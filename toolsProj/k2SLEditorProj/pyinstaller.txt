@@ -1,0 +1,1 @@
+AppData\Local\Programs\Python\Python38\Scripts\pyinstaller.exe C:\Users\akuro\Desktop\k2SLEditor\mainwindow.py --noconsole

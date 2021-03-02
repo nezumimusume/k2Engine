@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2A04211F-1BB8-30D8-B268-37E7BAA2F2BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{28BC13D6-E540-3536-8983-A19E4698A0B9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Character\btCharacterControllerInterface.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\btKinematicCharacterController.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btConeTwistConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btConstraintSolver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btContactConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btContactSolverInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btFixedConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btGearConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btGeneric6DofConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btGeneric6DofSpring2Constraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btGeneric6DofSpringConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btHinge2Constraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btHingeConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btJacobianEntry.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btNNCGConstraintSolver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btPoint2PointConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btSequentialImpulseConstraintSolver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btSliderConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btSolve2LinearConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btSolverBody.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btSolverConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btTypedConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintSolver\btUniversalConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dynamics\btActionInterface.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dynamics\btDiscreteDynamicsWorld.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dynamics\btDynamicsWorld.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dynamics\btRigidBody.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dynamics\btSimpleDynamicsWorld.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBody.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyConstraintSolver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyDynamicsWorld.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyJointFeedback.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyJointLimitConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyJointMotor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyLink.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyLinkCollider.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodyPoint2Point.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Featherstone\btMultiBodySolverConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLCPSolvers\btDantzigLCP.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLCPSolvers\btDantzigSolver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLCPSolvers\btLemkeAlgorithm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLCPSolvers\btLemkeSolver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLCPSolvers\btMLCPSolver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLCPSolvers\btMLCPSolverInterface.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLCPSolvers\btPATHSolver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLCPSolvers\btSolveProjectedGaussSeidel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vehicle\btRaycastVehicle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vehicle\btVehicleRaycaster.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vehicle\btWheelInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Character\btKinematicCharacterController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btConeTwistConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btContactConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btFixedConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btGearConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btGeneric6DofConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btGeneric6DofSpring2Constraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btGeneric6DofSpringConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btHinge2Constraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btHingeConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btNNCGConstraintSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btPoint2PointConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btSequentialImpulseConstraintSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btSliderConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btSolve2LinearConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btTypedConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintSolver\btUniversalConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dynamics\btDiscreteDynamicsWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dynamics\btRigidBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dynamics\btSimpleDynamicsWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Featherstone\btMultiBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Featherstone\btMultiBodyConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Featherstone\btMultiBodyConstraintSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Featherstone\btMultiBodyDynamicsWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Featherstone\btMultiBodyJointLimitConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Featherstone\btMultiBodyJointMotor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Featherstone\btMultiBodyPoint2Point.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MLCPSolvers\btDantzigLCP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MLCPSolvers\btLemkeAlgorithm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MLCPSolvers\btMLCPSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vehicle\btRaycastVehicle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vehicle\btWheelInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

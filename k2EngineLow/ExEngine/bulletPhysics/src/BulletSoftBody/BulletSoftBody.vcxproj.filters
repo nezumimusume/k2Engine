@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2A04211F-1BB8-30D8-B268-37E7BAA2F2BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{28BC13D6-E540-3536-8983-A19E4698A0B9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="btSoftSoftCollisionAlgorithm.h" />
+    <ClInclude Include="btDefaultSoftBodySolver.h" />
+    <ClInclude Include="btSoftBody.h" />
+    <ClInclude Include="btSoftBodyConcaveCollisionAlgorithm.h" />
+    <ClInclude Include="btSoftBodyData.h" />
+    <ClInclude Include="btSoftBodyHelpers.h" />
+    <ClInclude Include="btSoftBodyInternals.h" />
+    <ClInclude Include="btSoftBodyRigidBodyCollisionConfiguration.h" />
+    <ClInclude Include="btSoftBodySolvers.h" />
+    <ClInclude Include="btSoftBodySolverVertexBuffer.h" />
+    <ClInclude Include="btSoftRigidCollisionAlgorithm.h" />
+    <ClInclude Include="btSoftRigidDynamicsWorld.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="btDefaultSoftBodySolver.cpp" />
+    <ClCompile Include="btSoftBody.cpp" />
+    <ClCompile Include="btSoftBodyConcaveCollisionAlgorithm.cpp" />
+    <ClCompile Include="btSoftBodyHelpers.cpp" />
+    <ClCompile Include="btSoftBodyRigidBodyCollisionConfiguration.cpp" />
+    <ClCompile Include="btSoftRigidCollisionAlgorithm.cpp" />
+    <ClCompile Include="btSoftRigidDynamicsWorld.cpp" />
+    <ClCompile Include="btSoftSoftCollisionAlgorithm.cpp" />
+  </ItemGroup>
+</Project>
