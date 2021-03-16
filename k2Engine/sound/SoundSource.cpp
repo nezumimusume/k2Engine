@@ -31,7 +31,7 @@
 			m_dspSettings.EmitterVelocityComponent = 0.0f;
 			m_dspSettings.ListenerVelocityComponent = 0.0f;
 		}
-		void SoundSource::Init(wchar_t* filePath, bool is3DSound)
+		void SoundSource::Init(char* filePath, bool is3DSound)
 		{
 			m_isAvailable = false;
 			m_waveFile = SoundEngine().GetWaveFileBank().FindWaveFile(0, filePath);
@@ -62,7 +62,7 @@
 			m_is3DSound = is3DSound;
 			m_isAvailable = true;
 		}
-		void SoundSource::Init(const WNameKey& nameKey, bool is3DSound)
+		void SoundSource::Init(const int nameKey, bool is3DSound)
 		{
 			m_isAvailable = false;
 			m_waveFile = SoundEngine().GetWaveFileBank().FindWaveFile(0, nameKey);
@@ -87,7 +87,7 @@
 			m_isAvailable = true;
 		}
 
-		void SoundSource::InitStreaming(wchar_t* filePath, bool is3DSound, unsigned int ringBufferSize, unsigned int bufferSize)
+		void SoundSource::InitStreaming(char* filePath, bool is3DSound, unsigned int ringBufferSize, unsigned int bufferSize)
 		{
 			m_isAvailable = false;
 			//ストリーミングはWaveFileの使いまわしはできない。

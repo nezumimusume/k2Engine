@@ -17,11 +17,10 @@
 		Release();
 	}
 
-	bool WaveFile::Open(const wchar_t* fileName)
+	bool WaveFile::Open(const char* fileName)
 	{
 		m_filePath = fileName;
-		m_filePathHash = CUtil::MakeHash(fileName);
-		m_hmmio = mmioOpenW(const_cast<wchar_t*>(fileName), NULL, MMIO_ALLOCBUF | MMIO_READ);
+		m_hmmio = mmioOpenA(const_cast<char*>(fileName), NULL, MMIO_ALLOCBUF | MMIO_READ);
 		if (m_hmmio == NULL) {
 			//TK_WARNING_MESSAGE_BOX("waveファイルのオープンに失敗しました。filePath : %s\n"
 								   /*"原因として下記の２点が考えられます。\n"

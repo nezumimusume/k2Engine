@@ -2,7 +2,7 @@
  *@brief	波形データバンク。
  */
 
-#include "k2EnginePreCompile.h"
+#include "k2EngineLowPreCompile.h"
 #include "WaveFile.h"
 #include "WaveFileBank.h"
 
@@ -31,7 +31,7 @@
 		MY_ASSERT(groupID < MAX_GROUP, "groupID is invalid");
 		m_waveFileMap[groupID].insert({ waveFile->GetFilePathHash(), waveFile });
 	}
-	WaveFilePtr WaveFileBank::FindWaveFile(int groupID, const wchar_t* filePath)
+	WaveFilePtr WaveFileBank::FindWaveFile(int groupID, const char* filePath)
 	{
 		MY_ASSERT(groupID < MAX_GROUP, "groupID is invalid");
 		auto value = m_waveFileMap[groupID].find(CUtil::MakeHash(filePath));
@@ -40,7 +40,7 @@
 		}
 		return WaveFilePtr();
 	}
-	WaveFilePtr WaveFileBank::FindWaveFile(int groupID, const WNameKey& nameKey)
+	WaveFilePtr WaveFileBank::FindWaveFile(int groupID, const int nameKey)
 	{
 		MY_ASSERT(groupID < MAX_GROUP, "groupID is invalid");
 		auto value = m_waveFileMap[groupID].find(nameKey.GetHashCode());
@@ -49,3 +49,26 @@
 		}
 		return WaveFilePtr();
 	}
+
+
+void WaveFileBank::Resist(int number, const char* filePath)
+{
+	//初期化されてなかったら。
+	if (!m_waveFilePtrArray[number])
+	{
+		m_waveFilePtrArray[number].reset(new WaveFilePtr);
+		auto waveFile = m_waveFilePtrArray[number];
+		waveFile->Open(filePath);
+		bool result = waveFile->Open(filePath);
+		//ファイルオープンに失敗したら。
+		if (result == false) {
+			//リソースを破棄する。
+			m_waveFilePtrArray[number].reset();
+			return;
+		}
+		waveFile->AllocReadBuffer(waveFile->GetSize());	//waveファイルのサイズ分の読み込みバッファを確保する。
+		unsigned int dummy;
+		waveFile->Read(waveFile->GetReadBuffer(), waveFile->GetSize(), &dummy);
+		waveFile->ResetFile();
+	}
+}

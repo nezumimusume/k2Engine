@@ -9,3 +9,6 @@
 #include "k2EngineLowPreCompile.h"
 
 #include "graphics/ModelRender.h"
+
+
+const int MAXWAVEFILENUMBER = 1000;

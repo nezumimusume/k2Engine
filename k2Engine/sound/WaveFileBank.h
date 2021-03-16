@@ -4,6 +4,7 @@
 #pragma once
 
 #include <map>
+#include <array>
 
 	class WaveFile;
 	typedef std::shared_ptr<WaveFile>	WaveFilePtr;
@@ -30,7 +31,7 @@
 		*@param[in]	filePath	ファイルパス。
 		*@return 波形データ。登録されていない場合はNULLが返る。
 		*/
-		WaveFilePtr FindWaveFile(int groupID, const wchar_t* filePath);
+		WaveFilePtr FindWaveFile(int groupID, const char* filePath);
 		/*!
 		*@brief	引数で指定したファイルパスの波形データがバンクに登録されているか検索する。
 		*@details 
@@ -39,7 +40,7 @@
 		*@param[in]	nameyKey	名前キー。。
 		*@return 波形データ。登録されていない場合はNULLが返る。
 		*/
-		WaveFilePtr FindWaveFile(int groupID, const NameKey& nameKey);
+		WaveFilePtr FindWaveFile(int groupID, const int nameKey);
 		/*!
 		*@brief	波形データをバンクから登録解除。
 		*@param[in]	groupID		グループＩＤ。指定できるＩＤの最大値はMAX_GROUP-1。
@@ -59,7 +60,15 @@
 				Release(i);
 			}
 		}
+
+		WaveFilePtr FindWaveFile(int number)
+		{
+
+		}
+
+		void Resist(int number, const char* filePath);
 	private:
 		static const int MAX_GROUP = 256;
 		WaveFilePtrMap	m_waveFileMap[MAX_GROUP];		//!<waveファイルのリスト。
+		std::array<WaveFilePtr, MAXWAVEFILENUMBER> m_waveFilePtrArray;
 	};

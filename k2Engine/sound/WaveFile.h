@@ -23,7 +23,7 @@
 		 *@param[in]	fileName		ファイル名。
 		 *@return	falseを返して来たらオープンに失敗。
 		 */
-		bool Open( const wchar_t* fileName );
+		bool Open( const char* fileName );
 		/*!
 		* @brief	波形データを読み込み。
 		*@param[out]	pBuffer		波形データを書き込むバッファ。
@@ -66,13 +66,6 @@
 			return m_pwfx;
 		};
 		/*!
-		* @brief	ファイルパスのハッシュ値を取得。
-		*/
-		unsigned int GetFilePathHash() const
-		{
-			return m_filePathHash;
-		}
-		/*!
 		* @brief	読み込み先のバッファを確保。
 		*/
 		void AllocReadBuffer(int size)
@@ -99,6 +92,5 @@
 		volatile bool	m_isReadEnd = true;	//読み込み終了フラグ。
 		std::thread		m_readAsyncThread;	//非同期読み込みスレッド。
 		bool			m_isInvokeReadAsyncThread = false;
-		std::wstring	m_filePath;			//ファイルパス。
-		unsigned int	m_filePathHash = 0;		//ファイルパスのハッシュコード。
+		std::string	m_filePath;			//ファイルパス。
 	};
