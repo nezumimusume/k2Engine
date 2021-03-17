@@ -61,7 +61,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGUID>{4DCE52A5-106C-3D94-815D-C8EBC6133B5E}</ProjectGUID>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>LinearMath</ProjectName>
