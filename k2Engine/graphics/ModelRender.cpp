@@ -40,12 +40,14 @@ void ModelRender::InitModel(const char* filePath, EnModelUpAxis enModelUpAxis)
 	initData.m_fxFilePath = "Assets/shader/model.fx";
 	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 	initData.m_vsEntryPointFunc = "VSMain";
+	
 	if (m_animationClips != nullptr) {
 		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
 		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 		//スケルトンを指定する。
 		initData.m_skeleton = &m_skeleton;
 	}
+	
 	//モデルの上方向を指定する。
 	initData.m_modelUpAxis = enModelUpAxis;
 
@@ -55,6 +57,9 @@ void ModelRender::InitModel(const char* filePath, EnModelUpAxis enModelUpAxis)
 
 void ModelRender::Update()
 {
+	//スケルトンを更新。
+	m_skeleton.Update(m_model.GetWorldMatrix());
+
 	//モデルの更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 
