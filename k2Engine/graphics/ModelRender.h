@@ -118,15 +118,15 @@ private:
 		int numAnimationClips, 
 		EnModelUpAxis enModelUpAxis);
 private:
-	AnimationClip* m_animationClips = nullptr;			//!<アニメーションクリップ。
-	int							m_numAnimationClips = 0;			//!<アニメーションクリップの数。
-	Vector3 					m_position = Vector3::Zero;		//!<座標。
-	Quaternion	 				m_rotation = Quaternion::Identity;	//!<回転。
-	Vector3					m_scale = Vector3::One;			//!<拡大率。
-	EnModelUpAxis					m_enFbxUpAxis = enModelUpAxisZ;		//!<FBXの上方向。
-	Animation					m_animation;						//!<アニメーション。
-	Model					m_model;						//!<スキンモデル。
-	bool						m_isUpdateAnimation = true;			//!<アニメーションを更新する？
-	Skeleton m_skeleton;		//骨。
+	AnimationClip*				m_animationClips = nullptr;			//アニメーションクリップ。
+	int							m_numAnimationClips = 0;			//アニメーションクリップの数。
+	Vector3 					m_position = Vector3::Zero;			//座標。
+	Quaternion	 				m_rotation = Quaternion::Identity;	//回転。
+	Vector3						m_scale = Vector3::One;				//拡大率。
+	EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		//FBXの上方向。
+	Animation					m_animation;						//アニメーション。
+	Model						m_model;							//スキンモデル。
+	bool						m_isUpdateAnimation = true;			//アニメーションを更新する？
+	Skeleton					m_skeleton;							//骨。
 };
 
