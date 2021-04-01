@@ -5,7 +5,7 @@
 #pragma once
 
 #include "WaveFile.h"
-
+#include "SoundEngine.h"
 
 		/*!
 		 * @brief	音源クラス。
@@ -46,6 +46,7 @@
 			 * @brief	デストラクタ。
 			 */
 			~SoundSource();
+			void Init(const int number, bool is3DSound = false);
 			/*!
 			 * @brief	初期化。
 			 *@details
@@ -53,7 +54,7 @@
 			 *@param[in]	filePath	ファイルパス。対応しているファイルフォーマット(*.wave)
 			 *@param[in]	is3DSound	3Dサウンド？
 			 */
-			void Init(char* filePath, bool is3DSound = false);
+			//void Init(char* filePath, bool is3DSound = false);
 			/*!
 			 * @brief	初期化。
 			 *@details
@@ -61,7 +62,7 @@
 			 *@param[in]	nameKey		名前キー。
 			 *@param[in]	is3DSound	3Dサウンド？
 			 */
-			void Init(const int nameKey, bool is3DSound = false);
+			//void Init(const int nameKey, bool is3DSound = false);
 			/*!
 			* @brief	初期化。
 			*@details
@@ -75,7 +76,7 @@
 			*@param[in] ringBufferSize	リングバッファのサイズ。(bufferSizeの倍数になっていると無駄なく活用できます。)
 			*@param[in]	bufferSize		ストリーミングの最大バッファリングサイズ。
 			*/
-			void InitStreaming(char* filePath, bool is3DSound = false, unsigned int ringBufferSize = 3 * 1024 * 1024, unsigned int bufferingSize = 1024 * 512);
+			//void InitStreaming(char* filePath, bool is3DSound = false, unsigned int ringBufferSize = 3 * 1024 * 1024, unsigned int bufferingSize = 1024 * 512);
 			/*!
 			* @brief	開放。
 			*@details

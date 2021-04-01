@@ -29,6 +29,11 @@
 		 * @brief	デストラクタ。
 		 */
 		~SoundEngine();
+		static SoundEngine& GetInstance()
+		{
+			static SoundEngine instance;
+			return instance;
+		}
 		/*!
 		 * @brief	初期化。
 		 */
@@ -134,3 +139,9 @@
 		X3DAUDIO_CONE	m_emitterCone;
 		WaveFileBank m_waveFileBank;					//!<波形データのバンク。
 	};
+
+	static inline SoundEngine& GetSoundEngine()
+	{
+		return SoundEngine::GetInstance();
+	}
+

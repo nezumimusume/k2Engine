@@ -2,7 +2,7 @@
  *@brief	波形データバンク。
  */
 
-#include "k2EngineLowPreCompile.h"
+#include "k2EnginePreCompile.h"
 #include "WaveFile.h"
 #include "WaveFileBank.h"
 
@@ -12,9 +12,9 @@
 	}
 	WaveFileBank::~WaveFileBank()
 	{
-		ReleaseAll();
+		//ReleaseAll();
 	}
-	void WaveFileBank::Release(int groupID)
+	/*void WaveFileBank::Release(int groupID)
 	{
 		for (auto waveFile : m_waveFileMap[groupID]) {
 			waveFile.second->Release();
@@ -48,15 +48,17 @@
 			return value->second;
 		}
 		return WaveFilePtr();
-	}
+	}*/
 
 
-void WaveFileBank::Resist(int number, const char* filePath)
-{
-	//初期化されてなかったら。
-	if (!m_waveFilePtrArray[number])
+	void WaveFileBank::Resist(int number, const char* filePath)
 	{
-		m_waveFilePtrArray[number].reset(new WaveFilePtr);
+		//初期化されてたら。
+		if (m_waveFilePtrArray[number])
+		{
+			return;
+		}
+		m_waveFilePtrArray[number].reset(new WaveFile);
 		auto waveFile = m_waveFilePtrArray[number];
 		waveFile->Open(filePath);
 		bool result = waveFile->Open(filePath);
@@ -71,4 +73,3 @@ void WaveFileBank::Resist(int number, const char* filePath)
 		waveFile->Read(waveFile->GetReadBuffer(), waveFile->GetSize(), &dummy);
 		waveFile->ResetFile();
 	}
-}

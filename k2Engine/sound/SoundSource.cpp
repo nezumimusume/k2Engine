@@ -31,7 +31,47 @@
 			m_dspSettings.EmitterVelocityComponent = 0.0f;
 			m_dspSettings.ListenerVelocityComponent = 0.0f;
 		}
-		void SoundSource::Init(char* filePath, bool is3DSound)
+
+		void SoundSource::Init(const int number, bool is3DSound)
+		{
+			m_isAvailable = false;
+			m_waveFile = SoundEngine().GetWaveFileBank().FindWaveFile(number);
+			if (!m_waveFile) {
+				//TODO ここにエラーメッセージ。
+
+				return;
+			}
+			//サウンドボイスソースを作成。
+			m_sourceVoice = SoundEngine().CreateXAudio2SourceVoice(m_waveFile.get(), is3DSound);
+			if (is3DSound) {
+				SoundEngine().Add3DSoundSource(this);
+			}
+			InitCommon();
+
+			m_is3DSound = is3DSound;
+			m_isAvailable = true;
+		}
+
+		void SoundSource::Play(bool isLoop)
+		{
+			if (m_isAvailable == false) {
+
+				return;
+			}
+			if (m_isPlaying) {
+				//再生中のものを再開する。
+				m_sourceVoice->Start(0);
+			}
+			else {
+				m_sourceVoice->FlushSourceBuffers();
+				m_sourceVoice->Start(0);
+				Play(m_waveFile->GetReadBuffer(), m_waveFile->GetSize());
+				m_isPlaying = true;
+			}
+			m_isLoop = isLoop;
+		}
+
+		/*void SoundSource::Init(char* filePath, bool is3DSound)
 		{
 			m_isAvailable = false;
 			m_waveFile = SoundEngine().GetWaveFileBank().FindWaveFile(0, filePath);
@@ -61,8 +101,8 @@
 
 			m_is3DSound = is3DSound;
 			m_isAvailable = true;
-		}
-		void SoundSource::Init(const int nameKey, bool is3DSound)
+		}*/
+		/*void SoundSource::Init(const int nameKey, bool is3DSound)
 		{
 			m_isAvailable = false;
 			m_waveFile = SoundEngine().GetWaveFileBank().FindWaveFile(0, nameKey);
@@ -86,8 +126,8 @@
 			m_is3DSound = is3DSound;
 			m_isAvailable = true;
 		}
-
-		void SoundSource::InitStreaming(char* filePath, bool is3DSound, unsigned int ringBufferSize, unsigned int bufferSize)
+		*/
+		/*void SoundSource::InitStreaming(char* filePath, bool is3DSound, unsigned int ringBufferSize, unsigned int bufferSize)
 		{
 			m_isAvailable = false;
 			//ストリーミングはWaveFileの使いまわしはできない。
@@ -109,7 +149,7 @@
 
 			m_is3DSound = is3DSound;
 			m_isAvailable = true;
-		}
+		}*/
 		void SoundSource::Release()
 		{
 			if (m_isStreaming) {
@@ -151,32 +191,7 @@
 			m_waveFile->ReadAsync(&readStartBuff[m_readStartPos], m_streamingBufferSize, &m_currentBufferingSize);
 			m_streamingState = enStreamingBuffering;
 		}
-		void SoundSource::Play(bool isLoop)
-		{
-			if (m_isAvailable == false) {
-				
-				return;
-			}
-			if (m_isPlaying) {
-				//再生中のものを再開する。
-				m_sourceVoice->Start(0);
-			}
-			else {
-				if (m_isStreaming) {
-					//バッファリング開始
-					m_waveFile->ResetFile();
-					StartStreamingBuffring();
-					m_sourceVoice->Start(0, 0);
-				}
-				else {
-					m_sourceVoice->FlushSourceBuffers();
-					m_sourceVoice->Start(0);
-					Play(m_waveFile->GetReadBuffer(), m_waveFile->GetSize());
-				}
-				m_isPlaying = true;
-			}
-			m_isLoop = isLoop;
-		}
+		
 		void SoundSource::UpdateStreaming()
 		{
 			if (!m_isPlaying) {
@@ -251,20 +266,16 @@
 		{
 			if (m_isAvailable == false) {
 				return;
-			}
-
-			if (m_isStreaming) {
-				//ストリーミング再生中の更新。
-				UpdateStreaming();
-			}
-			else {
-				//オンメモリ再生中の更新処理。
-				UpdateOnMemory();
-			}
-			if (m_is3DSound == true) {
-				//音源の移動速度を更新。
-				m_velocity.Subtract(m_position, m_lastFramePosition);
-				m_velocity.Div(GameTime().GetFrameDeltaTime());
-				m_lastFramePosition = m_position;
+				{
+					//オンメモリ再生中の更新処理。
+					UpdateOnMemory();
+				}
+				if (m_is3DSound == true) {
+					//音源の移動速度を更新。
+					m_velocity.Subtract(m_position, m_lastFramePosition);
+					//TODO 1.0f/60.0fのところをフレーム時間に変更する。
+					m_velocity.Div(1.0f / 60.0f);
+					m_lastFramePosition = m_position;
+				}
 			}
 		}

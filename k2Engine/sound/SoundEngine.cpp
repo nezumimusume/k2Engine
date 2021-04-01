@@ -71,6 +71,7 @@
 	SoundEngine::SoundEngine()
 	{
 		memset(m_hx3DAudio, 0, sizeof(m_hx3DAudio));
+		Init();
 	}
 	/*!
 	 * @brief	デストラクタ。
@@ -152,7 +153,8 @@
 	void SoundEngine::Release()
 	{
 		//波形データバンクを解放。
-		m_waveFileBank.ReleaseAll();
+		//m_waveFileBank.ReleaseAll();
+		m_waveFileBank.Release();
 
 		if (m_submixVoice != nullptr) {
 			m_submixVoice->DestroyVoice();
@@ -235,7 +237,8 @@
 				m_listener.pCone = NULL;
 			}
 		}
-		float deltaTime = GameTime().GetFrameDeltaTime();
+		//TODO フレーム時間にする。
+		float deltaTime = 60.0f / 1.0f;
 		if (deltaTime > 0.0f) {
 			//リスナーの移動速度を計算する。
 			Vector3 vel;

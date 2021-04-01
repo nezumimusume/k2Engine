@@ -6,6 +6,8 @@
 #include <map>
 #include <array>
 
+const int MAXWAVEFILENUMBER = 1000;
+
 	class WaveFile;
 	typedef std::shared_ptr<WaveFile>	WaveFilePtr;
 	typedef std::map<unsigned int , WaveFilePtr>	WaveFilePtrMap;
@@ -24,14 +26,14 @@
 		 *@param[in]	groupID		グループＩＤ。指定できるＩＤの最大値はMAX_GROUP-1。
 		 *@param[in]	waveFile	波形データ。
 		 */
-		void RegistWaveFile(int groupID, WaveFilePtr waveFile);
+		//Svoid RegistWaveFile(int groupID, WaveFilePtr waveFile);
 		/*!
 		*@brief	引数で指定したファイルパスの波形データがバンクに登録されているか検索する。
 		*@param[in]	groupID		グループＩＤ。指定できるＩＤの最大値はMAX_GROUP-1。
 		*@param[in]	filePath	ファイルパス。
 		*@return 波形データ。登録されていない場合はNULLが返る。
 		*/
-		WaveFilePtr FindWaveFile(int groupID, const char* filePath);
+		//WaveFilePtr FindWaveFile(int groupID, const char* filePath);
 		/*!
 		*@brief	引数で指定したファイルパスの波形データがバンクに登録されているか検索する。
 		*@details 
@@ -40,35 +42,40 @@
 		*@param[in]	nameyKey	名前キー。。
 		*@return 波形データ。登録されていない場合はNULLが返る。
 		*/
-		WaveFilePtr FindWaveFile(int groupID, const int nameKey);
+		//WaveFilePtr FindWaveFile(int groupID, const int nameKey);
 		/*!
 		*@brief	波形データをバンクから登録解除。
 		*@param[in]	groupID		グループＩＤ。指定できるＩＤの最大値はMAX_GROUP-1。
 		*@param[in]	waveFile	波形データ。
 		*/
-		void UnregistWaveFile(int groupID, WaveFilePtr waveFile);
+		//void UnregistWaveFile(int groupID, WaveFilePtr waveFile);
 		/*!
 		*@brief	グループ単位で解放。
 		*/
-		void Release(int groupID);
+		//void Release(int groupID);
 		/*!
 		*@brief	全て解放。
 		*/
-		void ReleaseAll()
+		/*void ReleaseAll()
 		{
 			for (int i = 0; i < MAX_GROUP; i++) {
 				Release(i);
 			}
-		}
-
-		WaveFilePtr FindWaveFile(int number)
+		}*/
+		//TODO 後で実装する。
+		void Release()
 		{
 
 		}
-
+		//Waveファイルを検索する。
+		WaveFilePtr FindWaveFile(int number)
+		{
+			return m_waveFilePtrArray[number];
+		}
+		//Waveファイルを登録する。
 		void Resist(int number, const char* filePath);
 	private:
 		static const int MAX_GROUP = 256;
-		WaveFilePtrMap	m_waveFileMap[MAX_GROUP];		//!<waveファイルのリスト。
+		//WaveFilePtrMap	m_waveFileMap[MAX_GROUP];		//!<waveファイルのリスト。
 		std::array<WaveFilePtr, MAXWAVEFILENUMBER> m_waveFilePtrArray;
 	};
