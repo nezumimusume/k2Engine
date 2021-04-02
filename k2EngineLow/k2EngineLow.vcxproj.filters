@@ -34,6 +34,9 @@
     <Filter Include="MiniEngine\tkFile">
       <UniqueIdentifier>{461ca209-8a83-44c0-87d2-840ac25ee4f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ExEngine\sound">
+      <UniqueIdentifier>{eb44e5e8-f66e-4727-8b80-13bc61ca60f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ExEngine\gameObject\Gameobjectmanager.cpp">
@@ -190,6 +193,18 @@
       <Filter>MiniEngine</Filter>
     </ClCompile>
     <ClCompile Include="k2EngineLowPreCompile.cpp" />
+    <ClCompile Include="ExEngine\sound\SoundEngine.cpp">
+      <Filter>ExEngine\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\sound\SoundSource.cpp">
+      <Filter>ExEngine\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\sound\WaveFile.cpp">
+      <Filter>ExEngine\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\sound\WaveFileBank.cpp">
+      <Filter>ExEngine\sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExEngine\gameObject\GameObjectManager.h">
@@ -382,5 +397,20 @@
       <Filter>MiniEngine</Filter>
     </ClInclude>
     <ClInclude Include="k2EngineLowPreCompile.h" />
+    <ClInclude Include="ExEngine\sound\SoundEngine.h">
+      <Filter>ExEngine\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\sound\SoundSource.h">
+      <Filter>ExEngine\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\sound\WaveFile.h">
+      <Filter>ExEngine\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\sound\WaveFileBank.h">
+      <Filter>ExEngine\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\ExEngine.h">
+      <Filter>ExEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

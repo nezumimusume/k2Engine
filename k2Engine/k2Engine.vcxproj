@@ -23,18 +23,10 @@
     <ClCompile Include="k2EnginePreCompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="sound\SoundEngine.cpp" />
-    <ClCompile Include="sound\SoundSource.cpp" />
-    <ClCompile Include="sound\WaveFile.cpp" />
-    <ClCompile Include="sound\WaveFileBank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="k2EnginePreCompile.h" />
-    <ClInclude Include="sound\SoundEngine.h" />
-    <ClInclude Include="sound\SoundSource.h" />
-    <ClInclude Include="sound\WaveFile.h" />
-    <ClInclude Include="sound\WaveFileBank.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

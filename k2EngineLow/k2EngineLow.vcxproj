@@ -110,7 +110,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>k2EngineLowPreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
@@ -120,7 +120,7 @@
       <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;DirectXTK12.lib;d3d12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -177,7 +177,13 @@
     <ClCompile Include="ExEngine\physics\Physics.cpp" />
     <ClCompile Include="ExEngine\physics\PhysicsStaticObject.cpp" />
     <ClCompile Include="ExEngine\physics\RigidBody.cpp" />
-    <ClCompile Include="k2EngineLowPreCompile.cpp" />
+    <ClCompile Include="ExEngine\sound\SoundEngine.cpp" />
+    <ClCompile Include="ExEngine\sound\SoundSource.cpp" />
+    <ClCompile Include="ExEngine\sound\WaveFile.cpp" />
+    <ClCompile Include="ExEngine\sound\WaveFileBank.cpp" />
+    <ClCompile Include="k2EngineLowPreCompile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MiniEngine\Animation.cpp" />
     <ClCompile Include="MiniEngine\AnimationClip.cpp" />
     <ClCompile Include="MiniEngine\AnimationPlayController.cpp" />
@@ -220,6 +226,7 @@
     <ClCompile Include="MiniEngine\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExEngine\ExEngine.h" />
     <ClInclude Include="ExEngine\gameObject\GameObjectManager.h" />
     <ClInclude Include="ExEngine\gameObject\IGameobject.h" />
     <ClInclude Include="ExEngine\level2D\CaslFile.h" />
@@ -233,6 +240,10 @@
     <ClInclude Include="ExEngine\physics\Physics.h" />
     <ClInclude Include="ExEngine\physics\PhysicsStaticObject.h" />
     <ClInclude Include="ExEngine\physics\RigidBody.h" />
+    <ClInclude Include="ExEngine\sound\SoundEngine.h" />
+    <ClInclude Include="ExEngine\sound\SoundSource.h" />
+    <ClInclude Include="ExEngine\sound\WaveFile.h" />
+    <ClInclude Include="ExEngine\sound\WaveFileBank.h" />
     <ClInclude Include="k2EngineLowPreCompile.h" />
     <ClInclude Include="MiniEngine\Animation.h" />
     <ClInclude Include="MiniEngine\AnimationClip.h" />
