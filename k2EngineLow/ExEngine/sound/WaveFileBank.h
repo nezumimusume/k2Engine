@@ -29,7 +29,7 @@ public:
 	/// </summary>
 	void Release()
 	{
-		for (int i = 0; i++; i < m_waveFilePtrArray.size())
+		for (int i = 0; i < m_waveFilePtrArray.size(); i++)
 		{
 			m_waveFilePtrArray[i].reset();
 		}
