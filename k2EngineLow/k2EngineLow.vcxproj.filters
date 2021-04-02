@@ -205,6 +205,9 @@
     <ClCompile Include="ExEngine\sound\WaveFileBank.cpp">
       <Filter>ExEngine\sound</Filter>
     </ClCompile>
+    <ClCompile Include="ExEngine\physics\DebugWireframe.cpp">
+      <Filter>ExEngine\physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExEngine\gameObject\GameObjectManager.h">
@@ -411,6 +414,9 @@
     </ClInclude>
     <ClInclude Include="ExEngine\ExEngine.h">
       <Filter>ExEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\physics\DebugWireframe.h">
+      <Filter>ExEngine\physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

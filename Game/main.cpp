@@ -40,10 +40,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//sprite[1].Update(pos[1], Quaternion::Identity, Vector3::One);
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-		SoundEngine::GetInstance().Update();
+		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
+	
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
+		SoundEngine::GetInstance().Update();
 		g_engine->EndFrame();
 	}
 	//ゲームオブジェクトマネージャーを削除。

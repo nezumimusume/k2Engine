@@ -173,6 +173,7 @@
     <ClCompile Include="ExEngine\level2D\MapChip2D.cpp" />
     <ClCompile Include="ExEngine\physics\CapsuleCollider.cpp" />
     <ClCompile Include="ExEngine\physics\CharacterController.cpp" />
+    <ClCompile Include="ExEngine\physics\DebugWireframe.cpp" />
     <ClCompile Include="ExEngine\physics\MeshCollider.cpp" />
     <ClCompile Include="ExEngine\physics\Physics.cpp" />
     <ClCompile Include="ExEngine\physics\PhysicsStaticObject.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="ExEngine\physics\CapsuleCollider.h" />
     <ClInclude Include="ExEngine\physics\CharacterController.h" />
     <ClInclude Include="ExEngine\physics\CollisionAttr.h" />
+    <ClInclude Include="ExEngine\physics\DebugWireframe.h" />
     <ClInclude Include="ExEngine\physics\ICollider.h" />
     <ClInclude Include="ExEngine\physics\MeshCollider.h" />
     <ClInclude Include="ExEngine\physics\Physics.h" />

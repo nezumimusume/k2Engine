@@ -16,6 +16,10 @@ class Player : public IGameObject
 		m_bgm = NewGO<SoundSource>(0);
 		m_bgm->Init(1, false);
 		m_bgm->Play(true);
+
+		PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+		m_modelRender.Update();
+		m_po.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 		return true;
 	}
 
@@ -52,4 +56,5 @@ private:
 	ModelRender m_modelRender;
 	SoundSource* m_bgm = nullptr;
 	bool m_isStop = false;
+	PhysicsStaticObject m_po;
 };
