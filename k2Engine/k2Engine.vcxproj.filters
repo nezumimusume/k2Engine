@@ -10,11 +10,17 @@
       <Filter>graphics</Filter>
     </ClCompile>
     <ClCompile Include="k2EnginePreCompile.cpp" />
+    <ClCompile Include="graphics\SpriteRender.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="k2EnginePreCompile.h" />
+    <ClInclude Include="graphics\SpriteRender.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

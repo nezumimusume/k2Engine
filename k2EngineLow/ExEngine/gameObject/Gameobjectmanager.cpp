@@ -44,6 +44,8 @@ void GameObjectManager::ExecuteUpdate()
 			go->UpdateWrapper();
 		}
 	}
+	//物理エンジンのアップデートを呼び出す。
+	PhysicsWorld::GetInstance()->Update(1.0f/60.0f);
 }
 void GameObjectManager::ExecuteRender(RenderContext& rc)
 {

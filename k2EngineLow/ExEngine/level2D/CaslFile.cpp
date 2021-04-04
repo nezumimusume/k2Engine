@@ -11,20 +11,29 @@ void CaslFile::Load(const char* filePath)
 		MessageBoxA(nullptr, "caslファイルのオープンに失敗しました。", "エラー", MB_OK);
 		return;
 	}
+
+	//.ddsフォルダパスを設定。。
+	std::string ddsFolderPath = filePath;
+	int pos = (int)ddsFolderPath.rfind("/");
+	ddsFolderPath = ddsFolderPath.substr(0, pos + 1);
+	int ddsFolderPathCount = ddsFolderPath.length();
+
 	//画像の数を取得。
 	int numLevel = ReadInteger(fp);
 	for (int i = 0; i < numLevel; i++)
 	{
+
 		auto caslData = std::make_unique<CaslData>();
 		//std::unique_ptr<Level2DObject> levelObject;
-		//レベルファイルに保存してあるのは
+		//レベルファイルに保存してあるのは。
 		//以下全てchar型で保存してある、一つ一つに(,)で区切りがしてある。
-		//名前の長さ(int)、名前(char)
-		//ファイルパスの長さ(int)、ファイルパス(char)
-		//座標x,y(float)
-		//画像の大きさx,y(int)
-		//レイヤー優先度x,y(int)
-		//スケール倍率x,y(float)
+		//名前の長さ(int)、名前(char)。
+		//ファイルパスの長さ(int)、ファイルパス(char)。
+		//座標x,y(float)。
+		//画像の大きさx,y(int)。
+		//レイヤー優先度x,y(int)。
+		//スケール倍率x,y(float)。
+		//.ddsファイルの名前の長さ(int)、ddsファイルの名前。
 
 		//画像の名前の長さを取得。
 		int nameCount = ReadInteger(fp);
@@ -35,6 +44,7 @@ void CaslFile::Load(const char* filePath)
 
 		//ファイルパスの名前の長さを取得。
 		int fileNameCount = ReadInteger(fp);
+
 		//ファイルパスを取得。
 		caslData.get()->fileName = std::make_unique<char[]>(fileNameCount + 1);
 		fread(caslData.get()->fileName.get(), fileNameCount, 1, fp);
@@ -61,8 +71,16 @@ void CaslFile::Load(const char* filePath)
 		caslData.get()->ddsFileName = std::make_unique<char[]>(ddsFileNameCount + 1);
 		fread(caslData.get()->ddsFileName.get(), ddsFileNameCount, 1, fp);
 
+		//.ddsファイルパスを設定する。
+		caslData.get()->ddsFilePath = std::make_unique<char[]>(ddsFolderPathCount + ddsFileNameCount + 1);
+		//フォルダパスと.ddsファイルの名前を連結する。
+		std::string ddsFilePath = ddsFolderPath + caslData.get()->ddsFileName.get();
+		std::char_traits<char>::copy(caslData.get()->ddsFilePath.get(), ddsFilePath.c_str(), ddsFilePath.size() + 1);
 
-		ReadOnlyOneCharacter(fp);
+		//ReadOnlyOneCharacter(fp);
+		//改行コードを読み飛ばし。
+		char dummy[256];
+		fgets(dummy, 256, fp);
 
 		m_caslDataList.push_back(std::move(caslData));
 	}

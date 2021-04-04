@@ -2,6 +2,21 @@
 #include "RenderTarget.h"
 #include "GraphicsEngine.h"
 
+RenderTarget::~RenderTarget()
+{
+	if (m_renderTargetTextureDx12) {
+		m_renderTargetTextureDx12->Release();
+	}
+	if (m_depthStencilTexture) {
+		m_depthStencilTexture->Release();
+	}
+	if (m_rtvHeap) {
+		m_rtvHeap->Release();
+	}
+	if (m_dsvHeap) {
+		m_dsvHeap->Release();
+	}
+}
 bool RenderTarget::Create(
 	int w,
 	int h,
@@ -36,7 +51,7 @@ bool RenderTarget::Create(
 	//ディスクリプタを作成する。
 	CreateDescriptor(d3dDevice);
 	if (clearColor) {
-		memcpy(m_rtvClearColor, clearColor, sizeof(clearColor));
+		memcpy(m_rtvClearColor, clearColor, sizeof(m_rtvClearColor));
 	}
 	return true;
 }

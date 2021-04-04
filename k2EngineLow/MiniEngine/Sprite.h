@@ -68,6 +68,14 @@ public:
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト/param>
 	void Draw(RenderContext& renderContext);
+	/// <summary>
+	/// 初期化されているか判定。
+	/// </summary>
+	/// <returns></returns>
+	bool IsInited() const
+	{
+		return m_isInited;
+	}
 private:
 	/// <summary>
 	/// テクスチャを初期化。
@@ -123,4 +131,5 @@ private:
 	PipelineState		m_pipelineState;		//パイプラインステート。
 	Shader				m_vs;					//頂点シェーダー。
 	Shader				m_ps;					//ピクセルシェーダー。
+	bool				m_isInited = false;		//初期化済み？
 };

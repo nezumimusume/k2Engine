@@ -27,6 +27,14 @@ public:
 	/// <param name="model">モデル</param>
 	/// <param name="worldMatrix">ワールド行列</param>
 	void CreateFromModel(Model& model, const Matrix& worldMatrix);
+	/// <summary>
+	/// 摩擦力を設定する。
+	/// </summary>
+	/// <param name="friction">摩擦力。10が最大値。</param>
+	void SetFriction(float friction)
+	{
+		m_rigidBody.SetFriction(friction);
+	}
 private:
 	MeshCollider m_meshCollider;		//メッシュコライダー。
 	RigidBody m_rigidBody;				//剛体。

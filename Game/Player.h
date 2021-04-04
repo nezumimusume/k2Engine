@@ -20,6 +20,8 @@ class Player : public IGameObject
 		PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 		m_modelRender.Update();
 		m_po.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+
+		sR.Init("Assets/Image/sample.dds", 100.0f, 100.0f);
 		return true;
 	}
 
@@ -46,15 +48,18 @@ class Player : public IGameObject
 			}
 		}
 		m_modelRender.Update();
+		sR.Update();
 	}
 
 	void Render(RenderContext& rc) override
 	{
 		m_modelRender.Draw(rc);
+		sR.Draw(rc);
 	}
 private:
 	ModelRender m_modelRender;
 	SoundSource* m_bgm = nullptr;
 	bool m_isStop = false;
 	PhysicsStaticObject m_po;
+	SpriteRender sR;
 };

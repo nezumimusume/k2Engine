@@ -9,7 +9,7 @@ void MapChip2D::Init(CaslData* caslData)
 	data.m_width = caslData->width;
 	data.m_height = caslData->height;
 	//‰æ‘œ‚ğ“Ç‚İ‚ŞB
-	data.m_ddsFilePath[0] =  caslData->ddsFileName.get();
+	data.m_ddsFilePath[0] =  caslData->ddsFilePath.get();
 	data.m_fxFilePath = "Assets/shader/sprite.fx";
 	m_sprite.Init(data);
 	//À•WB

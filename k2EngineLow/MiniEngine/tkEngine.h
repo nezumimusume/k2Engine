@@ -25,7 +25,9 @@ public:
 private:
 	GraphicsEngine* m_graphicsEngine = nullptr;		//グラフィックエンジン。
 	GamePad m_pad[GamePad::CONNECT_PAD_MAX];		//ゲームパッド。
+	GameTime m_gameTime;							//ゲームタイム。
 	
 };
 
 extern TkEngine* g_engine;	//TKエンジン。
+extern GameTime* g_gameTime;

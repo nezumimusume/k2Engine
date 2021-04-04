@@ -199,9 +199,15 @@
 		InitPipelineState(initData);
 		//ディスクリプタヒープを初期化。
 		InitDescriptorHeap(initData);
+
+		m_isInited = true;
 	}
 	void Sprite::Update(const Vector3& pos, const Quaternion& rot, const Vector3& scale, const Vector2& pivot)
 	{
+		if (m_isInited == false) {
+			//未初期化
+			return;
+		}
 		//ピボットを考慮に入れた平行移動行列を作成。
 		//ピボットは真ん中が0.0, 0.0、左上が-1.0f, -1.0、右下が1.0、1.0になるようにする。
 		Vector2 localPivot = pivot;
@@ -228,6 +234,10 @@
 	}
 	void Sprite::Draw(RenderContext& renderContext)
 	{
+		if (m_isInited == false) {
+			//未初期化。
+			return;
+		}
 		Matrix viewMatrix = g_camera2D->GetViewMatrix();
 		Matrix projMatrix = g_camera2D->GetProjectionMatrix();
 

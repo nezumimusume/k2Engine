@@ -4,6 +4,8 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 import glob
 import constant
+import pathlib
+import os
 
 class MyImage():
     def __init__(self):
@@ -112,6 +114,15 @@ class MyImage():
             else:
                 extension = file[slash_number + 1:]
                 self.name = file[slash_number + 1:number]
+            #p_abs = pathlib.Path(file)
+            #file = p_abs.relative_to()
+            #self.file_name = file
+            try:
+                self.file_name = os.path.relpath(file)
+                self.file_name = self.file_name.replace('\\','/')
+            except:
+                self.file_name = file
+
 
             if self.name != 'rect':
                 pass

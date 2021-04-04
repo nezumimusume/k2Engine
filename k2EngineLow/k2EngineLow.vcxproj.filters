@@ -37,6 +37,9 @@
     <Filter Include="ExEngine\sound">
       <UniqueIdentifier>{eb44e5e8-f66e-4727-8b80-13bc61ca60f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MiniEngine\time">
+      <UniqueIdentifier>{0e5305e8-b021-4310-9bde-2d1dbd2b62b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ExEngine\gameObject\Gameobjectmanager.cpp">
@@ -206,6 +209,12 @@
       <Filter>ExEngine\sound</Filter>
     </ClCompile>
     <ClCompile Include="ExEngine\physics\DebugWireframe.cpp">
+      <Filter>ExEngine\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\physics\SphereCollider.cpp">
+      <Filter>ExEngine\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\physics\BoxCollider.cpp">
       <Filter>ExEngine\physics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -416,6 +425,18 @@
       <Filter>ExEngine</Filter>
     </ClInclude>
     <ClInclude Include="ExEngine\physics\DebugWireframe.h">
+      <Filter>ExEngine\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniEngine\time\GameTime.h">
+      <Filter>MiniEngine\time</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniEngine\time\Stopwatch.h">
+      <Filter>MiniEngine\time</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\physics\SphereCollider.h">
+      <Filter>ExEngine\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\physics\BoxCollider.h">
       <Filter>ExEngine\physics</Filter>
     </ClInclude>
   </ItemGroup>

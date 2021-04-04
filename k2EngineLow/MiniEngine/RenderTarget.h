@@ -10,6 +10,7 @@ class GraphicsEngine;
 /// </summary>
 class RenderTarget {
 public:
+	~RenderTarget();
 	/// <summary>
 	/// レンダリングターゲットの作成。
 	/// </summary>

@@ -335,7 +335,12 @@ class Application(tk.Frame):
             #読み込むファイルの拡張子を指定
             typ = [('png画像','*.png'),
                 ('jpg画像','*.jpg'),
-                ('ttf画像','*.ttf')]
+                ('tga画像','*.tga'),
+                ('dds画像','*.dds'),
+                ('bmp画像','*.bmp'),
+                ('jpeg画像','*.jpeg'),
+                ('ppm画像','*.ppm')
+            ]
             #ファイル選択ダイアログを表示
             fn = filedialog.askopenfilename(filetypes=typ)
             #ファイルが選択されてなかったら処理しない
@@ -474,19 +479,22 @@ class Application(tk.Frame):
                 file.write(bytes((str(scale[1]) + ',').encode()))
 
                 #ファイルパスを持ってきて
-                dds_file_path = fn
+                #dds_file_path = fn
                 #スラッシュで切る
-                slash_number = dds_file_path.rfind('/')
-                dds_file_path = dds_file_path[:slash_number]
+                #slash_number = dds_file_path.rfind('/')
+                #dds_file_path = dds_file_path[:slash_number]
+                #asset_number = dds_file_path.find("Assets")
+                #if asset_number != -1:
+                    #dds_file_path = dds_file_path[asset_number:]
 
                 file_name = myimg.file_name
                 dot_number = file_name.rfind('.')
                 slash_number = file_name.rfind('/')
-                file_name = file_name[slash_number:dot_number]
+                file_name = file_name[slash_number+1:dot_number]
 
 
                 #.ddsを加える
-                dds_file_path+=file_name + '.dds'
+                dds_file_path=file_name + '.dds'
 
                 #.ddsの場合のファイルパスを書き出す
                 file.write(bytes((str(len(dds_file_path)) + ',').encode()))

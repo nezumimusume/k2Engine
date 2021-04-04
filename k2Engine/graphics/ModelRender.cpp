@@ -64,8 +64,7 @@ void ModelRender::Update()
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 
 	//アニメーションを進める。
-	m_animation.Progress(1.0f / 60.0f);
-	
+	m_animation.Progress(g_gameTime->GetFrameDeltaTime());
 }
 
 void ModelRender::Draw(RenderContext& rc)
