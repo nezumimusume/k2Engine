@@ -22,6 +22,10 @@ class Player : public IGameObject
 		m_po.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
 		sR.Init("Assets/Image/sample.dds", 100.0f, 100.0f);
+
+		fontRender.SetText(L"aiueo");
+		fontRender.SetScale(5.0f);
+		fontRender.SetPosition({ 00.0f,300.0f,00.0f });
 		return true;
 	}
 
@@ -55,6 +59,7 @@ class Player : public IGameObject
 	{
 		m_modelRender.Draw(rc);
 		sR.Draw(rc);
+		fontRender.Draw(rc);
 	}
 private:
 	ModelRender m_modelRender;
@@ -62,4 +67,5 @@ private:
 	bool m_isStop = false;
 	PhysicsStaticObject m_po;
 	SpriteRender sR;
+	FontRender fontRender;
 };

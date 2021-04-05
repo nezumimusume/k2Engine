@@ -63,7 +63,7 @@ public:
 	/// <param name="pos">座標。</param>
 	/// <param name="rotation">回転。</param>
 	/// <param name="scale">拡大。</param>
-	void SetPRS(const Vector3& pos, const Quaternion& rotation, const Vector3& scale)
+	void SetTRS(const Vector3& pos, const Quaternion& rotation, const Vector3& scale)
 	{
 		SetPosition(pos);
 		SetRotation(rotation);

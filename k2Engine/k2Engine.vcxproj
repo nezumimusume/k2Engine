@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="graphics\FontRender.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\SpriteRender.cpp" />
     <ClCompile Include="k2EnginePreCompile.cpp">
@@ -27,6 +28,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\SpriteRender.h" />
     <ClInclude Include="k2EnginePreCompile.h" />

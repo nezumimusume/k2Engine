@@ -79,20 +79,6 @@ public:
 		return m_pivot;
 	}
 	/// <summary>
-	/// 座標、大きさ、回転、ピボットを設定。
-	/// </summary>
-	/// <param name="pos">座標。</param>
-	/// <param name="scale">大きさ。</param>
-	/// <param name="rot">回転。</param>
-	/// <param name="pivot">ピボット。</param>
-	void SetRPSP(const Vector3& pos, const Vector3& scale, const Quaternion& rot = Quaternion::Identity, const Vector2& pivot = Sprite::DEFAULT_PIVOT)
-	{
-		m_position = pos;
-		m_scale = scale;
-		m_rotation = rot;
-		m_pivot = pivot;
-	}
-	/// <summary>
 	/// 更新処理。
 	/// </summary>
 	void Update()
