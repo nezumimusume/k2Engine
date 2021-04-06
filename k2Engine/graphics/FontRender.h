@@ -104,6 +104,10 @@ public:
 	/// <param name="rc">レンダ―コンテキスト。</param>
 	void Draw(RenderContext& rc)
 	{
+		if (m_text == nullptr)
+		{
+			return;
+		}
 		m_font.Begin(rc);
 		m_font.Draw(m_text.get(), Vector2(m_position.x, m_position.y), m_color, m_rotation, m_scale, m_pivot);
 		m_font.End(rc);
@@ -124,7 +128,7 @@ private:
 	Vector4								m_color = g_vec4White;				//文字の色、デフォルトで白。
 	float								m_rotation = 0.0f;					//回転。
 	Vector2								m_pivot = Sprite::DEFAULT_PIVOT;	//ピボット。
-	std::unique_ptr<const wchar_t[]>	m_text;								//文字。
+	std::unique_ptr<const wchar_t[]>	m_text = nullptr;					//文字。
 	Font								m_font;								//フォント。
 };
 
