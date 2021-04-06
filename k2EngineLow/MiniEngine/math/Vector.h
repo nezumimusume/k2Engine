@@ -797,6 +797,17 @@ public:
 		*this *= addRot;
 	}
 	/// <summary>
+	/// Y軸周りの回転を加算。
+	/// </summary>
+	/// <returns>加算する回転角度。単位Degree</returns>
+	void AddRotationDegY(float degree)
+	{
+		float halfAngle = Math::DegToRad(degree) * 0.5f;
+		Quaternion addRot;
+		addRot.SetRotation(Vector3::AxisY, halfAngle);
+		*this *= addRot;
+	}
+	/// <summary>
 	/// クォータニオン同士の乗算
 	/// </summary>
 	/// <param name="rot"></param>
