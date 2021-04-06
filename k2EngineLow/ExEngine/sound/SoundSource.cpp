@@ -19,7 +19,7 @@ SoundSource::~SoundSource()
 void SoundSource::InitCommon()
 {
 	m_dspSettings.SrcChannelCount = INPUTCHANNELS;
-	m_dspSettings.DstChannelCount = SoundEngine::GetInstance().GetNumChannel();
+	m_dspSettings.DstChannelCount = g_soundEngine->GetNumChannel();
 	m_dspSettings.pMatrixCoefficients = m_matrixCoefficients;
 	m_dspSettings.pDelayTimes = nullptr;
 	m_dspSettings.DopplerFactor = 1.0f;
@@ -35,16 +35,16 @@ void SoundSource::InitCommon()
 void SoundSource::Init(const int number, bool is3DSound)
 {
 	m_isAvailable = false;
-	m_waveFile = SoundEngine::GetInstance().GetWaveFileBank().FindWaveFile(number);
+	m_waveFile = g_soundEngine->GetWaveFileBank().FindWaveFile(number);
 	if (!m_waveFile) {
 		//TODO ここにエラーメッセージ。
 
 		return;
 	}
 	//サウンドボイスソースを作成。
-	m_sourceVoice = SoundEngine::GetInstance().CreateXAudio2SourceVoice(m_waveFile.get(), is3DSound);
+	m_sourceVoice = g_soundEngine->CreateXAudio2SourceVoice(m_waveFile.get(), is3DSound);
 	if (is3DSound) {
-		SoundEngine::GetInstance().Add3DSoundSource(this);
+		g_soundEngine->Add3DSoundSource(this);
 	}
 	InitCommon();
 
@@ -99,7 +99,7 @@ void SoundSource::Play(char* buff, unsigned int bufferSize)
 void SoundSource::Remove3DSound()
 {
 	if (m_is3DSound) {
-		SoundEngine::GetInstance().Remove3DSoundSource(this);
+		g_soundEngine->Remove3DSoundSource(this);
 		m_is3DSound = false;
 	}
 }

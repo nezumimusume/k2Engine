@@ -13,7 +13,7 @@ class SoundSource;
 /// サウンドエンジン。
 /// </summary>
 class SoundEngine{
-private:
+public:
 	/// <summary>
 	/// コンストラクタ。
 	/// </summary>
@@ -22,16 +22,6 @@ private:
 	/// デストラクタ。
 	/// </summary>
 	~SoundEngine();
-public:
-	/// <summary>
-	/// SoundEngineのインスタンスを取得。
-	/// </summary>
-	/// <returns>SoundEngineのインスタンス。</returns>
-	static SoundEngine& GetInstance()
-	{
-		static SoundEngine instance;
-		return instance;
-	}
 	/// <summary>
 	/// 初期化。
 	/// </summary>
@@ -125,6 +115,13 @@ public:
 	{
 		return m_waveFileBank;
 	}
+	/// <summary>
+	/// 波形データを登録する。
+	/// </summary>
+	void ResistWaveFileBank(int number, const char* filePath)
+	{
+		m_waveFileBank.Resist(number, filePath);
+	}
 private:
 	IXAudio2*					m_xAudio2 = nullptr;
 	IXAudio2MasteringVoice*		m_masteringVoice = nullptr;
@@ -144,3 +141,5 @@ private:
 	X3DAUDIO_CONE				m_emitterCone;
 	WaveFileBank				m_waveFileBank;						//波形データのバンク。
 };
+
+extern SoundEngine* g_soundEngine;	//TKエンジン。

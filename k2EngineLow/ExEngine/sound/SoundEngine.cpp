@@ -7,7 +7,7 @@
 #include "WaveFile.h"
 #include "SoundSource.h"
 
-
+SoundEngine* g_soundEngine = nullptr;
 
 #define NUM_PRESETS 30
 	namespace {

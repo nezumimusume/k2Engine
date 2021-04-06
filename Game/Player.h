@@ -2,16 +2,15 @@
 
 #include "Sound/SoundSource.h"
 #include "Sound/SoundEngine.h"
-#include "Sound/WaveFileBank.h"
 
 class Player : public IGameObject
 {
 	bool Start() override
  	{
 		m_modelRender.Init("Assets/modelData/unityChan.tkm");
-		SoundEngine::GetInstance().GetWaveFileBank().Resist(0, "Assets/sound/sample.wav");
-		SoundEngine::GetInstance().GetWaveFileBank().Resist(1, "Assets/sound/shining_star.wav");
-		SoundEngine::GetInstance().GetWaveFileBank().Resist(2, "Assets/sound/sample2.wav");
+		g_soundEngine->ResistWaveFileBank(0, "Assets/sound/sample.wav");
+		g_soundEngine->ResistWaveFileBank(1, "Assets/sound/shining_star.wav");
+		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/sample2.wav");
 
 		m_bgm = NewGO<SoundSource>(0);
 		m_bgm->Init(1, false);
