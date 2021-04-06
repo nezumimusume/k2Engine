@@ -52,6 +52,13 @@ class Player : public IGameObject
 		}
 		m_modelRender.Update();
 		sR.Update();
+		auto playerVector = FindGOs<Player>("player");
+		int a = 0;
+		for (auto player : playerVector)
+		{
+			a++;
+		}
+		
 	}
 
 	void Render(RenderContext& rc) override

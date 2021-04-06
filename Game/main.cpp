@@ -20,7 +20,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	PhysicsWorld::CreateInstance();
 	g_soundEngine = new SoundEngine();
 	
-	NewGO<Player>(0);
+	NewGO<Player>(0,"player");
+	NewGO<Player>(0,"player");
+	NewGO<Player>(0,"player");
+	NewGO<Player>(0,"player");
+	NewGO<Player>(0,"player");
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

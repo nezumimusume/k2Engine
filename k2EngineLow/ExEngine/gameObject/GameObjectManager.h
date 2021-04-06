@@ -73,6 +73,7 @@ public:
 	T* NewGameObject(int prio, const char* objectName)
 	{
 		T* newObject = new T();
+		newObject->SetName(objectName);
 		m_gameObjectListArray.at(prio).push_back(newObject);
 		return newObject;
 	}
@@ -124,7 +125,21 @@ public:
 			}
 		}
 	}
-	
+	template<class T>
+	std::vector<T*> FindGameObjects(const char* objectName)
+	{
+		std::vector<T*> objectVector;
+		for (auto goList : m_gameObjectListArray) {
+			for (auto go : goList) {
+				if (go->IsMatchName(objectName)) {
+					//見つけた。
+					T* p = dynamic_cast<T*>(go);
+					objectVector.push_back(p);
+				}
+			}
+		}
+		return objectVector;
+	}
 private:
 	enum { GAME_OBJECT_PRIO_MAX = 255 };		//!<ゲームオブジェクトの優先度の最大値。
 	typedef std::list<IGameObject*>	 GameObjectList;
@@ -144,6 +159,19 @@ template<class T>
 static inline T* FindGO(const char* objectName)
 {
 	return GameObjectManager::GetInstance()->FindGameObject<T>(objectName);
+}
+
+/*!
+*@brief	ゲームオブジェクトの検索のヘルパー関数(複数対応)。
+*@details
+* 名前の検索が入るため遅いです。
+*@param[in]	objectName	ゲームオブジェクトの名前。
+*@return 見つかったインスタンスのアドレスの配列。
+*/
+template<class T>
+static inline std::vector<T*> FindGOs(const char* objectName)
+{
+	return GameObjectManager::GetInstance()->FindGameObjects<T>(objectName);
 }
 /*!
 *@brief	ゲームオブジェクトの検索のヘルパー関数。
