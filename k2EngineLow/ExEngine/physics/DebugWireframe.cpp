@@ -139,6 +139,8 @@ void DebugWireframe::ConstantBufferUpdate()
 
 void DebugWireframe::RenderContextUpdate(RenderContext& rc)
 {
+	//ルートシグネチャを設定。
+	rc.SetRootSignature(m_rootSignature);
 	//頂点をどんな感じに描画するのか。
 	//パイプラインステートの設定。
 	rc.SetPipelineState(m_pipelineState);

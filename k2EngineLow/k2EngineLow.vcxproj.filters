@@ -19,9 +19,6 @@
     <Filter Include="MiniEngine\dbg">
       <UniqueIdentifier>{134f7bcf-d033-44af-980d-3d74b1371557}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MiniEngine\font">
-      <UniqueIdentifier>{28f7249b-754b-495f-8ee9-23a73d565d4c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MiniEngine\HID">
       <UniqueIdentifier>{5d079273-7754-4b0d-8e6c-ae15d9b0755f}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,9 @@
     </Filter>
     <Filter Include="MiniEngine\time">
       <UniqueIdentifier>{0e5305e8-b021-4310-9bde-2d1dbd2b62b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MiniEngine\dbg\font">
+      <UniqueIdentifier>{28f7249b-754b-495f-8ee9-23a73d565d4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,10 +76,10 @@
       <Filter>ExEngine\physics</Filter>
     </ClCompile>
     <ClCompile Include="MiniEngine\font\Font.cpp">
-      <Filter>MiniEngine\font</Filter>
+      <Filter>MiniEngine\dbg\font</Filter>
     </ClCompile>
     <ClCompile Include="MiniEngine\font\FontEngine.cpp">
-      <Filter>MiniEngine\font</Filter>
+      <Filter>MiniEngine\dbg\font</Filter>
     </ClCompile>
     <ClCompile Include="MiniEngine\HID\GamePad.cpp">
       <Filter>MiniEngine\HID</Filter>
@@ -262,10 +262,10 @@
       <Filter>MiniEngine\dbg</Filter>
     </ClInclude>
     <ClInclude Include="MiniEngine\font\Font.h">
-      <Filter>MiniEngine\font</Filter>
+      <Filter>MiniEngine\dbg\font</Filter>
     </ClInclude>
     <ClInclude Include="MiniEngine\font\FontEngine.h">
-      <Filter>MiniEngine\font</Filter>
+      <Filter>MiniEngine\dbg\font</Filter>
     </ClInclude>
     <ClInclude Include="MiniEngine\HID\GamePad.h">
       <Filter>MiniEngine\HID</Filter>
