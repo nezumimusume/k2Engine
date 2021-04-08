@@ -709,7 +709,14 @@ public:
 	{
 		SetRotationDeg(g_vec3AxisY, angle);
 	}
-
+	/// <summary>
+	/// Y軸周りの回転クォータニオンを作成。
+	/// </summary>
+	/// <param name="direction">方向ベクトル。</param>
+	void SetRotationYFromDirectionXZ(const Vector3& direction)
+	{
+		SetRotationY(atan2f(direction.x, direction.z));
+	}
 	/// <summary>
 	/// Z軸周りの回転クォータニオンを作成。
 	/// </summary>

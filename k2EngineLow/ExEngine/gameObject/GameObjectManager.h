@@ -126,9 +126,10 @@ public:
 		}
 	}
 	template<class T>
-	std::vector<T*> FindGameObjects(const char* objectName)
+	const std::vector<T*>& FindGameObjects(const char* objectName)
 	{
-		std::vector<T*> objectVector;
+		static std::vector<T*> objectVector;
+		objectVector.clear();
 		for (auto goList : m_gameObjectListArray) {
 			for (auto go : goList) {
 				if (go->IsMatchName(objectName)) {
@@ -169,7 +170,7 @@ static inline T* FindGO(const char* objectName)
 *@return 見つかったインスタンスのアドレスの配列。
 */
 template<class T>
-static inline std::vector<T*> FindGOs(const char* objectName)
+static inline  const std::vector<T*>& FindGOs(const char* objectName)
 {
 	return GameObjectManager::GetInstance()->FindGameObjects<T>(objectName);
 }
