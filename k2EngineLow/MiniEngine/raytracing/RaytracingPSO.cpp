@@ -154,7 +154,7 @@ namespace raytracing {
 
 		desc.rootParams.resize(1);
 		desc.rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		desc.rootParams[0].DescriptorTable.NumDescriptorRanges = desc.range.size();
+		desc.rootParams[0].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(desc.range.size());
 		desc.rootParams[0].DescriptorTable.pDescriptorRanges = desc.range.data();
 
 		// Create the desc

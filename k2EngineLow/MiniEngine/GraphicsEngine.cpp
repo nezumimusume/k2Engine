@@ -437,9 +437,7 @@ void GraphicsEngine::BeginRender()
 	m_renderContext.Reset(m_commandAllocator, m_pipelineState);
 	//ビューポートを設定。
 	//ビューポートを設定。
-	m_renderContext.SetViewport(m_viewport);
-	//シザリング矩形を設定。
-	m_renderContext.SetScissorRect(m_scissorRect);
+	m_renderContext.SetViewportAndScissor(m_viewport);
 
 	m_currentFrameBufferRTVHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
 	m_currentFrameBufferRTVHandle.ptr += m_frameIndex * m_rtvDescriptorSize;

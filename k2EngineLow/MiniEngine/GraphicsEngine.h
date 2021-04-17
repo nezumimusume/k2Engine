@@ -199,6 +199,14 @@ public:
 	{
 		return m_fontEngine;
 	}
+	/// <summary>
+	/// フレームバッファに描画するときのビューポートを取得。
+	/// </summary>
+	/// <returns></returns>
+	D3D12_VIEWPORT& GetFrameBufferViewport()
+	{
+		return m_viewport;
+	}
 private:
 	/// <summary>
 	/// D3Dデバイスの作成。
@@ -308,7 +316,6 @@ private:
 	raytracing::Engine m_raytracingEngine;		//レイトレエンジン。
 	NullTextureMaps m_nullTextureMaps;			//ヌルテクスチャマップ。
 	FontEngine m_fontEngine;					//フォントエンジン。
-	public:
 	std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;	//DirectXTKのグラフィックメモリシステム。
 };
 extern GraphicsEngine* g_graphicsEngine;	//グラフィックスエンジン

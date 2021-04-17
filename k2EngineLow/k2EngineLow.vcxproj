@@ -196,6 +196,7 @@
     <ClCompile Include="MiniEngine\DescriptorHeap.cpp" />
     <ClCompile Include="MiniEngine\font\Font.cpp" />
     <ClCompile Include="MiniEngine\font\FontEngine.cpp" />
+    <ClCompile Include="MiniEngine\GaussianBlur.cpp" />
     <ClCompile Include="MiniEngine\GPUBuffer.cpp" />
     <ClCompile Include="MiniEngine\GraphicsEngine.cpp" />
     <ClCompile Include="MiniEngine\HID\GamePad.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="MiniEngine\DescriptorHeap_inline.h" />
     <ClInclude Include="MiniEngine\font\Font.h" />
     <ClInclude Include="MiniEngine\font\FontEngine.h" />
+    <ClInclude Include="MiniEngine\GaussianBlur.h" />
     <ClInclude Include="MiniEngine\GPUBuffer.h" />
     <ClInclude Include="MiniEngine\GraphicsEngine.h" />
     <ClInclude Include="MiniEngine\HID\GamePad.h" />
@@ -303,6 +305,7 @@
     <ClInclude Include="MiniEngine\tkFile\TkaFile.h" />
     <ClInclude Include="MiniEngine\tkFile\TkmFile.h" />
     <ClInclude Include="MiniEngine\tkFile\TksFile.h" />
+    <ClInclude Include="MiniEngine\TResourceBank.h" />
     <ClInclude Include="MiniEngine\VertexBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

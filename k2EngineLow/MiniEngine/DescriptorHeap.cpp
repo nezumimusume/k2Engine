@@ -64,8 +64,8 @@ void DescriptorHeap::Commit()
 
 		//定数バッファを登録していく。
 		for (int i = 0; i < m_numConstantBuffer; i++) {
-			if (m_constantBuffers[i] != nullptr) {
-				m_constantBuffers[i]->RegistConstantBufferView(cpuHandle, bufferNo);
+			if (m_constantBuffers != nullptr) {
+				m_constantBuffers[i]->RegistConstantBufferView(cpuHandle);
 			}
 			//次に進める。
 			cpuHandle.ptr += g_graphicsEngine->GetCbrSrvDescriptorSize();

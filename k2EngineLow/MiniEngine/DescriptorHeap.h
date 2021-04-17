@@ -212,21 +212,21 @@ private:
 	}
 private:
 	enum {
-		MAX_SHADER_RESOURCE = 10 * 1024,	//シェーダーリソースの最大数。
-		MAX_CONSTANT_BUFFER = 10 * 1024,	//定数バッファの最大数。
-		MAX_SAMPLER_STATE = 10 * 1024,		//サンプラステートの最大数。
+		MAX_SHADER_RESOURCE = 512,	//シェーダーリソースの最大数。
+		MAX_CONSTANT_BUFFER = 512,	//定数バッファの最大数。
+		MAX_SAMPLER_STATE = 512,	//サンプラステートの最大数。
 	};
 	int m_numShaderResource = 0;	//シェーダーリソースの数。
 	int m_numConstantBuffer = 0;	//定数バッファの数。
 	int m_numUavResource = 0;		//アンオーダーアクセスリソースの数。
 	int m_numSamplerDesc = 0;		//サンプラの数。
-	ID3D12DescriptorHeap* m_descriptorHeap[2] = { nullptr };										//ディスクリプタヒープ。
-	IShaderResource* m_shaderResources[MAX_SHADER_RESOURCE] = {nullptr};			//シェーダーリソース。7
+	ID3D12DescriptorHeap* m_descriptorHeap[2] = { nullptr };					//ディスクリプタヒープ。
+	IShaderResource* m_shaderResources[MAX_SHADER_RESOURCE] = {nullptr};		//シェーダーリソース。7
 	IUnorderAccessResrouce* m_uavResoruces[MAX_SHADER_RESOURCE] = { nullptr };	//UAVリソース。
-	ConstantBuffer* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };			//定数バッファ。
+	ConstantBuffer* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };		//定数バッファ。
 	D3D12_SAMPLER_DESC m_samplerDescs[MAX_SAMPLER_STATE];						//サンプラステート。
-	D3D12_GPU_DESCRIPTOR_HANDLE m_cbGpuDescriptorStart[2];							//定数バッファのディスクリプタヒープの開始ハンドル。
-	D3D12_GPU_DESCRIPTOR_HANDLE m_srGpuDescriptorStart[2];							//シェーダーリソースのディスクリプタヒープの開始ハンドル。
-	D3D12_GPU_DESCRIPTOR_HANDLE m_uavGpuDescriptorStart[2];							//UAVリソースのディスクリプタヒープの開始ハンドル。
+	D3D12_GPU_DESCRIPTOR_HANDLE m_cbGpuDescriptorStart[2];						//定数バッファのディスクリプタヒープの開始ハンドル。
+	D3D12_GPU_DESCRIPTOR_HANDLE m_srGpuDescriptorStart[2];						//シェーダーリソースのディスクリプタヒープの開始ハンドル。
+	D3D12_GPU_DESCRIPTOR_HANDLE m_uavGpuDescriptorStart[2];						//UAVリソースのディスクリプタヒープの開始ハンドル。
 	D3D12_GPU_DESCRIPTOR_HANDLE m_samplerGpuDescriptorStart[2];					//Samplerのでスクリプタヒープの開始ハンドル。
 };

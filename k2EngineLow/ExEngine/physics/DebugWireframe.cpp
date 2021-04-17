@@ -41,8 +41,8 @@ void DebugWireframe::InitRootSignature()
 
 void DebugWireframe::InitSharder()
 {
-	m_Vshader.LoadVS(L"Assets/shader/debugWireFrame.fx", "VSMain");
-	m_Pshader.LoadPS(L"Assets/shader/debugWireFrame.fx", "PSMain");
+	m_Vshader.LoadVS("Assets/shader/debugWireFrame.fx", "VSMain");
+	m_Pshader.LoadPS("Assets/shader/debugWireFrame.fx", "PSMain");
 }
 
 void DebugWireframe::InitPipelineState()

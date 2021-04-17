@@ -10,6 +10,7 @@ enum {
 	
 void Material::InitTexture(const TkmFile::SMaterial& tkmMat)
 {
+
 	const auto& nullTextureMaps = g_graphicsEngine->GetNullTextureMaps();
 	if (tkmMat.albedoMap != nullptr) {
 		m_albedoMap.InitFromMemory(tkmMat.albedoMap.get(), tkmMat.albedoMapSize);
@@ -56,10 +57,12 @@ void Material::InitTexture(const TkmFile::SMaterial& tkmMat)
 }
 void Material::InitFromTkmMaterila(
 	const TkmFile::SMaterial& tkmMat,
-	const wchar_t* fxFilePath,
+	const char* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
-	const char* psEntryPointFunc)
+	const char* psEntryPointFunc,
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
+)
 {
 	//テクスチャをロード。
 	InitTexture(tkmMat);
@@ -71,20 +74,42 @@ void Material::InitFromTkmMaterila(
 	m_constantBuffer.Init(sizeof(SMaterialParam), &matParam);
 
 	//ルートシグネチャを初期化。
-	m_rootSignature.Init(
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP);
+	D3D12_STATIC_SAMPLER_DESC samplerDescArray[2];
+	//デフォルトのサンプラ
+	samplerDescArray[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDescArray[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDescArray[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDescArray[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDescArray[0].MipLODBias = 0;
+	samplerDescArray[0].MaxAnisotropy = 0;
+	samplerDescArray[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	samplerDescArray[0].BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
+	samplerDescArray[0].MinLOD = 0.0f;
+	samplerDescArray[0].MaxLOD = D3D12_FLOAT32_MAX;
+	samplerDescArray[0].ShaderRegister = 0;
+	samplerDescArray[0].RegisterSpace = 0;
+	samplerDescArray[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//シャドウマップ用のサンプラ。
+	samplerDescArray[1] = samplerDescArray[0];
+	//比較対象の値が小さければ０、大きければ１を返す比較関数を設定する。
+	samplerDescArray[1].Filter = D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+	samplerDescArray[1].ComparisonFunc = D3D12_COMPARISON_FUNC_GREATER;
+	samplerDescArray[1].MaxAnisotropy = 1;
+	samplerDescArray[1].ShaderRegister = 1;
 
-	if (wcslen(fxFilePath) > 0) {
+	m_rootSignature.Init(
+		samplerDescArray,
+		2
+	);
+
+	if (fxFilePath != nullptr && strlen(fxFilePath) > 0) {
 		//シェーダーを初期化。
 		InitShaders(fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
 		//パイプラインステートを初期化。
-		InitPipelineState();
+		InitPipelineState(colorBufferFormat);
 	}
 }
-void Material::InitPipelineState()
+void Material::InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat)
 {
 	// 頂点レイアウトを定義する。
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -102,9 +127,10 @@ void Material::InitPipelineState()
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = { 0 };
 	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
 	psoDesc.pRootSignature = m_rootSignature.Get();
-	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel.GetCompiledBlob());
-	psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psModel.GetCompiledBlob());
+	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel->GetCompiledBlob());
+	psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psModel->GetCompiledBlob());
 	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState.DepthEnable = TRUE;
 	psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
@@ -112,8 +138,18 @@ void Material::InitPipelineState()
 	psoDesc.DepthStencilState.StencilEnable = FALSE;
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.NumRenderTargets = 3;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		//アルベドカラー出力用。
+	int numRenderTarget = 0;
+	for (auto& format : colorBufferFormat) {
+		if (format == DXGI_FORMAT_UNKNOWN) {
+			//フォーマットが指定されていない場所が来たら終わり。
+			break;
+		}
+		psoDesc.RTVFormats[numRenderTarget] = colorBufferFormat[numRenderTarget];
+		numRenderTarget++;
+	}
+	psoDesc.NumRenderTargets = numRenderTarget;
+#if 0 //古い実装。
+	psoDesc.RTVFormats[0] = colorBufferFormat;		//アルベドカラー出力用。
 #ifdef SAMPE_16_02
 	psoDesc.RTVFormats[1] = DXGI_FORMAT_R16G16B16A16_FLOAT;	//法線出力用。	
 	psoDesc.RTVFormats[2] = DXGI_FORMAT_R32_FLOAT;						//Z値。
@@ -121,17 +157,18 @@ void Material::InitPipelineState()
 	psoDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;			//法線出力用。	
 	psoDesc.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;	//Z値。
 #endif
+#endif
 	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	psoDesc.SampleDesc.Count = 1;
 
 	m_skinModelPipelineState.Init(psoDesc);
 
 	//続いてスキンなしモデル用を作成。
-	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkinModel.GetCompiledBlob());
+	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkinModel->GetCompiledBlob());
 	m_nonSkinModelPipelineState.Init(psoDesc);
 
 	//続いて半透明マテリアル用。
-	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel.GetCompiledBlob());
+	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel->GetCompiledBlob());
 	psoDesc.BlendState.IndependentBlendEnable = TRUE;
 	psoDesc.BlendState.RenderTarget[0].BlendEnable = TRUE;
 	psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -141,23 +178,38 @@ void Material::InitPipelineState()
 	
 	m_transSkinModelPipelineState.Init(psoDesc);
 
-	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkinModel.GetCompiledBlob());
+	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkinModel->GetCompiledBlob());
 	m_transNonSkinModelPipelineState.Init(psoDesc);
 
 }
 void Material::InitShaders(
-	const wchar_t* fxFilePath,
+	const char* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntriyPointFunc,
 	const char* psEntryPointFunc
 )
 {
 	//スキンなしモデル用のシェーダーをロードする。
-	m_vsNonSkinModel.LoadVS(fxFilePath, vsEntryPointFunc);
+	m_vsNonSkinModel = g_engine->GetShaderFromBank(fxFilePath, vsEntryPointFunc);
+	if (m_vsNonSkinModel == nullptr) {
+		m_vsNonSkinModel = new Shader;
+		m_vsNonSkinModel->LoadVS(fxFilePath, vsEntryPointFunc);
+		g_engine->RegistShaderToBank(fxFilePath, vsEntryPointFunc, m_vsNonSkinModel);
+	}
 	//スキンありモデル用のシェーダーをロードする。
-	m_vsSkinModel.LoadVS(fxFilePath, vsSkinEntriyPointFunc);
-	
-	m_psModel.LoadPS(fxFilePath, psEntryPointFunc);
+	m_vsSkinModel = g_engine->GetShaderFromBank(fxFilePath, vsSkinEntriyPointFunc);
+	if (m_vsSkinModel == nullptr) {
+		m_vsSkinModel = new Shader;
+		m_vsSkinModel->LoadVS(fxFilePath, vsSkinEntriyPointFunc);
+		g_engine->RegistShaderToBank(fxFilePath, vsSkinEntriyPointFunc, m_vsSkinModel);
+	}
+
+	m_psModel = g_engine->GetShaderFromBank(fxFilePath, psEntryPointFunc);
+	if (m_psModel == nullptr) {
+		m_psModel = new Shader;
+		m_psModel->LoadPS(fxFilePath, psEntryPointFunc);
+		g_engine->RegistShaderToBank(fxFilePath, psEntryPointFunc, m_psModel);
+	}
 }
 void Material::BeginRender(RenderContext& rc, int hasSkin)
 {

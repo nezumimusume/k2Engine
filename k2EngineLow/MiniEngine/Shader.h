@@ -8,19 +8,19 @@ public:
 	/// </summary>
 	/// <param name="filePath">ファイルパス。</param>
 	/// <param name="entryFuncName">エントリーポイントの関数名。</param>
-	void LoadPS(const wchar_t* filePath, const char* entryFuncName);
+	void LoadPS(const char* filePath, const char* entryFuncName);
 	/// <summary>
 	/// 頂点シェーダーをロード。
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
 	/// <param name="entryFuncName">エントリーポイントの関数名。</param>
-	void LoadVS(const wchar_t* filePath, const char* entryFuncName);
+	void LoadVS(const char* filePath, const char* entryFuncName);
 	/// <summary>
 	/// コンピュートシェーダーをロード。
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <param name="entryFuncName"></param>
-	void LoadCS(const wchar_t* filePath, const char* entryFuncName);
+	void LoadCS(const char* filePath, const char* entryFuncName);
 	/// <summary>
 	/// レイトレーシング用のシェーダーをロード。
 	/// </summary>
@@ -52,7 +52,7 @@ private:
 	/// <param name="filePath">ファイルパス</param>
 	/// <param name="entryFuncName">エントリーポイントの関数名。</param>
 	/// <param name="shaderModel">シェーダーモデル</param>
-	void Load(const wchar_t* filePath, const char* entryFuncName, const char* shaderModel);
+	void Load(const char* filePath, const char* entryFuncName, const char* shaderModel);
 private:
 	ID3DBlob*	m_blob = nullptr;	//コンパイル済みのシェーダーデータ。
 	IDxcBlob* m_dxcBlob = nullptr;	//DXCコンパイラを使用したときのシェーダーデータ。

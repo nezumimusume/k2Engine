@@ -1,11 +1,11 @@
 #include "k2EngineLowPreCompile.h"
 #include "tkFile/TksFile.h"
 
-void TksFile::Load(const char* filePath)
+bool TksFile::Load(const char* filePath)
 {
 	auto fp = fopen(filePath, "rb");
 	if (fp == nullptr) {
-		return;
+		return false;
 	}
 	//œ‚Ì”‚ğæ“¾B
 	fread(&m_numBone, sizeof(m_numBone), 1, fp);
@@ -28,4 +28,5 @@ void TksFile::Load(const char* filePath)
 	}
 
 	fclose(fp);
+	return true;
 }

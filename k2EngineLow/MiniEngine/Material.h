@@ -12,10 +12,12 @@ public:
 	/// <param name="tkmMat">tkmマテリアル</param>
 	void InitFromTkmMaterila(
 		const TkmFile::SMaterial& tkmMat,
-		const wchar_t* fxFilePath,
+		const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntriyPointFunc,
-		const char* psEntryPointFunc);
+		const char* psEntryPointFunc,
+		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
+	);
 	/// <summary>
 	/// レンダリングを開始するときに呼び出す関数。
 	/// </summary>
@@ -75,7 +77,7 @@ private:
 	/// <summary>
 	/// パイプラインステートの初期化。
 	/// </summary>
-	void InitPipelineState();
+	void InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat);
 	/// <summary>
 	/// シェーダーの初期化。
 	/// </summary>
@@ -84,7 +86,7 @@ private:
 	/// <param name="vsEntryPointFunc">スキンありマテリアル用の頂点シェーダーのエントリーポイントの関数名</param>
 	/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイントの関数名</param>
 	void InitShaders(
-		const wchar_t* fxFilePath,
+		const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntriyPointFunc,
 		const char* psEntryPointFunc);
@@ -113,9 +115,9 @@ private:
 	PipelineState m_skinModelPipelineState;			//スキンありモデル用のパイプラインステート。
 	PipelineState m_transSkinModelPipelineState;	//スキンありモデル用のパイプラインステート(半透明マテリアル)。
 	PipelineState m_transNonSkinModelPipelineState;	//スキンなしモデル用のパイプラインステート(半透明マテリアル)。
-	Shader m_vsNonSkinModel;						//スキンなしモデル用の頂点シェーダー。
-	Shader m_vsSkinModel;							//スキンありモデル用の頂点シェーダー。
-	Shader m_psModel;								//モデル用のピクセルシェーダー。
+	Shader* m_vsNonSkinModel = nullptr;				//スキンなしモデル用の頂点シェーダー。
+	Shader* m_vsSkinModel = nullptr;				//スキンありモデル用の頂点シェーダー。
+	Shader* m_psModel = nullptr;					//モデル用のピクセルシェーダー。
 };
 
 

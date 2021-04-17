@@ -24,11 +24,17 @@
 #include <dxgitype.h>
 #include <dxgiformat.h>
 
+
 #include "DirectXTK/Inc/CommonStates.h"
 #include "DirectXTK/Inc/SpriteBatch.h"
 #include "DirectXTK/Inc/SpriteFont.h"
 
 #include "d3dx12.h"
+
+const int MAX_RENDERING_TARGET = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;	//レンダリングターゲットの最大数。
+
+using namespace Microsoft::WRL;
+
 #include "dbg/MyAssert.h"
 
 #include "time/GameTime.h"
@@ -62,6 +68,8 @@
 #include "Sprite.h"
 #include "Model.h"
 #include "HID/GamePad.h"
+
+#include "GaussianBlur.h"
 
 const UINT FRAME_BUFFER_W = 1280;				//フレームバッファの幅。
 const UINT FRAME_BUFFER_H = 720;				//フレームバッファの高さ。

@@ -2,81 +2,95 @@
 #include "MeshParts.h"
 #include "Skeleton.h"
 #include "Material.h"
+#include "IndexBuffer.h"
 
 MeshParts::~MeshParts()
 {
 	for (auto& mesh : m_meshs) {
-		//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’å‰Šé™¤ã€‚
+		//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğíœB
 		for (auto& ib : mesh->m_indexBufferArray) {
 			delete ib;
 		}
-		//ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å‰Šé™¤ã€‚
+		//ƒ}ƒeƒŠƒAƒ‹‚ğíœB
 		for (auto& mat : mesh->m_materials) {
 			delete mat;
 		}
-		//ãƒ¡ãƒƒã‚·ãƒ¥ã‚’å‰Šé™¤ã€‚
+		//ƒƒbƒVƒ…‚ğíœB
 		delete mesh;
 	}
 }
 void MeshParts::InitFromTkmFile(
 	const TkmFile& tkmFile, 
-	const wchar_t* fxFilePath,
+	const char* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
 	const char* psEntryPointFunc,
 	void* expandData,
 	int expandDataSize,
-	IShaderResource* expandShaderResourceView
+	const std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV>& expandShaderResourceView,
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
 )
 {
 	m_meshs.resize(tkmFile.GetNumMesh());
 	int meshNo = 0;
 	tkmFile.QueryMeshParts([&](const TkmFile::SMesh& mesh) {
-		//tkmãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ¡ãƒƒã‚·ãƒ¥æƒ…å ±ã‹ã‚‰ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ä½œæˆã™ã‚‹ã€‚
-		CreateMeshFromTkmMesh(mesh, meshNo, fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
+		//tkmƒtƒ@ƒCƒ‹‚ÌƒƒbƒVƒ…î•ñ‚©‚çƒƒbƒVƒ…‚ğì¬‚·‚éB
+		CreateMeshFromTkmMesh(
+			mesh, 
+			meshNo, 
+			fxFilePath, 
+			vsEntryPointFunc, 
+			vsSkinEntryPointFunc, 
+			psEntryPointFunc, 
+			colorBufferFormat
+		);
 		meshNo++;
 	});
-	//å…±é€šå®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆã€‚
+	//‹¤’Ê’è”ƒoƒbƒtƒ@‚Ìì¬B
 	m_commonConstantBuffer.Init(sizeof(SConstantBuffer), nullptr);
-	//ãƒ¦ãƒ¼ã‚¶ãƒ¼æ‹¡å¼µç”¨ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆã€‚
+	//ƒ†[ƒU[Šg’£—p‚Ì’è”ƒoƒbƒtƒ@‚ğì¬B
 	if (expandData) {
 		m_expandConstantBuffer.Init(expandDataSize, nullptr);
 		m_expandData = expandData;
 	}
-	m_expandShaderResourceView = expandShaderResourceView;
-	//ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’ä½œæˆã€‚
+	for (int i = 0; i < MAX_MODEL_EXPAND_SRV; i++) {
+		m_expandShaderResourceView[i] = expandShaderResourceView[i];
+	}
+	//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚ğì¬B
 	CreateDescriptorHeaps();
 }
 
 void MeshParts::CreateDescriptorHeaps()
 {
-	//ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã¯ãƒãƒ†ãƒªã‚¢ãƒ«ã®æ•°åˆ†ã ã‘ä½œæˆã•ã‚Œã‚‹ã€‚
+	//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚Íƒ}ƒeƒŠƒAƒ‹‚Ì”•ª‚¾‚¯ì¬‚³‚ê‚éB
 	int numDescriptorHeap = 0;
 	for (auto& mesh : m_meshs) {
 		for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 			numDescriptorHeap++;
 		}
 	}
-	//ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’ãƒ‰ã‚«ãƒƒã¨ç¢ºä¿ã€‚
+	//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚ğƒhƒJƒb‚ÆŠm•ÛB
 	m_descriptorHeap.resize(numDescriptorHeap);
-	//ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’æ§‹ç¯‰ã—ã¦ã„ãã€‚
+	//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚ğ\’z‚µ‚Ä‚¢‚­B
 	int descriptorHeapNo = 0;
 	for (auto& mesh : m_meshs) {
 		for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 			auto& descriptorHeap = m_descriptorHeap[descriptorHeapNo];
-			//ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã«ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’ç™»éŒ²ã—ã¦ã„ãã€‚
-			descriptorHeap.RegistShaderResource(0, mesh->m_materials[matNo]->GetAlbedoMap());		//ã‚¢ãƒ«ãƒ™ãƒ‰ãƒãƒƒãƒ—ã€‚
-			descriptorHeap.RegistShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());		//æ³•ç·šãƒãƒƒãƒ—ã€‚
-			descriptorHeap.RegistShaderResource(2, mesh->m_materials[matNo]->GetSpecularMap());		//ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒãƒƒãƒ—ã€‚
-			descriptorHeap.RegistShaderResource(3, m_boneMatricesStructureBuffer);							//ãƒœãƒ¼ãƒ³ã®ã‚¹ãƒˆãƒ©ã‚¯ãƒãƒ£ãƒ¼ãƒ‰ãƒãƒƒãƒ•ã‚¡ã€‚
-			if (m_expandShaderResourceView){
-				descriptorHeap.RegistShaderResource(EXPAND_SRV_REG__START_NO, *m_expandShaderResourceView);
+			//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚ÉƒfƒBƒXƒNƒŠƒvƒ^‚ğ“o˜^‚µ‚Ä‚¢‚­B
+			descriptorHeap.RegistShaderResource(0, mesh->m_materials[matNo]->GetAlbedoMap());		//ƒAƒ‹ƒxƒhƒ}ƒbƒvB
+			descriptorHeap.RegistShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());		//–@üƒ}ƒbƒvB
+			descriptorHeap.RegistShaderResource(2, mesh->m_materials[matNo]->GetSpecularMap());		//ƒXƒyƒLƒ…ƒ‰ƒ}ƒbƒvB
+			descriptorHeap.RegistShaderResource(3, m_boneMatricesStructureBuffer);							//ƒ{[ƒ“‚ÌƒXƒgƒ‰ƒNƒ`ƒƒ[ƒhƒoƒbƒtƒ@B
+			for (int i = 0; i < MAX_MODEL_EXPAND_SRV; i++) {
+				if (m_expandShaderResourceView[i]) {
+					descriptorHeap.RegistShaderResource(EXPAND_SRV_REG__START_NO + i, *m_expandShaderResourceView[i]);
+				}
 			}
 			descriptorHeap.RegistConstantBuffer(0, m_commonConstantBuffer);
 			if (m_expandConstantBuffer.IsValid()) {
 				descriptorHeap.RegistConstantBuffer(1, m_expandConstantBuffer);
 			}
-			//ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã¸ã®ç™»éŒ²ã‚’ç¢ºå®šã•ã›ã‚‹ã€‚
+			//ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚Ö‚Ì“o˜^‚ğŠm’è‚³‚¹‚éB
 			descriptorHeap.Commit();
 			descriptorHeapNo++;
 		}
@@ -85,12 +99,13 @@ void MeshParts::CreateDescriptorHeaps()
 void MeshParts::CreateMeshFromTkmMesh(
 	const TkmFile::SMesh& tkmMesh, 
 	int meshNo,
-	const wchar_t* fxFilePath,
+	const char* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
-	const char* psEntryPointFunc)
+	const char* psEntryPointFunc,
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat)
 {
-	//1. é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆã€‚
+	//1. ’¸“_ƒoƒbƒtƒ@‚ğì¬B
 	int numVertex = (int)tkmMesh.vertexBuffer.size();
 	int vertexStride = sizeof(TkmFile::SVertex);
 	auto mesh = new SMesh;
@@ -100,48 +115,55 @@ void MeshParts::CreateMeshFromTkmMesh(
 
 	auto SetSkinFlag = [&](int index) {
 		if (tkmMesh.vertexBuffer[index].skinWeights.x > 0.0f) {
-			//ã‚¹ã‚­ãƒ³ãŒã‚ã‚‹ã€‚
+			//ƒXƒLƒ“‚ª‚ ‚éB
 			mesh->skinFlags.push_back(1);
 		}
 		else {
-			//ã‚¹ã‚­ãƒ³ãªã—ã€‚
+			//ƒXƒLƒ“‚È‚µB
 			mesh->skinFlags.push_back(0);
 		}
 	};
-	//2. ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆã€‚
+	//2. ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğì¬B
 	if (!tkmMesh.indexBuffer16Array.empty()) {
-		//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚µã‚¤ã‚ºãŒ2byte
+		//ƒCƒ“ƒfƒbƒNƒX‚ÌƒTƒCƒY‚ª2byte
 		mesh->m_indexBufferArray.reserve(tkmMesh.indexBuffer16Array.size());
 		for (auto& tkIb : tkmMesh.indexBuffer16Array) {
 			auto ib = new IndexBuffer;
 			ib->Init(static_cast<int>(tkIb.indices.size()) * 2, 2);
 			ib->Copy((uint16_t*)&tkIb.indices.at(0));
 				
-			//ã‚¹ã‚­ãƒ³ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’è¨­å®šã™ã‚‹ã€‚
+			//ƒXƒLƒ“‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğİ’è‚·‚éB
 			SetSkinFlag(tkIb.indices[0]);
 
 			mesh->m_indexBufferArray.push_back(ib);
 		}
 	}
 	else {
-		//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚µã‚¤ã‚ºãŒ4byte
+		//ƒCƒ“ƒfƒbƒNƒX‚ÌƒTƒCƒY‚ª4byte
 		mesh->m_indexBufferArray.reserve(tkmMesh.indexBuffer32Array.size());
 		for (auto& tkIb : tkmMesh.indexBuffer32Array) {
 			auto ib = new IndexBuffer;
 			ib->Init(static_cast<int>(tkIb.indices.size()) * 4, 4);
 			ib->Copy((uint32_t*)&tkIb.indices.at(0));
 
-			//ã‚¹ã‚­ãƒ³ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’è¨­å®šã™ã‚‹ã€‚
+			//ƒXƒLƒ“‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğİ’è‚·‚éB
 			SetSkinFlag(tkIb.indices[0]);
 
 			mesh->m_indexBufferArray.push_back(ib);
 		}
 	}
-	//3. ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ä½œæˆã€‚
+	//3. ƒ}ƒeƒŠƒAƒ‹‚ğì¬B
 	mesh->m_materials.reserve(tkmMesh.materials.size());
 	for (auto& tkmMat : tkmMesh.materials) {
 		auto mat = new Material;
-		mat->InitFromTkmMaterila(tkmMat, fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
+		mat->InitFromTkmMaterila(
+			tkmMat, 
+			fxFilePath, 
+			vsEntryPointFunc, 
+			vsSkinEntryPointFunc, 
+			psEntryPointFunc, 
+			colorBufferFormat
+		);
 		mesh->m_materials.push_back(mat);
 	}
 
@@ -152,7 +174,7 @@ void MeshParts::CreateMeshFromTkmMesh(
 void MeshParts::BindSkeleton(Skeleton& skeleton)
 {
 	m_skeleton = &skeleton;
-	//æ§‹é€ åŒ–ãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆã™ã‚‹ã€‚
+	//\‘¢‰»ƒoƒbƒtƒ@‚ğì¬‚·‚éB
 	m_boneMatricesStructureBuffer.Init(
 		sizeof(Matrix),
 		m_skeleton->GetNumBones(),
@@ -166,40 +188,39 @@ void MeshParts::Draw(
 	const Matrix& mProj
 )
 {
-	//ãƒ¡ãƒƒã‚·ãƒ¥ã”ã¨ã«ãƒ‰ãƒ­ãƒ¼
-	//ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã®ãƒˆãƒãƒ­ã‚¸ãƒ¼ã¯ãƒˆãƒ©ã‚¤ã‚¢ãƒ³ã‚°ãƒ«ãƒªã‚¹ãƒˆã®ã¿ã€‚
+	//ƒƒbƒVƒ…‚²‚Æ‚Éƒhƒ[
+	//ƒvƒŠƒ~ƒeƒBƒu‚Ìƒgƒ|ƒƒW[‚Íƒgƒ‰ƒCƒAƒ“ƒOƒ‹ƒŠƒXƒg‚Ì‚İB
 	rc.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚’æ›´æ–°ã™ã‚‹ã€‚
+	//’è”ƒoƒbƒtƒ@‚ğXV‚·‚éB
 	SConstantBuffer cb;
 	cb.mWorld = mWorld;
 	cb.mView = mView;
 	cb.mProj = mProj;
-
-	m_commonConstantBuffer.CopyToVRAM(&cb);
-
+	m_commonConstantBuffer.CopyToVRAM(cb);
+	
 	if (m_expandData) {
 		m_expandConstantBuffer.CopyToVRAM(m_expandData);
 	}
 	if (m_boneMatricesStructureBuffer.IsInited()) {
-		//ãƒœãƒ¼ãƒ³è¡Œåˆ—ã‚’æ›´æ–°ã™ã‚‹ã€‚
+		//ƒ{[ƒ“s—ñ‚ğXV‚·‚éB
 		m_boneMatricesStructureBuffer.Update(m_skeleton->GetBoneMatricesTopAddress());
 	}
 	int descriptorHeapNo = 0;
 	for (auto& mesh : m_meshs) {
-		//1. é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®šã€‚
+		//1. ’¸“_ƒoƒbƒtƒ@‚ğİ’èB
 		rc.SetVertexBuffer(mesh->m_vertexBuffer);
-		//ãƒãƒ†ãƒªã‚¢ãƒ«ã”ã¨ã«ãƒ‰ãƒ­ãƒ¼ã€‚
+		//ƒ}ƒeƒŠƒAƒ‹‚²‚Æ‚Éƒhƒ[B
 		for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
-			//ã“ã®ãƒãƒ†ãƒªã‚¢ãƒ«ãŒè²¼ã‚‰ã‚Œã¦ã„ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥ã®æç”»é–‹å§‹ã€‚
+			//‚±‚Ìƒ}ƒeƒŠƒAƒ‹‚ª“\‚ç‚ê‚Ä‚¢‚éƒƒbƒVƒ…‚Ì•`‰æŠJnB
 			mesh->m_materials[matNo]->BeginRender(rc, mesh->skinFlags[matNo]);
-			//2. ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã‚’è¨­å®šã€‚
+			//2. ƒfƒBƒXƒNƒŠƒvƒ^ƒq[ƒv‚ğİ’èB
 			rc.SetDescriptorHeap(m_descriptorHeap.at(descriptorHeapNo));
-			//3. ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’è¨­å®šã€‚
+			//3. ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğİ’èB
 			auto& ib = mesh->m_indexBufferArray[matNo];
 			rc.SetIndexBuffer(*ib);
 
-			//4. ãƒ‰ãƒ­ãƒ¼ã‚³ãƒ¼ãƒ«ã‚’å®Ÿè¡Œã€‚
+			//4. ƒhƒ[ƒR[ƒ‹‚ğÀsB
 			rc.DrawIndexed(ib->GetCount());
 			descriptorHeapNo++;
 		}

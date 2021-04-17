@@ -28,6 +28,22 @@ public:
 		UINT maxSrvDescriptor = 32,
 		UINT maxUavDescritor = 8
 	);
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="samplerDescArray"></param>
+	/// <param name="numSampler">サンプラの数</param>
+	/// <param name="maxCbvDescriptor">定数バッファ用のディスクリプタの最大数</param>
+	/// <param name="maxSrvDescriptor">シェーダーリソース用のディスクリプタの最大数</param>
+	/// <param name="maxUavDescritor">UAV用のディスクリプタの最大数</param>
+	/// <returns></returns>
+	bool Init(
+		D3D12_STATIC_SAMPLER_DESC* samplerDescArray,
+		int numSampler,
+		UINT maxCbvDescriptor = 8,
+		UINT maxSrvDescriptor = 32,
+		UINT maxUavDescritor = 8
+	);
 	bool Init(Shader& shader);
 	ID3D12RootSignature* Get()
 	{

@@ -13,6 +13,9 @@ class Material;
 class IShaderResource;
 
 
+
+const int MAX_MODEL_EXPAND_SRV = 16;	//拡張SRVの最大数。
+
 /// <summary>
 /// メッシュ
 /// </summary>
@@ -40,15 +43,17 @@ public:
 	/// <param name="vsEntryPointFunc">頂点シェーダーのエントリーポイントの関数名</param>
 	/// <param name="vsSkinEntryPointFunc">スキンありマテリアル用の頂点シェーダーのエントリーポイントの関数名</param>
 	/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイントの関数名</param>
+	/// <param name="colorBufferFormat">このモデルをレンダリングするカラーバッファのフォーマット</param>
 	void InitFromTkmFile(
 		const TkmFile& tkmFile,
-		const wchar_t* fxFilePath,
+		const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntryPointFunc,
 		const char* psEntryPointFunc,
 		void* expandData,
 		int expandDataSize,
-		IShaderResource* expandShaderResourceView
+		const std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV>& expandShaderResourceView, 
+		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
 	);
 	/// <summary>
 	/// 描画。
@@ -94,13 +99,15 @@ private:
 	/// <param name="vsEntryPointFunc">頂点シェーダーのエントリーポイントの関数名</param>
 	/// <param name="vsSkinEntryPointFunc">スキンありマテリアル用の頂点シェーダーのエントリーポイントの関数名</param>
 	/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイントの関数名</param>
+	/// <param name="colorBufferFormat">このモデルをレンダリングするカラーバッファのフォーマット</param>
 	void CreateMeshFromTkmMesh(
 		const TkmFile::SMesh& mesh, 
 		int meshNo,
-		const wchar_t* fxFilePath,
+		const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntryPointFunc,
-		const char* psEntryPointFunc );
+		const char* psEntryPointFunc,
+		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat);
 
 	
 private:
@@ -119,7 +126,7 @@ private:
 	};
 	ConstantBuffer m_commonConstantBuffer;					//メッシュ共通の定数バッファ。
 	ConstantBuffer m_expandConstantBuffer;					//ユーザー拡張用の定数バッファ
-	IShaderResource* m_expandShaderResourceView = nullptr;	//ユーザー拡張シェーダーリソースビュー。
+	std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResourceView = { nullptr };	//ユーザー拡張シェーダーリソースビュー。
 	StructuredBuffer m_boneMatricesStructureBuffer;	//ボーン行列の構造化バッファ。
 	std::vector< SMesh* > m_meshs;							//メッシュ。
 	std::vector< DescriptorHeap > m_descriptorHeap;		//ディスクリプタヒープ。

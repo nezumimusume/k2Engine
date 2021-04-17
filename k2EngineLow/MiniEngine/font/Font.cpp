@@ -10,7 +10,6 @@ void Font::Begin(RenderContext& rc)
 	auto& fontEngine = g_graphicsEngine->GetFontEngine();
 	fontEngine.BeginDraw(rc);
 }
-
 void Font::End(RenderContext& rc)
 {
 	auto& fontEngine = g_graphicsEngine->GetFontEngine();

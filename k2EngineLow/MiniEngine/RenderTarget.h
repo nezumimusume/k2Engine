@@ -10,6 +10,9 @@ class GraphicsEngine;
 /// </summary>
 class RenderTarget {
 public:
+	/// <summary>
+	/// デストラクタ。
+	/// </summary>
 	~RenderTarget();
 	/// <summary>
 	/// レンダリングターゲットの作成。
@@ -78,6 +81,14 @@ public:
 	{
 		return m_height;
 	}
+	/// <summary>
+	/// カラーバッファのフォーマットを取得。
+	/// </summary>
+	/// <returns></returns>
+	DXGI_FORMAT GetColorBufferFormat() const
+	{
+		return m_renderTargetTexture.GetFormat();
+	}
 	const float* GetRTVClearColor() const
 	{
 		return m_rtvClearColor;
@@ -138,14 +149,14 @@ private:
 	void CreateDescriptor(ID3D12Device5*& d3dDevice);
 private:
 	Texture m_renderTargetTexture;
-	ID3D12Resource* m_renderTargetTextureDx12;	//レンダリングターゲットとなるテクスチャ。
-	ID3D12Resource* m_depthStencilTexture;		//深度ステンシルバッファとなるテクスチャ。
-	ID3D12DescriptorHeap*		m_rtvHeap;		//RTV用のディスクリプタヒープ。
-	ID3D12DescriptorHeap*		m_dsvHeap;		//深度ステンシルバッファビューのディスクリプタヒープ。
-	UINT m_rtvDescriptorSize = 0;				//フレームバッファのディスクリプタのサイズ。
-	UINT m_dsvDescriptorSize = 0;				//深度ステンシルバッファのディスクリプタのサイズ。
-	int m_width = 0;							//レンダリングターゲットの幅。
-	int m_height = 0;							//レンダリングターゲットの高さ。
+	ID3D12Resource* m_renderTargetTextureDx12 = nullptr;//レンダリングターゲットとなるテクスチャ。
+	ID3D12Resource* m_depthStencilTexture = nullptr;	//深度ステンシルバッファとなるテクスチャ。
+	ID3D12DescriptorHeap*		m_rtvHeap = nullptr;	//RTV用のディスクリプタヒープ。
+	ID3D12DescriptorHeap*		m_dsvHeap = nullptr;	//深度ステンシルバッファビューのディスクリプタヒープ。
+	UINT m_rtvDescriptorSize = 0;						//フレームバッファのディスクリプタのサイズ。
+	UINT m_dsvDescriptorSize = 0;						//深度ステンシルバッファのディスクリプタのサイズ。
+	int m_width = 0;									//レンダリングターゲットの幅。
+	int m_height = 0;									//レンダリングターゲットの高さ。
 	float m_rtvClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };	//レンダリングターゲットビューのクリアカラー。
 	float m_dsvClearValue = 1.0f;							//DSVのクリアカラー。
 };

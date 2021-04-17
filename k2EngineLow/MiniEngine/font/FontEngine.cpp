@@ -37,8 +37,8 @@ void FontEngine::Init()
 	D3D12_VIEWPORT viewport;
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
-	viewport.Width = g_graphicsEngine->GetFrameBufferWidth();
-	viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+	viewport.Width = static_cast<FLOAT>(g_graphicsEngine->GetFrameBufferWidth());
+	viewport.Height = static_cast<FLOAT>(g_graphicsEngine->GetFrameBufferHeight());
 	//Spriteバッチを作成。
 	m_spriteBatch = make_unique<SpriteBatch>(
 		d3dDevice, 

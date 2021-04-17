@@ -217,6 +217,9 @@
     <ClCompile Include="ExEngine\physics\BoxCollider.cpp">
       <Filter>ExEngine\physics</Filter>
     </ClCompile>
+    <ClCompile Include="MiniEngine\GaussianBlur.cpp">
+      <Filter>MiniEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExEngine\gameObject\GameObjectManager.h">
@@ -438,6 +441,12 @@
     </ClInclude>
     <ClInclude Include="ExEngine\physics\BoxCollider.h">
       <Filter>ExEngine\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniEngine\TResourceBank.h">
+      <Filter>MiniEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniEngine\GaussianBlur.h">
+      <Filter>MiniEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

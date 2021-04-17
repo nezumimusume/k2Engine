@@ -68,7 +68,7 @@ namespace raytracing {
 		cam.aspect = g_camera3D->GetAspect();
 		cam.fNear = g_camera3D->GetNear();
 		cam.fFar = g_camera3D->GetFar();
-		m_rayGenerationCB.CopyToVRAM(&cam);
+		m_rayGenerationCB.CopyToVRAM(cam);
 
 		D3D12_RESOURCE_BARRIER barrier = {};
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

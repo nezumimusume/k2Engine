@@ -25,6 +25,7 @@ public:
 	/// </summary>
 	/// <param name="qRot">回転させるクォータニオン</param>
 	void RotateOriginTarget( const Quaternion& qRot);
+	
 	/// <summary>
 	/// カメラを動かす。
 	/// </summary>
@@ -121,6 +122,11 @@ public:
 	void SetUp( const Vector3& up )
 	{
 		m_up = up;
+		m_up.Normalize();
+	}
+	void SetUp(float x, float y, float z)
+	{
+		SetUp({ x, y, z });
 	}
 	/// <summary>
 	/// カメラの上方向を取得。

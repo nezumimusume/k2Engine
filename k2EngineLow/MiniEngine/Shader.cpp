@@ -11,7 +11,7 @@ namespace {
 	const char* g_psShaderModelName = "ps_5_0";	//ピクセルシェーダーのシェーダモデル名。
 	const char* g_csShaderModelName = "cs_5_0";	//コンピュートシェーダーのシェーダーモデル名。
 }
-void Shader::Load(const wchar_t* filePath, const char* entryFuncName, const char* shaderModel)
+void Shader::Load(const char* filePath, const char* entryFuncName, const char* shaderModel)
 {
 	ID3DBlob* errorBlob;
 #ifdef _DEBUG
@@ -20,33 +20,36 @@ void Shader::Load(const wchar_t* filePath, const char* entryFuncName, const char
 #else
 	UINT compileFlags = 0;
 #endif
-	auto hr = D3DCompileFromFile(filePath, nullptr, nullptr, entryFuncName, shaderModel, compileFlags, 0, &m_blob, &errorBlob);
+	wchar_t wfxFilePath[256] = { L"" };
+	mbstowcs(wfxFilePath, filePath, 256);
+	
+	auto hr = D3DCompileFromFile(wfxFilePath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryFuncName, shaderModel, compileFlags, 0, &m_blob, &errorBlob);
 	
 	if (FAILED(hr)) {
 		if (hr == STIERR_OBJECTNOTFOUND) {
 			std::wstring errorMessage;
 			errorMessage = L"指定されたfxファイルが開けませんでした。";
-			errorMessage += filePath;
+			errorMessage += wfxFilePath;
 			MessageBoxW(nullptr, errorMessage.c_str(), L"エラー", MB_OK);
 		}
 		if (errorBlob) {
 			static char errorMessage[10 * 1024];
-			sprintf_s(errorMessage, "filePath : %ws, %s", filePath, (char*)errorBlob->GetBufferPointer());
+			sprintf_s(errorMessage, "filePath : %ws, %s", wfxFilePath, (char*)errorBlob->GetBufferPointer());
 			MessageBoxA(NULL, errorMessage, "シェーダーコンパイルエラー", MB_OK);
 			return;
 		}
 	}
 	m_isInited = true;
 }
-void Shader::LoadPS(const wchar_t* filePath, const char* entryFuncName)
+void Shader::LoadPS(const char* filePath, const char* entryFuncName)
 {
 	Load(filePath, entryFuncName, g_psShaderModelName);
 }
-void Shader::LoadVS(const wchar_t* filePath, const char* entryFuncName)
+void Shader::LoadVS(const char* filePath, const char* entryFuncName)
 {
 	Load(filePath, entryFuncName, g_vsShaderModelName);
 }
-void Shader::LoadCS(const wchar_t* filePath, const char* entryFuncName)
+void Shader::LoadCS(const char* filePath, const char* entryFuncName)
 {
 	Load(filePath, entryFuncName, g_csShaderModelName);
 }

@@ -23,7 +23,7 @@ public:
 	/// TKSファイルをロードする。
 	/// </summary>
 	/// <param name="filePath"></param>
-	void Load(const char* filePath);
+	bool Load(const char* filePath);
 	/// <summary>
 	/// ボーンに対してクエリを行う。
 	/// </summary>

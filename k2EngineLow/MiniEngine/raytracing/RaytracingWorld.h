@@ -41,7 +41,7 @@ namespace raytracing {
 		/// <returns></returns>
 		int GetNumInstance() const
 		{
-			return m_instances.size();
+			return static_cast<int>(m_instances.size());
 		}
 		/// <summary>
 		/// BLASバッファーを取得。

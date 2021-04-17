@@ -4,22 +4,17 @@
 
 void Model::Init(const ModelInitData& initData)
 {
+	/* レイトレ向けの初期化の時にはm_fxFilePathは指定されていない場合があるのでスルーする。
 	MY_ASSERT(
 		initData.m_fxFilePath, 
 		"error : initData.m_fxFilePathが指定されていません。"
 	);
+	*/
 	MY_ASSERT(
 		initData.m_tkmFilePath,
 		"error : initData.m_tkmFilePathが指定されていません。"
 	);
-	//内部のシェーダーをロードする処理が求めているのが
-	//wchar_t型の文字列なので、ここで変換しておく。
-	wchar_t wfxFilePath[256] = {L""};
-	if (initData.m_fxFilePath != nullptr) {
-		//MessageBoxA(nullptr, "fxファイルパスが指定されていません。", "エラー", MB_OK);
-		//std::abort();
-		mbstowcs(wfxFilePath, initData.m_fxFilePath, 256);
-	}
+	
 	
 	if (initData.m_skeleton != nullptr) {
 		//スケルトンが指定されている。
@@ -28,19 +23,28 @@ void Model::Init(const ModelInitData& initData)
 	
 	m_modelUpAxis = initData.m_modelUpAxis;
 
-	m_tkmFile.Load(initData.m_tkmFilePath);
+	auto tkmFile = g_engine->GetTkmFileFromBank(initData.m_tkmFilePath);
+	if (tkmFile == nullptr) {
+		//未登録
+		tkmFile = new TkmFile;
+		tkmFile->Load(initData.m_tkmFilePath);
+		g_engine->RegistTkmFileToBank(initData.m_tkmFilePath, tkmFile);
+	}
+	m_tkmFile = tkmFile;
 	m_meshParts.InitFromTkmFile(
-		m_tkmFile, 
-		wfxFilePath, 
+		*m_tkmFile, 
+		initData.m_fxFilePath,
 		initData.m_vsEntryPointFunc,
 		initData.m_vsSkinEntryPointFunc,
 		initData.m_psEntryPointFunc,
 		initData.m_expandConstantBuffer,
 		initData.m_expandConstantBufferSize,
-		initData.m_expandShaderResoruceView
+		initData.m_expandShaderResoruceView,
+		initData.m_colorBufferFormat
 	);
 
 	UpdateWorldMatrix(g_vec3Zero, g_quatIdentity, g_vec3One);
+	m_isInited = true;
 	
 }
 
@@ -61,7 +65,7 @@ void Model::UpdateWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale)
 void Model::ChangeAlbedoMap(const char* materialName, Texture& albedoMap)
 {
 	m_meshParts.QueryMeshs([&](const SMesh& mesh) {
-		//todo マテリアル名をtkmファイルに出力したなかった・・・。
+		//todo マテリアル名をtkmファイルに出力してなかった。
 		//todo 今は全マテリアル差し替えます
 		for (Material* material : mesh.m_materials) {
 			material->GetAlbedoMap().InitFromD3DResource(albedoMap.Get());
@@ -78,5 +82,19 @@ void Model::Draw(RenderContext& rc)
 		m_world, 
 		g_camera3D->GetViewMatrix(), 
 		g_camera3D->GetProjectionMatrix()
+	);
+}
+void Model::Draw(RenderContext& rc, Camera& camera)
+{
+	Draw(rc, camera.GetViewMatrix(), camera.GetProjectionMatrix());
+}
+
+void Model::Draw(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix)
+{
+	m_meshParts.Draw(
+		rc,
+		m_world,
+		viewMatrix,
+		projMatrix
 	);
 }
