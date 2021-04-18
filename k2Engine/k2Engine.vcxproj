@@ -19,8 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="graphics\Bloom.cpp" />
+    <ClCompile Include="graphics\CascadeShadowMapMatrix.cpp" />
+    <ClCompile Include="graphics\Dof.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
+    <ClCompile Include="graphics\PostEffect.cpp" />
+    <ClCompile Include="graphics\RenderingEngine.cpp" />
+    <ClCompile Include="graphics\ShadowMapRender.cpp" />
     <ClCompile Include="graphics\SpriteRender.cpp" />
     <ClCompile Include="k2EnginePreCompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -28,8 +34,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphics\Bloom.h" />
+    <ClInclude Include="graphics\CascadeShadowMapMatrix.h" />
+    <ClInclude Include="graphics\Dof.h" />
     <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\ModelRender.h" />
+    <ClInclude Include="graphics\MyRenderer.h" />
+    <ClInclude Include="graphics\PostEffect.h" />
+    <ClInclude Include="graphics\RenderingEngine.h" />
+    <ClInclude Include="graphics\ShadowMapRender.h" />
     <ClInclude Include="graphics\SpriteRender.h" />
     <ClInclude Include="k2EnginePreCompile.h" />
   </ItemGroup>
