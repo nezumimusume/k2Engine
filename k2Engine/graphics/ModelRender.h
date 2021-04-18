@@ -72,12 +72,7 @@ public:
 	/// <returns>ƒ‚ƒfƒ‹</returns>
 	Model& GetModel()
 	{
-		if (m_renderToGBufferModel.IsInited()) {
-			return m_renderToGBufferModel;
-		}
-		if (m_forwardRenderModel.IsInited()) {
-			return m_forwardRenderModel;
-		}
+		return m_zprepassModel;
 	}
 
 	/// <summary>

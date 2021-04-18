@@ -27,7 +27,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	NewGO<Player>(0,"player");
 	Player* player = NewGO<Player>(0, "player");
 	player->m_position = { 0.0f,-100.0f,0.0f };
-	player->m_scale = { 5.0f,0.5f,5.0f };
+	player->m_scale = { 10.0f,0.3f,10.0f };
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
@@ -51,12 +51,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		
 		//sprite[1].Update(pos[1], Quaternion::Identity, Vector3::One);
 		GameObjectManager::GetInstance()->ExecuteUpdate();
-		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
+		
 
 		//レンダリングエンジンを実行
 		g_renderingEngine->Execute(renderContext);
 		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
-	
+		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////

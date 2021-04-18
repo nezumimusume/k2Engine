@@ -61,12 +61,12 @@ public:
 		{
 			a++;
 		}
-	
+		m_modelRender.Draw();
 	}
 
 	void Render(RenderContext& rc) override
 	{
-		m_modelRender.Draw();
+		
 		sR.Draw(rc);
 		fontRender.Draw(rc);
 	}
