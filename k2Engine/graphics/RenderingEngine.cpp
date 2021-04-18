@@ -1,6 +1,7 @@
 #include "k2EnginePreCompile.h"
 #include "RenderingEngine.h"
 
+RenderingEngine* g_renderingEngine = nullptr;
 
 void RenderingEngine::Init()
 {

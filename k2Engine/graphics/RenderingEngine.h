@@ -5,6 +5,7 @@
 #include "PostEffect.h"
 
 
+
 // レンダリングエンジン
 class RenderingEngine
 {
@@ -265,3 +266,4 @@ private:
     std::vector< Model* > m_forwardRenderModels;        // フォワードレンダリングの描画パスで描画されるモデルのリスト
 };
 
+extern RenderingEngine* g_renderingEngine;

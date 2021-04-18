@@ -5,6 +5,7 @@
 
 class Player : public IGameObject
 {
+public:
 	bool Start() override
  	{
 		m_modelRender.Init("Assets/modelData/unityChan.tkm");
@@ -12,11 +13,11 @@ class Player : public IGameObject
 		g_soundEngine->ResistWaveFileBank(1, "Assets/sound/shining_star.wav");
 		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/sample2.wav");
 
-		m_bgm = NewGO<SoundSource>(0);
-		m_bgm->Init(1, false);
-		m_bgm->Play(true);
+		//m_bgm = NewGO<SoundSource>(0);
+		//m_bgm->Init(1, false);
+		//m_bgm->Play(true);
 
-		PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+		//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 		m_modelRender.Update();
 		m_po.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
@@ -50,6 +51,8 @@ class Player : public IGameObject
 				m_isStop = true;
 			}
 		}
+		m_modelRender.SetScale(m_scale);
+		m_modelRender.SetPosition(m_position);
 		m_modelRender.Update();
 		sR.Update();
 		auto playerVector = FindGOs<Player>("player");
@@ -58,20 +61,22 @@ class Player : public IGameObject
 		{
 			a++;
 		}
-		
+	
 	}
 
 	void Render(RenderContext& rc) override
 	{
-		m_modelRender.Draw(rc);
+		m_modelRender.Draw();
 		sR.Draw(rc);
 		fontRender.Draw(rc);
 	}
-private:
+
 	ModelRender m_modelRender;
 	SoundSource* m_bgm = nullptr;
 	bool m_isStop = false;
 	PhysicsStaticObject m_po;
 	SpriteRender sR;
 	FontRender fontRender;
+	Vector3 m_position;
+	Vector3 m_scale = Vector3::One;
 };

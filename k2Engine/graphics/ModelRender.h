@@ -1,5 +1,8 @@
 #pragma once
 
+#include "MyRenderer.h"
+
+class RenderingEngine;
 /// <summary>
 /// スキンモデルレンダー。
 /// </summary>
@@ -9,16 +12,32 @@ public:
 	ModelRender() {}
 	/// <summary>
 	/// 初期化。
+	/// ディファードレンダリング。
 	/// </summary>
 	/// <param name="filePath">ファイルパス。</param>
 	/// <param name="animationClips">アニメーションクリップ。</param>
 	/// <param name="numAnimationClips">アニメーションクリップの数。</param>
 	/// <param name="">モデルの上方向。</param>
+	/// <param name="">trueなら影が落ちる。</param>
 	void Init(const char* filePath,
 		AnimationClip* animationClips = nullptr,
 		int numAnimationClips = 0,
-		EnModelUpAxis enModelUpAxis = enModelUpAxisZ);
-
+		EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+		bool isShadowReciever = true);
+	/// <summary>
+/// 初期化。
+/// フォワードレンダリング。
+/// </summary>
+/// <param name="filePath">ファイルパス。</param>
+/// <param name="animationClips">アニメーションクリップ。</param>
+/// <param name="numAnimationClips">アニメーションクリップの数。</param>
+/// <param name="">モデルの上方向。</param>
+/// <param name="">trueなら影が落ちる。</param>
+	void InitForwardRendering(const char* filePath,
+		AnimationClip* animationClips = nullptr,
+		int numAnimationClips = 0,
+		EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+		bool isShadowReciever = true);
 	/// <summary>
 	/// 更新処理。
 	/// </summary>
@@ -27,8 +46,7 @@ public:
 	/// <summary>
 	/// 描画処理。
 	/// </summary>
-	/// <param name="rc">レンダーコンテキスト。</param>
-	void Draw(RenderContext& rc);
+	void Draw();
 
 	/// <summary>
 	/// アニメーション再生。
@@ -54,7 +72,12 @@ public:
 	/// <returns>モデル</returns>
 	Model& GetModel()
 	{
-		return m_model;
+		if (m_renderToGBufferModel.IsInited()) {
+			return m_renderToGBufferModel;
+		}
+		if (m_forwardRenderModel.IsInited()) {
+			return m_forwardRenderModel;
+		}
 	}
 
 	/// <summary>
@@ -96,6 +119,13 @@ public:
 	{
 		m_scale = scale;
 	}
+	/// <summary>
+/// シャドウキャスターのフラグを設定する
+/// </summary>
+	void SetShadowCasterFlag(bool flag)
+	{
+		m_isShadowCaster = flag;
+	}
 private:
 	/// <summary>
 	/// モデルの初期化。
@@ -118,6 +148,13 @@ private:
 		int numAnimationClips, 
 		EnModelUpAxis enModelUpAxis);
 private:
+	/// <summary>
+	 /// 共通の初期化処理
+	 /// </summary>
+	 /// <param name="renderingEngine">レンダリングエンジン</param>
+	 /// <param name="tkmFilePath">tkmファイルパス</param>
+	void InitCommon(RenderingEngine& renderingEngine, const char* tkmFilePath);
+private:
 	AnimationClip*				m_animationClips = nullptr;			//アニメーションクリップ。
 	int							m_numAnimationClips = 0;			//アニメーションクリップの数。
 	Vector3 					m_position = Vector3::Zero;			//座標。
@@ -125,8 +162,12 @@ private:
 	Vector3						m_scale = Vector3::One;				//拡大率。
 	EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		//FBXの上方向。
 	Animation					m_animation;						//アニメーション。
-	Model						m_model;							//スキンモデル。
+	Model m_zprepassModel;					//ZPrepassで描画されるモデル
+	Model m_forwardRenderModel;				//フォワードレンダリングの描画パスで描画されるモデル
+	Model m_renderToGBufferModel;			//RenderToGBufferで描画されるモデル
+	Model m_shadowModels[NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	//シャドウマップに描画するモデル
 	bool						m_isUpdateAnimation = true;			//アニメーションを更新する？
 	Skeleton					m_skeleton;							//骨。
+	bool						m_isShadowCaster = true;			//シャドウキャスターフラグ
 };
 
