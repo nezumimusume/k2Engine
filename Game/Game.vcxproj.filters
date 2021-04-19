@@ -12,6 +12,7 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="BackGround.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -19,5 +20,6 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Player.h" />
+    <ClInclude Include="BackGround.h" />
   </ItemGroup>
 </Project>

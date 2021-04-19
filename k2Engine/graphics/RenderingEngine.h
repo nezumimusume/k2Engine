@@ -5,8 +5,9 @@
 #include "PostEffect.h"
 
 
-
-// レンダリングエンジン
+/// <summary>
+/// レンダリングエンジン。
+/// </summary>
 class RenderingEngine
 {
 public:

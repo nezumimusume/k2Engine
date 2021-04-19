@@ -1,4 +1,8 @@
 #pragma once
+
+/// <summary>
+/// ”íÊŠE[“xB
+/// </summary>
 class Dof
 {
 public:

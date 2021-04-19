@@ -1,4 +1,8 @@
 #pragma once
+
+/// <summary>
+/// フォントレンダ―。
+/// </summary>
 class FontRender
 {
 public:

@@ -11,7 +11,7 @@ class ModelRender
 public:
 	ModelRender() {}
 	/// <summary>
-	/// 初期化。
+	/// 初期化。通常はこの関数で初期化してください。
 	/// ディファードレンダリング。
 	/// </summary>
 	/// <param name="filePath">ファイルパス。</param>
@@ -25,14 +25,15 @@ public:
 		EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 		bool isShadowReciever = true);
 	/// <summary>
-/// 初期化。
-/// フォワードレンダリング。
-/// </summary>
-/// <param name="filePath">ファイルパス。</param>
-/// <param name="animationClips">アニメーションクリップ。</param>
-/// <param name="numAnimationClips">アニメーションクリップの数。</param>
-/// <param name="">モデルの上方向。</param>
-/// <param name="">trueなら影が落ちる。</param>
+	/// 初期化。
+	/// フォワードレンダリング。
+	/// この関数で初期化したモデルはライト、シャドウなどの影響を受けません。
+	/// </summary>
+	/// <param name="filePath">ファイルパス。</param>
+	/// <param name="animationClips">アニメーションクリップ。</param>
+	/// <param name="numAnimationClips">アニメーションクリップの数。</param>
+	/// <param name="">モデルの上方向。</param>
+	/// <param name="">trueなら影が落ちる。</param>
 	void InitForwardRendering(const char* filePath,
 		AnimationClip* animationClips = nullptr,
 		int numAnimationClips = 0,
@@ -115,8 +116,8 @@ public:
 		m_scale = scale;
 	}
 	/// <summary>
-/// シャドウキャスターのフラグを設定する
-/// </summary>
+	/// シャドウキャスターのフラグを設定する
+	/// </summary>
 	void SetShadowCasterFlag(bool flag)
 	{
 		m_isShadowCaster = flag;
