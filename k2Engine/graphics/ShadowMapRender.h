@@ -14,11 +14,11 @@ public:
     /// </summary>
     void Init();
     /// <summary>
-/// シャドウマップに描画するモデルを追加
-/// </summary>
-/// <param name="model0">近景用のシャドウマップに描画するモデル</param>
-/// <param name="model1">中景用のシャドウマップ1に描画するモデル</param>
-/// <param name="model2">遠景用のシャドウマップ2に描画するモデル</param>
+    /// シャドウマップに描画するモデルを追加
+    /// </summary>
+    /// <param name="model0">近景用のシャドウマップに描画するモデル</param>
+    /// <param name="model1">中景用のシャドウマップ1に描画するモデル</param>
+    /// <param name="model2">遠景用のシャドウマップ2に描画するモデル</param>
     void Add3DModel(
         Model& model0,
         Model& model1,
