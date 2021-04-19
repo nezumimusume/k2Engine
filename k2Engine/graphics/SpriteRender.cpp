@@ -1,7 +1,7 @@
 #include "k2EnginePreCompile.h"
 #include "SpriteRender.h"
 
-void SpriteRender::Init(const char* filePath, const float w, const float h)
+void SpriteRender::Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode)
 {
 	SpriteInitData initData;
 	//DDSファイル(画像データ)のファイルパスを指定する。
@@ -11,6 +11,7 @@ void SpriteRender::Init(const char* filePath, const float w, const float h)
 	//スプライトの幅と高さを指定する。
 	initData.m_width = w;
 	initData.m_height = h;
+	initData.m_alphaBlendMode = alphaBlendMode;
 	//Sprite初期化オブジェクトを使用して、Spriteを初期化する。
 	m_sprite.Init(initData);
 }

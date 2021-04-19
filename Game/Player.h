@@ -21,7 +21,7 @@ public:
 		m_modelRender.Update();
 		m_po.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
-		sR.Init("Assets/Image/sample.dds", 100.0f, 100.0f);
+		sR.Init("Assets/Image/title.dds", 500.0f, 500.0f);
 
 		fontRender.SetText(L"aiueo");
 		fontRender.SetScale(5.0f);
