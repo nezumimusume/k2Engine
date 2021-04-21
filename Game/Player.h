@@ -17,7 +17,7 @@ public:
 		//m_bgm->Init(1, false);
 		//m_bgm->Play(true);
 
-		//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+		PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 		m_modelRender.Update();
 		m_po.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
@@ -61,12 +61,12 @@ public:
 		{
 			a++;
 		}
-		m_modelRender.Draw();
+		
 	}
 
 	void Render(RenderContext& rc) override
 	{
-		
+		m_modelRender.Draw(rc);
 		sR.Draw(rc);
 		fontRender.Draw(rc);
 	}

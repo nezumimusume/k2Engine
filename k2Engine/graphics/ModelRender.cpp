@@ -148,7 +148,7 @@ void ModelRender::Update()
 	m_animation.Progress(g_gameTime->GetFrameDeltaTime());
 }
 
-void ModelRender::Draw()
+void ModelRender::Draw(RenderContext& rc)
 {
 	if (m_isShadowCaster) {
 		//シャドウキャスター

@@ -44,6 +44,8 @@ public:
         enZPrepass,             //ZPrepass
         enRenderToGBuffer,      //G-Bufferへの描画パス
         enForwardRender,        //フォワードレンダリングの描画パス
+        enPostEffect,           //ポストエフェクト
+        enDraw2D,               //2Dを描画。
     };
 
     /// <summary>
@@ -265,6 +267,7 @@ private:
     std::vector< Model* > m_renderToGBufferModels;      // Gバッファへの描画パスで描画するモデルのリスト
 
     std::vector< Model* > m_forwardRenderModels;        // フォワードレンダリングの描画パスで描画されるモデルのリスト
+
 };
 
 extern RenderingEngine* g_renderingEngine;

@@ -227,6 +227,8 @@ void RenderingEngine::Execute(RenderContext& rc)
     // ポストエフェクトを実行
     m_postEffect.Render(rc, m_mainRenderTarget);
 
+
+
     // メインレンダリングターゲットの内容をフレームバッファにコピー
     CopyMainRenderTargetToFrameBuffer(rc);
 

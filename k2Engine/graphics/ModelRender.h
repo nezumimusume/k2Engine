@@ -47,7 +47,7 @@ public:
 	/// <summary>
 	/// 描画処理。
 	/// </summary>
-	void Draw();
+	void Draw(RenderContext& rc);
 
 	/// <summary>
 	/// アニメーション再生。

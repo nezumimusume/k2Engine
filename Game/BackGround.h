@@ -15,12 +15,12 @@ public:
 	void Update()
 	{
 		modelRender.Update();
-		modelRender.Draw();
+		
 	}
 
 	void Render(RenderContext& rc)
 	{
-	
+		modelRender.Draw(rc);
 	}
 
 	ModelRender modelRender;

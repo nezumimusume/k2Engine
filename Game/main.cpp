@@ -54,11 +54,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//sprite[1].Update(pos[1], Quaternion::Identity, Vector3::One);
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 		
-
+	
+		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 		//レンダリングエンジンを実行
 		g_renderingEngine->Execute(renderContext);
 		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
-		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
+		
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
