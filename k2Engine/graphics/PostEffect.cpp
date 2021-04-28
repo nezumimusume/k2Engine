@@ -5,9 +5,11 @@ void PostEffect::Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRend
 {
     m_bloom.Init(mainRenderTarget);
     m_dof.Init(mainRenderTarget, zprepassRenderTarget);
+    m_fXaa.Init(mainRenderTarget);
 }
 void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
     m_bloom.Render(rc, mainRenderTarget);
     m_dof.Render(rc, mainRenderTarget);
+    m_fXaa.Render(rc, mainRenderTarget);
 }

@@ -227,6 +227,9 @@ PSInput VSMain(VSInput In)
     psIn.uv = In.uv;
     return psIn;
 }
+
+
+
 //ピクセルシェーダー。
 float4 PSMain(PSInput In) : SV_Target0
 {
@@ -295,3 +298,4 @@ float4 PSMain(PSInput In) : SV_Target0
     finalColor.xyz = lig;
     return finalColor;
 }
+

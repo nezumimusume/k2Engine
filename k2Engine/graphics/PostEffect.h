@@ -2,6 +2,7 @@
 
 #include "Bloom.h"
 #include "Dof.h"
+#include "Fxaa.h"
 
 /// <summary>
 /// ポストエフェクト。
@@ -24,5 +25,6 @@ public:
 private:
     Bloom m_bloom;	//ブルーム
     Dof m_dof;		//被写界深度
+    Fxaa m_fXaa;    //FXAA;
 };
 

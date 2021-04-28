@@ -23,6 +23,7 @@
     <ClCompile Include="graphics\CascadeShadowMapMatrix.cpp" />
     <ClCompile Include="graphics\Dof.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
+    <ClCompile Include="graphics\Fxaa.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\PostEffect.cpp" />
     <ClCompile Include="graphics\RenderingEngine.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="graphics\CascadeShadowMapMatrix.h" />
     <ClInclude Include="graphics\Dof.h" />
     <ClInclude Include="graphics\FontRender.h" />
+    <ClInclude Include="graphics\Fxaa.h" />
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\MyRenderer.h" />
     <ClInclude Include="graphics\PostEffect.h" />
