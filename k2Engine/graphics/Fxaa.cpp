@@ -20,8 +20,11 @@ void Fxaa::Init(RenderTarget& mainRenderTarget)
     spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
     spriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 
+    //解像度をGPUに送るための定数バッファを設定する。
+    spriteInitData.m_expandConstantBuffer = (void*)&m_cB;
+    spriteInitData.m_expandConstantBufferSize = sizeof(ConstantBuffer) + 
+        (16 - (sizeof(ConstantBuffer) % 16));
     m_finalSprite.Init(spriteInitData);
-
 }
 
 void Fxaa::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
@@ -30,6 +33,8 @@ void Fxaa::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
     rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
     // レンダリングターゲットを設定
     rc.SetRenderTargetAndViewport(mainRenderTarget);
+    m_cB.bufferW = g_graphicsEngine->GetFrameBufferWidth();
+    m_cB.bufferH = g_graphicsEngine->GetFrameBufferHeight();
     //描画。
     m_finalSprite.Draw(rc);
     // レンダリングターゲットへの書き込み終了待ち

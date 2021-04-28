@@ -88,11 +88,6 @@ void ModelRender::InitAnimation(AnimationClip* animationClips, int numAnimationC
 	}
 }
 
-void ModelRender::InitModel(const char* filePath, EnModelUpAxis enModelUpAxis)
-{
-	
-}
-
 void ModelRender::InitCommon(RenderingEngine& renderingEngine, const char* tkmFilePath)
 {
 	//ZPrepass•`‰æ—p‚Ìƒ‚ƒfƒ‹‚ğ‰Šú‰»

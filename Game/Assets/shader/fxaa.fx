@@ -7,6 +7,14 @@ cbuffer cb : register(b0) {
     float4x4 mvp;
     float4 mulColor;
 };
+
+//解像度を知るための定数バッファ―。
+cbuffer CresolutionB : register(b1) {
+    float bufferW;
+    float bufferH;
+};
+
+
 struct VSInput {
     float4 pos : POSITION;
     float2 uv  : TEXCOORD0;
@@ -49,10 +57,10 @@ float4 CalcFXAA(float2 uv)
 
     // 近傍4テクセルへのUVオフセット
     float2 uvOffset[4] = {
-        float2(-1.0f / 1280.0f, 1.0f / 720.0f),  //左上
-        float2(1.0f / 1280.0f, 1.0f / 720.0f),   //右上
-        float2(-1.0f / 1280.0f, -1.0f / 720.0f), //左下
-        float2(1.0f / 1280.0f, -1.0f / 720.0f)   //右下
+        float2(-1.0f / bufferW, 1.0f / bufferH),  //左上
+        float2(1.0f / bufferW, 1.0f / bufferH),   //右上
+        float2(-1.0f / bufferW, -1.0f / bufferH), //左下
+        float2(1.0f / bufferW, -1.0f / bufferH)   //右下
     };
     //近隣テクセルカラーを抽出する。
     float3 albedoNW = albedoTexture.Sample(Sampler, uv + uvOffset[0]).xyz;
@@ -96,7 +104,7 @@ float4 CalcFXAA(float2 uv)
     float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
     dir = min(float2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),
         max(float2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),
-            dir * rcpDirMin)) * float2(1.0f/1280.0f,1.0f/720.0f);
+            dir * rcpDirMin)) * float2(1.0f/ bufferW,1.0f/ bufferH);
 
 
     //方向ベクトルから最終的な色を決定していく。

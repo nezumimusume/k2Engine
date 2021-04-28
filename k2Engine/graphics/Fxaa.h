@@ -17,5 +17,13 @@ public:
     /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
     void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
 private:
+
+    struct ConstantBuffer
+    {
+        float bufferW;
+        float bufferH;
+    }; 
+
     Sprite m_finalSprite;					//最終合成用のスプライト
+    ConstantBuffer m_cB;
 };
