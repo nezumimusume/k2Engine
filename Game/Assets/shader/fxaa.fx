@@ -4,14 +4,14 @@
 
 
 cbuffer cb : register(b0) {
-    float4x4 mvp;
+    float4x4 mvp;       //ビュープロジェクション行列。
     float4 mulColor;
 };
 
 //解像度を知るための定数バッファ―。
 cbuffer CresolutionB : register(b1) {
-    float bufferW;
-    float bufferH;
+    float bufferW;  //横の解像度。
+    float bufferH;  //縦の解像度。
 };
 
 
@@ -25,8 +25,8 @@ struct PSInput {
     float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> albedoTexture : register(t0);
-sampler Sampler : register(s0);
+Texture2D<float4> albedoTexture : register(t0);     //FXAAをかけるレンダーターゲットのシェーダーリソース。
+sampler Sampler : register(s0);     //サンプラー。
 
 //FXAA関係。
 static const float FXAA_EDGE_THRESHOLD_MIN = 1.0f / 16.0f;
@@ -92,20 +92,23 @@ float4 CalcFXAA(float2 uv)
     }
 
 
-    //輝度勾配に対して垂直なベクトル(方向)を求めるよ。
+    //輝度エッジに対して垂直なベクトル(方向)を求める。
     float2 dir = float2(0.0f, 0.0f);
     dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
     dir.y = ((lumaNW + lumaSW) - (lumaNE + lumaSE));
-    dir.xy = normalize(dir.xy) * 2.0f;
+    dir.xy = normalize(dir.xy) * 3.0f;
 
+    //輝度によって、ベクトルの値を変化させる。
     float dirReduce = max(
         (lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL),
         FXAA_REDUCE_MIN);
     float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
     dir = min(float2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),
         max(float2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),
-            dir * rcpDirMin)) * float2(1.0f/ bufferW,1.0f/ bufferH);
+            dir * rcpDirMin));
 
+    //解像度分だけベクトルを割る。
+    dir *= float2(1.0f / bufferW, 1.0f / bufferH);
 
     //方向ベクトルから最終的な色を決定していく。
     float4 rgbA = (1.0f / 2.0f) * (
@@ -117,7 +120,6 @@ float4 CalcFXAA(float2 uv)
 
     float lumaB = FxaaLuma(rgbB.xyz);
 
-    //return albedoColor;
     //rgbBの輝度が最小最大から外れていたら。
     if ((lumaB < rangeMin) || (lumaB > rangeMax))
     {
@@ -135,5 +137,4 @@ float4 CalcFXAA(float2 uv)
 float4 PSMain(PSInput In) : SV_Target0
 {
     return CalcFXAA(In.uv);
-//return colorTexture.Sample(Sampler, In.uv) * mulColor;
 }
