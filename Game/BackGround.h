@@ -9,6 +9,8 @@ public:
 		Quaternion rotation;
 		rotation.SetRotationDegY(180.0f);
 		modelRender.SetRotation(rotation);
+		modelRender.Update();
+		pso.CreateFromModel(modelRender.GetModel(), modelRender.GetModel().GetWorldMatrix());
 	}
 	~BackGround() {}
 
@@ -24,6 +26,7 @@ public:
 	}
 
 	ModelRender modelRender;
+	PhysicsStaticObject pso;
 
 };
 

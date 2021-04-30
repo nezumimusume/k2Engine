@@ -83,6 +83,13 @@ inline void RenderContext::SetRenderTargetAndViewport(RenderTarget& renderTarget
 	SetViewportAndScissor(viewport);
 	
 	SetRenderTarget(renderTarget);
+
+	D3D12_RECT srect;
+	srect.top = 0;
+	srect.left = 0;
+	srect.right = renderTarget.GetWidth();
+	srect.bottom = renderTarget.GetHeight();
+	SetScissorRect(srect);
 }
 inline void RenderContext::SetRenderTargetsAndViewport(UINT numRT, RenderTarget* renderTargets[])
 {

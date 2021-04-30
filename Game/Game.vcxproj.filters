@@ -11,15 +11,17 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h" />
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
 </Project>

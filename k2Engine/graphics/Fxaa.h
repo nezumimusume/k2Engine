@@ -25,5 +25,5 @@ private:
     }; 
 
     Sprite m_finalSprite;					//最終合成用のスプライト
-    ConstantBuffer m_cB;
+    ConstantBuffer m_cB;                    //解像度をGPUに送るための定数バッファ―。
 };

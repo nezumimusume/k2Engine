@@ -60,15 +60,6 @@ public:
 		x = v0.x + (v1.x - v0.x) * t;
 		y = v0.y + (v1.y - v0.y) * t;
 	}
-	/// <summary>
-	/// 正規化。
-	/// </summary>
-	void Normalize()
-	{
-		DirectX::XMVECTOR xmv = DirectX::XMLoadFloat2(&vec);
-		xmv = DirectX::XMVector2Normalize(xmv);
-		DirectX::XMStoreFloat2(&vec, xmv);
-	}
 };
 /// <summary>
 /// 3次元ベクトル。
@@ -718,7 +709,14 @@ public:
 	{
 		SetRotationDeg(g_vec3AxisY, angle);
 	}
-
+	/// <summary>
+	/// Y軸周りの回転クォータニオンを作成。
+	/// </summary>
+	/// <param name="direction">方向ベクトル。</param>
+	void SetRotationYFromDirectionXZ(const Vector3& direction)
+	{
+		SetRotationY(atan2f(direction.x, direction.z));
+	}
 	/// <summary>
 	/// Z軸周りの回転クォータニオンを作成。
 	/// </summary>
@@ -803,6 +801,17 @@ public:
 	{
 		Quaternion addRot;
 		addRot.SetRotation(Vector3::AxisY, angle);
+		*this *= addRot;
+	}
+	/// <summary>
+	/// Y軸周りの回転を加算。
+	/// </summary>
+	/// <returns>加算する回転角度。単位Degree</returns>
+	void AddRotationDegY(float degree)
+	{
+		float halfAngle = Math::DegToRad(degree) * 0.5f;
+		Quaternion addRot;
+		addRot.SetRotation(Vector3::AxisY, halfAngle);
 		*this *= addRot;
 	}
 	/// <summary>

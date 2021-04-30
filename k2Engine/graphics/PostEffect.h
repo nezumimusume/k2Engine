@@ -3,6 +3,7 @@
 #include "Bloom.h"
 #include "Dof.h"
 #include "Fxaa.h"
+#include "ToneMap.h"
 
 /// <summary>
 /// ポストエフェクト。
@@ -23,8 +24,9 @@ public:
     /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
     void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
 private:
-    Bloom m_bloom;	//ブルーム
-    Dof m_dof;		//被写界深度
-    Fxaa m_fXaa;    //FXAA;
+    Bloom m_bloom;	    //ブルーム
+    Dof m_dof;		    //被写界深度
+    Fxaa m_fXaa;        //FXAA。
+    ToneMap m_tonemap;  //トーンマップ。
 };
 

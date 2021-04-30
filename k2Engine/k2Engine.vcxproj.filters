@@ -37,6 +37,9 @@
     <ClCompile Include="graphics\Fxaa.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\ToneMap.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -71,6 +74,9 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\Fxaa.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\ToneMap.h">
       <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,6 +4,7 @@
 #include "sound/SoundEngine.h"
 #include "graphics/RenderingEngine.h"
 #include "BackGround.h"
+#include "GameCamera.h"
 
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
@@ -26,10 +27,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_renderingEngine->Init();
 
 	NewGO<Player>(0,"player");
-	Player* player = NewGO<Player>(0, "player");
-	player->m_position = { 100.0f,00.0f,600.0f };
-	player->m_scale = { 4.0f,4.0f,4.0f };
-	NewGO<BackGround>(0, "BackGround");
+	//Player* player = NewGO<Player>(0, "player");
+	//player->m_position = { 100.0f,00.0f,600.0f };
+	//player->m_scale = { 4.0f,4.0f,4.0f };
+	NewGO<BackGround>(0, "backGround");
+	NewGO<GameCamera>(0, "gameCamera");
+
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");

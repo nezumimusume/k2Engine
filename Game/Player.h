@@ -1,82 +1,37 @@
 #pragma once
 
-#include "Sound/SoundSource.h"
-#include "Sound/SoundEngine.h"
-
+//プレイヤークラス。
 class Player : public IGameObject
 {
 public:
-	bool Start() override
- 	{
-		m_modelRender.Init("Assets/modelData/unityChan.tkm");
-		g_soundEngine->ResistWaveFileBank(0, "Assets/sound/sample.wav");
-		g_soundEngine->ResistWaveFileBank(1, "Assets/sound/shining_star.wav");
-		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/sample2.wav");
+	Player();
+	~Player();
+	//更新処理。
+	void Update();
+	//描画処理。
+	void Render(RenderContext& rc);
+	//移動処理。
+	void Move();
+	//回転処理。
+	void Rotation();
+	//ステート管理。
+	void ManageState();
+	//アニメーションの再生。
+	void PlayAnimation();
 
-		//m_bgm = NewGO<SoundSource>(0);
-		//m_bgm->Init(1, false);
-		//m_bgm->Play(true);
-
-		//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
-		m_modelRender.Update();
-		m_po.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
-
-		sR.Init("Assets/Image/title.dds", 500.0f, 500.0f);
-
-		fontRender.SetText(L"aiueo");
-		fontRender.SetScale(5.0f);
-		fontRender.SetPosition({ 00.0f,300.0f,00.0f });
-		return true;
-	}
-
-	void Update() override
-	{
-		if (g_pad[0]->IsTrigger(enButtonA))
-		{
-			SoundSource* se = NewGO<SoundSource>(0);
-			se->Init(0, false);
-			se->Play(false);
-		}
-
-		if (g_pad[0]->IsTrigger(enButtonB))
-		{
-			//停止中。
-			if (m_isStop)
-			{
-				m_bgm->Play(true);
-				m_isStop = false;
-			}
-			else {
-				m_bgm->Pause();
-				m_isStop = true;
-			}
-		}
-		m_modelRender.SetScale(m_scale);
-		m_modelRender.SetPosition(m_position);
-		m_modelRender.Update();
-		sR.Update();
-		auto playerVector = FindGOs<Player>("player");
-		int a = 0;
-		for (auto player : playerVector)
-		{
-			a++;
-		}
-		
-	}
-
-	void Render(RenderContext& rc) override
-	{
-		m_modelRender.Draw(rc);
-		sR.Draw(rc);
-		fontRender.Draw(rc);
-	}
-
-	ModelRender m_modelRender;
-	SoundSource* m_bgm = nullptr;
-	bool m_isStop = false;
-	PhysicsStaticObject m_po;
-	SpriteRender sR;
-	FontRender fontRender;
-	Vector3 m_position;
-	Vector3 m_scale = Vector3::One;
+	//メンバ変数。
+	ModelRender modelRender;	//モデルレンダ―。
+	Vector3 position;			//座標。
+	enum EnAnimationClip {		//アニメーション。
+		enAnimationClip_Idle,
+		enAnimationClip_Walk,
+		enAnimationClip_Jump,
+		enAnimationClip_Num,
+	};
+	AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ。
+	CharacterController characterController;  //キャラクターコントローラー。
+	Vector3 moveSpeed;		//移動速度。
+	Quaternion rotation;  //クォータニオン。
+	int playerState = 0;	//プレイヤーのステート(状態)を表す変数。
+	int starCount = 0;	//集めた☆の数をカウントする。
 };
