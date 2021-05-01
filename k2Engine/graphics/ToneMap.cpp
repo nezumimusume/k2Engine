@@ -38,12 +38,6 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 
 		//サイズを1/4にしたレンダ―ターゲットを作成。
 		auto renderPtr = std::make_unique<RenderTarget>();
-		/*renderPtr.get()->Create(width, height,
-			1,
-			1,
-			mainRenderTarget.GetColorBufferFormat(),
-			DXGI_FORMAT_UNKNOWN,
-			color);*/
 		renderPtr.get()->Create(width, height,
 			1,
 			1,
@@ -106,6 +100,10 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 	spriteInitData.m_psEntryPoinFunc = "FinalPSMain";
 
 	spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
+
+	spriteInitData.m_expandConstantBuffer = (void*)&m_tonemapBuffer;
+	spriteInitData.m_expandConstantBufferSize = sizeof(TonemapBuffer) +
+		(16 - (sizeof(TonemapBuffer) % 16));
 	
 	m_finalSprite.Init(spriteInitData);
 }
