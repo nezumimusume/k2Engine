@@ -35,9 +35,9 @@ PSInput VSMain(VSInput In)
 
 //rgbから輝度を計算する。
 float ToneMapLuma(float3 rgb) {
-    //float luma = (rgb.y * (0.587f / 0.299f) + rgb.x);
+    float luma = (rgb.y * (0.587f / 0.299f) + rgb.x);
     //luma /= (1.0f * (0.587f / 0.299f) + 1.0f);
-    float luma = (rgb.x + rgb.y + rgb.z) / 3.0f;
+    //float luma = (rgb.x + rgb.y + rgb.z) / 3.0f;
     return  luma;
 }
 
@@ -60,7 +60,7 @@ float4 FinalPSMain(PSInput In) : SV_Target0
     float averageLuma = lumaTexture.Sample(Sampler,In.uv).x;
     float4 color = albedoTexture.Sample(Sampler,In.uv);
     float luma = ToneMapLuma(color.xyz);
-    //return color;
+    /*//return color;
     float scale = KEY_VALUE / averageLuma;
     //color.xyz = (color.xyz * scale) / (float3(1.0f,1.0f,1.0f) + color.xyz * scale) * (1 + (color.xyz * scale / 4.0f));
     //color.xyz = (color.xyz) / (float3(1.0f,1.0f,1.0f) + color.xyz) * (1 + (color.xyz / averageLuma));
@@ -77,6 +77,13 @@ float4 FinalPSMain(PSInput In) : SV_Target0
     color.x=1.0f - exp(k*color.x);
     color.y=1.0f - exp(k*color.y);
     color.z=1.0f - exp(k*color.z);
+    */
+    float scale = (KEY_VALUE / averageLuma) / luma;
+    scale *= 30.0f;
+    scale = scale / (1 + scale);;
+    scale = pow(scale, (1.0f / 2.2f));
+    color.xyz *= scale;
+    //color.xyz /= averageLuma / luma;
 
     return color;
     //return float4(1.0f,1.0f,1.0f,1.0f);
