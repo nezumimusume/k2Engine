@@ -16,7 +16,7 @@ public:
 	void Init(RenderTarget& mainRenderTarget);
 private:
 	struct TonemapBuffer {
-		float scaler = 35.0f;
+		float scaler = 40.0f;
 		float gammaCorrection = 2.2f;
 	};
 
