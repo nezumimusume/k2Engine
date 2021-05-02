@@ -17,7 +17,7 @@ public:
 private:
 	struct TonemapBuffer {
 		float scaler = 6.0f;
-		float gammaCorrection = 2.2f;
+		float gammaCorrection = 2.0f;
 	};
 
 	std::vector<std::unique_ptr<RenderTarget>> m_renderTargetVector;		//平均輝度を求めるためのレンダ―ターゲット。
