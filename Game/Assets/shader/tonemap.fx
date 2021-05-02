@@ -40,7 +40,7 @@ PSInput VSMain(VSInput In)
 
 //rgbから輝度を計算する。
 float ToneMapLuma(float3 rgb) {
-    float luma = (rgb.y * (0.587f / 0.299f) + rgb.x);
+    float luma = dot(rgb, float3(0.2125f, 0.7154f, 0.0721f));
     return  luma;
 }
 
