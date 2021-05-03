@@ -113,24 +113,33 @@ void ToneMap::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	//レンダリングターゲットとして利用できるまで待つ。
 	rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
 
-
-	for (int i = 0; i < m_renderTargetVector.size(); i++)
+	if (m_numberCalcRenderTarget == -1)
 	{
-		// レンダリングターゲットを設定
-		rc.SetRenderTargetAndViewport(*m_renderTargetVector[i].get());
-		//描画。
-		m_spriteVector[i].get()->Draw(rc);
-		// レンダリングターゲットへの書き込み終了待ち
-		rc.WaitUntilFinishDrawingToRenderTarget(*m_renderTargetVector[i].get());
-		//レンダリングターゲットとして利用できるまで待つ。
-		rc.WaitUntilToPossibleSetRenderTarget(*m_renderTargetVector[i].get());
+		for (int i = 0; i < m_renderTargetVector.size(); i++)
+		{
+			CalcAverageLuma(rc, i);
+		}
+		m_numberCalcRenderTarget = 0;
 	}
-
+	else 
+	{
+		for (int i = 0; i < NUM_RENDER_TARGETS_DRAW_ONE_FRAME; i++)
+		{
+			CalcAverageLuma(rc, m_numberCalcRenderTarget);
+			if (m_numberCalcRenderTarget == m_renderTargetVector.size() - 1)
+			{
+				m_numberCalcRenderTarget = 0;
+			}
+			else
+			{
+				m_numberCalcRenderTarget++;
+			}
+		}
+	}
 	// レンダリングターゲットを設定
 	rc.SetRenderTargetAndViewport(mainRenderTarget);
 	//描画。
 	m_finalSprite.Draw(rc);
 	// レンダリングターゲットへの書き込み終了待ち
 	rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
-	
 }
