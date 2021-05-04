@@ -82,9 +82,9 @@ void RenderingEngine::InitGBuffer()
         DXGI_FORMAT_UNKNOWN
     );
 
-    // スペキュラマップ出力用のレンダリングターゲットを初期化する
+    // メタリック、スムース出力用のレンダリングターゲットを初期化する
     // todo DXGI_FORMAT_R32G32B32A32_FLOATもの精度は不要なので、後で、DXGI_FORMAT_R8G8B8A8_UNORMに変更する
-    m_gBuffer[enGBufferSpecular].Create(
+    m_gBuffer[enGBufferMetaricSmooth].Create(
         frameBuffer_w,
         frameBuffer_h,
         1,
@@ -289,11 +289,11 @@ void RenderingEngine::RenderToGBuffer(RenderContext& rc)
 {
     // レンダリングターゲットをG-Bufferに変更
     RenderTarget* rts[enGBufferNum] = {
-        &m_gBuffer[enGBufferAlbedo],     // 0番目のレンダリングターゲット
-        &m_gBuffer[enGBufferNormal],     // 1番目のレンダリングターゲット
-        &m_gBuffer[enGBufferWorldPos],   // 2番目のレンダリングターゲット
-        &m_gBuffer[enGBufferSpecular],   // 3番目のレンダリングターゲット
-        &m_gBuffer[enGBUfferShadowParam],// 4番目のレンダリングターゲット
+        &m_gBuffer[enGBufferAlbedo],        // 0番目のレンダリングターゲット
+        &m_gBuffer[enGBufferNormal],        // 1番目のレンダリングターゲット
+        &m_gBuffer[enGBufferWorldPos],      // 2番目のレンダリングターゲット
+        &m_gBuffer[enGBufferMetaricSmooth], // 3番目のレンダリングターゲット
+        &m_gBuffer[enGBUfferShadowParam],   // 4番目のレンダリングターゲット
     };
 
     // まず、レンダリングターゲットとして設定できるようになるまで待つ

@@ -35,7 +35,7 @@ struct SPSOut
     float4 albedo : SV_Target0;         // アルベド
     float4 normal : SV_Target1;         // 法線
     float4 worldPos : SV_Target2;       // ワールド座標
-    float4 specular : SV_Target3;       // スペキュラ
+    float4 metaricSmooth : SV_Target3;  // メタリックとスムース。rにメタリック、aにスムース。
     float4 shadowParam : SV_Target4;    //影生成用パラメータ。
 };
 
@@ -137,8 +137,8 @@ SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
     psOut.normal.xyz = GetNormalFromNormalMap( 
         psIn.normal, psIn.tangent, psIn.biNormal, psIn.uv ) ;
     psOut.normal.w = 1.0f;
-    // スペキュラ情報を出力。
-    psOut.specular = g_spacular.Sample(g_sampler, psIn.uv);
+    // メタリックスムースを出力。
+    psOut.metaricSmooth = g_spacular.Sample(g_sampler, psIn.uv);
     // ワールド座標を出力。
     psOut.worldPos = float4( psIn.worldPos, 1.0f);
     // 影パラメータ。

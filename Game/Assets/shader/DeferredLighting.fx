@@ -92,14 +92,14 @@ float SpcFresnel(float f0, float u)
 /// <param name="L">光源に向かうベクトル</param>
 /// <param name="V">視点に向かうベクトル</param>
 /// <param name="N">法線ベクトル</param>
-/// <param name="metaric">金属度</param>
-float CookTorranceSpecular(float3 L, float3 V, float3 N, float metaric)
+/// <param name="smooth">滑らかさ</param>
+float CookTorranceSpecular(float3 L, float3 V, float3 N, float smooth)
 {
     float microfacet = 0.76f;
 
     // 金属度を垂直入射の時のフレネル反射率として扱う
     // 金属度が高いほどフレネル反射は大きくなる
-    float f0 = metaric;
+    float f0 = smooth;
 
     // ライトに向かうベクトルと視線に向かうベクトルのハーフベクトルを求める
     float3 H = normalize(L + V);
@@ -142,55 +142,36 @@ float CookTorranceSpecular(float3 L, float3 V, float3 N, float metaric)
 /// <param name="roughness">粗さ。0～1の範囲。</param>
 float CalcDiffuseFromFresnel(float3 N, float3 L, float3 V)
 {
-    // step-4 フレネル反射を考慮した拡散反射光を求める
+    // step-1 ディズニーベースのフレネル反射による拡散反射を真面目に実装する。
     // 光源に向かうベクトルと視線に向かうベクトルのハーフベクトルを求める
     float3 H = normalize(L+V);
-
-    //表面の粗さは0.5で固定とする
+    
+    //粗さは0.5で固定。
     float roughness = 0.5f;
+    
+    //これは
     float energyBias = lerp(0.0f, 0.5f, roughness);
+    float energyFactor = lerp(1.0, 1.0/1.51, roughness);
 
     // 光源に向かうベクトルとハーフベクトルがどれだけ似ているかを内積で求める
     float dotLH = saturate(dot(L,H));
-
-    // 光源に向かうベクトルとハーフベクトル、最大の拡散反射率を求める
+    // 光源に向かうベクトルとハーフベクトル、光が平行に入射したときの拡散反射量を求めている。
     float Fd90 = energyBias + 2.0 * dotLH * dotLH * roughness;
-
-    // 法線と光源に向かうベクトルがどれだけ似ているかを内積で求める
+    
+    // 法線と光源に向かうベクトルｗを利用して拡散反射率を求めています
     float dotNL = saturate(dot(N,L));
+    float FL = (1 + (Fd90 - 1) * pow(1 - dotNL, 5));
 
-    //ここでは、法線とライトの方向を利用して拡散反射率を求めています
-    //法線とライトの方向が同じ向きだと拡散反射が強くなる
-    //向きが異なっていくと拡散反射が弱くなる計算になっています
-    float FL = Fd90 + (dotNL - Fd90);
-
-    // 法線と視線に向かうベクトルがどれだけ似ているかを内積で求める
+    
+    // 法線と視点に向かうベクトルを利用して拡散反射率を求めています
     float dotNV = saturate(dot(N,V));
-
-    //ここでは、法線と視点に向かうベクトルを利用して拡散反射率を求めています
-    //法線とライトの方向が同じ向きだと拡散反射が強くなる
-    //向きが異なっていくと拡散反射が弱くなる計算になっています
-    float FV = Fd90 + (dotNV - Fd90);
+    float FV =  (1 + (Fd90 - 1) * pow(1 - dotNV, 5));
 
     //法線と光源への方向に依存する拡散反射率と、法線と視点ベクトルに依存する拡散反射率を
     // 乗算して最終的な拡散反射率を求めている。PIで除算しているのは正規化を行うため
-    return (FL*FV)/PI;
-
-    // 以下コメントアウト
-    /*
-    // 光源に向かうベクトルと視線に向かうベクトルのハーフベクトルを求める
-    float3 H = normalize(L+V);
-
-    // 3. 法線と光源に向かうベクトルがどれだけ似ているかを内積で求める
-    float dotNL = saturate(dot(N,L));
-
-    float dotNV = saturate(dot(N,V));
-
-    // 法線と光源への方向に依存する拡散反射率と、法線と視点ベクトルに依存する拡散反射率を乗算して
-    // 最終的な拡散反射率を求めている。PIで除算しているのは正規化を行うため
-    return (dotNL*dotNV)/PI;
-    */
+    return (FL*FV * energyFactor);
 }
+
 float CalcShadowRate(int ligNo, float3 worldPos)
 {
     float shadow = 0.0f;
@@ -241,9 +222,12 @@ float4 PSMain(PSInput In) : SV_Target0
     //ワールド座標をサンプリング。
     float3 worldPos = worldPosTexture.Sample(Sampler, In.uv).xyz;
     //スペキュラカラーをサンプリング。
-    float3 specColor = specularTexture.SampleLevel(Sampler, In.uv, 0).rgb;
+    float3 specColor = albedoColor.xyz;
     //金属度をサンプリング。
-    float metaric = specularTexture.SampleLevel(Sampler, In.uv, 0).a;
+    float metaric = specularTexture.SampleLevel(Sampler, In.uv, 0).r;
+    //スムース
+    float smooth = specularTexture.SampleLevel(Sampler, In.uv, 0).a;
+
     //影生成用のパラメータ。
     float4 shadowParam = shadowParamTexture.Sample(Sampler, In.uv);
     // 視線に向かって伸びるベクトルを計算する
@@ -274,22 +258,21 @@ float4 PSMain(PSInput In) : SV_Target0
         float3 lambertDiffuse = directionalLight[ligNo].color * NdotL / PI;
 
         // 最終的な拡散反射光を計算する
-        float3 diffuse = albedoColor * /*diffuseFromFresnel */ lambertDiffuse;
+        float3 diffuse = albedoColor * diffuseFromFresnel * lambertDiffuse;
 
         // クックトランスモデルを利用した鏡面反射率を計算する
         // クックトランスモデルの鏡面反射率を計算する
         float3 spec = CookTorranceSpecular(
-            -directionalLight[ligNo].direction, toEye, normal, metaric)
+            -directionalLight[ligNo].direction, toEye, normal, smooth)
             * directionalLight[ligNo].color;
 
         // 金属度が高ければ、鏡面反射はスペキュラカラー、低ければ白
         // スペキュラカラーの強さを鏡面反射率として扱う
-        float specTerm = length(specColor.xyz);
-        spec *= lerp(float3(specTerm, specTerm, specTerm), specColor, metaric);
+     
+        spec *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metaric);
 
-        // 鏡面反射率を使って、拡散反射光と鏡面反射光を合成する
-        // 鏡面反射率が高ければ、拡散反射は弱くなる
-        lig += diffuse * (1.0f - specTerm) + spec;
+        // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
+        lig += diffuse * (1.0f - smooth) + spec * smooth;
     }
     // 環境光による底上げ
     lig += ambientLight * albedoColor;

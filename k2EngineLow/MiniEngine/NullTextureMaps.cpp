@@ -38,6 +38,12 @@ void NullTextureMaps::Init()
 		m_normalMap,
 		m_normalMapSize);
 
+	//スペキュラマップマップをロード。
+	TexLoad(
+		"Assets/modelData/preset/specMap_None.DDS",
+		m_specMap,
+		m_specMapSize);
+
 	//０の値を格納しているマップをロード。
 	TexLoad(
 		"Assets/modelData/preset/ZeroValueMap.DDS",

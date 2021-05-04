@@ -43,7 +43,7 @@ public:
 	/// <returns></returns>
 	const std::unique_ptr<char[]>& GetSpecularMap() const
 	{
-		return m_zeroValueMap;
+		return m_specMap;
 	}
 	/// <summary>
 	/// スペキュラマップのサイズを取得。
@@ -51,7 +51,7 @@ public:
 	/// <returns></returns>
 	unsigned int GetSpecularMapSize() const
 	{
-		return m_zeroValueMapSize;
+		return m_specMapSize;
 	}
 	/// <summary>
 	/// アルベドマップを取得。
@@ -106,6 +106,8 @@ private:
 	unsigned int m_albedoMapSize = 0;		//アルベドマップのサイズ。
 	std::unique_ptr<char[]>	m_normalMap;	//法線マップ。
 	unsigned int m_normalMapSize = 0;		//法線マップのサイズ。
+	std::unique_ptr<char[]>	m_specMap;		//法線マップ。
+	unsigned int m_specMapSize = 0;			//法線マップのサイズ。
 	std::unique_ptr<char[]> m_zeroValueMap;	//0の値を格納しているマップ。
 	unsigned int m_zeroValueMapSize = 0;	//0の値を格納しているマップのサイズ。
 };

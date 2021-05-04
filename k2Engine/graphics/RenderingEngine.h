@@ -229,7 +229,7 @@ private:
         enGBufferAlbedo,        // アルベド
         enGBufferNormal,        // 法線
         enGBufferWorldPos,      // ワールド座標
-        enGBufferSpecular,      // スペキュラ。xyzにスペキュラカラー、wに金属度
+        enGBufferMetaricSmooth, // メタリックとスムース。メタリックがr、スムースがa。gbは未使用。
         enGBUfferShadowParam,   // 影パラメータ
         enGBufferNum,           // G-Bufferの数
     };
