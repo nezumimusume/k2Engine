@@ -25,16 +25,11 @@ struct PSInput {
     float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> albedoTexture : register(t0);     //FXAAをかけるレンダーターゲットのシェーダーリソース。
+Texture2D<float4> sceneTexture : register(t0);     //FXAAをかけるレンダーターゲットのシェーダーリソース。
 sampler Sampler : register(s0);     //サンプラー。
 
 //FXAA関係。
-static const float FXAA_EDGE_THRESHOLD_MIN = 1.0f / 16.0f;
-static const float XAA_EDGE_THRESHOLD = 1.0f / 8.0f;
 
-static const float FXAA_REDUCE_MIN = 1.0f / 128.0f;
-static const float FXAA_REDUCE_MUL = 1.0f / 8.0f;
-static const float FXAA_SPAN_MAX = 8.0f;
 
 PSInput VSMain(VSInput In)
 {
@@ -44,97 +39,106 @@ PSInput VSMain(VSInput In)
     return psIn;
 }
 
-//rgbから輝度を計算する。
-float FxaaLuma(float3 rgb) {
-    return rgb.y * (0.587 / 0.299) + rgb.x;
+float4 FxaaPixelShader( 
+	float2 pos, 
+    float4 fxaaConsoleRcpFrameOpt,
+    float4 fxaaConsoleRcpFrameOpt2,
+    float fxaaQualityEdgeThreshold,
+    float fxaaQualityEdgeThresholdMin,
+    float fxaaConsoleEdgeSharpness,
+    float fxaaConsoleEdgeThreshold,
+    float fxaaConsoleEdgeThresholdMin,
+    float2 sceneTexSize
+)
+{
+	//近傍4テクセルをフェッチ。
+	float4 nTex = float4( 
+		pos.x + 0.5f/sceneTexSize.x, 
+		pos.y + 0.5f/sceneTexSize.y,
+		pos.x - 0.5f/sceneTexSize.x, 
+		pos.y - 0.5f/sceneTexSize.y
+	);
+	float lumaNw = sceneTexture.Sample(Sampler, nTex.xy).y;
+	float lumaSw = sceneTexture.Sample(Sampler, nTex.xw).y;
+	float lumaNe = sceneTexture.Sample(Sampler, nTex.zy).y;
+	float lumaSe = sceneTexture.Sample(Sampler, nTex.zw).y;
+	
+	float4 rgbyM = sceneTexture.Sample(Sampler, pos.xy);
+	float lumaM = rgbyM.y;
+	
+	
+	//近傍テクセルの輝度の差を調べる。
+	float lumaMaxNwSw = max(lumaNw, lumaSw);
+    lumaNe += 1.0/384.0;
+    float lumaMinNwSw = min(lumaNw, lumaSw);
+/*--------------------------------------------------------------------------*/
+    float lumaMaxNeSe = max(lumaNe, lumaSe);
+    float lumaMinNeSe = min(lumaNe, lumaSe);
+/*--------------------------------------------------------------------------*/
+    float lumaMax = max(lumaMaxNeSe, lumaMaxNwSw);
+    float lumaMin = min(lumaMinNeSe, lumaMinNwSw);
+/*--------------------------------------------------------------------------*/
+    float lumaMaxScaled = lumaMax * fxaaConsoleEdgeThreshold;
+/*--------------------------------------------------------------------------*/
+    float lumaMinM = min(lumaMin, lumaM);
+    float lumaMaxScaledClamped = max(fxaaConsoleEdgeThresholdMin, lumaMaxScaled);
+    float lumaMaxM = max(lumaMax, lumaM);
+    float dirSwMinusNe = lumaSw - lumaNe;
+    float lumaMaxSubMinM = lumaMaxM - lumaMinM;
+    float dirSeMinusNw = lumaSe - lumaNw;
+    if(lumaMaxSubMinM < lumaMaxScaledClamped){
+		//輝度の差がしきい値以下だったので、このピクセルはアンチをかけない。
+		 return rgbyM;
+	}
+    
+/*--------------------------------------------------------------------------*/
+	//輝度の差を利用して、ギザギザが発生している可能性の高いテクセルをフェッチする。
+    float2 dir;
+    dir.x = dirSwMinusNe + dirSeMinusNw;
+    dir.y = dirSwMinusNe - dirSeMinusNw;
+   
+/*--------------------------------------------------------------------------*/
+    float2 dir1 = normalize(dir.xy);
+   
+    float4 rgbyN1 = sceneTexture.Sample(Sampler, pos.xy - dir1 * fxaaConsoleRcpFrameOpt.zw);
+    float4 rgbyP1 = sceneTexture.Sample(Sampler, pos.xy + dir1 * fxaaConsoleRcpFrameOpt.zw);
+/*--------------------------------------------------------------------------*/
+    float dirAbsMinTimesC = min(abs(dir1.x), abs(dir1.y)) * fxaaConsoleEdgeSharpness;
+    float2 dir2 = clamp(dir1.xy / dirAbsMinTimesC, -2.0, 2.0);
+/*--------------------------------------------------------------------------*/
+    float4 rgbyN2 = sceneTexture.Sample(Sampler, pos.xy - dir2 * fxaaConsoleRcpFrameOpt2.zw);
+    float4 rgbyP2 = sceneTexture.Sample(Sampler, pos.xy + dir2 * fxaaConsoleRcpFrameOpt2.zw);
+    
+/*--------------------------------------------------------------------------*/
+	//ブレンドブレンド。
+    float4 rgbyA = rgbyN1 + rgbyP1;
+    float4 rgbyB = ((rgbyN2 + rgbyP2) * 0.25) + (rgbyA * 0.25);
+/*--------------------------------------------------------------------------*/
+    int twoTap = (rgbyB.y < lumaMin) || (rgbyB.y > lumaMax);
+    
+    if(twoTap){
+		//まだ輝度の差が大きいので、再度ブレンド。
+		rgbyB.xyz = rgbyA.xyz * 0.5;
+	}
+    return rgbyB;
+    
 }
 
-//FXAAを計算するよ。
-float4 CalcFXAA(float2 uv)
+float4 PSMain( PSInput In ) : SV_Target0
 {
-    //中央のテクセルカラーを抽出する。
-    float4 albedoColor = albedoTexture.Sample(Sampler, uv);
-
-    // 近傍4テクセルへのUVオフセット
-    float2 uvOffset[4] = {
-        float2(-1.0f / bufferW, 1.0f / bufferH),  //左上
-        float2(1.0f / bufferW, 1.0f / bufferH),   //右上
-        float2(-1.0f / bufferW, -1.0f / bufferH), //左下
-        float2(1.0f / bufferW, -1.0f / bufferH)   //右下
-    };
-    //近隣テクセルカラーを抽出する。
-    float3 albedoNW = albedoTexture.Sample(Sampler, uv + uvOffset[0]).xyz;
-    float3 albedoNE = albedoTexture.Sample(Sampler, uv + uvOffset[1]).xyz;
-    float3 albedoSW = albedoTexture.Sample(Sampler, uv + uvOffset[2]).xyz;
-    float3 albedoSE = albedoTexture.Sample(Sampler, uv + uvOffset[3]).xyz;
-
-    //近隣テクセルの輝度を計算する。
-    float lumaM = FxaaLuma(albedoColor.xyz);
-    float lumaNW = FxaaLuma(albedoNW);
-    float lumaNE = FxaaLuma(albedoNE);
-    float lumaSW = FxaaLuma(albedoSW);
-    float lumaSE = FxaaLuma(albedoSE);
-
-    //輝度最小値を計算。
-    float rangeMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
-
-    //輝度最大値を計算。
-    float rangeMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
-
-    //輝度最大値と最小値のコントラストを計算。
-    float range = rangeMax - rangeMin;
-
-    //コントラストが輝度最大値*しきい値より低かったら計算を終了するよ。
-    //輝度変化が大きかったら、FXAAするよ。
-    if (range <
-        max(FXAA_EDGE_THRESHOLD_MIN, rangeMax * XAA_EDGE_THRESHOLD)) {
-        return albedoColor;
-    }
-
-
-    //輝度エッジに対して垂直なベクトル(方向)を求める。
-    float2 dir = float2(0.0f, 0.0f);
-    dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
-    dir.y = ((lumaNW + lumaSW) - (lumaNE + lumaSE));
-    dir.xy = normalize(dir.xy) * 3.0f;
-
-    //輝度によって、ベクトルの値を変化させる。
-    float dirReduce = max(
-        (lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL),
-        FXAA_REDUCE_MIN);
-    float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
-    dir = min(float2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),
-        max(float2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),
-            dir * rcpDirMin));
-
-    //解像度分だけベクトルを割る。
-    dir *= float2(1.0f / bufferW, 1.0f / bufferH);
-
-    //方向ベクトルから最終的な色を決定していく。
-    float4 rgbA = (1.0f / 2.0f) * (
-        albedoTexture.Sample(Sampler, uv + dir * (1.0f / 3.0f - 0.5f)) +
-        albedoTexture.Sample(Sampler, uv + dir * (2.0f / 3.0f - 0.5f)));
-    float4 rgbB = rgbA * (1.0f / 2.0f) + (1.0f / 4.0f) * (
-        albedoTexture.Sample(Sampler, uv + dir * (0.0f / 3.0f - 0.5f)) +
-        albedoTexture.Sample(Sampler, uv + dir * (3.0f / 3.0f - 0.5f)));
-
-    float lumaB = FxaaLuma(rgbB.xyz);
-
-    //rgbBの輝度が最小最大から外れていたら。
-    if ((lumaB < rangeMin) || (lumaB > rangeMax))
-    {
-        //rgbAを返す。
-        return rgbA;
-    }
-    else
-    {
-        return rgbB;
-    }
-}
-
-
-
-float4 PSMain(PSInput In) : SV_Target0
-{
-    return CalcFXAA(In.uv);
+	float2 texSize = float2( bufferW, bufferH);
+	float level;
+	sceneTexture.GetDimensions( 0, texSize.x, texSize.y, level );
+	float4 rcpFrame = float4(0.0f, 0.0f, 1.0f/texSize.x, 1.0f/texSize.y);
+	return FxaaPixelShader( 
+		In.uv,
+        rcpFrame,							// float4 fxaaConsoleRcpFrameOpt,
+        rcpFrame,							// float4 fxaaConsoleRcpFrameOpt2,
+        0.166f,								// FxaaFloat fxaaQualityEdgeThreshold,
+        0.0833f,							// FxaaFloat fxaaQualityEdgeThresholdMin,
+        1.0f,								// FxaaFloat fxaaConsoleEdgeSharpness,
+        0.4f,								// FxaaFloat fxaaConsoleEdgeThreshold,
+        0.0833f,								// FxaaFloat fxaaConsoleEdgeThresholdMin,
+        texSize
+	);
 }
