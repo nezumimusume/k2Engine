@@ -21,16 +21,17 @@ private:
 	/// </summary>
 	/// <param name="rc">レンダーコンテキスト。</param>
 	/// <param name="numberRenderTarget">レンダーターゲットの番号。</param>
-	void CalcAverageLuma(RenderContext& rc,int numberRenderTarget)
+	void RenderToLuma(RenderContext& rc,int numberRenderTarget)
 	{
-		// レンダリングターゲットを設定
+		//描画予定のレンダーターゲットはPRESENTからRENDERTARGETへ。
+		rc.WaitUntilToPossibleSetRenderTarget(*m_renderTargetVector[numberRenderTarget].get());
+		//レンダリングターゲットを設定
 		rc.SetRenderTargetAndViewport(*m_renderTargetVector[numberRenderTarget].get());
 		//描画。
 		m_spriteVector[numberRenderTarget].get()->Draw(rc);
-		// レンダリングターゲットへの書き込み終了待ち
+		//次のレンダーターゲット描画の際に。
+		//シェーダーリソースビューとして使用するので、RENDERTARGETからPRESENTへ。
 		rc.WaitUntilFinishDrawingToRenderTarget(*m_renderTargetVector[numberRenderTarget].get());
-		//レンダリングターゲットとして利用できるまで待つ。
-		rc.WaitUntilToPossibleSetRenderTarget(*m_renderTargetVector[numberRenderTarget].get());
 	}
 	struct TonemapBuffer {
 		float scaler = 6.0f;
@@ -42,5 +43,5 @@ private:
 	Sprite m_finalSprite;
 	TonemapBuffer m_tonemapBuffer;
 	int m_numberCalcRenderTarget = -1;		
-};
+}; 
 

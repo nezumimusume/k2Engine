@@ -52,16 +52,13 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 		if (number == 0)
 		{
 			spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-			spriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 			spriteInitData.m_psEntryPoinFunc = "ExtractLumaPSMain";
 		}
 		else
 		{
 			spriteInitData.m_textures[0] = &m_renderTargetVector[number - 1].get()->GetRenderTargetTexture();
-			spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
 			spriteInitData.m_psEntryPoinFunc = "PSMain";
 		}
-
 		//解像度は4/1したもの。
 		spriteInitData.m_width = width;
 		spriteInitData.m_height = height;
@@ -69,7 +66,8 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 		spriteInitData.m_fxFilePath = "Assets/shader/tonemap.fx";
 		spriteInitData.m_vsEntryPointFunc = "VSMain";
 	
-
+		//ここにはレンダーターゲットのフォーマットを入れる。
+		spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
 		spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
 	
 		auto spritePtr = std::make_unique<Sprite>();
@@ -88,9 +86,7 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 	//平均輝度を利用したtonemap用のスプライトを初期化する。
 	SpriteInitData spriteInitData;
 	spriteInitData.m_textures[0] = &m_renderTargetVector[m_renderTargetVector.size() - 1].get()->GetRenderTargetTexture();
-	spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
 	spriteInitData.m_textures[1] = &mainRenderTarget.GetRenderTargetTexture();
-	spriteInitData.m_colorBufferFormat[1] = mainRenderTarget.GetColorBufferFormat();
 	
 	spriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
 	spriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
@@ -99,6 +95,8 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 	spriteInitData.m_vsEntryPointFunc = "VSMain";
 	spriteInitData.m_psEntryPoinFunc = "FinalPSMain";
 
+	//ここにはレンダーターゲットのフォーマットを入れる。
+	spriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 	spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
 
 	spriteInitData.m_expandConstantBuffer = (void*)&m_tonemapBuffer;
@@ -110,14 +108,11 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 
 void ToneMap::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
-	//レンダリングターゲットとして利用できるまで待つ。
-	rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-
 	if (m_numberCalcRenderTarget == -1)
 	{
 		for (int i = 0; i < m_renderTargetVector.size(); i++)
 		{
-			CalcAverageLuma(rc, i);
+			RenderToLuma(rc, i);
 		}
 		m_numberCalcRenderTarget = 0;
 	}
@@ -125,10 +120,11 @@ void ToneMap::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
 		for (int i = 0; i < NUM_RENDER_TARGETS_DRAW_ONE_FRAME; i++)
 		{
-			CalcAverageLuma(rc, m_numberCalcRenderTarget);
+			RenderToLuma(rc, m_numberCalcRenderTarget);
 			if (m_numberCalcRenderTarget == m_renderTargetVector.size() - 1)
 			{
 				m_numberCalcRenderTarget = 0;
+				break;
 			}
 			else
 			{
@@ -136,10 +132,12 @@ void ToneMap::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 			}
 		}
 	}
+	//メインレンダーターゲットをPRESENTからRENDERTARGETへ。
+	rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
 	// レンダリングターゲットを設定
 	rc.SetRenderTargetAndViewport(mainRenderTarget);
 	//描画。
 	m_finalSprite.Draw(rc);
-	// レンダリングターゲットへの書き込み終了待ち
+	// レンダリングターゲットへの書き込み終了待ち。
 	rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 }
