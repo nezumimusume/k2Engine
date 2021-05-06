@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.CommandList.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Compiler.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.ConstantBuffer.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Graphics.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.IndexBuffer.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.PipelineState.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Platform.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Texture.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.VertexBuffer.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\PC\LLGI.CreatePC.cpp">
+      <Filter>PC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\Win\LLGI.WindowWin.cpp">
+      <Filter>Win</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.BaseDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.BufferDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.CommandListDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.CompilerDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.ConstantBufferDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.DescriptorHeapDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.GraphicsDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.IndexBufferDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.PipelineStateDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.PlatformDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.RenderPassDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.RenderPassPipelineStateDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.ShaderDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.SingleFrameMemoryPoolDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.TextureDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.VertexBufferDX12.cpp">
+      <Filter>DX12</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Base.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.CommandList.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Compiler.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.ConstantBuffer.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Graphics.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.IndexBuffer.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.PipelineState.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Platform.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Shader.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Texture.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.VertexBuffer.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\Win\LLGI.WindowWin.h">
+      <Filter>Win</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.BaseDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.BufferDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.CommandListDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.CompilerDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.ConstantBufferDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.DescriptorHeapDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.GraphicsDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.IndexBufferDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.PipelineStateDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.PlatformDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.RenderPassDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.RenderPassPipelineStateDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.ShaderDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.SingleFrameMemoryPoolDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.TextureDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.VertexBufferDX12.h">
+      <Filter>DX12</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Base">
+      <UniqueIdentifier>{380B5CA8-4C5A-37CA-8B04-7C6E8856E098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX12">
+      <UniqueIdentifier>{E669ECB5-F5B2-3CDE-99F6-49B3B1D4B68D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PC">
+      <UniqueIdentifier>{B338FC2A-F5D6-36FB-AED6-B3B1766D806C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win">
+      <UniqueIdentifier>{139AF929-71F3-30A7-8E9D-BD261ED46823}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

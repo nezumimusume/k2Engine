@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\Examples\Distortion\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Takay\Downloads\EffekseerRuntime160\Examples\Distortion\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{464A8DC6-93CE-333F-9CD4-7A68303E98ED}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

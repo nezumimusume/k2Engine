@@ -1,0 +1,465 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Client.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Color.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.CurveLoader.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.DefaultEffectLoader.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.DefaultFile.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Effect.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNode.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeModel.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeRibbon.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeRing.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeRoot.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeSprite.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeTrack.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.FCurves.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Instance.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InstanceChunk.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InstanceContainer.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InstanceGlobal.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InstanceGroup.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InternalScript.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Manager.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Matrix43.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Matrix44.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Random.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.RectF.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Resource.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.ResourceManager.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Setting.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Server.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Socket.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Vector2D.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Vector3D.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.WorkerThread.cpp">
+      <Filter>Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.Grid.cpp">
+      <Filter>Effekseer\Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.Layer.cpp">
+      <Filter>Effekseer\Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.Matrix44.cpp">
+      <Filter>Effekseer\Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.ObjectInternal.cpp">
+      <Filter>Effekseer\Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.ReferenceObject.cpp">
+      <Filter>Effekseer\Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.Vector3DF.cpp">
+      <Filter>Effekseer\Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.WorldInternal.cpp">
+      <Filter>Effekseer\Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Material\Effekseer.MaterialFile.cpp">
+      <Filter>Effekseer\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Material\Effekseer.CompiledMaterial.cpp">
+      <Filter>Effekseer\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Material\Effekseer.MaterialCompiler.cpp">
+      <Filter>Effekseer\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\IO\Effekseer.EfkEfcFactory.cpp">
+      <Filter>Effekseer\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Parameter\Easing.cpp">
+      <Filter>Effekseer\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Parameter\Effekseer.Parameters.cpp">
+      <Filter>Effekseer\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Utils\Effekseer.CustomAllocator.cpp">
+      <Filter>Effekseer\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\SIMD\Mat43f.cpp">
+      <Filter>Effekseer\SIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\SIMD\Mat44f.cpp">
+      <Filter>Effekseer\SIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\SIMD\Utils.cpp">
+      <Filter>Effekseer\SIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Noise\CurlNoise.cpp">
+      <Filter>Effekseer\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Noise\PerlinNoise.cpp">
+      <Filter>Effekseer\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\ForceField\ForceFields.cpp">
+      <Filter>Effekseer\ForceField</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\ProceduralModelGenerator.cpp">
+      <Filter>Effekseer\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\Model.cpp">
+      <Filter>Effekseer\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\ModelLoader.cpp">
+      <Filter>Effekseer\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\SplineGenerator.cpp">
+      <Filter>Effekseer\Model</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer.Modules.h" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer.SIMD.h" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer.h" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Backend\GraphicsDevice.h">
+      <Filter>Effekseer\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.Grid.h">
+      <Filter>Effekseer\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.Layer.h">
+      <Filter>Effekseer\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.ObjectInternal.h">
+      <Filter>Effekseer\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.ReferenceObject.h">
+      <Filter>Effekseer\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.WorldInternal.h">
+      <Filter>Effekseer\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Culling\Culling3D.h">
+      <Filter>Effekseer\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Base.Pre.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Base.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Client.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.ClientImplemented.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Color.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Curve.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.CurveLoader.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.DefaultEffectLoader.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.DefaultFile.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Effect.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectImplemented.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectLoader.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNode.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeModel.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeRibbon.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeRing.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeRoot.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeSprite.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.EffectNodeTrack.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.FCurves.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.File.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Instance.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InstanceChunk.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InstanceContainer.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InstanceGlobal.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InstanceGroup.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InternalScript.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.InternalStruct.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.IntrusiveList.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Manager.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.ManagerImplemented.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.MaterialLoader.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Math.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Matrix43.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Matrix44.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Random.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.RectF.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Resource.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.ResourceManager.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Server.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.ServerImplemented.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Setting.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Socket.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.SoundLoader.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.TextureLoader.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Vector2D.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.Vector3D.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Effekseer.WorkerThread.h">
+      <Filter>Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\ForceField\ForceFields.h">
+      <Filter>Effekseer\ForceField</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\IO\Effekseer.EfkEfcFactory.h">
+      <Filter>Effekseer\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Material\Effekseer.CompiledMaterial.h">
+      <Filter>Effekseer\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Material\Effekseer.MaterialCompiler.h">
+      <Filter>Effekseer\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Material\Effekseer.MaterialFile.h">
+      <Filter>Effekseer\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\Model.h">
+      <Filter>Effekseer\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\ModelLoader.h">
+      <Filter>Effekseer\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\ProceduralModelGenerator.h">
+      <Filter>Effekseer\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\ProceduralModelParameter.h">
+      <Filter>Effekseer\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Model\SplineGenerator.h">
+      <Filter>Effekseer\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Noise\CurlNoise.h">
+      <Filter>Effekseer\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Noise\PerlinNoise.h">
+      <Filter>Effekseer\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Parameter\DynamicParameter.h">
+      <Filter>Effekseer\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Parameter\Easing.h">
+      <Filter>Effekseer\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Parameter\Effekseer.Parameters.h">
+      <Filter>Effekseer\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Renderer\Effekseer.ModelRenderer.h">
+      <Filter>Effekseer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Renderer\Effekseer.ParticleRenderer.h">
+      <Filter>Effekseer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Renderer\Effekseer.RibbonRenderer.h">
+      <Filter>Effekseer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Renderer\Effekseer.RingRenderer.h">
+      <Filter>Effekseer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Renderer\Effekseer.SpriteRenderer.h">
+      <Filter>Effekseer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Renderer\Effekseer.TrackRenderer.h">
+      <Filter>Effekseer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Utils\BinaryVersion.h">
+      <Filter>Effekseer\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Utils\Compatiblity.h">
+      <Filter>Effekseer\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Utils\Effekseer.BinaryReader.h">
+      <Filter>Effekseer\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Utils\Effekseer.CustomAllocator.h">
+      <Filter>Effekseer\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\Effekseer\Utils\Profiler.h">
+      <Filter>Effekseer\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Effekseer">
+      <UniqueIdentifier>{A254D903-E3BE-377C-A47D-12C3261C987E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\Backend">
+      <UniqueIdentifier>{9E5F77F9-A3DC-3BAF-A3D9-3B5F5C6EAE85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\Culling">
+      <UniqueIdentifier>{0ECEE39C-4EB8-3AF5-B4C4-FEB28AABEA24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\ForceField">
+      <UniqueIdentifier>{A5F115E9-288E-3124-9824-2A387AE7D5F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\IO">
+      <UniqueIdentifier>{C9A6E386-68D3-3D80-9D5B-740C8132667F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\Material">
+      <UniqueIdentifier>{7A827012-1CAD-3E53-B9AD-4A98F865C436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\Model">
+      <UniqueIdentifier>{0BC385DB-3C86-3C6B-9E7C-E76ED1928061}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\Noise">
+      <UniqueIdentifier>{4A419E8E-8DB4-3C92-8195-11A0863CD3B9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\Parameter">
+      <UniqueIdentifier>{8B422B46-7D64-32BE-A694-3690DC461B7F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\Renderer">
+      <UniqueIdentifier>{DC8D3408-BCBA-3093-90DF-DE7CECA9686B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\SIMD">
+      <UniqueIdentifier>{5ACAC14D-E78A-32DB-B080-BDD9243755DD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effekseer\Utils">
+      <UniqueIdentifier>{F59482A0-6652-3F05-B18B-2A346E828C27}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

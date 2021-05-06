@@ -1,0 +1,4 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.19/Modules/ExternalProject.cmake
+C:/Users/Takay/Downloads/EffekseerRuntime160/src/3rdParty/LLGI/CMakeLists.txt
+C:/Users/Takay/Downloads/EffekseerRuntime160/src/3rdParty/LLGI/cmake/ClangFormat.cmake

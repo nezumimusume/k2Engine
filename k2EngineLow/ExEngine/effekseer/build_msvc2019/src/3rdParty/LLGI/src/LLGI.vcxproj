@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FDF36096-34CB-371F-ABF2-70C50B0CBCC7}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>LLGI</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\src\3rdParty\LLGI\src\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">LLGI.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">LLGId</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\src\3rdParty\LLGI\src\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">LLGI.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">LLGI</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\src\3rdParty\LLGI\src\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">LLGI.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">LLGI</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\src\3rdParty\LLGI\src\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">LLGI.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">LLGI</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>"4100"</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>NOMINMAX;WIN32;_WINDOWS;__EFFEKSEER_RENDERER_INTERNAL_LOADER__;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;NOMINMAX;_WINDOWS;__EFFEKSEER_RENDERER_INTERNAL_LOADER__;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>"4100"</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>NOMINMAX;WIN32;_WINDOWS;NDEBUG;__EFFEKSEER_RENDERER_INTERNAL_LOADER__;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;_WINDOWS;NDEBUG;__EFFEKSEER_RENDERER_INTERNAL_LOADER__;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>"4100"</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>NOMINMAX;WIN32;_WINDOWS;NDEBUG;__EFFEKSEER_RENDERER_INTERNAL_LOADER__;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;_WINDOWS;NDEBUG;__EFFEKSEER_RENDERER_INTERNAL_LOADER__;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>"4100"</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>NOMINMAX;WIN32;_WINDOWS;NDEBUG;__EFFEKSEER_RENDERER_INTERNAL_LOADER__;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;_WINDOWS;NDEBUG;__EFFEKSEER_RENDERER_INTERNAL_LOADER__;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Takay\Downloads\EffekseerRuntime160\src\Effekseer;C:\Users\Takay\Downloads\EffekseerRuntime160\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\CMakeLists.txt">
+      <StdOutEncoding>UTF-8</StdOutEncoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/Takay/Downloads/EffekseerRuntime160/src/3rdParty/LLGI/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Takay/Downloads/EffekseerRuntime160 -BC:/Users/Takay/Downloads/EffekseerRuntime160/build_msvc2019 --check-stamp-file C:/Users/Takay/Downloads/EffekseerRuntime160/build_msvc2019/src/3rdParty/LLGI/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\src\3rdParty\LLGI\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/Takay/Downloads/EffekseerRuntime160/src/3rdParty/LLGI/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Takay/Downloads/EffekseerRuntime160 -BC:/Users/Takay/Downloads/EffekseerRuntime160/build_msvc2019 --check-stamp-file C:/Users/Takay/Downloads/EffekseerRuntime160/build_msvc2019/src/3rdParty/LLGI/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\src\3rdParty\LLGI\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/Takay/Downloads/EffekseerRuntime160/src/3rdParty/LLGI/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Takay/Downloads/EffekseerRuntime160 -BC:/Users/Takay/Downloads/EffekseerRuntime160/build_msvc2019 --check-stamp-file C:/Users/Takay/Downloads/EffekseerRuntime160/build_msvc2019/src/3rdParty/LLGI/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\src\3rdParty\LLGI\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/Takay/Downloads/EffekseerRuntime160/src/3rdParty/LLGI/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Takay/Downloads/EffekseerRuntime160 -BC:/Users/Takay/Downloads/EffekseerRuntime160/build_msvc2019 --check-stamp-file C:/Users/Takay/Downloads/EffekseerRuntime160/build_msvc2019/src/3rdParty/LLGI/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\src\3rdParty\LLGI\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Base.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.CommandList.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.CommandList.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Compiler.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Compiler.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.ConstantBuffer.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.ConstantBuffer.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Graphics.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Graphics.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.IndexBuffer.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.IndexBuffer.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.PipelineState.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.PipelineState.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Platform.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Platform.h" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Shader.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Texture.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.Texture.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.VertexBuffer.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\LLGI.VertexBuffer.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\PC\LLGI.CreatePC.cpp" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\Win\LLGI.WindowWin.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\Win\LLGI.WindowWin.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.BaseDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.BaseDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.BufferDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.BufferDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.CommandListDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.CommandListDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.CompilerDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.CompilerDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.ConstantBufferDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.ConstantBufferDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.DescriptorHeapDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.DescriptorHeapDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.GraphicsDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.GraphicsDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.IndexBufferDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.IndexBufferDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.PipelineStateDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.PipelineStateDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.PlatformDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.PlatformDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.RenderPassDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.RenderPassDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.RenderPassPipelineStateDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.RenderPassPipelineStateDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.ShaderDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.ShaderDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.SingleFrameMemoryPoolDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.SingleFrameMemoryPoolDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.TextureDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.TextureDX12.h" />
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.VertexBufferDX12.cpp" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\3rdParty\LLGI\src\DX12\LLGI.VertexBufferDX12.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\Takay\Downloads\EffekseerRuntime160\build_msvc2019\ZERO_CHECK.vcxproj">
+      <Project>{985EC803-C58E-3EB7-AA95-3E443D76D340}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

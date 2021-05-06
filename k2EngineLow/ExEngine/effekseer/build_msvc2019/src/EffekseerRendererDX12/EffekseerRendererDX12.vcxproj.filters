@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.CommonUtils.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.DDSTextureLoader.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.IndexBufferBase.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.ModelRendererBase.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.PngTextureLoader.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.RenderStateBase.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.Renderer.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.Renderer_Impl.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.RibbonRendererBase.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.RingRendererBase.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.SpriteRendererBase.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.TGATextureLoader.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.TrackRendererBase.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.VertexBufferBase.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\ModelLoader.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\TextureLoader.cpp">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\EffekseerRendererDX12.Renderer.cpp">
+      <Filter>EffekseerRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerMaterialCompiler\DirectX12\EffekseerMaterialCompilerDX12.cpp">
+      <Filter>..\EffekseerMaterialCompiler\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\Common.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.DeviceObject.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.IndexBuffer.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.MaterialLoader.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.ModelRenderer.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.RenderState.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.Renderer.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.Shader.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.VertexBuffer.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\GraphicsDevice.cpp">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.CommonUtils.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.DDSTextureLoader.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.IndexBufferBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.ModelRendererBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.PngTextureLoader.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.RenderStateBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.Renderer.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.Renderer_Impl.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.RibbonRendererBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.RingRendererBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.ShaderBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.SpriteRendererBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.StandardRenderer.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.TGATextureLoader.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.TrackRendererBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\EffekseerRenderer.VertexBufferBase.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\ModelLoader.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererCommon\TextureLoader.h">
+      <Filter>EffekseerRendererCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\EffekseerRendererDX12.Base.Pre.h">
+      <Filter>EffekseerRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\EffekseerRendererDX12.Base.h">
+      <Filter>EffekseerRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\EffekseerRendererDX12.Renderer.h">
+      <Filter>EffekseerRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_model_distortion_ps.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_model_distortion_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_model_lit_ps.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_model_lit_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_model_unlit_ps.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_model_unlit_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_sprite_distortion_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_sprite_lit_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\ad_sprite_unlit_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\model_distortion_ps.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\model_distortion_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\model_lit_ps.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\model_lit_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\model_unlit_ps.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\model_unlit_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\sprite_distortion_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\sprite_lit_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRenderer\ShaderHeader\sprite_unlit_vs.h">
+      <Filter>EffekseerRenderer\ShaderHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\EffekseerRendererDX12.h" />
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerMaterialCompiler\DirectX12\EffekseerMaterialCompilerDX12.h">
+      <Filter>..\EffekseerMaterialCompiler\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\Common.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.Base.Pre.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.Base.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.DeviceObject.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.IndexBuffer.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.MaterialLoader.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.ModelRenderer.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.RenderState.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.Renderer.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.RendererImplemented.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.Shader.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\EffekseerRendererLLGI.VertexBuffer.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererLLGI\GraphicsDevice.h">
+      <Filter>EffekseerRendererLLGI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Takay\Downloads\EffekseerRuntime160\src\EffekseerRendererDX12\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{B82A4EE9-34AD-378B-8180-EFF7741148E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\EffekseerMaterialCompiler">
+      <UniqueIdentifier>{63A747EB-E64A-3CAB-8CCE-3FC1983C03B2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\EffekseerMaterialCompiler\DirectX12">
+      <UniqueIdentifier>{702E71DC-9DE4-30F9-94F0-472D4B39EBE6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffekseerRenderer">
+      <UniqueIdentifier>{E8CE7199-0794-3856-8DBF-B8B17A1C9BBD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffekseerRendererCommon">
+      <UniqueIdentifier>{E076D3BC-4D22-3AA0-AEFB-9E0E44E9ECF7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffekseerRendererLLGI">
+      <UniqueIdentifier>{28B06B7C-EFEB-3871-BE68-8E414462E6A2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffekseerRenderer\ShaderHeader">
+      <UniqueIdentifier>{DBA6BE71-3941-387A-9600-17EC74C0BAB3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
