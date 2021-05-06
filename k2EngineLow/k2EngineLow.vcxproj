@@ -75,8 +75,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)/ExEngine/bulletPhysics/src/;$(ProjectDir)/ExEngine/;$(ProjectDir)/;$(ProjectDir)/MiniEngine/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\MiniEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)/ExEngine/bulletPhysics/src/;$(ProjectDir)/ExEngine/;$(ProjectDir)/;$(ProjectDir)/MiniEngine/;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/EffeseerRendererDX12;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\MiniEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
     <OutDir>..\exlib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -85,8 +85,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)/ExEngine/bulletPhysics/src/;$(ProjectDir)/ExEngine/;$(ProjectDir)/;$(ProjectDir)/MiniEngine/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\MiniEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)/ExEngine/bulletPhysics/src/;$(ProjectDir)/ExEngine/;$(ProjectDir)/;$(ProjectDir)/MiniEngine/;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/EffeseerRendererDX12;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\MiniEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
     <OutDir>..\exlib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -120,7 +120,7 @@
       <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dxguid.lib;DirectXTK12.lib;d3d12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;DirectXTK12.lib;d3d12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX12d.lib;LLGId.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,10 +162,12 @@
       <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dxguid.lib;DirectXTK12.lib;d3d12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;DirectXTK12.lib;d3d12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX12d.lib;LLGId.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ExEngine\effect\Effect.cpp" />
+    <ClCompile Include="ExEngine\effect\EffectEngine.cpp" />
     <ClCompile Include="ExEngine\gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="ExEngine\gameObject\IGameObject.cpp" />
     <ClCompile Include="ExEngine\level2D\CaslFile.cpp" />
@@ -231,6 +233,8 @@
     <ClCompile Include="MiniEngine\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExEngine\effect\Effect.h" />
+    <ClInclude Include="ExEngine\effect\EffectEngine.h" />
     <ClInclude Include="ExEngine\ExEngine.h" />
     <ClInclude Include="ExEngine\gameObject\GameObjectManager.h" />
     <ClInclude Include="ExEngine\gameObject\IGameobject.h" />

@@ -40,6 +40,9 @@
     <Filter Include="MiniEngine\dbg\font">
       <UniqueIdentifier>{28f7249b-754b-495f-8ee9-23a73d565d4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ExEngine\effect">
+      <UniqueIdentifier>{d3ab396e-20b4-4b1c-82ee-784b759b3d6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ExEngine\gameObject\Gameobjectmanager.cpp">
@@ -219,6 +222,12 @@
     </ClCompile>
     <ClCompile Include="MiniEngine\GaussianBlur.cpp">
       <Filter>MiniEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\effect\Effect.cpp">
+      <Filter>ExEngine\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\effect\EffectEngine.cpp">
+      <Filter>ExEngine\effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -447,6 +456,12 @@
     </ClInclude>
     <ClInclude Include="MiniEngine\GaussianBlur.h">
       <Filter>MiniEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\effect\Effect.h">
+      <Filter>ExEngine\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\effect\EffectEngine.h">
+      <Filter>ExEngine\effect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -20,3 +20,7 @@
 #include <x3daudio.h>
 #include <xaudio2fx.h>
 
+#include "Effekseer.h"
+#include "EffekseerRendererDX12.h"
+
+#include "effect/EffectEngine.h"

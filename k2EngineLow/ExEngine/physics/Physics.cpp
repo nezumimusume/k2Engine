@@ -77,7 +77,7 @@ void PhysicsWorld::Init()
 }
 void PhysicsWorld::Update(float deltaTime)
 {
-	m_dynamicWorld->stepSimulation(deltaTime);
+	//m_dynamicWorld->stepSimulation(deltaTime);
 }
 #if 0
 void PhysicsWorld::DebubDrawWorld(CRenderContext& rc)

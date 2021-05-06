@@ -272,7 +272,6 @@ private:
 	/// 描画の完了待ち。
 	/// </summary>
 	void WaitDraw();
-	
 public:
 	enum { FRAME_BUFFER_COUNT = 2 };						//フレームバッファの数。
 private:

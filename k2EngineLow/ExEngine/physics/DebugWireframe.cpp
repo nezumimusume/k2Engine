@@ -7,6 +7,7 @@ DebugWireframe::DebugWireframe()
 
 DebugWireframe::~DebugWireframe()
 {
+	
 }
 
 void DebugWireframe::Init()
