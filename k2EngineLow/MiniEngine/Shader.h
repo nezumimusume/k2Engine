@@ -45,6 +45,17 @@ public:
 	{
 		return m_isInited;
 	}
+	~Shader()
+	{
+		if (m_blob)
+		{
+			m_blob->Release();
+		}
+		if (m_dxcBlob)
+		{
+			m_dxcBlob->Release();
+		}
+	}
 private:
 	/// <summary>
 	/// シェーダーをロード。
