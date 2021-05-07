@@ -19,7 +19,6 @@ public:
 	void Update()
 	{
 		modelRender.Update();
-		
 	}
 
 	void Render(RenderContext& rc)
@@ -29,6 +28,5 @@ public:
 
 	ModelRender modelRender;
 	PhysicsStaticObject pso;
-
 };
 

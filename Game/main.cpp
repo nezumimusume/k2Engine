@@ -66,8 +66,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	laserEffect.Init(u"Assets/effect/laser.efk");
 	laserEffect.SetPosition({ 0.0f,100.0f,0.0f });
 
-
-
+	//スプライトは現状表示できない。
+	//修正予定。
+	//SpriteRender spriteRender;
+	//spriteRender.Init("Assets/sprite/gameclear.dds", 500.0f, 500.0f);
+	//Quaternion rotation;
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
@@ -114,12 +117,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 		//エフェクトのドロー。
+		//レンダリングエンジンでドローしています。
 		//EffectEngine::GetInstance()->Draw();
 		//レンダリングエンジンを実行
 		g_renderingEngine->Execute(renderContext);
 	
 		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
-		
+	
 	
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
