@@ -34,7 +34,7 @@ private:
 		rc.WaitUntilFinishDrawingToRenderTarget(*m_renderTargetVector[numberRenderTarget].get());
 	}
 	struct TonemapBuffer {
-		float scaler = 6.0f;
+		float scaler = 7.0f;
 		float gammaCorrection = 2.0f;
 	};
 

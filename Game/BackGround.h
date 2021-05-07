@@ -4,15 +4,15 @@ class BackGround : public IGameObject
 public:
 	BackGround()
 	{
-		//modelRender.Init("Assets/modelData/bg/bg.tkm");
-		modelRender.Init("Assets/modelData/stage/stage.tkm");
-		//modelRender.SetScale({ 3.0f, 3.0f, 3.0f });
+		modelRender.Init("Assets/modelData/bg/bg.tkm");
+		//modelRender.Init("Assets/modelData/stage/stage.tkm");
+		modelRender.SetScale({ 3.0f, 3.0f, 3.0f });
 		Quaternion rotation;
 		rotation.SetRotationDegY(180.0f);
 		modelRender.SetRotation(rotation);
 		modelRender.Update();
 		pso.CreateFromModel(modelRender.GetModel(), modelRender.GetModel().GetWorldMatrix());
-		PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+		//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	}
 	~BackGround() {}
 
