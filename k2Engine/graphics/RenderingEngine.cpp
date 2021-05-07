@@ -1,7 +1,6 @@
 #include "k2EnginePreCompile.h"
 #include "RenderingEngine.h"
 
-#include "effect/EffectEngine.h"
 
 RenderingEngine* g_renderingEngine = nullptr;
 
@@ -226,8 +225,7 @@ void RenderingEngine::Execute(RenderContext& rc)
     // フォワードレンダリング
     ForwardRendering(rc);
 
-    //ここでエフェクトドローするよ。
-    EffectEngine::GetInstance()->Draw();
+    
 
     // ポストエフェクトを実行
     m_postEffect.Render(rc, m_mainRenderTarget);
