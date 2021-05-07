@@ -17,6 +17,7 @@ GameObjectManager::GameObjectManager()
 }
 GameObjectManager::~GameObjectManager()
 {
+	DeleteAllGameObjects();
 	m_instance = nullptr;
 }
 void GameObjectManager::ExecuteUpdate()

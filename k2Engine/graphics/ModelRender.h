@@ -124,12 +124,6 @@ public:
 	}
 private:
 	/// <summary>
-	/// モデルの初期化。
-	/// </summary>
-	/// <param name="filePath">ファイルパス。</param>
-	/// <param name="enModelUpAxis">モデルの上向き。</param>
-	void InitModel(const char* filePath, EnModelUpAxis enModelUpAxis);
-	/// <summary>
 	/// スケルトンの初期化。
 	/// </summary>
 	/// <param name="filePath">ファイルパス。</param>

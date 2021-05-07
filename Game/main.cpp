@@ -38,34 +38,33 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
+	//各種エンジンなどの初期化。
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
 	GameObjectManager::CreateInstance();
 	PhysicsWorld::CreateInstance();
-	//g_soundEngine = new SoundEngine();
-
-	
+	g_soundEngine = new SoundEngine();
 	//レンダリングエンジンを初期化
-	//g_renderingEngine = new RenderingEngine();
-	//g_renderingEngine->Init();
+	g_renderingEngine = new RenderingEngine();
+	g_renderingEngine->Init();
+	//エフェクトエンジンの初期化。
+	EffectEngine::CreateInstance();
 
-	//NewGO<Player>(0,"player");
-	//Player* player = NewGO<Player>(0, "player");
+	auto* player = NewGO<Player>(0, "player");
 	//player->m_position = { 100.0f,00.0f,600.0f };
 	//player->m_scale = { 4.0f,4.0f,4.0f };
-	//NewGO<BackGround>(0, "backGround");
-	//NewGO<GameCamera>(0, "gameCamera");
+	auto backGround = NewGO<BackGround>(0, "backGround");
+	auto gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 
-	//エフェクトエンジンの初期化。
-	/*EffectEngine::CreateInstance();
+
 	//step-2 レーザーエフェクトの初期化。
 	Effect laserEffect;
 	laserEffect.Init(u"Assets/effect/laser.efk");
-	*/
+	laserEffect.SetPosition({ 0.0f,100.0f,0.0f });
 
 
 
@@ -86,12 +85,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
 		
-		//sprite[1].Update(pos[1], Quaternion::Identity, Vector3::One);
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 
 
 
-		/*if (g_pad[0]->IsTrigger(enButtonA)) {
+		if (g_pad[0]->IsTrigger(enButtonA)) {
 			//再生開始。
 			laserEffect.Play();
 		}
@@ -108,31 +106,39 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		laserEffect.Update();
 		//エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-		//エフェクトのドロー。
-		EffectEngine::GetInstance()->Draw();
-		*/
+		
+		
 
 
 
 
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-	
+		//エフェクトのドロー。
+		//EffectEngine::GetInstance()->Draw();
 		//レンダリングエンジンを実行
-		//g_renderingEngine->Execute(renderContext);
-		//PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
+		g_renderingEngine->Execute(renderContext);
+	
+		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
 		
 	
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
-		//g_soundEngine->Update();
+		g_soundEngine->Update();
 		g_engine->EndFrame();
 	
 	}
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
 
-	//ReportLiveObjects();
+	PhysicsWorld::DeleteInstance();
+	delete g_soundEngine;
+	EffectEngine::DeleteInstance();
+	delete g_renderingEngine;
+
+#ifdef _DEBUG
+	ReportLiveObjects();
+#endif // _DEBUG
 	return 0;
 }
 

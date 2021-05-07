@@ -12,6 +12,7 @@ public:
 		modelRender.SetRotation(rotation);
 		modelRender.Update();
 		pso.CreateFromModel(modelRender.GetModel(), modelRender.GetModel().GetWorldMatrix());
+		PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	}
 	~BackGround() {}
 

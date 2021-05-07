@@ -141,7 +141,19 @@ public:
 		}
 		return objectVector;
 	}
+	
 private:
+	//全てのゲームオブジェクトを削除する。
+	void DeleteAllGameObjects()
+	{
+		for (auto gameObjects : m_gameObjectListArray)
+		{
+			for (auto gameObject : gameObjects)
+			{
+				delete gameObject;
+			}
+		}
+	}
 	enum { GAME_OBJECT_PRIO_MAX = 255 };		//!<ゲームオブジェクトの優先度の最大値。
 	typedef std::list<IGameObject*>	 GameObjectList;
 	std::array<GameObjectList, GAME_OBJECT_PRIO_MAX>	m_gameObjectListArray;							//!<ゲームオブジェクトの優先度付きリスト。
