@@ -76,7 +76,7 @@ public:
 	/// <summary>
 	/// 描画。
 	/// </summary>
-	/// <param name="renderContext">レンダリングコンテキスト/param>
+	/// <param name="renderContext">レンダリングコンテキスト</param>
 	void Draw(RenderContext& renderContext);
 private:
 	/// <summary>

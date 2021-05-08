@@ -142,7 +142,10 @@ public:
         m_deferredLightingCB.m_light.directionalLight[lightNo].direction = direction;
         m_deferredLightingCB.m_light.directionalLight[lightNo].color = color;
     }
-
+    void SetMainRenderTargetAndDepthStencilBuffer(RenderContext& rc)
+    {
+        rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_gBuffer[enGBufferAlbedo].GetDSVCpuDescriptorHandle());
+    }
 private:
     /// <summary>
     /// G-Buffer‚ğ‰Šú‰»

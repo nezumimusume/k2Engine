@@ -3,6 +3,8 @@
 
 #include "effect/EffectEngine.h"
 
+#include "RenderingEngine.h"
+
 void PostEffect::Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRenderTarget)
 {
     m_bloom.Init(mainRenderTarget);
@@ -13,6 +15,8 @@ void PostEffect::Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRend
 void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 {   
     m_tonemap.Render(rc, mainRenderTarget);
+
+    g_renderingEngine->SetMainRenderTargetAndDepthStencilBuffer(rc);
 
     //ここでエフェクトドローするよ。
     EffectEngine::GetInstance()->Draw();
