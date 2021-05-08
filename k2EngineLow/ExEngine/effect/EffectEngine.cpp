@@ -44,21 +44,19 @@ EffectEngine::EffectEngine()
 	m_manager->SetMaterialLoader(m_renderer->CreateMaterialLoader());
 	m_manager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());
 }
-Effekseer::EffectRef EffectEngine::LoadEffect(const char16_t* filePath)
+Effekseer::EffectRef EffectEngine::LoadEffect(const int number)
 {
-	std::u16string u16FilePath = filePath;
 	Effekseer::EffectRef effect;
-	auto it = m_effectMap.find(u16FilePath);
+	auto it = m_effectMap.find(number);
 	if (it != m_effectMap.end()) {
 		//ロード済み。
 		effect = it->second;
-		m_effectMap.insert({ u16FilePath, effect });
 	}
 	else {
-		//新規
-		effect = Effekseer::Effect::Create(m_manager, filePath);
+		//ロードできない。
+		//ResistEffectでエフェクト読み込んでね！
+		std::abort();
 	}
-
 	return effect;
 }
 EffectEngine::~EffectEngine()
@@ -113,4 +111,15 @@ void EffectEngine::Draw()
 	// コマンドリストを終了する。
 	m_renderer->SetCommandList(nullptr);
 	EffekseerRendererDX12::EndCommandList(m_commandList);
+}
+
+void EffectEngine::ResistEffect(const int number, const char16_t* filePath)
+{
+	Effekseer::EffectRef effect;
+	auto it = m_effectMap.find(number);
+	if (it == m_effectMap.end()) {
+		//新規。
+		effect = Effekseer::Effect::Create(m_manager, filePath);
+		m_effectMap.insert({ number, effect });
+	}
 }

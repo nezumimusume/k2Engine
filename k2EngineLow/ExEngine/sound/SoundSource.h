@@ -25,7 +25,7 @@ public:
 	/// <summary>
 	/// 初期化。
 	/// </summary>
-	/// <param name="number">WaveFileBank::Resistで登録した波形データの番号。</param>
+	/// <param name="number">g_soundEngine->ResistWaveFileBankで登録した波形データの番号。</param>
 	/// <param name="is3DSound">3Dサウンドならtrue。</param>
 	void Init(const int number, bool is3DSound = false);
 	/// <summary>

@@ -16,9 +16,9 @@ Effect::~Effect()
 }
 
 		
-void Effect::Init(const char16_t* filePath)
+void Effect::Init(const int number)
 {
-	m_effect = EffectEngine::GetInstance()->LoadEffect(filePath);
+	m_effect = EffectEngine::GetInstance()->LoadEffect(number);
 	
 }
 void Effect::Play()

@@ -167,6 +167,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ExEngine\effect\Effect.cpp" />
+    <ClCompile Include="ExEngine\effect\EffectEmitter.cpp" />
     <ClCompile Include="ExEngine\effect\EffectEngine.cpp" />
     <ClCompile Include="ExEngine\gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="ExEngine\gameObject\IGameObject.cpp" />
@@ -234,6 +235,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExEngine\effect\Effect.h" />
+    <ClInclude Include="ExEngine\effect\EffectEmitter.h" />
     <ClInclude Include="ExEngine\effect\EffectEngine.h" />
     <ClInclude Include="ExEngine\ExEngine.h" />
     <ClInclude Include="ExEngine\gameObject\GameObjectManager.h" />

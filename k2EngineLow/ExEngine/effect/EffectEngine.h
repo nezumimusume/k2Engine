@@ -11,7 +11,7 @@ class EffectEngine {
 	Effekseer::RefPtr<EffekseerRenderer::SingleFrameMemoryPool> m_memoryPool;	//メモリプール。
 	Effekseer::RefPtr<EffekseerRenderer::CommandList> m_commandList;			//コマンドリスト。
 	Effekseer::ManagerRef m_manager;
-	std::map< std::u16string, Effekseer::EffectRef > m_effectMap;
+	std::map< int, Effekseer::EffectRef > m_effectMap;
 public:
 	/// <summary>
 	/// インスタンスの作成。
@@ -97,8 +97,7 @@ public:
 	/// <summary>
 	/// エフェクトをロード。
 	/// </summary>
-	Effekseer::EffectRef LoadEffect(const char16_t* filePath);
-
+	Effekseer::EffectRef LoadEffect(const int number);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -108,6 +107,12 @@ public:
 	/// 描画。
 	/// </summary>
 	void Draw();
+	/// <summary>
+	/// エフェクトを読み込んで登録する。
+	/// </summary>
+	/// <param name="number">登録番号。</param>
+	/// <param name="filePath">ファイルパス。</param>
+	void ResistEffect(const int number, const char16_t* filePath);
 private:
 	EffectEngine();
 	~EffectEngine();

@@ -229,6 +229,9 @@
     <ClCompile Include="ExEngine\effect\EffectEngine.cpp">
       <Filter>ExEngine\effect</Filter>
     </ClCompile>
+    <ClCompile Include="ExEngine\effect\EffectEmitter.cpp">
+      <Filter>ExEngine\effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExEngine\gameObject\GameObjectManager.h">
@@ -461,6 +464,9 @@
       <Filter>ExEngine\effect</Filter>
     </ClInclude>
     <ClInclude Include="ExEngine\effect\EffectEngine.h">
+      <Filter>ExEngine\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\effect\EffectEmitter.h">
       <Filter>ExEngine\effect</Filter>
     </ClInclude>
   </ItemGroup>

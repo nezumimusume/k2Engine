@@ -18,8 +18,8 @@ public:
 	/// <remark>
 	/// エフェクト再生のための準備を行います。
 	/// </remark>
-	/// <param name="filePath">ファイルパス</param>
-	void Init(const char16_t* filePath);
+	/// <param name="number"></param>
+	void Init(const int number);
 	/// <summary>
 	/// 再生開始
 	/// </summary>

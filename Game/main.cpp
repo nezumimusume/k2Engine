@@ -59,11 +59,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
+	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/laser.efk");
 
 
 	//step-2 レーザーエフェクトの初期化。
 	Effect laserEffect;
-	laserEffect.Init(u"Assets/effect/laser.efk");
+	//laserEffect.Init(u"Assets/effect/laser.efk");
+	laserEffect.Init(0);
 	laserEffect.SetPosition({ 0.0f,100.0f,0.0f });
 
 	//スプライトは現状表示できない。
