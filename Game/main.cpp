@@ -12,6 +12,8 @@
 #include "GameCamera.h"
 #include "effect/effect.h"
 
+#include "effect/EffectEmitter.h"
+
 void ReportLiveObjects()
 {
 	IDXGIDebug* pDxgiDebug;
@@ -60,16 +62,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/laser.efk");
-
+	EffectEngine::GetInstance()->ResistEffect(1, u"Assets/effect/hit.efk");
 
 	//step-2 レーザーエフェクトの初期化。
-	Effect laserEffect;
+	/*Effect laserEffect;
 	//laserEffect.Init(u"Assets/effect/laser.efk");
 	laserEffect.Init(0);
-	laserEffect.SetPosition({ 0.0f,100.0f,0.0f });
+	laserEffect.SetPosition({ 0.0f,100.0f,0.0f });*/
+	
+
 
 	//スプライトは現状表示できない。
-	//修正予定。
+	//todo 修正予定。
 	//SpriteRender spriteRender;
 	//spriteRender.Init("Assets/sprite/gameclear.dds", 500.0f, 500.0f);
 	//Quaternion rotation;
@@ -93,8 +97,32 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 
 
-
 		if (g_pad[0]->IsTrigger(enButtonA)) {
+			//再生開始。
+			auto effect = NewGO<EffectEmitter>(0);
+			effect->Init(0);
+			effect->SetPosition({ 0.0f,100.0f,0.0f });
+			effect->SetScale({ 10.0f,10.0f,10.0f });
+			effect->Play();
+		}
+		if (g_pad[0]->IsTrigger(enButtonB)) {
+			//再生開始。
+			auto effect = NewGO<EffectEmitter>(0);
+			effect->Init(0);
+			effect->SetPosition({ 100.0f,100.0f,0.0f });
+			effect->SetScale({ 10.0f,10.0f,10.0f });
+			effect->Play();
+		}
+
+		if (g_pad[0]->IsTrigger(enButtonStart)) {
+			//再生開始。
+			auto effect = NewGO<EffectEmitter>(0);
+			effect->Init(1);
+			effect->SetPosition({ -100.0f,100.0f,0.0f });
+			effect->SetScale({ 10.0f,10.0f,10.0f });
+			effect->Play();
+		}
+		/*if (g_pad[0]->IsTrigger(enButtonA)) {
 			//再生開始。
 			laserEffect.Play();
 		}
@@ -109,6 +137,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		laserEffect.SetRotation(rot);
 		laserEffect.SetScale({ 10.0f,10.0f,10.0f });
 		laserEffect.Update();
+		*/
 		//エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 		

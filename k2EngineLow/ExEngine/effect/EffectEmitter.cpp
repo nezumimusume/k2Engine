@@ -18,5 +18,10 @@ void EffectEmitter::Init(const int number)
 
 void EffectEmitter::Update()
 {
+	m_effect.Update();
 
+	if (!IsPlay())
+	{
+		DeleteGO(this);
+	}
 }

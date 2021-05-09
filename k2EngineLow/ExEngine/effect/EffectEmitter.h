@@ -25,12 +25,19 @@ public:
 	/// <param name="number">EffectEngine::GetInstance()->ResistEffectで指定した番号。</param>
 	void Init(const int number);
 	/// <summary>
+	/// エフェクトを再生する。
+	/// </summary>
+	void Play()
+	{
+		m_effect.Play();
+	}
+	/// <summary>
 	/// 座標を設定。
 	/// </summary>
 	/// <param name="position">座標。/param>
 	void SetPosition(const Vector3& position)
 	{
-		m_position = position;
+		m_effect.SetPosition(position);
 	}
 	/// <summary>
 	/// 座標を取得。
@@ -38,7 +45,7 @@ public:
 	/// <returns>座標。</returns>
 	const Vector3& GetPosition() const
 	{
-		return m_position;
+		return m_effect.GetPosition();
 	}
 	/// <summary>
 	/// スケール(拡大率を設定)。
@@ -46,7 +53,7 @@ public:
 	/// <param name="scale">スケール(拡大率)。</param>
 	void SetScale(const Vector3& scale)
 	{
-		m_scale = scale;
+		m_effect.SetScale(scale);
 	}
 	/// <summary>
 	/// スケール(拡大率)を取得。
@@ -54,7 +61,7 @@ public:
 	/// <returns>スケール(拡大率)。</returns>
 	const Vector3& GetScale() const
 	{
-		return m_scale;
+		return m_effect.GetScale();
 	}
 	/// <summary>
 	/// 回転を設定。
@@ -62,7 +69,7 @@ public:
 	/// <param name="rotation">回転。</param>
 	void SetRotation(const Quaternion& rotation)
 	{
-		m_rotation = rotation;
+		m_effect.SetRotation(rotation);
 	}
 	/// <summary>
 	/// 回転を取得。
@@ -70,37 +77,17 @@ public:
 	/// <returns>回転。</returns>
 	const Quaternion& GetRotation() const
 	{
-		return m_rotation;
-	}
-	/// <summary>
-	/// 移動速度を設定。
-	/// </summary>
-	/// <param name="moveSpeed">移動速度。</param>
-	void SetMoveSpeed(const Vector3& moveSpeed)
-	{
-		m_moveSpeed = moveSpeed;
-	}
-	/// <summary>
-	/// 移動速度を取得。
-	/// </summary>
-	/// <returns>移動速度。</returns>
-	const Vector3& GetMoveSpeed() const
-	{
-		return m_moveSpeed;
+		m_effect.GetRotation();
 	}
 	/// <summary>
 	/// 再生中かどうかを取得。
 	/// </summary>
 	/// <returns>再生中ならtrue。</returns>
-	const bool GetIsPlay() const
+	const bool IsPlay() const
 	{
 		return m_effect.IsPlay();
 	}
 private:
 	Effect m_effect;					//エフェクト。
-	Vector3 m_position;					//座標。
-	Vector3 m_moveSpeed;				//移動速度。
-	Quaternion m_rotation;				//回転。
-	Vector3 m_scale = g_vec3One;		//スケール(拡大率)。
 };
 
