@@ -18,12 +18,12 @@ public:
     void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
 private:
 
-    struct ConstantBuffer
+    struct FaxxBuffer
     {
         float bufferW;
         float bufferH;
     }; 
 
     Sprite m_finalSprite;					//最終合成用のスプライト
-    ConstantBuffer m_cB;                    //解像度をGPUに送るための定数バッファ―。
+    FaxxBuffer m_cB;                    //解像度をGPUに送るための定数バッファ―。
 };

@@ -19,8 +19,8 @@ void Fxaa::Init(RenderTarget& mainRenderTarget)
 
     //解像度をGPUに送るための定数バッファを設定する。
     spriteInitData.m_expandConstantBuffer = (void*)&m_cB;
-    spriteInitData.m_expandConstantBufferSize = sizeof(ConstantBuffer) + 
-        (16 - (sizeof(ConstantBuffer) % 16));
+    spriteInitData.m_expandConstantBufferSize = sizeof(FaxxBuffer) + 
+        (16 - (sizeof(FaxxBuffer) % 16));
     m_finalSprite.Init(spriteInitData);
 }
 

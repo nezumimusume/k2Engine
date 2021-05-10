@@ -4,6 +4,7 @@
 #include "Dof.h"
 #include "Fxaa.h"
 #include "ToneMap.h"
+#include "Ssao.h"
 
 /// <summary>
 /// ポストエフェクト。
@@ -28,5 +29,6 @@ private:
     Dof m_dof;		    //被写界深度
     Fxaa m_fXaa;        //FXAA。
     ToneMap m_tonemap;  //トーンマップ。
+    Ssao m_ssao;        //SSAO(スクリーンスペースアンビエントオクルージョン)。
 };
 

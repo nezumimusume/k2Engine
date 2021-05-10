@@ -116,6 +116,15 @@ public:
     }
 
     /// <summary>
+    /// GBufferの法線テクスチャを取得。
+    /// </summary>
+    /// <returns></returns>
+    Texture& GetGBufferNormalTexture()
+    {
+        return m_gBuffer[enGBufferNormal].GetRenderTargetTexture();
+    }
+
+    /// <summary>
     /// 不透明オブジェクトの描画完了時のメインレンダリングターゲットの
     /// スナップショットを取得
     /// </summary>

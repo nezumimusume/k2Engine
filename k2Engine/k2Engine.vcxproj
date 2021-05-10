@@ -29,6 +29,7 @@
     <ClCompile Include="graphics\RenderingEngine.cpp" />
     <ClCompile Include="graphics\ShadowMapRender.cpp" />
     <ClCompile Include="graphics\SpriteRender.cpp" />
+    <ClCompile Include="graphics\Ssao.cpp" />
     <ClCompile Include="graphics\ToneMap.cpp" />
     <ClCompile Include="k2EnginePreCompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -47,6 +48,7 @@
     <ClInclude Include="graphics\RenderingEngine.h" />
     <ClInclude Include="graphics\ShadowMapRender.h" />
     <ClInclude Include="graphics\SpriteRender.h" />
+    <ClInclude Include="graphics\Ssao.h" />
     <ClInclude Include="graphics\ToneMap.h" />
     <ClInclude Include="k2EnginePreCompile.h" />
   </ItemGroup>

@@ -159,6 +159,17 @@ public:
 		return m_viewMatrix;
 	}
 	/// <summary>
+	/// プロジェクション行列の逆行列を取得。
+	/// </summary>
+	const Matrix& GetProjectionMatrixInv()
+	{
+		if (m_isDirty) {
+			//更新する必要がある。
+			Update();
+		}
+		return m_projectionMatrixInv;
+	}
+	/// <summary>
 	/// プロジェクション行列を取得。
 	/// </summary>
 	const Matrix& GetProjectionMatrix() 
@@ -347,6 +358,7 @@ protected:
 	Matrix		m_projectionMatrix;						//プロジェクション行列。
 	Matrix		m_viewProjectionMatrix;					//ビュープロジェクション行列。
 	Matrix		m_viewMatrixInv;						//ビュー行列の逆行列。
+	Matrix      m_projectionMatrixInv;					//プロジェクション行列の逆行列。
 	Matrix		m_cameraRotation;						//カメラの回転行列。
 	Vector3		m_forward = g_vec3Front;				//カメラの前方。
 	Vector3		m_right = g_vec3Right;					//カメラの右。

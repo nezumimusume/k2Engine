@@ -11,9 +11,12 @@ void PostEffect::Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRend
     m_dof.Init(mainRenderTarget, zprepassRenderTarget);
     m_fXaa.Init(mainRenderTarget);
     m_tonemap.Init(mainRenderTarget);
+    m_ssao.Init(mainRenderTarget);
 }
 void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 {   
+    m_ssao.Render(rc, mainRenderTarget);
+
     m_tonemap.Render(rc, mainRenderTarget);
 
     g_renderingEngine->SetMainRenderTargetAndDepthStencilBuffer(rc);

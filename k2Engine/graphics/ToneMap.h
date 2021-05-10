@@ -14,7 +14,7 @@ public:
 	/// 初期化。
 	/// </summary>
 	void Init(RenderTarget& mainRenderTarget);
-	static const int NUM_RENDER_TARGETS_DRAW_ONE_FRAME = 3;		//1フレームに描画する、平均輝度を求めるためのレンダーターゲットの最大数。
+	static const int NUM_RENDER_TARGETS_DRAW_ONE_FRAME = 2;		//1フレームに描画する、平均輝度を求めるためのレンダーターゲットの最大数。
 private:
 	/// <summary>
 	/// 平均輝度を求めるための描画。
