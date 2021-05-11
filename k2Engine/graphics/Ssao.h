@@ -21,7 +21,6 @@ private:
         Matrix view;//ビュー行列。
         Matrix proj;//プロジェクション行列。
         Matrix invproj;//逆プロジェクション行列。
-        Matrix invView;//逆ビュー行列。
     };
     RenderTarget m_ssaoRenderTarget;
     Sprite m_ssaoSprite;					//SSAO用のスプライト。

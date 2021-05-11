@@ -12,7 +12,6 @@ cbuffer ssaoBuffer : register(b1) {
     float4x4 view;//ビュー行列。
     float4x4 proj;//プロジェクション行列。
     float4x4 invproj;//逆プロジェクション行列。
-    float4x4 invView;//逆ビュー行列。
 };
 
 struct VSInput {
@@ -44,54 +43,61 @@ float random(float2 uv)
 {
 	return frac(sin(dot(uv, float2(12.9898f, 78.233f)))*43758.5453f);
 }
-float PSMain(PSInput input) : SV_Target0
-{
-    float4x4 mat;
-	mat._11_12_13_14 = float4(1.0f, 2.0f, 3.0f, 4.0f);
 
-	float dp = zPrepassTexture.Sample(Sampler, input.uv).x;//���݂�UV�̐[�x
+float4 PSMain(PSInput input) : SV_Target0
+{
+  
+	//深度値マップから深度値ゲット。
+	float dp = zPrepassTexture.Sample(Sampler, input.uv).x;
 
 	float w, h, miplevels;
 	zPrepassTexture.GetDimensions(0, w, h, miplevels);
 	float dx = 1.0f / w;
 	float dy = 1.0f / h;
 
-	//SSAO
-	//���̍��W�𕜌�����
+	//SSAO。
+	//uv値から、元の座標を復元。
 	float4 respos = mul(invproj, float4(input.uv*float2(2, -2) + float2(-1, 1), dp, 1));
 	respos.xyz = respos.xyz / respos.w;
 	float div = 0.0f;
 	float ao = 0.0f;
+	//法線ベクトルを法線マップから取得して、元の法線の値に戻している。
 	float3 norm = normalize((normalTexture .Sample(Sampler, input.uv).xyz * 2) - 1);
-	const int trycnt = 40;
-	const float radius = 30.5f;
+	//計算する回数。
+	const int trycnt = 30;
+	//半球の半径。
+	const float radius = 1.0f;
+
 	if (dp < 1.0f) {
 		for (int i = 0; i < trycnt; ++i) {
+			//乱数から適当なベクトルを作成する。
 			float rnd1 = random(float2(i*dx, i*dy)) * 2 - 1;
 			float rnd2 = random(float2(rnd1, i*dy)) * 2 - 1;
 			float rnd3 = random(float2(rnd2, rnd1)) * 2 - 1;
 			float3 omega = normalize(float3(rnd1,rnd2,rnd3));
-			omega = normalize(omega);
-			//�����̌��ʖ@���̔��Α��Ɍ����Ă��甽�]����
+			//適当なベクトルと法線の内積を取る。
 			float dt = dot(norm, omega);
+			//signで内積の符号(+、-)を取得する。
 			float sgn = sign(dt);
-			omega *= sign(dt);
-			//���ʂ̍��W���Ăюˉe�ϊ�����
+			//-の場合は+に変換する。
+			omega *= sgn;
+			//求めた元の座標に適当なベクトルを加算し。
+			//ビュー行列とプロジェクション行列より、スクリーン上の座標を求める。
 			float4 rpos = mul(proj, float4(respos.xyz + omega * radius, 1));
+			//wで割る。
 			rpos.xyz /= rpos.w;
+			//内積の符号を-なら+にする。
 			dt *= sgn;
+			//cosΘの総和を求めたいので、加算する。
 			div += dt;
-			//�v�Z���ʂ����݂̏ꏊ�̐[�x��艜�ɓ����Ă�Ȃ�Օ�����Ă���Ƃ������Ȃ̂ŉ��Z
+			//深度値マップから実際の深度値を比較して、遮蔽されていたら1.0f*cosΘを加算する。
 			ao += step(zPrepassTexture.Sample(Sampler, (rpos.xy + float2(1, -1))*float2(0.5f, -0.5f)).x, rpos.z)*dt;
 		}
+		//cosΘの総和(全てが遮蔽されていた時の値)で割る。
 		ao /= div;
 	}
-	return 1.0f - ao;
-}
-
-float4 PSMain(PSInput In) : SV_TARGET0
-{
-    
+	float brightNess = 1.0f - ao;
+	return float4(brightNess, brightNess, brightNess, 1.0f);
 }
 
 //SSAO(��Z�p�̖��x�̂ݏ���Ԃ���΂悢)

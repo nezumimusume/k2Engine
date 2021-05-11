@@ -20,6 +20,7 @@ enum AlphaBlendMode {
 	AlphaBlendMode_None,	//アルファブレンディングなし(上書き)。
 	AlphaBlendMode_Trans,	//半透明合成
 	AlphaBlendMode_Add,		//加算合成
+	AlphaBlendMode_Multiply	//乗算合成
 };
 /// <summary>
 /// スプライトの初期化データ。

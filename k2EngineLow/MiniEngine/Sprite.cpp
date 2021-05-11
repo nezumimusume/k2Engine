@@ -146,6 +146,13 @@
             psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
             psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
         }
+        else if (initData.m_alphaBlendMode == AlphaBlendMode_Multiply) {
+            //èÊéZçáê¨ÅB
+            psoDesc.BlendState.RenderTarget[0].BlendEnable = true;
+            psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
+            psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
+            psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+        }
 
         psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
         psoDesc.DepthStencilState.DepthEnable = FALSE;

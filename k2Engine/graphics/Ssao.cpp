@@ -14,7 +14,7 @@ void Ssao::Init(RenderTarget& mainRenderTarget)
         mainRenderTarget.GetHeight(),
         1,
         1,
-        DXGI_FORMAT_R32_FLOAT,
+        DXGI_FORMAT_R32G32B32A32_FLOAT,
         DXGI_FORMAT_UNKNOWN,
         color
     );
@@ -43,10 +43,10 @@ void Ssao::Init(RenderTarget& mainRenderTarget)
 
     spriteInitData.m_textures[0] = &m_ssaoRenderTarget.GetRenderTargetTexture();
     // 2D用のシェーダーを使用する
-    spriteInitData.m_fxFilePath = "Assets/shader/ssao.fx";
+    spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
     spriteInitData.m_vsEntryPointFunc = "VSMain";
-    spriteInitData.m_psEntryPoinFunc = "FinalPSMain";
-    spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
+    spriteInitData.m_psEntryPoinFunc = "PSMain";
+    spriteInitData.m_alphaBlendMode = AlphaBlendMode_Multiply;
     spriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 
     m_finalSprite.Init(spriteInitData);
@@ -67,8 +67,6 @@ void Ssao::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
     m_cB.proj = g_camera3D->GetProjectionMatrix();
     //プロジェクション行列の逆行列。
     m_cB.invproj = g_camera3D->GetProjectionMatrixInv();
-    //ビュー行列の逆行列。
-    m_cB.invView = g_camera3D->GetViewMatrixInv();
 
     //描画。
     m_ssaoSprite.Draw(rc);
