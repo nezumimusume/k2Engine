@@ -66,7 +66,12 @@ float4 PSMain(PSInput input) : SV_Target0
 	//計算する回数。
 	const int trycnt = 30;
 	//半球の半径。
-	const float radius = 1.0f;
+	const float radius = 30.5f;
+
+	float sumDepth = 0.0f;
+
+	float4 rpos;
+	float realDepth;
 
 	if (dp < 1.0f) {
 		for (int i = 0; i < trycnt; ++i) {
@@ -83,20 +88,41 @@ float4 PSMain(PSInput input) : SV_Target0
 			omega *= sgn;
 			//求めた元の座標に適当なベクトルを加算し。
 			//ビュー行列とプロジェクション行列より、スクリーン上の座標を求める。
-			float4 rpos = mul(proj, float4(respos.xyz + omega * radius, 1));
+			rpos = mul(proj, float4(respos.xyz + omega * radius, 1));
+			//rpos = mul(proj, mul(view,float4(respos.xyz + omega * radius, 1)));
 			//wで割る。
 			rpos.xyz /= rpos.w;
 			//内積の符号を-なら+にする。
 			dt *= sgn;
 			//cosΘの総和を求めたいので、加算する。
 			div += dt;
+
+			//rpos.xy *= float2(0.5f, -0.5f);
+			//rpos.xy += 0.5f;
+
+			rpos.xy = (rpos.xy + float2(1, -1))* float2(0.5f, -0.5f);
+
+			realDepth = zPrepassTexture.Sample(Sampler, rpos.xy).x;
+
 			//深度値マップから実際の深度値を比較して、遮蔽されていたら1.0f*cosΘを加算する。
-			ao += step(zPrepassTexture.Sample(Sampler, (rpos.xy + float2(1, -1))*float2(0.5f, -0.5f)).x, rpos.z)*dt;
+			ao += step(realDepth, rpos.z)*dt;
+
+			sumDepth += abs(realDepth - rpos.z);
+
 		}
 		//cosΘの総和(全てが遮蔽されていた時の値)で割る。
 		ao /= div;
+		sumDepth /= trycnt;
+	
 	}
-	float brightNess = 1.0f - ao;
+	float brightNess = 0.0f;
+	//サンプリングした深度値-計算した深度値の平均。
+	//brightNess = sumDepth;
+	brightNess = 1.0f - ao;
+	//計算した深度値。
+	//brightNess = rpos.z;
+	//サンプリングした深度値。
+	//brightNess = realDepth;
 	return float4(brightNess, brightNess, brightNess, 1.0f);
 }
 
