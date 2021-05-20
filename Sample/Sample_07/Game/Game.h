@@ -1,0 +1,23 @@
+#pragma once
+
+//クラス宣言。
+class Player;
+class Background;
+
+class Game : public IGameObject
+{
+public:
+	//////////////////////////////////////
+	// メンバ関数。
+	//////////////////////////////////////
+	Game();
+	~Game();
+	bool Start();
+
+	////////////////////////////////////
+	// メンバ変数とか
+	////////////////////////////////////
+	Player* m_player = nullptr;
+	Background* m_background = nullptr;
+};
+

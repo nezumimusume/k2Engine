@@ -139,7 +139,7 @@ void ModelRender::Update()
 		{
 			m_skeleton.Update(m_renderToGBufferModel.GetWorldMatrix());
 		}
-		else if (m_forwardRenderModel.IsInited())
+		if (m_forwardRenderModel.IsInited())
 		{
 			m_skeleton.Update(m_forwardRenderModel.GetWorldMatrix());
 		}
