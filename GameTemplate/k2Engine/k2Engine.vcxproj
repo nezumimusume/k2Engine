@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="camera\CameraCollisionSolver.cpp" />
+    <ClCompile Include="camera\SpringCamera.cpp" />
     <ClCompile Include="graphics\Bloom.cpp" />
     <ClCompile Include="graphics\CascadeShadowMapMatrix.cpp" />
     <ClCompile Include="graphics\Dof.cpp" />
@@ -37,6 +39,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera\CameraCollisionSolver.h" />
+    <ClInclude Include="camera\SpringCamera.h" />
     <ClInclude Include="graphics\Bloom.h" />
     <ClInclude Include="graphics\CascadeShadowMapMatrix.h" />
     <ClInclude Include="graphics\Dof.h" />

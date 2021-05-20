@@ -173,5 +173,5 @@ void ModelRender::Draw(RenderContext& rc)
 	if (m_forwardRenderModel.IsInited()) {
 		g_renderingEngine->Add3DModelToForwardRenderPass(m_forwardRenderModel);
 	}
-
+	m_renderToGBufferModel.Draw(rc);
 }

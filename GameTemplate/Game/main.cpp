@@ -151,7 +151,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//レンダリングエンジンでドローしています。
 		//EffectEngine::GetInstance()->Draw();
 		//レンダリングエンジンを実行
-		g_renderingEngine->Execute(renderContext);
+		//g_renderingEngine->Execute(renderContext);
 	
 		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
 	

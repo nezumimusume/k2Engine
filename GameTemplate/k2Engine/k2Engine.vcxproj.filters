@@ -4,6 +4,9 @@
     <Filter Include="graphics">
       <UniqueIdentifier>{be505d70-91d3-424b-a445-5685d22f485c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{9a89f799-d7bf-47b8-bd87-315d3c7d0d60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics\ModelRender.cpp">
@@ -42,6 +45,12 @@
     </ClCompile>
     <ClCompile Include="graphics\Ssao.cpp">
       <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\CameraCollisionSolver.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\SpringCamera.cpp">
+      <Filter>camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +93,12 @@
     </ClInclude>
     <ClInclude Include="graphics\Ssao.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\CameraCollisionSolver.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\SpringCamera.h">
+      <Filter>camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
