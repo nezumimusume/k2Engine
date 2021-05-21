@@ -815,6 +815,48 @@ public:
 		*this *= addRot;
 	}
 	/// <summary>
+	/// X軸周りの回転を加算。
+	/// </summary>
+	/// <returns>加算する回転角度。ラジアン単位。</returns>
+	void AddRotationX(float angle)
+	{
+		Quaternion addRot;
+		addRot.SetRotation(Vector3::AxisX, angle);
+		*this *= addRot;
+	}
+	/// <summary>
+	/// X軸周りの回転を加算。
+	/// </summary>
+	/// <returns>加算する回転角度。単位Degree</returns>
+	void AddRotationDegX(float degree)
+	{
+		float halfAngle = Math::DegToRad(degree) * 0.5f;
+		Quaternion addRot;
+		addRot.SetRotation(Vector3::AxisX, halfAngle);
+		*this *= addRot;
+	}
+	/// <summary>
+	/// Z軸周りの回転を加算。
+	/// </summary>
+	/// <returns>加算する回転角度。ラジアン単位。</returns>
+	void AddRotationZ(float angle)
+	{
+		Quaternion addRot;
+		addRot.SetRotation(Vector3::AxisZ, angle);
+		*this *= addRot;
+	}
+	/// <summary>
+	/// Z軸周りの回転を加算。
+	/// </summary>
+	/// <returns>加算する回転角度。単位Degree</returns>
+	void AddRotationDegZ(float degree)
+	{
+		float halfAngle = Math::DegToRad(degree) * 0.5f;
+		Quaternion addRot;
+		addRot.SetRotation(Vector3::AxisZ, halfAngle);
+		*this *= addRot;
+	}
+	/// <summary>
 	/// クォータニオン同士の乗算
 	/// </summary>
 	/// <param name="rot"></param>
