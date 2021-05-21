@@ -39,6 +39,7 @@
 　　Game.cppにサンプルが記述されている。
 ↓まだ
 ・Sample_14
+　　(要実装)
 　　レベルデザインのサンプル。
 　　レベルデザインのやり方は下記URLの動画を参考。
 　　https://www.youtube.com/watch?v=DdugMxWZZq4
@@ -47,8 +48,13 @@
 　　Game.cppにサンプルが記述されている。
 ↓まだ
 ・Sample_19
+　　(ライティングがまだ無い)
 　　ゴーストのサンプル。
 　　Game.cpp,hにサンプルが記述されている。
 ・Sample_20
 　　クォータニオンの使い方。
 ↑ここまで実装した。
+・Sample_20
+　　(SpriteかSpriteRenderを使うのか分からん)
+　　Level2Dの使い方。
+　　

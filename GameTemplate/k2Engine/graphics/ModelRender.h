@@ -153,10 +153,10 @@ private:
 	Vector3						m_scale = Vector3::One;				//拡大率。
 	EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		//FBXの上方向。
 	Animation					m_animation;						//アニメーション。
-	Model m_zprepassModel;					//ZPrepassで描画されるモデル
-	Model m_forwardRenderModel;				//フォワードレンダリングの描画パスで描画されるモデル
-	Model m_renderToGBufferModel;			//RenderToGBufferで描画されるモデル
-	Model m_shadowModels[NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	//シャドウマップに描画するモデル
+	Model						m_zprepassModel;					//ZPrepassで描画されるモデル
+	Model						m_forwardRenderModel;				//フォワードレンダリングの描画パスで描画されるモデル
+	Model						m_renderToGBufferModel;				//RenderToGBufferで描画されるモデル
+	Model						m_shadowModels[NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	//シャドウマップに描画するモデル
 	bool						m_isUpdateAnimation = true;			//アニメーションを更新する？
 	Skeleton					m_skeleton;							//骨。
 	bool						m_isShadowCaster = true;			//シャドウキャスターフラグ
