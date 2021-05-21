@@ -14,7 +14,7 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	//tkmファイルのファイルパスを指定する。
 	initData.m_tkmFilePath = filePath;
 	//シェーダーファイルのファイルパスを指定する。
-	initData.m_fxFilePath = "Assets/shader/RenderToGBufferFor3DModel.fx";
+	initData.m_fxFilePath = "Assets/shader/Model.fx";
 	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 	initData.m_vsEntryPointFunc = "VSMain";
 
