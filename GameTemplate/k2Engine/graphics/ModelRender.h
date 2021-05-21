@@ -43,7 +43,6 @@ public:
 	/// 更新処理。
 	/// </summary>
 	void Update();
-
 	/// <summary>
 	/// 描画処理。
 	/// </summary>

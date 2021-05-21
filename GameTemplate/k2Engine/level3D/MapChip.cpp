@@ -5,8 +5,8 @@
 #include "MapChip.h"
 #include "Level.h"
 
-namespace tkEngine{
-	CMapChip::CMapChip(const LevelObjectData& objData, CMapChipRender* mapChipRender)
+
+	MapChip::MapChip(const LevelObjectData& objData, MapChipRender* mapChipRender)
 	{
 		char objName[256];
 		wcstombs(objName, objData.name, 256);
@@ -22,4 +22,8 @@ namespace tkEngine{
 			mapChipRender->GetSkinModelRender()
 		);
 	}
+MapChip::MapChip(const LevelObjectData& objData)
+{
+	m_modelRender.Init(objData.name);
 }
+

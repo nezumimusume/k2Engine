@@ -10,6 +10,9 @@
     <Filter Include="level3D">
       <UniqueIdentifier>{c0dd323f-9775-4217-8178-9ab457df52bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="nature">
+      <UniqueIdentifier>{0f811c27-ef1a-4c7a-a33d-6b4890e9f741}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics\ModelRender.cpp">
@@ -54,6 +57,15 @@
     </ClCompile>
     <ClCompile Include="camera\SpringCamera.cpp">
       <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="nature\SkyCube.cpp">
+      <Filter>nature</Filter>
+    </ClCompile>
+    <ClCompile Include="level3D\Level.cpp">
+      <Filter>level3D</Filter>
+    </ClCompile>
+    <ClCompile Include="level3D\MapChip.cpp">
+      <Filter>level3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +114,15 @@
     </ClInclude>
     <ClInclude Include="camera\SpringCamera.h">
       <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="nature\SkyCube.h">
+      <Filter>nature</Filter>
+    </ClInclude>
+    <ClInclude Include="level3D\Level.h">
+      <Filter>level3D</Filter>
+    </ClInclude>
+    <ClInclude Include="level3D\MapChip.h">
+      <Filter>level3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
