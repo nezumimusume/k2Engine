@@ -14,13 +14,13 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	//tkmファイルのファイルパスを指定する。
 	initData.m_tkmFilePath = filePath;
 	//シェーダーファイルのファイルパスを指定する。
-	initData.m_fxFilePath = "Assets/shader/model.fx";
+	initData.m_fxFilePath = "Assets/shader/RenderToGBufferFor3DModel.fx";
 	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 	initData.m_vsEntryPointFunc = "VSMain";
 
 	if (m_animationClips != nullptr) {
 		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
-		initData.m_vsSkinEntryPointFunc = "VSMainSkin";
+		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 		//スケルトンを指定する。
 		initData.m_skeleton = &m_skeleton;
 	}
@@ -173,5 +173,4 @@ void ModelRender::Draw(RenderContext& rc)
 	if (m_forwardRenderModel.IsInited()) {
 		g_renderingEngine->Add3DModelToForwardRenderPass(m_forwardRenderModel);
 	}
-	m_renderToGBufferModel.Draw(rc);
 }

@@ -147,11 +147,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-		//エフェクトのドロー。
-		//レンダリングエンジンでドローしています。
-		//EffectEngine::GetInstance()->Draw();
 		//レンダリングエンジンを実行
-		//g_renderingEngine->Execute(renderContext);
+		//ここでエフェクトをドローしています。
+		g_renderingEngine->Execute(renderContext);
 	
 		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
 	

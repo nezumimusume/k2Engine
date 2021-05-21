@@ -1,0 +1,21 @@
+#pragma once
+
+//クラス宣言。
+class SoundSource;
+
+class Game : public IGameObject
+{
+public:
+	//////////////////////////////////////
+	// メンバ関数。
+	//////////////////////////////////////
+	Game();
+	~Game();
+	bool Start();
+	void Update();
+	////////////////////////////////////
+	// メンバ変数とか
+	////////////////////////////////////
+	SoundSource* m_soundSource = nullptr;		//BGM。
+};
+

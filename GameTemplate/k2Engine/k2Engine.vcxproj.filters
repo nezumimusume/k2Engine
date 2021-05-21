@@ -7,6 +7,9 @@
     <Filter Include="camera">
       <UniqueIdentifier>{9a89f799-d7bf-47b8-bd87-315d3c7d0d60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="level3D">
+      <UniqueIdentifier>{c0dd323f-9775-4217-8178-9ab457df52bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics\ModelRender.cpp">

@@ -122,6 +122,7 @@ public:
 	{
 		m_isShadowCaster = flag;
 	}
+
 private:
 	/// <summary>
 	/// スケルトンの初期化。
