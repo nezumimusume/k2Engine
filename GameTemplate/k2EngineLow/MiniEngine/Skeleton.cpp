@@ -103,6 +103,8 @@ void Skeleton::BuildBoneMatrices()
 		});
 	for (auto& bone : m_bones) {
 		if (bone->GetParentBoneNo() != -1) {
+			if (bone->GetParentBoneNo() > m_bones.size())
+				continue;
 			m_bones.at(bone->GetParentBoneNo())->AddChild(bone.get());
 			//ローカルマトリクスを計算。
 			const Matrix& parentMatrix = m_bones.at(bone->GetParentBoneNo())->GetInvBindPoseMatrix();

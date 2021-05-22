@@ -4,15 +4,17 @@
 #include<InitGUID.h>
 #include<dxgidebug.h>
 
-
-#include "Player.h"
 #include "sound/SoundEngine.h"
 #include "graphics/RenderingEngine.h"
-#include "BackGround.h"
-#include "GameCamera.h"
 #include "effect/effect.h"
 
 #include "effect/EffectEmitter.h"
+
+#include "Player.h"
+
+#include "BackGround.h"
+#include "GameCamera.h"
+#include "Game.h"
 
 void ReportLiveObjects()
 {
@@ -56,6 +58,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//player->m_scale = { 4.0f,4.0f,4.0f };
 	auto backGround = NewGO<BackGround>(0, "backGround");
 	auto gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+	auto game = NewGO<Game>(0, "game");
 
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
