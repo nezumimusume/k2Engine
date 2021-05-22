@@ -86,6 +86,6 @@ void Level::Draw(RenderContext& rc)
 {
 	for (auto mapChipPtr : m_mapChipPtrs)
 	{
-
+		mapChipPtr->Draw(rc);
 	}
 }
