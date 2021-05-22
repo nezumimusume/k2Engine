@@ -19,6 +19,11 @@ public:
 	~MapChip()
 	{
 	}
+	/// <summary>
+	/// モデルを描画。
+	/// </summary>
+	/// <param name="rc">レンダーコンテキスト。</param>
+	void Draw(RenderContext& rc);
 	/*!
 	*@brief	モデルレンダラーを取得。
 	*/

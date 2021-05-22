@@ -42,7 +42,7 @@ struct LevelObjectData {
 	 */
 class Level {
 private:
-	using MapChipPtr = std::unique_ptr<MapChip>;
+	using MapChipPtr = std::shared_ptr<MapChip>;
 public:
 	~Level();
 	/*!
@@ -58,7 +58,16 @@ public:
 	 * 生成したときに、falseを返してしまうと、同じモデルが二つ描画されることになります。
 	 */
 	void Init(const char* filePath, std::function<bool(LevelObjectData& objData)> hookFunc);
+	/// <summary>
+	/// モデルを描画。
+	/// </summary>
+	/// <param name="rc">レンダーコンテキスト。</param>
+	void Draw(RenderContext& rc);
 private:
+	/// <summary>
+	/// マップチップを作成。
+	/// </summary>
+	/// <param name="objData">LevelObjectData。</param>
 	void CreateMapChip(const LevelObjectData& objData);
 private:
 	std::vector<MapChipPtr> m_mapChipPtrs;			//マップチップの可変長配列。

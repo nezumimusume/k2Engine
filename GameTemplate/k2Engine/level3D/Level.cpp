@@ -14,8 +14,8 @@ Level::~Level()
 void Level::CreateMapChip(const LevelObjectData& objData)
 {
 	//フックされなかったので、マップチップを作成する。
-	auto mapChip = std::make_unique<MapChip>(objData);
-	m_mapChipPtrs.push_back(std::move(mapChip));
+	auto mapChip = std::make_shared<MapChip>(objData);
+	m_mapChipPtrs.push_back(mapChip);
 }
 void Level::Init(
 	const char* filePath,
@@ -79,5 +79,13 @@ void Level::Init(
 				CreateMapChip(objData);
 			}
 		}
+	}
+}
+
+void Level::Draw(RenderContext& rc)
+{
+	for (auto mapChipPtr : m_mapChipPtrs)
+	{
+
 	}
 }
