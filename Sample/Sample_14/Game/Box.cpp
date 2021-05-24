@@ -15,6 +15,8 @@ bool Box::Start()
 {
 	m_modelRender.Init("Assets/modelData/sample/sample.tkm");
 	m_modelRender.SetPosition(m_position);
+	m_modelRender.SetRotation(m_rotation);
+	m_modelRender.SetScale(m_scale);
 
 	m_modelRender.Update();
 

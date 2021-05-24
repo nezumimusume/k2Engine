@@ -32,7 +32,11 @@ bool Game::Start()
 		if (objData.EqualObjectName(L"sample") == true) {
 
 			auto box = NewGO<Box>(0);
+			//配置座標、スケール、回転を取得する。
 			box->m_position = objData.position;
+			box->m_scale = objData.scale;
+			box->m_rotation = objData.rotation;
+			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
 		else if (objData.EqualObjectName(L"player") == true) {
@@ -40,11 +44,11 @@ bool Game::Start()
 			//プレイヤーのインスタンスを生成する。
 			m_player = NewGO<Player>(0, "player");
 			m_player->m_position = objData.position;
-			//フックした場合はtrueを返す。
+			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
 		if (objData.EqualObjectName(L"bg") == true) {
-
+			//falseにすると、レベルの方でモデルが読み込まれて配置される。
 			return false;
 		}
 		return false;
@@ -60,5 +64,6 @@ void Game::Update()
 
 void Game::Render(RenderContext& rc)
 {
+	//レベルで読み込んだモデルを表示させる。
 	m_levelRender.Draw(rc);
 }
