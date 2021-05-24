@@ -96,6 +96,11 @@ void ModelRender::InitCommon(RenderingEngine& renderingEngine, const char* tkmFi
 		ModelInitData modelInitData;
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
+		if (m_animationClips != nullptr) {
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+		}
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		m_zprepassModel.Init(modelInitData);
@@ -104,6 +109,12 @@ void ModelRender::InitCommon(RenderingEngine& renderingEngine, const char* tkmFi
 	{
 		ModelInitData modelInitData;
 		modelInitData.m_tkmFilePath = tkmFilePath;
+		if (m_animationClips != nullptr) {
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+		}
+		
 		modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
 		for (

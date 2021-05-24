@@ -59,9 +59,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	auto backGround = NewGO<BackGround>(0, "backGround");
 	auto gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
-	auto game = NewGO<Game>(0, "game");
+//	auto game = NewGO<Game>(0, "game");
 
-	//NewGO<Player>(0,"player");
+//	NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
 	//NewGO<Player>(0,"player");
