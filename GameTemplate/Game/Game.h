@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Level3D/Level.h"
+#include "Level3DRender/LevelRender.h"
 
 class Player;
 
@@ -14,6 +14,6 @@ public:
 
 private:
 	Player* m_player;
-	Level m_level;
+	LevelRender m_levelRender;
 };
 

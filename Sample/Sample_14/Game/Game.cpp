@@ -1,66 +1,64 @@
 #include "stdafx.h"
 #include "Game.h"
 
-//SoundSourceを使用するにはファイルをインクルードする必要がある。
-#include "sound/SoundSource.h"
-
+#include "Player.h"
+#include "GameCamera.h"
+#include "Box.h"
 Game::Game()
 {
-
+	//削除。
+	DeleteGO(m_player);
+	DeleteGO(m_gameCamera);
+	for (auto box : m_boxs)
+	{
+		DeleteGO(box);
+	}
 }
 
 Game::~Game()
 {
-	DeleteGO(m_soundSource);
+
 }
 
 bool Game::Start()
 {
-	//.wavファイルを読み込む。
-	//BGM。
-	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/shining_star.wav");
-	//効果音。
-	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/get.wav");
+	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
 
-	//SoundSourceのオブジェクトを作成する。
-	//SoundSouceはIGameObjectを継承しているので。
-	//NewGOする。
-	m_soundSource = NewGO<SoundSource>(0);
-	//ResistWaveFileBankで指定した番号。
-	m_soundSource->Init(0);
-	//BGMは曲をループさせる。
-	m_soundSource->Play(true);
+
+	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+	//レベルを構築する。
+	m_levelRender.Init("Assets/level/sample.tkl", [&](LevelObjectData& objData) {
+		if (objData.EqualObjectName(L"sample") == true) {
+
+			auto box = NewGO<Box>(0);
+			box->m_position = objData.position;
+			return true;
+		}
+		else if (objData.EqualObjectName(L"player") == true) {
+			//Unityちゃん。
+			//プレイヤーのインスタンスを生成する。
+			m_player = NewGO<Player>(0, "player");
+			m_player->m_position = objData.position;
+			//フックした場合はtrueを返す。
+			return true;
+		}
+		if (objData.EqualObjectName(L"bg") == true) {
+
+			return false;
+		}
+		return false;
+		});
 
 	return true;
 }
 
 void Game::Update()
 {
-	//Aボタンが押されたら。
-	if (g_pad[0]->IsTrigger(enButtonA))
-	{
-		//BGMが再生中なら。
-		if (m_soundSource->IsPlaying())
-		{
-			//停止させる。
-			m_soundSource->Stop();
-		}
-		//停止中なら。
-		else
-		{
-			m_soundSource->Play(true);
-		}
-	}
 
-	//Bボタンが押されたら。
-	if (g_pad[0]->IsTrigger(enButtonB))
-	{
-		//効果音を鳴らす。
-		SoundSource* soundSource = NewGO<SoundSource>(0);
-		soundSource->Init(1);
-		//効果音はワンショット再生(ループさせない)なので。
-		//false
-		soundSource->Play(false);
-	}
+}
 
+void Game::Render(RenderContext& rc)
+{
+	m_levelRender.Draw(rc);
 }

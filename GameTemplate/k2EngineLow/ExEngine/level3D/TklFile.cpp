@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "k2EngineLowPreCompile.h"
 #include "TklFile.h"
 
 void TklFile::Load(const char* filepath)

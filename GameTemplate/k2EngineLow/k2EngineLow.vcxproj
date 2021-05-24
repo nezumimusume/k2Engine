@@ -174,6 +174,9 @@
     <ClCompile Include="ExEngine\level2D\CaslFile.cpp" />
     <ClCompile Include="ExEngine\level2D\Level2D.cpp" />
     <ClCompile Include="ExEngine\level2D\MapChip2D.cpp" />
+    <ClCompile Include="ExEngine\level3D\Level.cpp" />
+    <ClCompile Include="ExEngine\level3D\MapChip.cpp" />
+    <ClCompile Include="ExEngine\level3D\TklFile.cpp" />
     <ClCompile Include="ExEngine\physics\BoxCollider.cpp" />
     <ClCompile Include="ExEngine\physics\CapsuleCollider.cpp" />
     <ClCompile Include="ExEngine\physics\CharacterController.cpp" />
@@ -243,6 +246,9 @@
     <ClInclude Include="ExEngine\level2D\CaslFile.h" />
     <ClInclude Include="ExEngine\level2D\Level2D.h" />
     <ClInclude Include="ExEngine\level2D\MapChip2D.h" />
+    <ClInclude Include="ExEngine\level3D\Level.h" />
+    <ClInclude Include="ExEngine\level3D\MapChip.h" />
+    <ClInclude Include="ExEngine\level3D\TklFile.h" />
     <ClInclude Include="ExEngine\physics\BoxCollider.h" />
     <ClInclude Include="ExEngine\physics\CapsuleCollider.h" />
     <ClInclude Include="ExEngine\physics\CharacterController.h" />

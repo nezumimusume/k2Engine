@@ -9,14 +9,14 @@
 
 struct LevelObjectData;
 
-/*!
-*@brief	マップチップ。
-*/
-class MapChip
+/// <summary>
+/// マップチップレンダー。
+/// </summary>
+class MapChipRender
 {
 public:
-	MapChip(const LevelObjectData& objData);
-	~MapChip()
+	MapChipRender(const LevelObjectData& objData, const char* filePath);
+	~MapChipRender()
 	{
 	}
 	/// <summary>
@@ -24,9 +24,10 @@ public:
 	/// </summary>
 	/// <param name="rc">レンダーコンテキスト。</param>
 	void Draw(RenderContext& rc);
-	/*!
-	*@brief	モデルレンダラーを取得。
-	*/
+	/// <summary>
+	/// モデルレンダラーを取得。
+	/// </summary>
+	/// <returns></returns>
 	ModelRender& GetSkinModelRender()
 	{
 		return m_modelRender;

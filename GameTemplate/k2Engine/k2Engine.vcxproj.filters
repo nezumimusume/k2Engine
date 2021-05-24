@@ -7,11 +7,14 @@
     <Filter Include="camera">
       <UniqueIdentifier>{9a89f799-d7bf-47b8-bd87-315d3c7d0d60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="level3D">
-      <UniqueIdentifier>{c0dd323f-9775-4217-8178-9ab457df52bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="nature">
       <UniqueIdentifier>{0f811c27-ef1a-4c7a-a33d-6b4890e9f741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="level3DRender">
+      <UniqueIdentifier>{c0dd323f-9775-4217-8178-9ab457df52bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="level2DRender">
+      <UniqueIdentifier>{f1c1e7b1-a2da-4466-a50a-8201c631849c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,11 +64,17 @@
     <ClCompile Include="nature\SkyCube.cpp">
       <Filter>nature</Filter>
     </ClCompile>
-    <ClCompile Include="level3D\Level.cpp">
-      <Filter>level3D</Filter>
+    <ClCompile Include="level3DRender\LevelRender.cpp">
+      <Filter>level3DRender</Filter>
     </ClCompile>
-    <ClCompile Include="level3D\MapChip.cpp">
-      <Filter>level3D</Filter>
+    <ClCompile Include="level3DRender\MapChipRender.cpp">
+      <Filter>level3DRender</Filter>
+    </ClCompile>
+    <ClCompile Include="level2DRender\Level2DRender.cpp">
+      <Filter>level2DRender</Filter>
+    </ClCompile>
+    <ClCompile Include="level2DRender\MapChip2DRender.cpp">
+      <Filter>level2DRender</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,11 +127,17 @@
     <ClInclude Include="nature\SkyCube.h">
       <Filter>nature</Filter>
     </ClInclude>
-    <ClInclude Include="level3D\Level.h">
-      <Filter>level3D</Filter>
+    <ClInclude Include="level3DRender\LevelRender.h">
+      <Filter>level3DRender</Filter>
     </ClInclude>
-    <ClInclude Include="level3D\MapChip.h">
-      <Filter>level3D</Filter>
+    <ClInclude Include="level3DRender\MapChipRender.h">
+      <Filter>level3DRender</Filter>
+    </ClInclude>
+    <ClInclude Include="level2DRender\MapChip2DRender.h">
+      <Filter>level2DRender</Filter>
+    </ClInclude>
+    <ClInclude Include="level2DRender\Level2DRender.h">
+      <Filter>level2DRender</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,9 +3,9 @@
  */
 
 #pragma once
+#include "level3D/TklFile.h"
 
-
-class MapChip;
+class MapChipRender;
 /*!
 * @brief	オブジェクト名。
 */
@@ -13,38 +13,40 @@ struct LevelObjectData {
 	Vector3 position;		//<座標。
 	Quaternion rotation;	//!<回転。
 	Vector3 scale;			//!<拡大率。
-	char* name;	//!<名前。
+	const wchar_t* name;	//!<名前。
+	int number;
 	/*!
 	* @brief	引数で渡したオブジェクト名のオブジェクトか調べる。
 	*@param[in]	objName		調べる名前。
 	*@return	名前が同じ場合にtrueを返します。
 	*/
-	bool EqualObjectName(const char* objName)
+	bool EqualObjectName(const wchar_t* objName)
 	{
-		return strcmp(objName, name) == 0;
+		return wcscmp(objName, name) == 0;
 	}
 	/*!
 	* @brief	名前が前方一致するか調べる。
 	*/
-	bool ForwardMatchName(const char* n)
+	bool ForwardMatchName(const wchar_t* n)
 	{
-		auto len = strlen(n);
-		auto namelen = strlen(name);
+		auto len = wcslen(n);
+		auto namelen = wcslen(name);
 		if (len > namelen) {
 			//名前が長い。不一致。
 			return false;
 		}
-		return strncmp(n, name, len) == 0;
+		return wcsncmp(n, name, len) == 0;
 	}
 };
-	/*!
-	 *@brief	レベル。
-	 */
-class Level {
+
+/*!
+*@brief	レベル。
+*/
+class LevelRender {
 private:
-	using MapChipPtr = std::shared_ptr<MapChip>;
+	using MapChipRenderPtr = std::shared_ptr<MapChipRender>;
 public:
-	~Level();
+	~LevelRender();
 	/*!
 	 * @brief	レベルを初期化。
 	 *@param[in]	levelDataFilePath		tklファイルのファイルパス。
@@ -68,8 +70,17 @@ private:
 	/// マップチップを作成。
 	/// </summary>
 	/// <param name="objData">LevelObjectData。</param>
-	void CreateMapChip(const LevelObjectData& objData);
+	void CreateMapChipRender(const LevelObjectData& objData, const char* filePath);
+	/// <summary>
+	/// Tklファイルの行列を変換する。
+	/// </summary>
+	void MatrixTklToLevel();
 private:
-	std::vector<MapChipPtr> m_mapChipPtrs;			//マップチップの可変長配列。
+	using BonePtr = std::unique_ptr<Bone>;						//ボーンPtr。
+	std::vector<BonePtr> m_bonelist;							//ボーンのリスト。
+	std::unique_ptr<Matrix[]> m_matrixlist;						//行列のリスト。
+	std::vector<MapChipRenderPtr> m_mapChipRenderPtrs;			//マップチップの可変長配列。
+	TklFile m_tklFile;											//Tklファイル。
+
 
 };

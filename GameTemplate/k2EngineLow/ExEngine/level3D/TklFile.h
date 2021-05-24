@@ -1,5 +1,8 @@
 #pragma once
 
+/// <summary>
+/// tklファイルを読み込む。
+/// </summary>
 class TklFile
 {
 public:
@@ -12,8 +15,7 @@ public:
 		float invBindPose[4][3];		//バインドポーズの逆数。
 		int no;
 
-		//ここからはあんまりきにしなくてOK ]
-		//todo:シャドウを実装したら変える。
+		//スクリプトの方がまだ未実装。
 		bool shadowcasterflag = false;
 		bool shadowreceiverflag = false;
 		std::vector<int> intData;
@@ -21,7 +23,10 @@ public:
 		std::vector<char*> charData;
 		std::vector<Vector3> Vector3Data;
 	};
-	//ロード関数。
+	/// <summary>
+	/// ロード。
+	/// </summary>
+	/// <param name="filepath">ファイルパス。</param>
 	void Load(const char* filepath);
 	//クエリ関数。
 	void QuaryObject(std::function<void(SObject& obj)> query)

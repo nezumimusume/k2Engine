@@ -43,6 +43,9 @@
     <Filter Include="ExEngine\effect">
       <UniqueIdentifier>{d3ab396e-20b4-4b1c-82ee-784b759b3d6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ExEngine\level3D">
+      <UniqueIdentifier>{66c2d7db-bd03-4bab-9d9b-8c86803d9dc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ExEngine\gameObject\Gameobjectmanager.cpp">
@@ -231,6 +234,15 @@
     </ClCompile>
     <ClCompile Include="ExEngine\effect\EffectEmitter.cpp">
       <Filter>ExEngine\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\level3D\TklFile.cpp">
+      <Filter>ExEngine\level3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\level3D\Level.cpp">
+      <Filter>ExEngine\level3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ExEngine\level3D\MapChip.cpp">
+      <Filter>ExEngine\level3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +480,15 @@
     </ClInclude>
     <ClInclude Include="ExEngine\effect\EffectEmitter.h">
       <Filter>ExEngine\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\level3D\TklFile.h">
+      <Filter>ExEngine\level3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\level3D\Level.h">
+      <Filter>ExEngine\level3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ExEngine\level3D\MapChip.h">
+      <Filter>ExEngine\level3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,14 +2,14 @@
  *@brief	マップチップ
  */
 #include "k2EnginePreCompile.h"
-#include "MapChip.h"
-#include "Level.h"
+#include "MapChipRender.h"
+#include "LevelRender.h"
 
 
-MapChip::MapChip(const LevelObjectData& objData)
+MapChipRender::MapChipRender(const LevelObjectData& objData, const char* filePath)
 {
 	//モデルを読み込む。
-	m_modelRender.Init(objData.name);
+	m_modelRender.Init(filePath);
 	//色々セット。
 	m_modelRender.SetPosition(objData.position);
 	m_modelRender.SetScale(objData.scale);
@@ -21,7 +21,7 @@ MapChip::MapChip(const LevelObjectData& objData)
 	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 }
 
-void MapChip::Draw(RenderContext& rc)
+void MapChipRender::Draw(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
 }

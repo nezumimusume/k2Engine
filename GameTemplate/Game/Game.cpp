@@ -6,11 +6,12 @@ bool Game::Start()
 {
 
 	//レベルを構築する。
-	m_level.Init("Assets/level/sample.tkl", [&](LevelObjectData& objData) {
-		if (objData.EqualObjectName("star") == true) {
+	m_levelRender.Init("Assets/level/sample.tkl", [&](LevelObjectData& objData) {
+		if (objData.EqualObjectName(L"unityChan") == true) {
 
+			return true;
 		}
-		else if (objData.EqualObjectName("player") == true) {
+		else if (objData.EqualObjectName(L"player") == true) {
 			//Unityちゃん。
 			//プレイヤーのインスタンスを生成する。
 			m_player = NewGO<Player>(0, "player");
@@ -25,5 +26,5 @@ bool Game::Start()
 
 void Game::Render(RenderContext& rc)
 {
-	m_level.Draw(rc);
+	m_levelRender.Draw(rc);
 }

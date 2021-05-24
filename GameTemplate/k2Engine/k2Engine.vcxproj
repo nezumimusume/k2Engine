@@ -37,8 +37,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="level3D\Level.cpp" />
-    <ClCompile Include="level3D\MapChip.cpp" />
+    <ClCompile Include="level2DRender\Level2DRender.cpp" />
+    <ClCompile Include="level2DRender\MapChip2DRender.cpp" />
+    <ClCompile Include="level3DRender\LevelRender.cpp" />
+    <ClCompile Include="level3DRender\MapChipRender.cpp" />
     <ClCompile Include="nature\SkyCube.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -58,8 +60,10 @@
     <ClInclude Include="graphics\Ssao.h" />
     <ClInclude Include="graphics\ToneMap.h" />
     <ClInclude Include="k2EnginePreCompile.h" />
-    <ClInclude Include="level3D\Level.h" />
-    <ClInclude Include="level3D\MapChip.h" />
+    <ClInclude Include="level2DRender\Level2DRender.h" />
+    <ClInclude Include="level2DRender\MapChip2DRender.h" />
+    <ClInclude Include="level3DRender\LevelRender.h" />
+    <ClInclude Include="level3DRender\MapChipRender.h" />
     <ClInclude Include="nature\SkyCube.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
