@@ -51,6 +51,7 @@
     <ClInclude Include="graphics\Dof.h" />
     <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\Fxaa.h" />
+    <ClInclude Include="graphics\IRenderer.h" />
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\MyRenderer.h" />
     <ClInclude Include="graphics\PostEffect.h" />

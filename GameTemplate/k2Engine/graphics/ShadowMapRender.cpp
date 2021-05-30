@@ -41,7 +41,9 @@ void ShadowMapRender::Init()
 
 void ShadowMapRender::Render(
     RenderContext& rc,
-    Vector3& lightDirection
+    int ligNo,
+    Vector3& lightDirection,
+    std::vector< IRenderer* >& renderObjects
 )
 {
     if (lightDirection.LengthSq() < 0.001f) {
@@ -55,15 +57,18 @@ void ShadowMapRender::Render(
         rc.SetRenderTargetAndViewport(shadowMap);
         rc.ClearRenderTargetView(shadowMap);
 
-        for (auto& model : m_modelsArray[shadowMapNo]) {
-            model->Draw(
-                rc,
-                g_matIdentity,
+        for (auto& renderer : renderObjects) {
+            renderer->OnRenderShadowMap(
+                rc, 
+                ligNo,
+                shadowMapNo, 
                 m_cascadeShadowMapMatrix.GetLightViewProjectionCropMatrix(shadowMapNo)
             );
         }
+        
         //•`‰æ‚ªI‚í‚Á‚½‚çƒNƒŠƒA
-        m_modelsArray[shadowMapNo].clear();
+        m_renderers.clear();
+        
         // ‘‚«‚İŠ®—¹‘Ò‚¿
         rc.WaitUntilFinishDrawingToRenderTarget(shadowMap);
         shadowMapNo++;

@@ -6,7 +6,7 @@ class RenderingEngine;
 /// <summary>
 /// スキンモデルレンダー。
 /// </summary>
-class ModelRender
+class ModelRender : public IRenderer
 {
 public:
 	ModelRender() {}
@@ -137,6 +137,31 @@ private:
 	void InitAnimation(AnimationClip* animationClips,
 		int numAnimationClips, 
 		EnModelUpAxis enModelUpAxis);
+	/// <summary>
+	/// シャドウマップへの描画パスから呼ばれる処理。
+	/// </summary>
+	/// <param name="rc">レンダリングコンテキスト</param>
+	/// <param name="ligNo">ライト番号</param>
+	/// <param name="shadowMapNo">シャドウマップ番号</param>
+	/// <param name="lvpMatrix">ライトビュープロジェクション行列</param>
+	void OnRenderShadowMap(
+		RenderContext& rc,
+		int ligNo,
+		int shadowMapNo,
+		const Matrix& lvpMatrix) override;
+	/// <summary>
+	/// ZPrepassから呼ばれる処理。
+	/// </summary>
+	/// <param name="rc"></param>
+	void OnZPrepass(RenderContext& rc) override;
+	/// <summary>
+	/// G-Buffer描画パスから呼ばれる処理。
+	/// </summary>
+	void OnRenderToGBuffer(RenderContext& rc) override;
+	/// <summary>
+	/// フォワードレンダーパスから呼ばれる処理。
+	/// </summary>
+	void OnForwardRender(RenderContext& rc) override;
 private:
 	/// <summary>
 	 /// 共通の初期化処理

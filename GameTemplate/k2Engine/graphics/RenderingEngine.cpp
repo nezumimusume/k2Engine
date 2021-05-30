@@ -226,19 +226,15 @@ void RenderingEngine::Execute(RenderContext& rc)
     ForwardRendering(rc);
 
     
-
     // ポストエフェクトを実行
     m_postEffect.Render(rc, m_mainRenderTarget);
-
 
 
     // メインレンダリングターゲットの内容をフレームバッファにコピー
     CopyMainRenderTargetToFrameBuffer(rc);
 
-    // 登録されている3Dモデルをクリア
-    m_renderToGBufferModels.clear();
-    m_forwardRenderModels.clear();
-    m_zprepassModels.clear();
+    // 登録されている描画オブジェクトをクリア
+    m_renderObjects.clear();
 }
 
 void RenderingEngine::RenderToShadowMap(RenderContext& rc)
@@ -248,7 +244,9 @@ void RenderingEngine::RenderToShadowMap(RenderContext& rc)
     {
         shadowMapRender.Render(
             rc,
-            m_deferredLightingCB.m_light.directionalLight[ligNo].direction
+            ligNo,
+            m_deferredLightingCB.m_light.directionalLight[ligNo].direction,
+            m_renderObjects
         );
         ligNo++;
     }
@@ -265,9 +263,8 @@ void RenderingEngine::ZPrepass(RenderContext& rc)
     // レンダリングターゲットをクリア
     rc.ClearRenderTargetView(m_zprepassRenderTarget);
 
-    for (auto& model : m_zprepassModels)
-    {
-        model->Draw(rc);
+    for (auto& renderObj : m_renderObjects) {
+        renderObj->OnZPrepass(rc);
     }
 
     rc.WaitUntilFinishDrawingToRenderTarget(m_zprepassRenderTarget);
@@ -280,9 +277,8 @@ void RenderingEngine::ForwardRendering(RenderContext& rc)
         m_mainRenderTarget.GetRTVCpuDescriptorHandle(),
         m_gBuffer[enGBufferAlbedo].GetDSVCpuDescriptorHandle()
     );
-    for (auto& model : m_forwardRenderModels)
-    {
-        model->Draw(rc);
+    for (auto& renderObj : m_renderObjects) {
+        renderObj->OnForwardRender(rc);
     }
 
     // メインレンダリングターゲットへの書き込み終了待ち
@@ -307,9 +303,9 @@ void RenderingEngine::RenderToGBuffer(RenderContext& rc)
 
     // レンダリングターゲットをクリア
     rc.ClearRenderTargetViews(ARRAYSIZE(rts), rts);
-    for (auto& model : m_renderToGBufferModels)
-    {
-        model->Draw(rc);
+
+    for (auto& renderObj : m_renderObjects) {
+        renderObj->OnRenderToGBuffer(rc);
     }
 
     // レンダリングターゲットへの書き込み待ち

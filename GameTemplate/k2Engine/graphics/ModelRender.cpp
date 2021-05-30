@@ -162,26 +162,32 @@ void ModelRender::Update()
 
 void ModelRender::Draw(RenderContext& rc)
 {
+	g_renderingEngine->AddRenderObject(this);
+}
+void ModelRender::OnRenderShadowMap(
+	RenderContext& rc,
+	int ligNo,
+	int shadowMapNo,
+	const Matrix& lvpMatrix)
+{
 	if (m_isShadowCaster) {
-		//シャドウキャスター
-		for (
-			int ligNo = 0;
-			ligNo < NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT;
-			ligNo++)
-		{
-			g_renderingEngine->Add3DModelToRenderToShadowMap(
-				ligNo,
-				m_shadowModels[ligNo][0],
-				m_shadowModels[ligNo][1],
-				m_shadowModels[ligNo][2]
-			);
-		}
+		m_shadowModels[ligNo][shadowMapNo].Draw(rc, g_matIdentity, lvpMatrix);
 	}
-	g_renderingEngine->Add3DModelToZPrepass(m_zprepassModel);
+}
+
+void ModelRender::OnZPrepass(RenderContext& rc)
+{
+	m_zprepassModel.Draw(rc);
+}
+void ModelRender::OnRenderToGBuffer(RenderContext& rc)
+{
 	if (m_renderToGBufferModel.IsInited()) {
-		g_renderingEngine->Add3DModelToRenderGBufferPass(m_renderToGBufferModel);
+		m_renderToGBufferModel.Draw(rc);
 	}
+}
+void ModelRender::OnForwardRender(RenderContext& rc)
+{
 	if (m_forwardRenderModel.IsInited()) {
-		g_renderingEngine->Add3DModelToForwardRenderPass(m_forwardRenderModel);
+		m_forwardRenderModel.Draw(rc);
 	}
 }

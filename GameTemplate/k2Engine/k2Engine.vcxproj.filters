@@ -139,5 +139,8 @@
     <ClInclude Include="level2DRender\Level2DRender.h">
       <Filter>level2DRender</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\IRenderer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
