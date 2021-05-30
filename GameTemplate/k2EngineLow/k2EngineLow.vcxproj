@@ -76,7 +76,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)/ExEngine/bulletPhysics/src/;$(ProjectDir)/ExEngine/;$(ProjectDir)/;$(ProjectDir)/MiniEngine/;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\MiniEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
     <OutDir>..\exlib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -120,7 +120,7 @@
       <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dxguid.lib;DirectXTK12.lib;d3d12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX12d.lib;LLGId.lib</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3d12.lib;DirectXTK12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX12d.lib;LLGId.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,163 +162,162 @@
       <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dxguid.lib;DirectXTK12.lib;d3d12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseer.lib;EffekseerRendererDX12.lib;LLGI.lib</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3d12.lib;DirectXTK12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseer.lib;EffekseerRendererDX12.lib;LLGI.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ExEngine\effect\Effect.cpp" />
-    <ClCompile Include="ExEngine\effect\EffectEmitter.cpp" />
-    <ClCompile Include="ExEngine\effect\EffectEngine.cpp" />
-    <ClCompile Include="ExEngine\gameObject\Gameobjectmanager.cpp" />
-    <ClCompile Include="ExEngine\gameObject\IGameObject.cpp" />
-    <ClCompile Include="ExEngine\level2D\CaslFile.cpp" />
-    <ClCompile Include="ExEngine\level2D\Level2D.cpp" />
-    <ClCompile Include="ExEngine\level2D\MapChip2D.cpp" />
-    <ClCompile Include="ExEngine\level3D\Level.cpp" />
-    <ClCompile Include="ExEngine\level3D\MapChip.cpp" />
-    <ClCompile Include="ExEngine\level3D\TklFile.cpp" />
-    <ClCompile Include="ExEngine\physics\BoxCollider.cpp" />
-    <ClCompile Include="ExEngine\physics\CapsuleCollider.cpp" />
-    <ClCompile Include="ExEngine\physics\CharacterController.cpp" />
-    <ClCompile Include="ExEngine\physics\DebugWireframe.cpp" />
-    <ClCompile Include="ExEngine\physics\MeshCollider.cpp" />
-    <ClCompile Include="ExEngine\physics\Physics.cpp" />
-    <ClCompile Include="ExEngine\physics\PhysicsStaticObject.cpp" />
-    <ClCompile Include="ExEngine\physics\RigidBody.cpp" />
-    <ClCompile Include="ExEngine\physics\SphereCollider.cpp" />
-    <ClCompile Include="ExEngine\sound\SoundEngine.cpp" />
-    <ClCompile Include="ExEngine\sound\SoundSource.cpp" />
-    <ClCompile Include="ExEngine\sound\WaveFile.cpp" />
-    <ClCompile Include="ExEngine\sound\WaveFileBank.cpp" />
+    <ClCompile Include="gameObject\Gameobjectmanager.cpp" />
+    <ClCompile Include="gameObject\IGameObject.cpp" />
+    <ClCompile Include="graphics\Animation.cpp" />
+    <ClCompile Include="graphics\AnimationClip.cpp" />
+    <ClCompile Include="graphics\AnimationPlayController.cpp" />
+    <ClCompile Include="graphics\Camera.cpp" />
+    <ClCompile Include="graphics\ConstantBuffer.cpp" />
+    <ClCompile Include="graphics\DescriptorHeap.cpp" />
+    <ClCompile Include="graphics\effect\Effect.cpp" />
+    <ClCompile Include="graphics\effect\EffectEmitter.cpp" />
+    <ClCompile Include="graphics\effect\EffectEngine.cpp" />
+    <ClCompile Include="graphics\font\Font.cpp" />
+    <ClCompile Include="graphics\font\FontEngine.cpp" />
+    <ClCompile Include="graphics\GaussianBlur.cpp" />
+    <ClCompile Include="graphics\GPUBuffer.cpp" />
+    <ClCompile Include="graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="graphics\IndexBuffer.cpp" />
+    <ClCompile Include="graphics\Material.cpp" />
+    <ClCompile Include="graphics\MeshParts.cpp" />
+    <ClCompile Include="graphics\Model.cpp" />
+    <ClCompile Include="graphics\NullTextureMaps.cpp" />
+    <ClCompile Include="graphics\PipelineState.cpp" />
+    <ClCompile Include="graphics\raytracing\BLASBuffer.cpp" />
+    <ClCompile Include="graphics\raytracing\RaytracingDescriptorHeaps.cpp" />
+    <ClCompile Include="graphics\raytracing\RaytracingEngine.cpp" />
+    <ClCompile Include="graphics\raytracing\RaytracingInstance.cpp" />
+    <ClCompile Include="graphics\raytracing\RaytracingPSO.cpp" />
+    <ClCompile Include="graphics\raytracing\RaytracingShaderTable.cpp" />
+    <ClCompile Include="graphics\raytracing\RaytracingWorld.cpp" />
+    <ClCompile Include="graphics\raytracing\TLASBuffer.cpp" />
+    <ClCompile Include="graphics\RenderTarget.cpp" />
+    <ClCompile Include="graphics\RootSignature.cpp" />
+    <ClCompile Include="graphics\RWStructuredBuffer.cpp" />
+    <ClCompile Include="graphics\Shader.cpp" />
+    <ClCompile Include="graphics\Skeleton.cpp" />
+    <ClCompile Include="graphics\Sprite.cpp" />
+    <ClCompile Include="graphics\StructuredBuffer.cpp" />
+    <ClCompile Include="graphics\Texture.cpp" />
+    <ClCompile Include="graphics\VertexBuffer.cpp" />
+    <ClCompile Include="HID\GamePad.cpp" />
+    <ClCompile Include="k2Engine.cpp" />
     <ClCompile Include="k2EngineLowPreCompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="MiniEngine\Animation.cpp" />
-    <ClCompile Include="MiniEngine\AnimationClip.cpp" />
-    <ClCompile Include="MiniEngine\AnimationPlayController.cpp" />
-    <ClCompile Include="MiniEngine\Camera.cpp" />
-    <ClCompile Include="MiniEngine\ConstantBuffer.cpp" />
-    <ClCompile Include="MiniEngine\DescriptorHeap.cpp" />
-    <ClCompile Include="MiniEngine\font\Font.cpp" />
-    <ClCompile Include="MiniEngine\font\FontEngine.cpp" />
-    <ClCompile Include="MiniEngine\GaussianBlur.cpp" />
-    <ClCompile Include="MiniEngine\GPUBuffer.cpp" />
-    <ClCompile Include="MiniEngine\GraphicsEngine.cpp" />
-    <ClCompile Include="MiniEngine\HID\GamePad.cpp" />
-    <ClCompile Include="MiniEngine\IndexBuffer.cpp" />
-    <ClCompile Include="MiniEngine\Material.cpp" />
-    <ClCompile Include="MiniEngine\math\Matrix.cpp" />
-    <ClCompile Include="MiniEngine\math\Vector.cpp" />
-    <ClCompile Include="MiniEngine\MeshParts.cpp" />
-    <ClCompile Include="MiniEngine\Model.cpp" />
-    <ClCompile Include="MiniEngine\NullTextureMaps.cpp" />
-    <ClCompile Include="MiniEngine\PipelineState.cpp" />
-    <ClCompile Include="MiniEngine\raytracing\BLASBuffer.cpp" />
-    <ClCompile Include="MiniEngine\raytracing\RaytracingDescriptorHeaps.cpp" />
-    <ClCompile Include="MiniEngine\raytracing\RaytracingEngine.cpp" />
-    <ClCompile Include="MiniEngine\raytracing\RaytracingInstance.cpp" />
-    <ClCompile Include="MiniEngine\raytracing\RaytracingPSO.cpp" />
-    <ClCompile Include="MiniEngine\raytracing\RaytracingShaderTable.cpp" />
-    <ClCompile Include="MiniEngine\raytracing\RaytracingWorld.cpp" />
-    <ClCompile Include="MiniEngine\raytracing\TLASBuffer.cpp" />
-    <ClCompile Include="MiniEngine\RenderTarget.cpp" />
-    <ClCompile Include="MiniEngine\RootSignature.cpp" />
-    <ClCompile Include="MiniEngine\RWStructuredBuffer.cpp" />
-    <ClCompile Include="MiniEngine\Shader.cpp" />
-    <ClCompile Include="MiniEngine\Skeleton.cpp" />
-    <ClCompile Include="MiniEngine\Sprite.cpp" />
-    <ClCompile Include="MiniEngine\StructuredBuffer.cpp" />
-    <ClCompile Include="MiniEngine\Texture.cpp" />
-    <ClCompile Include="MiniEngine\tkEngine.cpp" />
-    <ClCompile Include="MiniEngine\tkFile\TkaFile.cpp" />
-    <ClCompile Include="MiniEngine\tkFile\TkmFile.cpp" />
-    <ClCompile Include="MiniEngine\tkFile\TksFile.cpp" />
-    <ClCompile Include="MiniEngine\VertexBuffer.cpp" />
+    <ClCompile Include="level2D\CaslFile.cpp" />
+    <ClCompile Include="level2D\Level2D.cpp" />
+    <ClCompile Include="level2D\MapChip2D.cpp" />
+    <ClCompile Include="level3D\Level.cpp" />
+    <ClCompile Include="level3D\MapChip.cpp" />
+    <ClCompile Include="level3D\TklFile.cpp" />
+    <ClCompile Include="math\Matrix.cpp" />
+    <ClCompile Include="math\Vector.cpp" />
+    <ClCompile Include="physics\BoxCollider.cpp" />
+    <ClCompile Include="physics\CapsuleCollider.cpp" />
+    <ClCompile Include="physics\CharacterController.cpp" />
+    <ClCompile Include="physics\DebugWireframe.cpp" />
+    <ClCompile Include="physics\MeshCollider.cpp" />
+    <ClCompile Include="physics\Physics.cpp" />
+    <ClCompile Include="physics\PhysicsStaticObject.cpp" />
+    <ClCompile Include="physics\RigidBody.cpp" />
+    <ClCompile Include="physics\SphereCollider.cpp" />
+    <ClCompile Include="sound\SoundEngine.cpp" />
+    <ClCompile Include="sound\SoundSource.cpp" />
+    <ClCompile Include="sound\WaveFile.cpp" />
+    <ClCompile Include="sound\WaveFileBank.cpp" />
+    <ClCompile Include="tkFile\TkaFile.cpp" />
+    <ClCompile Include="tkFile\TkmFile.cpp" />
+    <ClCompile Include="tkFile\TksFile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ExEngine\effect\Effect.h" />
-    <ClInclude Include="ExEngine\effect\EffectEmitter.h" />
-    <ClInclude Include="ExEngine\effect\EffectEngine.h" />
-    <ClInclude Include="ExEngine\ExEngine.h" />
-    <ClInclude Include="ExEngine\gameObject\GameObjectManager.h" />
-    <ClInclude Include="ExEngine\gameObject\IGameobject.h" />
-    <ClInclude Include="ExEngine\level2D\CaslFile.h" />
-    <ClInclude Include="ExEngine\level2D\Level2D.h" />
-    <ClInclude Include="ExEngine\level2D\MapChip2D.h" />
-    <ClInclude Include="ExEngine\level3D\Level.h" />
-    <ClInclude Include="ExEngine\level3D\MapChip.h" />
-    <ClInclude Include="ExEngine\level3D\TklFile.h" />
-    <ClInclude Include="ExEngine\physics\BoxCollider.h" />
-    <ClInclude Include="ExEngine\physics\CapsuleCollider.h" />
-    <ClInclude Include="ExEngine\physics\CharacterController.h" />
-    <ClInclude Include="ExEngine\physics\CollisionAttr.h" />
-    <ClInclude Include="ExEngine\physics\DebugWireframe.h" />
-    <ClInclude Include="ExEngine\physics\ICollider.h" />
-    <ClInclude Include="ExEngine\physics\MeshCollider.h" />
-    <ClInclude Include="ExEngine\physics\Physics.h" />
-    <ClInclude Include="ExEngine\physics\PhysicsStaticObject.h" />
-    <ClInclude Include="ExEngine\physics\RigidBody.h" />
-    <ClInclude Include="ExEngine\physics\SphereCollider.h" />
-    <ClInclude Include="ExEngine\sound\SoundEngine.h" />
-    <ClInclude Include="ExEngine\sound\SoundSource.h" />
-    <ClInclude Include="ExEngine\sound\WaveFile.h" />
-    <ClInclude Include="ExEngine\sound\WaveFileBank.h" />
+    <ClInclude Include="dbg\MyAssert.h" />
+    <ClInclude Include="gameObject\GameObjectManager.h" />
+    <ClInclude Include="gameObject\IGameobject.h" />
+    <ClInclude Include="graphics\Animation.h" />
+    <ClInclude Include="graphics\AnimationClip.h" />
+    <ClInclude Include="graphics\AnimationPlayController.h" />
+    <ClInclude Include="graphics\Camera.h" />
+    <ClInclude Include="graphics\ConstantBuffer.h" />
+    <ClInclude Include="graphics\d3dx12.h" />
+    <ClInclude Include="graphics\DescriptorHeap.h" />
+    <ClInclude Include="graphics\DescriptorHeap_inline.h" />
+    <ClInclude Include="graphics\effect\Effect.h" />
+    <ClInclude Include="graphics\effect\EffectEmitter.h" />
+    <ClInclude Include="graphics\effect\EffectEngine.h" />
+    <ClInclude Include="graphics\font\Font.h" />
+    <ClInclude Include="graphics\font\FontEngine.h" />
+    <ClInclude Include="graphics\GaussianBlur.h" />
+    <ClInclude Include="graphics\GPUBuffer.h" />
+    <ClInclude Include="graphics\GraphicsEngine.h" />
+    <ClInclude Include="graphics\IndexBuffer.h" />
+    <ClInclude Include="graphics\IShaderResource.h" />
+    <ClInclude Include="graphics\IUnorderAccessResource.h" />
+    <ClInclude Include="graphics\Material.h" />
+    <ClInclude Include="graphics\MeshParts.h" />
+    <ClInclude Include="graphics\Model.h" />
+    <ClInclude Include="graphics\NullTextureMaps.h" />
+    <ClInclude Include="graphics\PipelineState.h" />
+    <ClInclude Include="graphics\raytracing\BLASBuffer.h" />
+    <ClInclude Include="graphics\raytracing\Raytracing.h" />
+    <ClInclude Include="graphics\raytracing\RaytracingDescriptorHeaps.h" />
+    <ClInclude Include="graphics\raytracing\RaytracingEngine.h" />
+    <ClInclude Include="graphics\raytracing\RaytracingInstance.h" />
+    <ClInclude Include="graphics\raytracing\RaytracingPSO.h" />
+    <ClInclude Include="graphics\raytracing\RaytracingShaderTable.h" />
+    <ClInclude Include="graphics\raytracing\RaytracingWorld.h" />
+    <ClInclude Include="graphics\raytracing\TLASBuffer.h" />
+    <ClInclude Include="graphics\RenderContext.h" />
+    <ClInclude Include="graphics\RenderContext_inline.h" />
+    <ClInclude Include="graphics\RenderTarget.h" />
+    <ClInclude Include="graphics\RootSignature.h" />
+    <ClInclude Include="graphics\RWStructuredBuffer.h" />
+    <ClInclude Include="graphics\Shader.h" />
+    <ClInclude Include="graphics\Skeleton.h" />
+    <ClInclude Include="graphics\Sprite.h" />
+    <ClInclude Include="graphics\StructuredBuffer.h" />
+    <ClInclude Include="graphics\Texture.h" />
+    <ClInclude Include="graphics\VertexBuffer.h" />
+    <ClInclude Include="HID\GamePad.h" />
+    <ClInclude Include="k2Engine.h" />
     <ClInclude Include="k2EngineLowPreCompile.h" />
-    <ClInclude Include="MiniEngine\Animation.h" />
-    <ClInclude Include="MiniEngine\AnimationClip.h" />
-    <ClInclude Include="MiniEngine\AnimationPlayController.h" />
-    <ClInclude Include="MiniEngine\Camera.h" />
-    <ClInclude Include="MiniEngine\ConstantBuffer.h" />
-    <ClInclude Include="MiniEngine\d3dx12.h" />
-    <ClInclude Include="MiniEngine\dbg\MyAssert.h" />
-    <ClInclude Include="MiniEngine\DescriptorHeap.h" />
-    <ClInclude Include="MiniEngine\DescriptorHeap_inline.h" />
-    <ClInclude Include="MiniEngine\font\Font.h" />
-    <ClInclude Include="MiniEngine\font\FontEngine.h" />
-    <ClInclude Include="MiniEngine\GaussianBlur.h" />
-    <ClInclude Include="MiniEngine\GPUBuffer.h" />
-    <ClInclude Include="MiniEngine\GraphicsEngine.h" />
-    <ClInclude Include="MiniEngine\HID\GamePad.h" />
-    <ClInclude Include="MiniEngine\IndexBuffer.h" />
-    <ClInclude Include="MiniEngine\IShaderResource.h" />
-    <ClInclude Include="MiniEngine\IUnorderAccessResource.h" />
-    <ClInclude Include="MiniEngine\Material.h" />
-    <ClInclude Include="MiniEngine\math\Math.h" />
-    <ClInclude Include="MiniEngine\math\Matrix.h" />
-    <ClInclude Include="MiniEngine\math\Vector.h" />
-    <ClInclude Include="MiniEngine\MeshParts.h" />
-    <ClInclude Include="MiniEngine\MiniEngine.h" />
-    <ClInclude Include="MiniEngine\Model.h" />
-    <ClInclude Include="MiniEngine\NullTextureMaps.h" />
-    <ClInclude Include="MiniEngine\PipelineState.h" />
-    <ClInclude Include="MiniEngine\raytracing\BLASBuffer.h" />
-    <ClInclude Include="MiniEngine\raytracing\Raytracing.h" />
-    <ClInclude Include="MiniEngine\raytracing\RaytracingDescriptorHeaps.h" />
-    <ClInclude Include="MiniEngine\raytracing\RaytracingEngine.h" />
-    <ClInclude Include="MiniEngine\raytracing\RaytracingInstance.h" />
-    <ClInclude Include="MiniEngine\raytracing\RaytracingPSO.h" />
-    <ClInclude Include="MiniEngine\raytracing\RaytracingShaderTable.h" />
-    <ClInclude Include="MiniEngine\raytracing\RaytracingWorld.h" />
-    <ClInclude Include="MiniEngine\raytracing\TLASBuffer.h" />
-    <ClInclude Include="MiniEngine\RenderContext.h" />
-    <ClInclude Include="MiniEngine\RenderContext_inline.h" />
-    <ClInclude Include="MiniEngine\RenderTarget.h" />
-    <ClInclude Include="MiniEngine\RootSignature.h" />
-    <ClInclude Include="MiniEngine\RWStructuredBuffer.h" />
-    <ClInclude Include="MiniEngine\Shader.h" />
-    <ClInclude Include="MiniEngine\Skeleton.h" />
-    <ClInclude Include="MiniEngine\Sprite.h" />
-    <ClInclude Include="MiniEngine\StructuredBuffer.h" />
-    <ClInclude Include="MiniEngine\Texture.h" />
-    <ClInclude Include="MiniEngine\time\GameTime.h" />
-    <ClInclude Include="MiniEngine\time\Stopwatch.h" />
-    <ClInclude Include="MiniEngine\tkEngine.h" />
-    <ClInclude Include="MiniEngine\tkFile\TkaFile.h" />
-    <ClInclude Include="MiniEngine\tkFile\TkmFile.h" />
-    <ClInclude Include="MiniEngine\tkFile\TksFile.h" />
-    <ClInclude Include="MiniEngine\TResourceBank.h" />
-    <ClInclude Include="MiniEngine\VertexBuffer.h" />
+    <ClInclude Include="level2D\CaslFile.h" />
+    <ClInclude Include="level2D\Level2D.h" />
+    <ClInclude Include="level2D\MapChip2D.h" />
+    <ClInclude Include="level3D\Level.h" />
+    <ClInclude Include="level3D\MapChip.h" />
+    <ClInclude Include="level3D\TklFile.h" />
+    <ClInclude Include="math\Math.h" />
+    <ClInclude Include="math\Matrix.h" />
+    <ClInclude Include="math\Vector.h" />
+    <ClInclude Include="physics\BoxCollider.h" />
+    <ClInclude Include="physics\CapsuleCollider.h" />
+    <ClInclude Include="physics\CharacterController.h" />
+    <ClInclude Include="physics\CollisionAttr.h" />
+    <ClInclude Include="physics\DebugWireframe.h" />
+    <ClInclude Include="physics\ICollider.h" />
+    <ClInclude Include="physics\MeshCollider.h" />
+    <ClInclude Include="physics\Physics.h" />
+    <ClInclude Include="physics\PhysicsStaticObject.h" />
+    <ClInclude Include="physics\RigidBody.h" />
+    <ClInclude Include="physics\SphereCollider.h" />
+    <ClInclude Include="sound\SoundEngine.h" />
+    <ClInclude Include="sound\SoundSource.h" />
+    <ClInclude Include="sound\WaveFile.h" />
+    <ClInclude Include="sound\WaveFileBank.h" />
+    <ClInclude Include="time\GameTime.h" />
+    <ClInclude Include="time\Stopwatch.h" />
+    <ClInclude Include="tkFile\TkaFile.h" />
+    <ClInclude Include="tkFile\TkmFile.h" />
+    <ClInclude Include="tkFile\TksFile.h" />
+    <ClInclude Include="util\Stopwatch.h" />
+    <ClInclude Include="util\TResourceBank.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

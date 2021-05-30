@@ -6,9 +6,9 @@
 
 #include "sound/SoundEngine.h"
 #include "graphics/RenderingEngine.h"
-#include "effect/effect.h"
+#include "graphics/effect/effect.h"
 
-#include "effect/EffectEmitter.h"
+#include "graphics/effect/EffectEmitter.h"
 
 #include "Player.h"
 

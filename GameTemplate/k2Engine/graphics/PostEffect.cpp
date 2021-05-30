@@ -1,7 +1,7 @@
 #include "k2EnginePreCompile.h"
 #include "PostEffect.h"
 
-#include "effect/EffectEngine.h"
+#include "graphics/effect/EffectEngine.h"
 
 #include "RenderingEngine.h"
 
