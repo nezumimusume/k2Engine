@@ -82,6 +82,9 @@ void Dof::Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRenderTarge
     }
 void Dof::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
+    if (m_isEnable == false) {
+        return;
+    }
     //step-4 ‚’¼A‘ÎŠpüƒuƒ‰[‚ğ‚©‚¯‚é
     RenderTarget* blurRts[] = {
         &m_rtVerticalBlur,

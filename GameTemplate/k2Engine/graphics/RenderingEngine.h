@@ -28,7 +28,7 @@ public:
             NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT>
             directionalLight; // ディレクションライト
         Vector3 eyePos;         // カメラの位置
-        float specPow;          // スペキュラの絞り
+        float pad;
         Vector3 ambinetLight;   // 環境光
     };
 

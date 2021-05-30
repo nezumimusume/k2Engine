@@ -18,6 +18,20 @@ public:
     /// <param name="rc">レンダリングコンテキスト</param>
     /// <param name="mainRenderTarget">メインレンダリングターゲット</param>
     void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
+    /// <summary>
+    /// 被写界深度を有効にする。
+    /// </summary>
+    void Enable()
+    {
+        m_isEnable = true;
+    }
+    /// <summary>
+    /// 被写界深度を無効にする。
+    /// </summary>
+    void Disable()
+    {
+        m_isEnable = false;
+    }
 private:
     void InitCombimeBokeImageToSprite(Sprite& combineBokeImageSprite, Texture& bokeTexture, Texture& depthTexture);
 private:
@@ -27,6 +41,7 @@ private:
     Sprite m_vertDIagonalBlurSprite;	//垂直、対角線ブラー用のスプライト
     Sprite m_phomboidBlurSprite;		//六角形ブラ用のスプライト
     Sprite m_combineBokeImageSprite;	//ボケ画像をメインレンダリングターゲットに合成するためのスプライト
+    bool m_isEnable = false;            //被写界深度が有効？
 
 };
 

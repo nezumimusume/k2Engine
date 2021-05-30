@@ -174,7 +174,6 @@ void RenderingEngine::InitDeferredLighting()
     m_deferredLightingCB.m_light.ambinetLight.y = 0.2f;
     m_deferredLightingCB.m_light.ambinetLight.z = 0.2f;
     m_deferredLightingCB.m_light.eyePos = g_camera3D->GetPosition();
-    m_deferredLightingCB.m_light.specPow = 5.0f;
 
     // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
     SpriteInitData spriteInitData;
