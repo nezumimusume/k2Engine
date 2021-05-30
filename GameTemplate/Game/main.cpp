@@ -130,8 +130,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			effect->SetScale({ 10.0f,10.0f,10.0f });
 			effect->Play();
 		}
-		spriteRender.Draw(renderContext);
-		fontRender.Draw(renderContext);
+	/*	spriteRender.Draw(renderContext);
+		fontRender.Draw(renderContext);*/
 		/*if (g_pad[0]->IsTrigger(enButtonA)) {
 			//Ä¶ŠJnB
 			laserEffect.Play();
