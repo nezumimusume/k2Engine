@@ -145,6 +145,11 @@ private:
     /// <param name="rc">レンダリングコンテキスト</param>
     void DeferredLighting(RenderContext& rc);
     /// <summary>
+    /// 2D描画
+    /// </summary>
+    /// <param name="rc">レンダリングコンテキスト</param>
+    void Render2D(RenderContext& rc);
+    /// <summary>
     /// メインレンダリングターゲットの内容をフレームバッファにコピーする
     /// </summary>
     /// <param name="rc">レンダリングコンテキスト</param>

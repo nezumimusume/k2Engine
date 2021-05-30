@@ -225,10 +225,11 @@ void RenderingEngine::Execute(RenderContext& rc)
     // フォワードレンダリング
     ForwardRendering(rc);
 
-    
     // ポストエフェクトを実行
     m_postEffect.Render(rc, m_mainRenderTarget);
 
+    // 2D描画
+    Render2D(rc);
 
     // メインレンダリングターゲットの内容をフレームバッファにコピー
     CopyMainRenderTargetToFrameBuffer(rc);
@@ -269,7 +270,12 @@ void RenderingEngine::ZPrepass(RenderContext& rc)
 
     rc.WaitUntilFinishDrawingToRenderTarget(m_zprepassRenderTarget);
 }
-
+void RenderingEngine::Render2D(RenderContext& rc)
+{
+    for (auto& renderObj : m_renderObjects) {
+        renderObj->OnRender2D(rc);
+    }
+}
 void RenderingEngine::ForwardRendering(RenderContext& rc)
 {
     rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);

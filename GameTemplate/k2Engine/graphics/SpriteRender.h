@@ -3,7 +3,7 @@
 /// <summary>
 /// スプライトレンラー。
 /// </summary>
-class SpriteRender
+class SpriteRender : public IRenderer
 {
 public:
 	/// <summary>
@@ -93,7 +93,14 @@ public:
 	/// 描画処理。
 	/// </summary>
 	/// <param name="rc">レンダーコンテキスト。</param>
-	void Draw(RenderContext& rc)
+	void Draw(RenderContext& rc);
+	
+private:
+	/// <summary>
+	/// 2D描画パスから呼ばれる処理。
+	/// </summary>
+	/// <param name="rc"></param>
+	void OnRender2D(RenderContext& rc) override 
 	{
 		m_sprite.Draw(rc);
 	}

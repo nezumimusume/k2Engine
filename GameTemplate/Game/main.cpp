@@ -76,10 +76,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 
 
-	//スプライトは現状表示できない。
-	//todo 修正予定。
-	//SpriteRender spriteRender;
-	//spriteRender.Init("Assets/sprite/gameclear.dds", 500.0f, 500.0f);
+	
+	//。
+	SpriteRender spriteRender;
+	spriteRender.Init("Assets/sprite/gameclear.dds", 500.0f, 500.0f);
+
+	FontRender fontRender;
+	fontRender.SetText(L"テスト");
+	fontRender.SetColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//Quaternion rotation;
 
 	//////////////////////////////////////
@@ -126,6 +130,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			effect->SetScale({ 10.0f,10.0f,10.0f });
 			effect->Play();
 		}
+		spriteRender.Draw(renderContext);
+		fontRender.Draw(renderContext);
 		/*if (g_pad[0]->IsTrigger(enButtonA)) {
 			//再生開始。
 			laserEffect.Play();
@@ -145,11 +151,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 		
-		
-
-
-
-
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 		//レンダリングエンジンを実行
 		//ここでエフェクトをドローしています。

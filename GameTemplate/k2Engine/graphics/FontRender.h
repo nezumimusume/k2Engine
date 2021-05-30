@@ -3,7 +3,7 @@
 /// <summary>
 /// フォントレンダ―。
 /// </summary>
-class FontRender
+class FontRender : public IRenderer
 {
 public:
 	/// <summary>
@@ -26,6 +26,10 @@ public:
 	/// 座標を設定。
 	/// </summary>
 	/// <param name="position">座標。</param>
+	void SetPosition(float x, float y, float z)
+	{
+		SetPosition({ x, y, z });
+	}
 	void SetPosition(const Vector3& position)
 	{
 		m_position = position;
@@ -58,6 +62,10 @@ public:
 	/// 色を設定。
 	/// </summary>
 	/// <param name="color">色。</param>
+	void SetColor(float r, float g, float b, float a)
+	{
+		SetColor({ r, g, b, a });
+	}
 	void SetColor(const Vector4& color)
 	{
 		m_color = color;
@@ -89,7 +97,22 @@ public:
 	/// <summary>
 	/// ピボットを設定。
 	/// </summary>
-	/// <param name="pivot">ピボット。</param>
+	/// <param name="x">ピボットのx座標</param>
+	/// <param name="y">ピボットのy座標</param>
+	void SetPivot(float x, float y)
+	{
+		SetPivot({ x, y });
+	}
+	/// <summary>
+	/// ピボットを設定。
+	/// </summary>
+	/// <param name="pivot">
+	/// ピボット。
+	/// x = 0.5, y = 0.5で画像の中心が基点。
+	/// x = 0.0, y = 0.0で画像の左下。
+	/// x = 1.0, y = 1.0で画像の右上。
+	/// UnityのuGUIに準拠。
+	/// </param>
 	void SetPivot(const Vector2& pivot)
 	{
 		m_pivot = pivot;
@@ -106,16 +129,7 @@ public:
 	/// 描画処理。
 	/// </summary>
 	/// <param name="rc">レンダ―コンテキスト。</param>
-	void Draw(RenderContext& rc)
-	{
-		if (m_text == nullptr)
-		{
-			return;
-		}
-		m_font.Begin(rc);
-		m_font.Draw(m_text.get(), Vector2(m_position.x, m_position.y), m_color, m_rotation, m_scale, m_pivot);
-		m_font.End(rc);
-	}
+	void Draw(RenderContext& rc);
 	/// <summary>
 	/// 影のパラメータを設定。
 	/// </summary>
@@ -125,6 +139,18 @@ public:
 	void SetShadowParam(bool isDrawShadow, float shadowOffset, const Vector4& shadowColor)
 	{
 		m_font.SetShadowParam(isDrawShadow, shadowOffset, shadowColor);
+	}
+private:
+	/// <summary>
+	/// 2D描画パスから呼ばれる処理。
+	/// </summary>
+	/// <param name="rc"></param>
+	void OnRender2D(RenderContext& rc) override
+	{
+		
+		m_font.Begin(rc);
+		m_font.Draw(m_text.get(), Vector2(m_position.x, m_position.y), m_color, m_rotation, m_scale, m_pivot);
+		m_font.End(rc);
 	}
 private:
 	Vector3								m_position = Vector3::Zero;			//座標。	

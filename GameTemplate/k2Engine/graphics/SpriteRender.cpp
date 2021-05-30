@@ -1,5 +1,6 @@
 #include "k2EnginePreCompile.h"
 #include "SpriteRender.h"
+#include "RenderingEngine.h"
 
 void SpriteRender::Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode)
 {
@@ -14,4 +15,9 @@ void SpriteRender::Init(const char* filePath, const float w, const float h, Alph
 	initData.m_alphaBlendMode = alphaBlendMode;
 	//Sprite初期化オブジェクトを使用して、Spriteを初期化する。
 	m_sprite.Init(initData);
+}
+
+void SpriteRender::Draw(RenderContext& rc)
+{
+	g_renderingEngine->AddRenderObject(this);
 }
