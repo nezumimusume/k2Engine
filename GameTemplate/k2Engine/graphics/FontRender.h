@@ -6,13 +6,18 @@
 class FontRender : public IRenderer
 {
 public:
+	static const int MAX_TEXT_SIZE = 256;
+	~FontRender()
+	{
+		
+	}
 	/// <summary>
 	/// 表示する文字を設定。
 	/// </summary>
 	/// <param name="text">表示する文字。</param>
 	void SetText(const wchar_t* text)
 	{
-		m_text = std::unique_ptr<const wchar_t[]>(text);
+		swprintf_s(m_text, text);
 	}
 	/// <summary>
 	/// 表示する文字を取得。
@@ -20,7 +25,7 @@ public:
 	/// <returns>表示する文字。</returns>
 	const wchar_t* GetText() const
 	{
-		return m_text.get();
+		return m_text;
 	}
 	/// <summary>
 	/// 座標を設定。
@@ -149,16 +154,16 @@ private:
 	{
 		
 		m_font.Begin(rc);
-		m_font.Draw(m_text.get(), Vector2(m_position.x, m_position.y), m_color, m_rotation, m_scale, m_pivot);
+		m_font.Draw(m_text, Vector2(m_position.x, m_position.y), m_color, m_rotation, m_scale, m_pivot);
 		m_font.End(rc);
 	}
 private:
-	Vector3								m_position = Vector3::Zero;			//座標。	
-	float								m_scale = 1.0f;						//文字の大きさ。
-	Vector4								m_color = g_vec4White;				//文字の色、デフォルトで白。
-	float								m_rotation = 0.0f;					//回転。
-	Vector2								m_pivot = Sprite::DEFAULT_PIVOT;	//ピボット。
-	std::unique_ptr<const wchar_t[]>	m_text = nullptr;					//文字。
-	Font								m_font;								//フォント。
+	Vector3							m_position = Vector3::Zero;			//座標。	
+	float							m_scale = 1.0f;						//文字の大きさ。
+	Vector4							m_color = g_vec4White;				//文字の色、デフォルトで白。
+	float							m_rotation = 0.0f;					//回転。
+	Vector2							m_pivot = Sprite::DEFAULT_PIVOT;	//ピボット。
+	wchar_t							m_text[MAX_TEXT_SIZE];				//文字。
+	Font							m_font;								//フォント。
 };
 

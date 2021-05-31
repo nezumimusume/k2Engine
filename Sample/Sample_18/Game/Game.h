@@ -1,0 +1,20 @@
+#pragma once
+
+class Game : public IGameObject
+{
+public:
+	//////////////////////////////////////
+	// メンバ関数。
+	//////////////////////////////////////
+	Game();
+	~Game();
+	bool Start();
+	void Update();
+	void Render(RenderContext& rc);
+	//////////////////////////////////////
+	// メンバ変数。
+	//////////////////////////////////////
+	FontRender m_fontRender;
+	float m_timer = 0.0f;
+};
+
