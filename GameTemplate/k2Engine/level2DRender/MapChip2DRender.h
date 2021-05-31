@@ -1,6 +1,6 @@
 #pragma once
 
-struct CaslData;
+struct Level2DObjectData;
 /// <summary>
 /// マップチップ2D。
 /// </summary>
@@ -10,8 +10,8 @@ public:
 	/// <summary>
 	/// 初期化。
 	/// </summary>
-	/// <param name="caslData">Caslデータ。</param>
-	void Init(CaslData* caslData);
+	/// <param name="objData">レベル2Dデータ。</param>
+	void Init(Level2DObjectData* objData);
 	/// <summary>
 	/// 更新処理。
 	/// </summary>

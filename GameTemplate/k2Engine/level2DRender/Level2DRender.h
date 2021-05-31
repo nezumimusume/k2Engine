@@ -1,6 +1,4 @@
-
 #pragma once
-
 #include "MapChip2DRender.h"
 
 struct CaslData;
@@ -66,8 +64,8 @@ private:
 	/// <summary>
 	/// マップチップ2Dレンダーを追加する。
 	/// </summary>
-	/// <param name="caslData">Caslデータ</param>
-	void AddMapChip2DRender(CaslData* caslData);
+	/// <param name="objData">レベル2Dデータ</param>
+	void AddMapChip2DRender(Level2DObjectData* objData);
 private:
 	std::vector<MapChip2DRenderPtr> m_mapChip2DRenderPtrList;		//マップチップ2Dレンダー。
 };

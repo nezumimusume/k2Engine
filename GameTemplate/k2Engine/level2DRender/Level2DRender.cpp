@@ -7,10 +7,10 @@
 #include "Level2D/CaslFile.h"
 #include "MapChip2DRender.h"
 
-void Level2DRender::AddMapChip2DRender(CaslData* caslData)
+void Level2DRender::AddMapChip2DRender(Level2DObjectData* objData)
 {
 	auto mapChip2DPtr = std::make_unique<MapChip2DRender>();
-	mapChip2DPtr.get()->Init(caslData);
+	mapChip2DPtr.get()->Init(objData);
 	//std::unique_ptr‚ğˆÚ“®‚³‚¹‚é‚Ístd::move()‚ğg‚¤B
 	m_mapChip2DRenderPtrList.push_back(std::move(mapChip2DPtr));
 }
@@ -43,15 +43,14 @@ void Level2DRender::Init(
 			isHook = hookFunc(objData);
 			if (!isHook)
 			{
-				AddMapChip2DRender(caslData);
+				AddMapChip2DRender(&objData);
 			}
 		}
 		else
 		{
-			AddMapChip2DRender(caslData);
+			AddMapChip2DRender(&objData);
 		}
 	}
-
 }
 
 void Level2DRender::Update() const

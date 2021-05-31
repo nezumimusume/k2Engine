@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "system.h"
-#include "GraphicsEngine.h"
+#include "graphics/GraphicsEngine.h"
 
 HWND			g_hWnd = NULL;				//ウィンドウハンドル。
 
@@ -80,7 +80,7 @@ void InitGame(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, in
 	//ウィンドウを初期化。
 	InitWindow(hInstance, hPrevInstance, lpCmdLine, nCmdShow, appName);
 	//TKエンジンの初期化。
-	g_engine = new TkEngine;
+	g_engine = new K2Engine;
 	g_engine->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });

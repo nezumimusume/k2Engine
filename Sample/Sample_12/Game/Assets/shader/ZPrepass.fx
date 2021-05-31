@@ -2,15 +2,12 @@
 // ZPrepass
 ///////////////////////////////////////
 
+#include "ModelVSCommon.h"
 
 ///////////////////////////////////////
 // 構造体。
 ///////////////////////////////////////
-// 頂点シェーダーへの入力
-struct SVSIn
-{
-    float4 pos : POSITION;          //頂点座標。
-};
+
 
 // ピクセルシェーダーへの入力
 struct SPSIn
@@ -20,31 +17,23 @@ struct SPSIn
 };
 
 
-
-///////////////////////////////////////
-// 定数バッファ。
-///////////////////////////////////////
-// モデル用の定数バッファー
-cbuffer ModelCb : register(b0)
-{
-    float4x4 mWorld;
-    float4x4 mView;
-    float4x4 mProj;
-};
-
-
-
-
 ///////////////////////////////////////
 // 関数
 ///////////////////////////////////////
 
 // モデル用の頂点シェーダーのエントリーポイント
-SPSIn VSMain(SVSIn vsIn, uniform bool hasSkin)
+SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 {
     SPSIn psIn;
+    float4x4 m;
 
-    psIn.pos = mul(mWorld, vsIn.pos); // モデルの頂点をワールド座標系に変換
+	if( hasSkin ){
+		m = CalcSkinMatrix(vsIn);
+	}else{
+		m = mWorld;
+	}
+
+    psIn.pos = mul(m, vsIn.pos); // モデルの頂点をワールド座標系に変換
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.depth.z = psIn.pos.z;
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
@@ -53,7 +42,20 @@ SPSIn VSMain(SVSIn vsIn, uniform bool hasSkin)
     
     return psIn;
 }
-
+/// <summary>
+/// スキンなしメッシュ用の頂点シェーダーのエントリー関数。
+/// </summary>
+SPSIn VSMain(SVSIn vsIn)
+{
+	return VSMainCore(vsIn, false);
+}
+/// <summary>
+/// スキンありメッシュの頂点シェーダーのエントリー関数。
+/// </summary>
+SPSIn VSSkinMain( SVSIn vsIn ) 
+{
+	return VSMainCore(vsIn, true);
+}
 // モデル用のピクセルシェーダーのエントリーポイント
 float4 PSMain(SPSIn psIn) : SV_Target0
 {

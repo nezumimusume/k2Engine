@@ -243,36 +243,34 @@ float4 PSMain(PSInput In) : SV_Target0
             //影を生成するなら。
             shadow = CalcShadowRate( ligNo, worldPos ) * shadowParam.r;
         }
-        if( shadow > 0.9f){
-            //ライトの計算をしない。
-            //影が落ちていると環境光の影響も下げる。
-            continue;
+        if( shadow < 0.9f){
+            // 影が落ちていないのでライトの計算を行う。
+            // ディズニーベースの拡散反射を実装する
+            // フレネル反射を考慮した拡散反射を計算
+            float diffuseFromFresnel = CalcDiffuseFromFresnel(
+                normal, -directionalLight[ligNo].direction, toEye);
+
+            // 正規化Lambert拡散反射を求める
+            float NdotL = saturate(dot(normal, -directionalLight[ligNo].direction));
+            float3 lambertDiffuse = directionalLight[ligNo].color * NdotL / PI;
+
+            // 最終的な拡散反射光を計算する
+            float3 diffuse = albedoColor * diffuseFromFresnel * lambertDiffuse;
+
+            // クックトランスモデルを利用した鏡面反射率を計算する
+            // クックトランスモデルの鏡面反射率を計算する
+            float3 spec = CookTorranceSpecular(
+                -directionalLight[ligNo].direction, toEye, normal, smooth)
+                * directionalLight[ligNo].color;
+
+            // 金属度が高ければ、鏡面反射はスペキュラカラー、低ければ白
+            // スペキュラカラーの強さを鏡面反射率として扱う
+        
+            spec *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metaric);
+
+            // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
+            lig += diffuse * (1.0f - smooth) + spec * smooth;   
         }
-        // ディズニーベースの拡散反射を実装する
-        // フレネル反射を考慮した拡散反射を計算
-        float diffuseFromFresnel = CalcDiffuseFromFresnel(
-            normal, -directionalLight[ligNo].direction, toEye);
-
-        // 正規化Lambert拡散反射を求める
-        float NdotL = saturate(dot(normal, -directionalLight[ligNo].direction));
-        float3 lambertDiffuse = directionalLight[ligNo].color * NdotL / PI;
-
-        // 最終的な拡散反射光を計算する
-        float3 diffuse = albedoColor * diffuseFromFresnel * lambertDiffuse;
-
-        // クックトランスモデルを利用した鏡面反射率を計算する
-        // クックトランスモデルの鏡面反射率を計算する
-        float3 spec = CookTorranceSpecular(
-            -directionalLight[ligNo].direction, toEye, normal, smooth)
-            * directionalLight[ligNo].color;
-
-        // 金属度が高ければ、鏡面反射はスペキュラカラー、低ければ白
-        // スペキュラカラーの強さを鏡面反射率として扱う
-     
-        spec *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metaric);
-
-        // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
-        lig += diffuse * (1.0f - smooth) + spec * smooth;
     }
     // 環境光による底上げ
     lig += ambientLight * albedoColor;

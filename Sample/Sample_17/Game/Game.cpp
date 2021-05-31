@@ -2,7 +2,7 @@
 #include "Game.h"
 
 //EffectEmitterを使用する時はファイルをインクルードする必要がある。
-#include "effect/EffectEmitter.h"
+#include "graphics/effect/EffectEmitter.h"
 
 Game::Game()
 {

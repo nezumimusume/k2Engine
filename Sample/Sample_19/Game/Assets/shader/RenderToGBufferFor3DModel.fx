@@ -2,21 +2,11 @@
 // 3Dモデル用のGBufferへの描画シェーダー。
 ///////////////////////////////////////
 
+#include "ModelVSCommon.h"
 
 ///////////////////////////////////////
 // 構造体。
 ///////////////////////////////////////
-// 頂点シェーダーへの入力
-struct SVSIn
-{
-    float4 pos : POSITION;          //頂点座標。
-    float3 normal : NORMAL;         //法線。
-    float2 uv : TEXCOORD0;          //UV座標。
-    float3 tangent  : TANGENT;      //接ベクトル。
-    float3 biNormal : BINORMAL;     //従ベクトル。
-    int4  Indices  	: BLENDINDICES0;
-    float4 Weights  : BLENDWEIGHT0;
-};
 
 // ピクセルシェーダーへの入力
 struct SPSIn
@@ -40,24 +30,11 @@ struct SPSOut
 };
 
 ///////////////////////////////////////
-// 定数バッファ。
-///////////////////////////////////////
-// モデル用の定数バッファー
-cbuffer ModelCb : register(b0)
-{
-    float4x4 mWorld;
-    float4x4 mView;
-    float4x4 mProj;
-};
-
-///////////////////////////////////////
 // シェーダーリソース
 ///////////////////////////////////////
 Texture2D<float4> g_albedo : register(t0);      //アルベドマップ
 Texture2D<float4> g_normal : register(t1);      //法線マップ
 Texture2D<float4> g_spacular : register(t2);    //スペキュラマップ
-
-StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
 
 ///////////////////////////////////////
 // サンプラーステート
@@ -79,21 +56,7 @@ float3 GetNormalFromNormalMap(float3 normal, float3 tangent, float3 biNormal, fl
     return newNormal;
 }
 
-float4x4 CalcSkinMatrix(SVSIn skinVert)
-{
-	float4x4 skinning = 0;	
-	float w = 0.0f;
-	[unroll]
-    for (int i = 0; i < 3; i++)
-    {
-        skinning += g_boneMatrix[skinVert.Indices[i]] * skinVert.Weights[i];
-        w += skinVert.Weights[i];
-    }
-    
-    skinning += g_boneMatrix[skinVert.Indices[3]] * (1.0f - w);
-	
-    return skinning;
-}
+
 
 // モデル用の頂点シェーダーのエントリーポイント
 SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
@@ -112,9 +75,9 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
-    psIn.normal = normalize(mul(mWorld, vsIn.normal));
-    psIn.tangent = normalize(mul(mWorld, vsIn.tangent));
-    psIn.biNormal = normalize(mul(mWorld, vsIn.biNormal));
+    psIn.normal = normalize(mul(m, vsIn.normal));
+    psIn.tangent = normalize(mul(m, vsIn.tangent));
+    psIn.biNormal = normalize(mul(m, vsIn.biNormal));
     psIn.uv = vsIn.uv;
 
     return psIn;

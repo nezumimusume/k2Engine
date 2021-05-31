@@ -2,19 +2,7 @@
  * @brief シャドウマップ描画用のシェーダー
  */
 
-// モデル用の定数バッファー
-cbuffer ModelCb : register(b0)
-{
-    float4x4 mWorld;
-    float4x4 mView;
-    float4x4 mProj;
-};
-
-// 頂点シェーダーへの入力
-struct SVSIn
-{
-    float4 pos : POSITION;  // モデルの頂点座標
-};
+#include "ModelVSCommon.h"
 
 // ピクセルシェーダーへの入力
 struct SPSIn
@@ -26,20 +14,39 @@ struct SPSIn
 // グローバル変数
 ///////////////////////////////////////////////////
 
+// モデル用の頂点シェーダーのエントリーポイント
+SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
+{
+    SPSIn psIn;
+    float4x4 m;
+    if( hasSkin ){
+        m = CalcSkinMatrix(vsIn);
+    }else{
+        m = mWorld;
+    }
+
+    psIn.pos = mul(m, vsIn.pos);
+    psIn.pos = mul(mView, psIn.pos);
+    psIn.pos = mul(mProj, psIn.pos);
+
+    return psIn;
+}
 /// <summary>
 /// 頂点シェーダー
 /// <summary>
 SPSIn VSMain(SVSIn vsIn)
 {
     // シャドウマップ描画用の頂点シェーダーを実装
-    SPSIn psIn;
-    psIn.pos = mul(mWorld, vsIn.pos);
-    psIn.pos = mul(mView, psIn.pos);
-    psIn.pos = mul(mProj, psIn.pos);
-
-    return psIn;
+    return VSMainCore(vsIn, false);
 }
-
+/// <summary>
+/// 頂点シェーダー
+/// <summary>
+SPSIn VSSkinMain(SVSIn vsIn)
+{
+    // シャドウマップ描画用の頂点シェーダーを実装
+    return VSMainCore(vsIn, true);
+}
 /// <summary>
 /// シャドウマップ描画用のピクセルシェーダー
 /// </summary>
