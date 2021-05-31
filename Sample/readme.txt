@@ -46,13 +46,11 @@
 ・Sample_17
 　　Effekseerを使用したエフェクトのサンプル。
 　　Game.cppにサンプルが記述されている。
-↓まだ
 ・Sample_18
 　　文字列を表示するサンプル。
 　　Game.cpp,hにサンプルが記述されている。
-↓まだ
+↓まだ(GhostObjectが無かった)
 ・Sample_19
-　　(ライティングがまだ無い)
 　　ゴーストのサンプル。
 　　Game.cpp,hにサンプルが記述されている。
 ・Sample_20

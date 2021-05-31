@@ -7,7 +7,7 @@
 #include "graphics/RenderingEngine.h"
 #include "sound/SoundEngine.h"
 
-#include "Game.h"
+#include "Title.h"
 
 
 
@@ -50,8 +50,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 
-	//Gameクラスのオブジェクトを作成。
-	NewGO<Game>(0, "game");
+	//Titleクラスのオブジェクトを作成。
+	NewGO<Title>(0, "title");
 	
 
 
