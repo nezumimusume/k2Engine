@@ -106,7 +106,7 @@ private:
 	}
 private:
 	Sprite			m_sprite;								//スプライト。
-	Vector3			m_position;								//座標。
+	Vector3			m_position = Vector3::Zero;				//座標。
 	Quaternion		m_rotation = Quaternion::Identity;		//回転。
 	Vector3			m_scale = Vector3::One;					//大きさ。
 	Vector2			m_pivot = Sprite::DEFAULT_PIVOT;		//ピボット。
