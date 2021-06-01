@@ -24,10 +24,11 @@ Game::~Game()
 bool Game::Start()
 {
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
+	g_camera3D->SetFar(10000.0f);
 	
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
-	//m_skyCube = NewGO<SkyCube>(0, "skycube");
+	m_skyCube = NewGO<SkyCube>(0, "skycube");
 
 	//ƒŒƒxƒ‹‚ğ\’z‚·‚éB
 	m_levelRender.Init("Assets/level3D/stage.tkl", [&](LevelObjectData& objData) {

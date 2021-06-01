@@ -33,7 +33,7 @@ private:
 	ModelRender m_modelRender;
 	Texture m_texture;
 	Vector3 m_position = g_vec3Zero;
-	Vector3 m_scale = g_vec3One * 1000.0f;
+	Vector3 m_scale = g_vec3One * 500.0f;
 	Vector4 m_selfLuminous = { 0.0f,0.0f,0.0f,1.0f };
 	bool m_isDirty = false;
 };
