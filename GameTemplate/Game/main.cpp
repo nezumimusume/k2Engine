@@ -105,49 +105,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 
 
-		if (g_pad[0]->IsTrigger(enButtonA)) {
-			//再生開始。
-			auto effect = NewGO<EffectEmitter>(0);
-			effect->Init(0);
-			effect->SetPosition({ 0.0f,100.0f,0.0f });
-			effect->SetScale({ 10.0f,10.0f,10.0f });
-			effect->Play();
-		}
-		if (g_pad[0]->IsTrigger(enButtonB)) {
-			//再生開始。
-			auto effect = NewGO<EffectEmitter>(0);
-			effect->Init(0);
-			effect->SetPosition({ 100.0f,100.0f,0.0f });
-			effect->SetScale({ 10.0f,10.0f,10.0f });
-			effect->Play();
-		}
-
-		if (g_pad[0]->IsTrigger(enButtonStart)) {
-			//再生開始。
-			auto effect = NewGO<EffectEmitter>(0);
-			effect->Init(1);
-			effect->SetPosition({ -100.0f,100.0f,0.0f });
-			effect->SetScale({ 10.0f,10.0f,10.0f });
-			effect->Play();
-		}
-	/*	spriteRender.Draw(renderContext);
-		fontRender.Draw(renderContext);*/
-		/*if (g_pad[0]->IsTrigger(enButtonA)) {
-			//再生開始。
-			laserEffect.Play();
-		}
-		auto pos = laserEffect.GetPosition();
-		pos.x += g_pad[0]->GetLStickXF();
-		pos.z += g_pad[0]->GetLStickYF();
-
-		auto rot = laserEffect.GetRotation();
-		rot.AddRotationY(g_pad[0]->GetRStickXF() * 0.1f);
-
-		laserEffect.SetPosition(pos);
-		laserEffect.SetRotation(rot);
-		laserEffect.SetScale({ 10.0f,10.0f,10.0f });
-		laserEffect.Update();
-		*/
+		
 		//エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 		

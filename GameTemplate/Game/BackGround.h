@@ -1,4 +1,7 @@
 #pragma once
+
+#include "physics/PhysicsGhostObject.h"
+
 class BackGround : public IGameObject
 {
 public:
@@ -11,8 +14,9 @@ public:
 		rotation.SetRotationDegY(180.0f);
 		modelRender.SetRotation(rotation);
 		modelRender.Update();
-		pso.CreateFromModel(modelRender.GetModel(), modelRender.GetModel().GetWorldMatrix());
-		//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+		//pso.CreateFromModel(modelRender.GetModel(), modelRender.GetModel().GetWorldMatrix());
+		go.CreateBox(Vector3(100.0f, 100.0f, 100.0f), Quaternion::Identity, Vector3::One * 200.0f);
+		PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	}
 	~BackGround() {}
 
@@ -28,5 +32,7 @@ public:
 
 	ModelRender modelRender;
 	PhysicsStaticObject pso;
+	PhysicsGhostObject go;
+	
 };
 

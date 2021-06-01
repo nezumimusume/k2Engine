@@ -223,6 +223,7 @@
     <ClCompile Include="physics\CapsuleCollider.cpp" />
     <ClCompile Include="physics\CharacterController.cpp" />
     <ClCompile Include="physics\DebugWireframe.cpp" />
+    <ClCompile Include="physics\PhysicsGhostObject.cpp" />
     <ClCompile Include="physics\MeshCollider.cpp" />
     <ClCompile Include="physics\Physics.cpp" />
     <ClCompile Include="physics\PhysicsStaticObject.cpp" />
@@ -301,6 +302,7 @@
     <ClInclude Include="physics\CharacterController.h" />
     <ClInclude Include="physics\CollisionAttr.h" />
     <ClInclude Include="physics\DebugWireframe.h" />
+    <ClInclude Include="physics\PhysicsGhostObject.h" />
     <ClInclude Include="physics\ICollider.h" />
     <ClInclude Include="physics\MeshCollider.h" />
     <ClInclude Include="physics\Physics.h" />

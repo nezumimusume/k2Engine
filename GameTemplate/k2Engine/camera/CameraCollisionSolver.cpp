@@ -13,7 +13,8 @@ public:
 		Vector3 normal = Vector3(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
 		//normal.Set(convexResult.m_hitNormalLocal);
 		
-		if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Character) {
+		if (convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Character
+			|| convexResult.m_hitCollisionObject->getInternalType() == btCollisionObject::CO_GHOST_OBJECT) {
 			return 1.0f;
 		}
 		return btCollisionWorld::ClosestConvexResultCallback::addSingleResult(convexResult, normalInWorldSpace);

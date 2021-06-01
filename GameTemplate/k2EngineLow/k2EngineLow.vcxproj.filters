@@ -195,6 +195,9 @@
     <ClCompile Include="sound\WaveFile.cpp">
       <Filter>sound</Filter>
     </ClCompile>
+    <ClCompile Include="physics\PhysicsGhostObject.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -436,6 +439,9 @@
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="k2Engine.h" />
+    <ClInclude Include="physics\PhysicsGhostObject.h">
+      <Filter>physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
