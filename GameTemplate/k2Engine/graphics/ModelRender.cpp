@@ -27,7 +27,8 @@ void ModelRender::InitForwardRendering(const char* filePath,
 
 	//モデルの上方向を指定する。
 	initData.m_modelUpAxis = enModelUpAxis;
-
+	
+	initData.m_colorBufferFormat[0] = g_renderingEngine->GetMainRenderTargetColorBufferFormat();
 	//作成した初期化データをもとにモデルを初期化する、
 	m_forwardRenderModel.Init(initData);
 	InitCommon(*g_renderingEngine, filePath);
@@ -37,8 +38,8 @@ void ModelRender::InitForwardRendering(ModelInitData& initData)
 {
 	InitSkeleton(initData.m_tkmFilePath);
 
+	initData.m_colorBufferFormat[0] = g_renderingEngine->GetMainRenderTargetColorBufferFormat();
 	//作成した初期化データをもとにモデルを初期化する。
-	//m_renderToGBufferModel.Init(initData);
 	m_forwardRenderModel.Init(initData);
 	InitCommon(*g_renderingEngine, initData.m_tkmFilePath);
 }

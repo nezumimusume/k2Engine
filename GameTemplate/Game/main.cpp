@@ -6,14 +6,7 @@
 
 #include "sound/SoundEngine.h"
 #include "graphics/RenderingEngine.h"
-#include "graphics/effect/effect.h"
 
-#include "graphics/effect/EffectEmitter.h"
-
-#include "Player.h"
-
-#include "BackGround.h"
-#include "GameCamera.h"
 #include "Game.h"
 
 void ReportLiveObjects()
@@ -53,38 +46,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//エフェクトエンジンの初期化。
 	EffectEngine::CreateInstance();
 
-	auto* player = NewGO<Player>(0, "player");
-	//player->m_position = { 100.0f,00.0f,600.0f };
-	//player->m_scale = { 4.0f,4.0f,4.0f };
-	auto backGround = NewGO<BackGround>(0, "backGround");
-	auto gameCamera = NewGO<GameCamera>(0, "gameCamera");
-
-//	auto game = NewGO<Game>(0, "game");
-
-//	NewGO<Player>(0,"player");
-	//NewGO<Player>(0,"player");
-	//NewGO<Player>(0,"player");
-	//NewGO<Player>(0,"player");
-	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/laser.efk");
-	EffectEngine::GetInstance()->ResistEffect(1, u"Assets/effect/hit.efk");
-
-	//step-2 レーザーエフェクトの初期化。
-	/*Effect laserEffect;
-	//laserEffect.Init(u"Assets/effect/laser.efk");
-	laserEffect.Init(0);
-	laserEffect.SetPosition({ 0.0f,100.0f,0.0f });*/
-	
-
-
-	
-	//。
-	SpriteRender spriteRender;
-	spriteRender.Init("Assets/sprite/gameclear.dds", 500.0f, 500.0f);
-
-	FontRender fontRender;
-	fontRender.SetText(L"テスト");
-	fontRender.SetColor(0.0f, 0.0f, 0.0f, 1.0f);
-	//Quaternion rotation;
+	auto game = NewGO<Game>(0, "game");
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

@@ -11,9 +11,6 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="BackGround.cpp" />
-    <ClCompile Include="GameCamera.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -21,9 +18,6 @@
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="BackGround.h" />
-    <ClInclude Include="GameCamera.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Game.h" />
   </ItemGroup>
 </Project>
