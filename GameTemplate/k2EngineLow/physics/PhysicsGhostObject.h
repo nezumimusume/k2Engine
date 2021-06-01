@@ -1,23 +1,21 @@
 #pragma once
 
-/*!
-	 * @brief	ゴーストオブジェクト
-	 *@detail
-	 * ゴーストオブジェクトは剛体がすり抜けるあたり判定のオブジェクトです。
-	 * キャラクターのチェックポイント通過判定、クリア判定などの
-	 * キャラクターがすり抜ける必要のあるあたり判定に使えます。
-	 */
+/// <summary>
+/// ゴーストオブジェクト。
+/// ゴーストオブジェクトは剛体がすり抜けるあたり判定のオブジェクトです。
+/// キャラクターのチェックポイント通過判定、クリア判定などの
+/// キャラクターがすり抜ける必要のあるあたり判定に使えます。
+/// </summary>
 class PhysicsGhostObject{
 public:
 	~PhysicsGhostObject()
 	{
 		Release();
 	}
-	/*!
-	* @brief	ゴーストオブジェクトを解放。
-	*@detail
-	* 明示的なタイミングでゴーストオブジェクトを削除したい場合に呼び出してください。
-	*/
+	/// <summary>
+	/// ゴーストオブジェクトを開放。
+	/// 明示的なタイミングでゴーストオブジェクトを削除したい場合に呼び出してください。
+	/// </summary>
 	void Release()
 	{
 		if (m_isRegistPhysicsWorld == true) {
@@ -25,45 +23,49 @@ public:
 			m_isRegistPhysicsWorld = false;
 		}
 	}
-	/*!
-	* @brief	ボックス形状のゴーストオブジェクトを作成。
-	*@param[in]	pos			座標。
-	*@param[in]	rot			回転。
-	*@param[in]	size		サイズ。
-	*/
+	/// <summary>
+	/// ボックス形状のゴーストオブジェクトを作成。
+	/// </summary>
+	/// <param name="pos">座標。</param>
+	/// <param name="rot">回転。</param>
+	/// <param name="size">サイズ。</param>
 	void CreateBox(Vector3 pos, Quaternion rot, Vector3 size);
-	/*!
-	* @brief	カプセル形状のゴーストオブジェクトを作成。
-	*@param[in]	pos			座標。
-	*@param[in]	rot			回転。
-	*@param[in]	radius		カプセルの半径。
-	*@param[in]	height		カプセルの高さ。
-	*/
+	/// <summary>
+	/// カプセル形状のゴーストオブジェクトを作成。
+	/// </summary>
+	/// <param name="pos">座標。</param>
+	/// <param name="rot">回転。</param>
+	/// <param name="radius">カプセルの半径。</param>
+	/// <param name="height">カプセルの高さ。</param>
 	void CreateCapsule(Vector3 pos, Quaternion rot, float radius, float height);
-	/*!
-	* @brief	球体形状のゴーストオブジェクトを作成。
-	*@param[in]	pos			座標。
-	*@param[in]	rot			回転。
-	*@param[in]	radius		球体の半径。
-	*/
+	/// <summary>
+	/// 球形状のゴーストオブジェクトを作成。
+	/// </summary>
+	/// <param name="pos">座標。</param>
+	/// <param name="rot">回転。</param>
+	/// <param name="radius">球形の半径。</param>
 	void CreateSphere(Vector3 pos, Quaternion rot, float radius);
-	/*!
-	* @brief	メッシュ形状のゴーストオブジェクトを作成。
-	*@param[in]	pos					座標。
-	*@param[in]	rot					回転。
-	*@param[in]	skinModelData		スキンモデルデータ。
-	*/
-	void CreateMesh(Vector3 pos,Quaternion rot, const Model& model, const Matrix& worldMatrix);
-	/*!
-	* @brief	引数で渡されたゴーストオブジェクトが自分自身かどうか判定。
-	*/
+	/// <summary>
+	/// メッシュ形状のゴーストオブジェクトを作成。
+	/// </summary>
+	/// <param name="pos">座標。</param>
+	/// <param name="rot">回転。</param>
+	/// <param name="model">モデル。</param>
+	/// <param name="worldMatrix">ワールド行列。</param>
+	void CreateMesh(Vector3 pos, Quaternion rot, const Model& model, const Matrix& worldMatrix);
+	/// <summary>
+	/// 引数で渡されたゴーストオブジェクトが自分自身かどうかを判定 
+	/// </summary>
+	/// <param name="ghost">ゴーストオブジェクト。</param>
+	/// <returns>引数のゴーストオブジェクトが自分自身ならtrue。</returns>
 	bool IsSelf(const btCollisionObject& ghost) const
 	{
 		return &ghost == &m_ghostObject;
 	}
-	/*!
-	* @brief	座標を設定。
-	*/
+	/// <summary>
+	/// 座標を設定。
+	/// </summary>
+	/// <param name="pos">座標。</param>
 	void SetPosition(const Vector3& pos)
 	{
 		auto& btTrans = m_ghostObject.getWorldTransform();
@@ -71,9 +73,10 @@ public:
 		btPos = btVector3(pos.x, pos.y, pos.z);
 		btTrans.setOrigin(btPos);
 	}
-	/*!
-	* @brief	回転を設定。
-	*/
+	/// <summary>
+	/// 回転を設定。
+	/// </summary>
+	/// <param name="rot">回転。</param>
 	void SetRotation(const Quaternion& rot)
 	{
 		auto& btTrans = m_ghostObject.getWorldTransform();
@@ -82,9 +85,11 @@ public:
 		btTrans.setRotation(btRot);
 	}
 private:
-	/*!
-	* @brief	ゴースト作成処理の共通処理。
-	*/
+	/// <summary>
+	/// ゴースト作成処理の共通処理。
+	/// </summary>
+	/// <param name="pos">座標。</param>
+	/// <param name="rot">回転。</param>
 	void CreateCommon(Vector3 pos, Quaternion rot);
 private:
 	bool							m_isRegistPhysicsWorld = false;	//物理ワールドに登録しているかどうかのフラグ。

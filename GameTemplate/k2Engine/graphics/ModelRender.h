@@ -40,6 +40,11 @@ public:
 		EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 		bool isShadowReciever = true);
 	/// <summary>
+	/// Sky用。
+	/// </summary>
+	/// <param name="initData">モデルデータ。</param>
+	void InitForwardRendering(ModelInitData& initData);
+	/// <summary>
 	/// 更新処理。
 	/// </summary>
 	void Update();

@@ -30,6 +30,17 @@ void ModelRender::InitForwardRendering(const char* filePath,
 
 	//作成した初期化データをもとにモデルを初期化する、
 	m_forwardRenderModel.Init(initData);
+	InitCommon(*g_renderingEngine, filePath);
+}
+
+void ModelRender::InitForwardRendering(ModelInitData& initData)
+{
+	InitSkeleton(initData.m_tkmFilePath);
+
+	//作成した初期化データをもとにモデルを初期化する。
+	//m_renderToGBufferModel.Init(initData);
+	m_forwardRenderModel.Init(initData);
+	InitCommon(*g_renderingEngine, initData.m_tkmFilePath);
 }
 
 void ModelRender::Init(const char* filePath,

@@ -80,6 +80,22 @@ public:
 		return m_pivot;
 	}
 	/// <summary>
+	/// 乗算カラーを設定。
+	/// </summary>
+	/// <param name="mulColor">乗算カラー。</param>
+	void SetMulColor(const Vector4& mulColor)
+	{
+		m_sprite.SetMulColor(mulColor);
+	}
+	/// <summary>
+	/// 乗算カラーを取得。
+	/// </summary>
+	/// <returns></returns>
+	const Vector4& GetMulColor() const
+	{
+		return m_sprite.GetMulColor();
+	}
+	/// <summary>
 	/// 更新処理。
 	/// </summary>
 	void Update()

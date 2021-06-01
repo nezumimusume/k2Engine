@@ -49,7 +49,6 @@
 ・Sample_18
 　　文字列を表示するサンプル。
 　　Game.cpp,hにサンプルが記述されている。
-↓まだ(GhostObjectが無かった)
 ・Sample_19
 　　ゴーストのサンプル。
 　　Game.cpp,hにサンプルが記述されている。

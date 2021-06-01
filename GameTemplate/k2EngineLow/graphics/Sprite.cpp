@@ -248,10 +248,7 @@
         projMatrix.MakeOrthoProjectionMatrix(viewport.Width, viewport.Height, 0.1f, 1.0f);
 
         m_constantBufferCPU.mvp = m_world * viewMatrix * projMatrix;
-        m_constantBufferCPU.mulColor.x = 1.0f;
-        m_constantBufferCPU.mulColor.y = 1.0f;
-        m_constantBufferCPU.mulColor.z = 1.0f;
-        m_constantBufferCPU.mulColor.w = 1.0f;
+        m_constantBufferCPU.mulColor = m_mulColor;
         m_constantBufferCPU.screenParam.x = g_camera3D->GetNear();
         m_constantBufferCPU.screenParam.y = g_camera3D->GetFar();
         m_constantBufferCPU.screenParam.z = FRAME_BUFFER_W;

@@ -65,8 +65,8 @@ void Player::Move()
 	//XZ成分の移動速度をクリア。
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
-	m_moveSpeed += cameraForward * lStick_y * 400.0f;	//奥方向への移動速度を加算。
-	m_moveSpeed += cameraRight * lStick_x * 400.0f;		//右方向への移動速度を加算。
+	m_moveSpeed += cameraForward * lStick_y * 500.0f;	//奥方向への移動速度を加算。
+	m_moveSpeed += cameraRight * lStick_x * 500.0f;		//右方向への移動速度を加算。
 	if (g_pad[0]->IsTrigger(enButtonA) //Aボタンが押されたら
 		&& m_charaCon.IsOnGround()  //かつ、地面に居たら
 		) {

@@ -61,6 +61,22 @@ public:
 	/// <param name="initData">初期化データ</param>
 	void Init(const SpriteInitData& initData);
 	/// <summary>
+	/// 乗算カラーを設定。
+	/// </summary>
+	/// <param name="mulColor">乗算カラー。</param>
+	void SetMulColor(const Vector4& mulColor)
+	{
+		m_mulColor = mulColor;
+	}
+	/// <summary>
+	/// 乗算カラーを取得。
+	/// </summary>
+	/// <returns>乗算カラー。</returns>
+	const Vector4& GetMulColor() const
+	{
+		return m_mulColor;
+	}
+	/// <summary>
 	/// 更新。
 	/// </summary>
 	/// <param name="pos">座標</param>
@@ -134,4 +150,6 @@ private:
 	PipelineState		m_pipelineState;		//パイプラインステート。
 	Shader				m_vs;					//頂点シェーダー。
 	Shader				m_ps;					//ピクセルシェーダー。
+	Vector4				m_mulColor = Vector4::White;	//乗算カラー。
+
 };

@@ -8,6 +8,7 @@
 #include "sound/SoundEngine.h"
 
 #include "Title.h"
+#include "Game.h"
 
 
 
@@ -51,7 +52,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 	//Titleクラスのオブジェクトを作成。
-	NewGO<Title>(0, "title");
+	//NewGO<Title>(0, "title");
+	NewGO<Game>(0, "game");
 	
 
 

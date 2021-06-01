@@ -134,7 +134,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 					--ダミーをレベルの下にぽいっとな。
 					$selection[1].pivot = Point3 0 0 0
 					selection[1].name = filename
-					--addModifier selection[1] (maxPlugin())	
+					--addModifier selection[1] maxPlugin()	
 					$selection[1].parent = editLevelObj
 					return selection[1]
 				)
