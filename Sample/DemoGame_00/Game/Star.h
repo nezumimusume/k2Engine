@@ -1,4 +1,8 @@
 #pragma once
+
+//クラス宣言。
+class Player;
+
 class Star : public IGameObject
 {
 public:
@@ -6,8 +10,30 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 
-	Vector3 m_postiion;
-	Vector3 m_scale = Vector3::One * 0.5f;
-	ModelRender m_modelRender;
+	/// <summary>
+	/// 座標を設定。
+	/// </summary>
+	/// <param name="position">座標。</param>
+	void SetPosition(const Vector3& position)
+	{
+		m_position = position;
+	}
+	/// <summary>
+	/// 座標を取得。
+	/// </summary>
+	/// <returns>座標。</returns>
+	const Vector3& GetPosition() const
+	{
+		return m_position;
+	}
+private:
+	Vector3				m_position;						//座用。
+	Vector3				m_scale = Vector3::One * 0.5f;	//大きさ。
+	ModelRender			m_modelRender;					//モデルレンダ―。
+	Player*				m_player = nullptr;
+	bool				m_isGet = false;
+	float				m_jumpSpeed = 0.0f;
+	float				m_jumStartPosY = 0.0f;
+	Quaternion			m_rotation;
 };
 

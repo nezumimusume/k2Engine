@@ -271,9 +271,15 @@ void RenderingEngine::ZPrepass(RenderContext& rc)
 }
 void RenderingEngine::Render2D(RenderContext& rc)
 {
+    // レンダリングターゲットとして利用できるまで待つ。
+    //PRESENTからRENDERTARGETへ。
+    rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
     for (auto& renderObj : m_renderObjects) {
         renderObj->OnRender2D(rc);
     }
+    //RENDERTARGETからPRESENTへ。
+    rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+    
 }
 void RenderingEngine::ForwardRendering(RenderContext& rc)
 {

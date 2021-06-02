@@ -1,4 +1,7 @@
 #pragma once
+
+class Fade;
+
 class Title : public IGameObject
 {
 public:
@@ -7,6 +10,9 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-	SpriteRender m_spriteRender;
+private:
+	SpriteRender		m_spriteRender;			//スプライトレンダ―。
+	bool				m_isWaitFadeout = false;
+	Fade*				m_fade = nullptr;
 };
 

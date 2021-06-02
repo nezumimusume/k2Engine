@@ -35,5 +35,6 @@ void Fxaa::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
     //描画。
     m_finalSprite.Draw(rc);
     // レンダリングターゲットへの書き込み終了待ち
+    //メインレンダ―ターゲットをRENDERTARGETからPRESENTへ。
     rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 }

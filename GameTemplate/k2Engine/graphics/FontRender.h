@@ -28,13 +28,17 @@ public:
 		return m_text;
 	}
 	/// <summary>
-	/// 座標を設定。
+	/// 座標を設定。zは0.0fで。
 	/// </summary>
 	/// <param name="position">座標。</param>
 	void SetPosition(float x, float y, float z)
 	{
 		SetPosition({ x, y, z });
 	}
+	/// <summary>
+	/// 大きさを設定。zは0.0fで。
+	/// </summary>
+	/// <param name="position">座標。</param>
 	void SetPosition(const Vector3& position)
 	{
 		m_position = position;

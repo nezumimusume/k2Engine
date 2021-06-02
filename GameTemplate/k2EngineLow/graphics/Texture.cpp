@@ -47,9 +47,7 @@ void Texture::LoadTextureFromMemory(const char* memory, unsigned int size
 		0,
 		D3D12_RESOURCE_FLAG_NONE,
 		0,
-		&texture,
-		nullptr,
-		&m_isCubemap
+		&texture
 	);
 	re.End(g_graphicsEngine->GetCommandQueue());
 

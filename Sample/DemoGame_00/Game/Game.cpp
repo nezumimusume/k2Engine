@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Game.h"
 
+//スカイキューブ。お空。
 #include "nature/SkyCube.h"
 
 #include "Player.h"
@@ -8,12 +9,15 @@
 #include "GameCamera.h"
 #include "Star.h"
 
+#include "Fade.h"
+
 Game::Game()
 {
 	//削除。
 	DeleteGO(m_player);
 	DeleteGO(m_background);
 	DeleteGO(m_gameCamera);
+	DeleteGO(m_skyCube);
 }
 
 Game::~Game()
@@ -36,24 +40,58 @@ bool Game::Start()
 			//Unityちゃん。
 			//プレイヤーのインスタンスを生成する。
 			m_player = NewGO<Player>(0, "player");
-			m_player->m_position = objData.position;
+			m_player->SetPosition(objData.position);
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
 		else if (objData.EqualObjectName(L"background") == true) {
 			m_background = NewGO<Background>(0, "background");
-			m_background->m_position = objData.position;
-			m_background->m_scale = objData.scale;
-			m_background->m_rotation = objData.rotation;
+			m_background->SetPosition(objData.position);
+			m_background->SetScale(objData.scale);
+			m_background->SetRotation(objData.rotation);
 			return true;
 		}
-		else if (objData.EqualObjectName(L"star") == true) {
+		else if (objData.ForwardMatchName(L"star") == true) {
 			//auto star = NewGO<Star>(0, "star");
-			//star->m_postiion = objData.position;
+			//star->SetPosition(objData.position);
 			return true;
 		}
-		return false;
+		return true;
 	});
 
+	m_fade = FindGO<Fade>("fade");
+	m_fade->StartFadeIn();
 	return true;
+}
+
+void Game::Update()
+{
+	UpdateFont();
+	
+	m_timer -= g_gameTime->GetFrameDeltaTime();
+}
+
+void Game::UpdateFont()
+{
+	wchar_t wcsbuf[256];
+	swprintf_s(wcsbuf, 256, L"STAR %04d", int(m_starCount));
+
+	//表示するテキストを設定。
+	m_starCountFont.SetText(wcsbuf);
+	m_starCountFont.SetPosition(Vector3(-640.0f, 250.0f, 0.0f));
+	m_starCountFont.SetScale(1.5f);
+
+	wchar_t text[256];
+	int minute = (int)m_timer / 60;
+	int sec = (int)m_timer % 60;
+	swprintf_s(text, 256, L"%02d:%02d", minute, sec);
+	m_timerFont.SetText(text);
+	m_timerFont.SetPosition(Vector3(-640.0f, 350.0f, 0.0f));
+	m_timerFont.SetScale(1.5f);
+}
+
+void Game::Render(RenderContext& rc)
+{
+	m_starCountFont.Draw(rc);
+	m_timerFont.Draw(rc);
 }

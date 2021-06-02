@@ -10,6 +10,8 @@
 #include "Title.h"
 #include "Game.h"
 
+#include "Fade.h"
+
 
 
 void ReportLiveObjects()
@@ -50,12 +52,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	EffectEngine::CreateInstance();
 
 
-
 	//Titleクラスのオブジェクトを作成。
-	//NewGO<Title>(0, "title");
-	NewGO<Game>(0, "game");
-	
-
+	NewGO<Title>(0, "title");
+	//NewGO<Game>(0, "game");
+	//Fadeクラスのオブジェクトを作成。
+	NewGO<Fade>(0, "fade");
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

@@ -11,14 +11,41 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
+
+	/// <summary>
+	/// 座標を設定。
+	/// </summary>
+	/// <param name="position">座標。</param>
+	void SetPosition(const Vector3& position)
+	{
+		m_position = position;
+	}
+	/// <summary>
+	/// 座標を取得。
+	/// </summary>
+	/// <returns>座標。</returns>
+	const Vector3& GetPosition() const
+	{
+		return m_position;
+	}
+private:
+	/// <summary>
+	/// 移動処理。
+	/// </summary>
 	void Move();
+	/// <summary>
+	/// 回転処理。
+	/// </summary>
 	void Turn();
+	/// <summary>
+	/// ステートを管理。
+	/// </summary>
 	void ManageState();
+	/// <summary>
+	/// アニメーションの再生。
+	/// </summary>
 	void PlayAnimation();
-	////////////////////////////////////
-	// メンバ変数とか
-	////////////////////////////////////
-	ModelRender			m_modelRender;
+	ModelRender			m_modelRender;				//モデルレンダ―。
 	Vector3				m_position;					//座標。
 	CharacterController m_charaCon;					//キャラクターコントローラー。
 	Vector3				m_moveSpeed;				//移動速度。

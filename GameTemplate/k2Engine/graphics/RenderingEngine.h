@@ -115,10 +115,6 @@ public:
     {
         rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_gBuffer[enGBufferAlbedo].GetDSVCpuDescriptorHandle());
     }
-    DXGI_FORMAT GetMainRenderTargetColorBufferFormat() const
-    {
-        return m_mainRenderTarget.GetColorBufferFormat();
-    }
 private:
     /// <summary>
     /// G-Buffer‚ğ‰Šú‰»

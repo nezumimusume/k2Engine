@@ -8,7 +8,6 @@ class SpriteRender : public IRenderer
 public:
 	/// <summary>
 	/// 初期化。
-	/// 横幅と縦幅は、画像のプロパティなどで確認できるピクセル数を入れてください。
 	/// </summary>
 	/// <param name="filePath">ファイルパス。</param>
 	/// <param name="w">画像の横幅。</param>
@@ -16,7 +15,7 @@ public:
 	/// <param name="alphaBlendMode">デフォルトは半透明合成。</param>
 	void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
 	/// <summary>
-	/// 座標を設定。
+	/// 座標を設定。zは0.0fで。
 	/// </summary>
 	/// <param name="pos">座標。</param>
 	void SetPosition(const Vector3& pos)
@@ -32,7 +31,7 @@ public:
 		return m_position;
 	}
 	/// <summary>
-	/// 大きさを設定。
+	/// 大きさを設定。zは1.0fで。
 	/// </summary>
 	/// <param name="scale">大きさ。</param>
 	void SetScale(const Vector3& scale)
