@@ -28,7 +28,7 @@ Game::~Game()
 bool Game::Start()
 {
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
-	g_camera3D->SetFar(10000.0f);
+	g_camera3D->SetFar(40000.0f);
 	
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
@@ -52,8 +52,8 @@ bool Game::Start()
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"star") == true) {
-			//auto star = NewGO<Star>(0, "star");
-			//star->SetPosition(objData.position);
+			auto star = NewGO<Star>(0, "star");
+			star->SetPosition(objData.position);
 			return true;
 		}
 		return true;
