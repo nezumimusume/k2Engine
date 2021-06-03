@@ -7,6 +7,7 @@
 
 class GraphicsEngine;
 class GameTime;
+class Texture;
 
 class K2Engine {
 public:
@@ -56,6 +57,24 @@ public:
 		return m_shaderBank.Get(programName.c_str());
 	}
 	/// <summary>
+	/// テクスチャをバンクに登録。
+	/// </summary>
+	/// <param name="filePath">ファイルパス。</param>
+	/// <param name="texture">テクスチャ。</param>
+	void RegistTextureToBank(const char* filePath, Texture* texture)
+	{
+		m_textureBank.Regist(filePath, texture);
+	}
+	/// <summary>
+	/// バンクからテクスチャを取得。
+	/// </summary>
+	/// <param name="filePath">ファイルパス。</param>
+	/// <returns>テクスチャ。</returns>
+	Texture* GetTextureFromBank(const char* filePath)
+	{
+		return m_textureBank.Get(filePath);
+	}
+	/// <summary>
 	/// 
 	/// </summary>
 	/// <param name="filePath"></param>
@@ -70,6 +89,7 @@ private:
 	GraphicsEngine* m_graphicsEngine = nullptr;		//グラフィックエンジン。
 	TResourceBank<TkmFile> m_tkmFileBank;			//tkmファイルバンク。
 	TResourceBank<Shader> m_shaderBank;				//シェーダーバンク
+	TResourceBank<Texture>	m_textureBank;			//テクスチャバンク。
 	GamePad m_pad[GamePad::CONNECT_PAD_MAX];		//ゲームパッド。
 	GameTime m_gameTime;
 };

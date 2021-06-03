@@ -241,7 +241,8 @@ void TkmFile::BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath)
 	auto loadTexture = [&](
 		std::string& texFileName, 
 		std::unique_ptr<char[]>& ddsFileMemory, 
-		unsigned int& fileSize
+		unsigned int& fileSize,
+		std::string& filePath
 	) {
 		int filePathLength = static_cast<int>(texFilePath.length());
 		if (texFileName.length() > 0) {
@@ -257,7 +258,7 @@ void TkmFile::BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath)
 			replaseStartPos = texFilePath.find_last_of('.') + 1;
 			replaceLen = texFilePath.length() - replaseStartPos;
 			texFilePath.replace(replaseStartPos, replaceLen, "dds");
-				
+			
 			//テクスチャをロード。
 			FILE* texFileFp = fopen(texFilePath.c_str(), "rb");
 			if (texFileFp != nullptr) {
@@ -269,6 +270,7 @@ void TkmFile::BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath)
 				ddsFileMemory = std::make_unique<char[]>(fileSize);
 				fread(ddsFileMemory.get(), fileSize, 1, texFileFp);
 				fclose(texFileFp);
+				filePath = texFilePath;
 			}
 			else {
 
@@ -278,11 +280,11 @@ void TkmFile::BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath)
 		}
 	};
 	//テクスチャをロード。
-	loadTexture( tkmMat.albedoMapFileName, tkmMat.albedoMap, tkmMat.albedoMapSize );
-	loadTexture( tkmMat.normalMapFileName, tkmMat.normalMap, tkmMat.normalMapSize );
-	loadTexture( tkmMat.specularMapFileName, tkmMat.specularMap, tkmMat.specularMapSize );
-	loadTexture( tkmMat.reflectionMapFileName, tkmMat.reflectionMap, tkmMat.reflectionMapSize );
-	loadTexture( tkmMat.refractionMapFileName, tkmMat.refractionMap, tkmMat.refractionMapSize) ;
+	loadTexture( tkmMat.albedoMapFileName, tkmMat.albedoMap, tkmMat.albedoMapSize, tkmMat.albedoMapFilePath);
+	loadTexture( tkmMat.normalMapFileName, tkmMat.normalMap, tkmMat.normalMapSize, tkmMat.normalMapFilePath);
+	loadTexture( tkmMat.specularMapFileName, tkmMat.specularMap, tkmMat.specularMapSize, tkmMat.specularMapFilePath);
+	loadTexture( tkmMat.reflectionMapFileName, tkmMat.reflectionMap, tkmMat.reflectionMapSize, tkmMat.reflectionMapFilePath);
+	loadTexture( tkmMat.refractionMapFileName, tkmMat.refractionMap, tkmMat.refractionMapSize, tkmMat.refractionMapFilePath) ;
 }
 void TkmFile::BuildTangentAndBiNormal()
 {

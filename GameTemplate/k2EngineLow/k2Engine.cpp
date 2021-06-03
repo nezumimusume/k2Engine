@@ -1,6 +1,6 @@
 #include "k2EngineLowPreCompile.h"
 #include "k2Engine.h"
-#include "graphics/GraphicsEngine.h"
+#include "graphics/Texture.h"
 
 K2Engine* g_engine = nullptr;
 GameTime* g_gameTime = nullptr;
