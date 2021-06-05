@@ -2,6 +2,21 @@
 #include "DescriptorHeap.h"
 
 
+DescriptorHeap::DescriptorHeap()
+{
+	m_shaderResources.resize(MAX_SHADER_RESOURCE);
+	m_uavResoruces.resize(MAX_SHADER_RESOURCE);
+	m_constantBuffers.resize(MAX_CONSTANT_BUFFER);
+	for (auto& srv : m_shaderResources) {
+		srv = nullptr;
+	}
+	for (auto& uav : m_uavResoruces) {
+		uav = nullptr;
+	}
+	for (auto& cbv : m_constantBuffers) {
+		cbv = nullptr;
+	}
+}
 DescriptorHeap::~DescriptorHeap()
 {
 	for (auto& ds : m_descriptorHeap) {
