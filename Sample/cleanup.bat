@@ -12,10 +12,10 @@
 @set SAMPLE_FOLDER=%~1
 pushd %~1
 
-@rmdir /s /q tkEngine
-@rmdir /s /q tkTools
-@del tkEngine
-@del tkTools
+@rmdir /s /q k2Engine
+@rmdir /s /q k2EngineLow
+@del k2Engine
+@del k2EngineLow
 
 @popd
 
