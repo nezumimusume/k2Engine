@@ -223,7 +223,7 @@ private:
 	int m_numConstantBuffer = 0;	//定数バッファの数。
 	int m_numUavResource = 0;		//アンオーダーアクセスリソースの数。
 	int m_numSamplerDesc = 0;		//サンプラの数。
-	ID3D12DescriptorHeap* m_descriptorHeap[2] = { nullptr };					//ディスクリプタヒープ。
+	ID3D12DescriptorHeap* m_descriptorHeap = { nullptr };					//ディスクリプタヒープ。
 	std::vector<IShaderResource*> m_shaderResources;		//シェーダーリソース。
 	std::vector < IUnorderAccessResrouce*> m_uavResoruces;	//UAVリソース。
 	std::vector < ConstantBuffer*> m_constantBuffers;		//定数バッファ。

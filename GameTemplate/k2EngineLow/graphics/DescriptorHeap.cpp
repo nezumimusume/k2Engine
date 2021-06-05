@@ -19,39 +19,37 @@ DescriptorHeap::DescriptorHeap()
 }
 DescriptorHeap::~DescriptorHeap()
 {
-	for (auto& ds : m_descriptorHeap) {
-		if (ds) {
-			ds->Release();
-		}
+	if (m_descriptorHeap) {
+		m_descriptorHeap->Release();
 	}
+	
 }
 void DescriptorHeap::CommitSamperHeap()
 {
 	const auto& d3dDevice = g_graphicsEngine->GetD3DDevice();
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 
-	srvHeapDesc.NumDescriptors = m_numSamplerDesc;
+	srvHeapDesc.NumDescriptors = m_numSamplerDesc * 2;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-	for (auto& ds : m_descriptorHeap) {
-		auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&ds));
-		if (FAILED(hr)) {
-			MessageBox(nullptr, L"DescriptorHeap::Commit ディスクリプタヒープの作成に失敗しました。", L"エラー", MB_OK);
-			std::abort();
-		}
+	
+	auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_descriptorHeap));
+	if (FAILED(hr)) {
+		MessageBox(nullptr, L"DescriptorHeap::Commit ディスクリプタヒープの作成に失敗しました。", L"エラー", MB_OK);
+		std::abort();
 	}
-	int bufferNo = 0;
-	for (auto& descriptorHeap : m_descriptorHeap) {
-		auto cpuHandle = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-		auto gpuHandle = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	
+	
+	for(int bufferNo = 0; bufferNo < 2; bufferNo++){
+		auto cpuHandle = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		auto gpuHandle = m_descriptorHeap->GetGPUDescriptorHandleForHeapStart();
 		for (int i = 0; i < m_numSamplerDesc; i++) {
 			//サンプラステートをディスクリプタヒープに登録していく。
 			d3dDevice->CreateSampler(&m_samplerDescs[i], cpuHandle);
 			cpuHandle.ptr += g_graphicsEngine->GetSapmerDescriptorSize();
 		}
 		m_samplerGpuDescriptorStart[bufferNo] = gpuHandle;
-		bufferNo++;
 	}
 
 }
@@ -61,24 +59,22 @@ void DescriptorHeap::Commit()
 	const auto& d3dDevice = g_graphicsEngine->GetD3DDevice();
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 
-	srvHeapDesc.NumDescriptors = m_numShaderResource + m_numConstantBuffer + m_numUavResource;
+	srvHeapDesc.NumDescriptors = ( m_numShaderResource + m_numConstantBuffer + m_numUavResource ) * 2;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-	for (auto& ds : m_descriptorHeap) {
-		auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&ds));
-		g_numDescriptorHeap++;
-		if (FAILED(hr)) {
-			MessageBox(nullptr, L"DescriptorHeap::Commit ディスクリプタヒープの作成に失敗しました。", L"エラー", MB_OK);
-			std::abort();
-		}
+	
+	auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_descriptorHeap));
+	g_numDescriptorHeap++;
+	if (FAILED(hr)) {
+		MessageBox(nullptr, L"DescriptorHeap::Commit ディスクリプタヒープの作成に失敗しました。", L"エラー", MB_OK);
+		std::abort();
 	}
+	
 	//定数バッファやシェーダーリソースのディスクリプタをヒープに書き込んでいく。
-	int bufferNo = 0;
-	for (auto& descriptorHeap : m_descriptorHeap) {
-		auto cpuHandle = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-		auto gpuHandle = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-
+	auto cpuHandle = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	auto gpuHandle = m_descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	for (int bufferNo = 0; bufferNo < 2; bufferNo++) {
 		//定数バッファを登録していく。
 		for (int i = 0; i < m_numConstantBuffer; i++) {
 			//@todo bug
@@ -115,6 +111,5 @@ void DescriptorHeap::Commit()
 		//UAVリソースのディスクリプタヒープの開始ハンドルを計算。
 		m_uavGpuDescriptorStart[bufferNo] = gpuHandle;
 		m_uavGpuDescriptorStart[bufferNo].ptr += (UINT64)g_graphicsEngine->GetCbrSrvDescriptorSize() * ( m_numShaderResource + m_numConstantBuffer );
-		bufferNo++;
 	}
 }
