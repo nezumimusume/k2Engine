@@ -212,9 +212,9 @@ private:
 	}
 private:
 	enum {
-		MAX_SHADER_RESOURCE = 512,	//シェーダーリソースの最大数。
-		MAX_CONSTANT_BUFFER = 512,	//定数バッファの最大数。
-		MAX_SAMPLER_STATE = 512,	//サンプラステートの最大数。
+		MAX_SHADER_RESOURCE = 1024 * 10,	//シェーダーリソースの最大数。
+		MAX_CONSTANT_BUFFER = 1024 * 10,	//定数バッファの最大数。
+		MAX_SAMPLER_STATE = 16,	//サンプラステートの最大数。
 	};
 	int m_numShaderResource = 0;	//シェーダーリソースの数。
 	int m_numConstantBuffer = 0;	//定数バッファの数。

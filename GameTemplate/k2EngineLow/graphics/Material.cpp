@@ -153,7 +153,11 @@ void Material::InitFromTkmMaterila(
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
 	const char* psEntryPointFunc,
-	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
+	int numSrv,
+	int numCbv,
+	UINT offsetInDescriptorsFromTableStartCB,
+	UINT offsetInDescriptorsFromTableStartSRV
 )
 {
 	//テクスチャをロード。
@@ -191,7 +195,12 @@ void Material::InitFromTkmMaterila(
 
 	m_rootSignature.Init(
 		samplerDescArray,
-		2
+		2,
+		numCbv,
+		numSrv,
+		8,
+		offsetInDescriptorsFromTableStartCB,
+		offsetInDescriptorsFromTableStartSRV
 	);
 
 	if (fxFilePath != nullptr && strlen(fxFilePath) > 0) {

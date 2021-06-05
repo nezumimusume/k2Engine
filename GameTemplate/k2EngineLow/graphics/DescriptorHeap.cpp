@@ -40,6 +40,7 @@ void DescriptorHeap::CommitSamperHeap()
 	}
 
 }
+int g_numDescriptorHeap = 0;
 void DescriptorHeap::Commit()
 {
 	const auto& d3dDevice = g_graphicsEngine->GetD3DDevice();
@@ -51,6 +52,7 @@ void DescriptorHeap::Commit()
 
 	for (auto& ds : m_descriptorHeap) {
 		auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&ds));
+		g_numDescriptorHeap++;
 		if (FAILED(hr)) {
 			MessageBox(nullptr, L"DescriptorHeap::Commit ディスクリプタヒープの作成に失敗しました。", L"エラー", MB_OK);
 			std::abort();
@@ -64,7 +66,8 @@ void DescriptorHeap::Commit()
 
 		//定数バッファを登録していく。
 		for (int i = 0; i < m_numConstantBuffer; i++) {
-			if (m_constantBuffers != nullptr) {
+			//@todo bug
+			if (m_constantBuffers[i] != nullptr) {
 				m_constantBuffers[i]->RegistConstantBufferView(cpuHandle, bufferNo);
 			}
 			//次に進める。

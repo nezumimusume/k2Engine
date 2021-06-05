@@ -16,7 +16,11 @@ public:
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntriyPointFunc,
 		const char* psEntryPointFunc,
-		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
+		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
+		int numSrv,
+		int numCbv,
+		UINT offsetInDescriptorsFromTableStartCB,
+		UINT offsetInDescriptorsFromTableStartSRV
 	);
 	/// <summary>
 	/// レンダリングを開始するときに呼び出す関数。
