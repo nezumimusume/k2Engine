@@ -7,6 +7,7 @@ class Background;
 class GameCamera;
 class SkyCube;
 class Fade;
+class Enemy;
 
 class Game : public IGameObject
 {
@@ -32,6 +33,7 @@ private:
 	Player*		m_player = nullptr;			//プレイヤー。
 	Background* m_background = nullptr;		//背景。
 	GameCamera* m_gameCamera = nullptr;		//ゲームカメラ。
+	std::vector<Enemy*>		m_enemys;		//エネミーのリスト。
 	LevelRender	m_levelRender;				//レベル。
 	SkyCube*	m_skyCube = nullptr;		//スカイキューブ。
 	bool		m_isWaitFadeout = false;

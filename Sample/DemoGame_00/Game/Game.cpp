@@ -8,6 +8,7 @@
 #include "Background.h"
 #include "GameCamera.h"
 #include "Star.h"
+#include "Enemy.h"
 
 #include "Fade.h"
 
@@ -18,6 +19,10 @@ Game::Game()
 	DeleteGO(m_background);
 	DeleteGO(m_gameCamera);
 	DeleteGO(m_skyCube);
+	for (auto enemy : m_enemys)
+	{
+		DeleteGO(enemy);
+	}
 }
 
 Game::~Game()
@@ -51,16 +56,26 @@ bool Game::Start()
 			m_background->SetRotation(objData.rotation);
 			return true;
 		}
+		else if (objData.ForwardMatchName(L"enemy") == true) {
+			auto enemy = NewGO<Enemy>(0, "enemy");
+			enemy->SetPosition(objData.position);
+			enemy->SetScale(objData.scale);
+			m_enemys.push_back(enemy);
+			return true;
+		}
 		else if (objData.ForwardMatchName(L"star") == true) {
 			auto star = NewGO<Star>(0, "star");
 			star->SetPosition(objData.position);
 			return true;
 		}
+
 		return true;
 	});
 
 	m_fade = FindGO<Fade>("fade");
 	m_fade->StartFadeIn();
+
+	
 	return true;
 }
 
