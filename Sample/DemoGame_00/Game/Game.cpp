@@ -18,7 +18,7 @@
 
 namespace
 {
-	const float TIME_LIMIT = 10.0f;
+	const float TIME_LIMIT = 90.0f;
 	const Vector3	STAR_COUNT_FONT_POSITION = Vector3(-640.0f, 250.0f, 0.0f);
 	const float STAR_COUNT_FONT_CENTER_POSITION_X = -170.0f;
 	const float STAR_COUNT_FONT_POSITION_MOVE_SPEED = 350.0f;

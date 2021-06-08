@@ -170,9 +170,9 @@ void RenderingEngine::InitDeferredLighting()
     m_deferredLightingCB.m_light.directionalLight[2].direction.z = 1.0f;
     m_deferredLightingCB.m_light.directionalLight[2].direction.Normalize();
 
-    m_deferredLightingCB.m_light.ambinetLight.x = 0.2f;
-    m_deferredLightingCB.m_light.ambinetLight.y = 0.2f;
-    m_deferredLightingCB.m_light.ambinetLight.z = 0.2f;
+    m_deferredLightingCB.m_light.ambinetLight.x = 0.4f;
+    m_deferredLightingCB.m_light.ambinetLight.y = 0.4f;
+    m_deferredLightingCB.m_light.ambinetLight.z = 0.4f;
     m_deferredLightingCB.m_light.eyePos = g_camera3D->GetPosition();
 
     // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
