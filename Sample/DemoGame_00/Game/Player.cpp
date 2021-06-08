@@ -1,6 +1,16 @@
 #include "stdafx.h"
 #include "Player.h"
 
+#include "Game.h"
+
+#include "sound/SoundSource.h"
+#include "sound/SoundEngine.h"
+
+namespace
+{
+	float GAMEOVER_LIMITED_POSITION = -200.0f;
+}
+
 Player::Player()
 {
 
@@ -20,6 +30,10 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_Run].SetLoopFlag(true);
 	m_animationClips[enAnimationClip_Jump].Load("Assets/animData/jump.tka");
 	m_animationClips[enAnimationClip_Jump].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_GameClear].Load("Assets/animData/clear.tka");
+	m_animationClips[enAnimationClip_GameClear].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_GameOver].Load("Assets/animData/KneelDown.tka");
+	m_animationClips[enAnimationClip_GameOver].SetLoopFlag(false);
 	//ユニティちゃんのモデルを読み込む。
 	m_modelRender.Init("Assets/modelData/unityChan.tkm", m_animationClips, enAnimationClip_Num, enModelUpAxisY);
 
@@ -30,6 +44,8 @@ bool Player::Start()
 		m_position		//座標。
 	);
 
+	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/gameover.wav");
+	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/gameclear.wav");
 	return true;
 }
 
@@ -39,40 +55,54 @@ void Player::Update()
 	Move();
 	//旋回処理。
 	Turn();
-	//ステート管理。
-	ManageState();
 	//アニメーション再生。
 	PlayAnimation();
+	//ステート管理。
+	ManageState();
 
 	//モデルを更新。
 	m_modelRender.Update();
+
+	auto mRot = Matrix::Identity;
+	mRot.MakeRotationFromQuaternion(m_rotation);
+	m_forward.x = mRot.m[2][0];
+	m_forward.y = mRot.m[2][1];
+	m_forward.z = mRot.m[2][2];
 }
 
 void Player::Move()
 {
-	//このフレームの移動量を求める。
-	//左スティックの入力量を受け取る。
-	float lStick_x = g_pad[0]->GetLStickXF();
-	float lStick_y = g_pad[0]->GetLStickYF();
-	//カメラの前方方向と右方向を取得。
-	Vector3 cameraForward = g_camera3D->GetForward();
-	Vector3 cameraRight = g_camera3D->GetRight();
-	//XZ平面での前方方向、右方向に変換する。
-	cameraForward.y = 0.0f;
-	cameraForward.Normalize();
-	cameraRight.y = 0.0f;
-	cameraRight.Normalize();
-	//XZ成分の移動速度をクリア。
+	
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
-	m_moveSpeed += cameraForward * lStick_y * 500.0f;	//奥方向への移動速度を加算。
-	m_moveSpeed += cameraRight * lStick_x * 500.0f;		//右方向への移動速度を加算。
-	if (g_pad[0]->IsTrigger(enButtonA) //Aボタンが押されたら
-		&& m_charaCon.IsOnGround()  //かつ、地面に居たら
-		) {
-		//ジャンプする。
-		m_moveSpeed.y = 400.0f;	//上方向に速度を設定して、
+	//ゲームオーバーかゲームクリアの際には、プレイヤーを移動させない。
+	if(m_playerState != enPlayerState_GameClear &&
+		m_playerState != enPlayerState_GameClear_Idle &&
+		m_playerState != enPlayerState_GameOver)
+	{
+		//このフレームの移動量を求める。
+		//左スティックの入力量を受け取る。
+		float lStick_x = g_pad[0]->GetLStickXF();
+		float lStick_y = g_pad[0]->GetLStickYF();
+		//カメラの前方方向と右方向を取得。
+		Vector3 cameraForward = g_camera3D->GetForward();
+		Vector3 cameraRight = g_camera3D->GetRight();
+		//XZ平面での前方方向、右方向に変換する。
+		cameraForward.y = 0.0f;
+		cameraForward.Normalize();
+		cameraRight.y = 0.0f;
+		cameraRight.Normalize();
+		//XZ成分の移動速度をクリア。
+		m_moveSpeed += cameraForward * lStick_y * 500.0f;	//奥方向への移動速度を加算。
+		m_moveSpeed += cameraRight * lStick_x * 500.0f;		//右方向への移動速度を加算。
+		if (g_pad[0]->IsTrigger(enButtonA) //Aボタンが押されたら
+			&& m_charaCon.IsOnGround()  //かつ、地面に居たら
+			) {
+			//ジャンプする。
+			m_moveSpeed.y = 400.0f;	//上方向に速度を設定して、
+		}
 	}
+
 	m_moveSpeed.y -= 980.0f * g_gameTime->GetFrameDeltaTime();
 	//キャラクターコントローラーを使用して、座標を更新。
 
@@ -109,11 +139,47 @@ void Player::Turn()
 
 void Player::ManageState()
 {
+	if (m_playerState == enPlayerState_GameClear_Idle)
+	{
+		return;
+	}
+
+	if (m_playerState == enPlayerState_GameClear)
+	{
+		if (m_modelRender.IsPlayingAnimation() == false)
+		{
+			//ステートをゲームクリア(待機)にする。
+			m_playerState = enPlayerState_GameClear_Idle;
+			Game* game = FindGO<Game>("game");
+			game->NotifyGameClearIdle();
+		}
+		return;
+	}
+
+	//ゲームオーバーの時。
+	if (m_playerState == enPlayerState_GameOver)
+	{
+		//アニメーションの再生が終わったら。
+		if (m_modelRender.IsPlayingAnimation() == false)
+		{
+			//ステートを待機状態にする。
+			m_playerState = enPlayerState_Idle;
+			Game* game = FindGO<Game>("game");
+			game->NotifyReStart();
+		}
+		return;
+	}
+
 	//地面に付いていなかったら。
 	if (m_charaCon.IsOnGround() == false)
 	{
-		//ステートを1(ジャンプ中)にする。
-		m_playerState = 1;
+		//ステートをジャンプ中にする。
+		m_playerState = enPlayerState_Jump;
+		if (m_position.y <= GAMEOVER_LIMITED_POSITION)
+		{
+			Game* game = FindGO<Game>("game");
+			game->NotifyGameOver();
+		}
 		//ここでManageStateの処理を終わらせる。
 		return;
 	}
@@ -122,14 +188,14 @@ void Player::ManageState()
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{
-		//ステートを2(走り)にする。
-		m_playerState = 2;
+		//ステートを走りにする。
+		m_playerState = enPlayerState_Run;
 	}
 	//xとzの移動速度が無かったら(スティックの入力が無かったら)。
 	else
 	{
-		//ステートを0(待機)にする。
-		m_playerState = 0;
+		//ステートを待機にする。
+		m_playerState = enPlayerState_Idle;
 	}
 }
 
@@ -138,21 +204,57 @@ void Player::PlayAnimation()
 	//switch文。
 	switch (m_playerState) {
 		//プレイヤーステートが0(待機)だったら。
-	case 0:
+	case enPlayerState_Idle:
 		//待機アニメーションを再生する。
 		m_modelRender.PlayAnimation(enAnimationClip_Idle);
 		break;
-		//プレイヤーステートが1(ジャンプ中)だったら。
-	case 1:
+		//プレイヤーステートがジャンプ中だったら。
+	case enPlayerState_Jump:
 		//ジャンプアニメーションを再生する。
 		m_modelRender.PlayAnimation(enAnimationClip_Jump);
 		break;
-		//プレイヤーステートが2(走り)だったら。
-	case 2:
+		//プレイヤーステートが走りだったら。
+	case enPlayerState_Run:
 		//歩きアニメーションを再生する。
 		m_modelRender.PlayAnimation(enAnimationClip_Run);
 		break;
+		//プレイヤーステートがゲームクリアだったら。
+	case enPlayerState_GameClear:
+		//ゲームクリアアニメーションを再生する。
+		m_modelRender.PlayAnimation(enAnimationClip_GameClear);
+		break;
+		//プレイヤーステートがゲームオーバーだったら。
+	case enPlayerState_GameOver:
+		//ゲームオーバーアニメーションを再生する。
+		m_modelRender.PlayAnimation(enAnimationClip_GameOver);
+		break;
 	}
+}
+
+void Player::NotifyGameOver()
+{
+	m_playerState = enPlayerState_GameOver;
+	SoundSource* se = NewGO<SoundSource>(0);
+	se->Init(3);
+	se->SetVolume(3.f);
+	se->Play(false);
+}
+
+void Player::NotifyGameClear()
+{
+	m_playerState = enPlayerState_GameClear;
+	SoundSource* se = NewGO<SoundSource>(0);
+	se->Init(4);
+	se->SetVolume(3.f);
+	se->Play(false);
+}
+
+void Player::ReStart()
+{
+	m_position = m_startPosition;
+	m_moveSpeed = Vector3::Zero;
+	m_modelRender.SetPosition(m_position);
+	m_charaCon.SetPosition(m_position);
 }
 
 void Player::Render(RenderContext& rc)

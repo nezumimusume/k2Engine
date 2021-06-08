@@ -31,8 +31,17 @@ bool GameCamera::Start()
 	return true;
 }
 
-void GameCamera::Update()
+void GameCamera::UpdatePositionAndTarget()
 {
+	//プレイヤーがゲームオーバーまたはゲームクリア状態の時。
+	//カメラを操作できないようにする。
+	if (m_player->GetPlayerState() == Player::enPlayerState_GameClear ||
+		m_player->GetPlayerState() == Player::enPlayerState_GameClear_Idle ||
+		m_player->GetPlayerState() == Player::enPlayerState_GameOver)
+	{
+		return;
+	}
+
 	//カメラを更新。
 	//注視点を計算する。
 	Vector3 target = m_player->GetPosition();
@@ -69,13 +78,37 @@ void GameCamera::Update()
 		m_toCameraPos = toCameraPosOld;
 	}
 
-	
+
 	//視点を計算する。
 	Vector3 pos = target + m_toCameraPos;
 
 	//バネカメラに注視点と視点を設定する。
 	m_springCamera.SetPosition(pos);
 	m_springCamera.SetTarget(target);
+}
+
+void GameCamera::ReStart()
+{
+	//注視点から視点までのベクトルを設定。
+	m_toCameraPos.Set(0.0f, 200.0f, 400.0f);
+	m_springCamera.Refresh();
+	UpdatePositionAndTarget();
+}
+
+void GameCamera::NotifyGameClear()
+{
+	Vector3 target = m_player->GetPosition();
+	target.y += 50.0f;
+	Vector3 pos = target + m_player->GetForward() * 200.0f;
+	pos.y += 100.0f;
+	m_springCamera.SetTarget(target);
+	m_springCamera.SetPosition(pos);
+}
+
+void GameCamera::Update()
+{
+	//視点と注視点を更新する。
+	UpdatePositionAndTarget();
 
 	//カメラの更新。
 	m_springCamera.Update();

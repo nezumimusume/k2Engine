@@ -56,7 +56,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	NewGO<Title>(0, "title");
 	//NewGO<Game>(0, "game");
 	//Fadeクラスのオブジェクトを作成。
-	NewGO<Fade>(0, "fade");
+	NewGO<Fade>(2, "fade");
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

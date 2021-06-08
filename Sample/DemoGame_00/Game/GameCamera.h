@@ -13,7 +13,9 @@ public:
 	~GameCamera();
 	bool Start();
 	void Update();
-
+	void UpdatePositionAndTarget();
+	void ReStart();
+	void NotifyGameClear();
 private:
 	Player*			m_player = nullptr;				//プレイヤー。
 	Vector3			m_toCameraPos = Vector3::One;	//注視点から視点に向かうベクトル。

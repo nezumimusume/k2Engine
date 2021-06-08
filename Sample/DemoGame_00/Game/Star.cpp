@@ -4,6 +4,9 @@
 #include "Player.h"
 #include "Game.h"
 
+#include "sound/SoundSource.h"
+#include "sound/SoundEngine.h"
+
 bool Star::Start()
 {
 	m_modelRender.Init("Assets/modelData/star.tkm");
@@ -11,6 +14,8 @@ bool Star::Start()
 	m_modelRender.SetScale(m_scale);
 
 	m_player = FindGO<Player>("player");
+
+	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/coinGet.wav");
 	return true;
 }
 
@@ -23,6 +28,9 @@ void Star::Update()
 			m_jumpSpeed = 500.0f;
 			m_isGet = true;
 			m_jumStartPosY = m_position.y;
+			SoundSource* se = NewGO<SoundSource>(0);
+			se->Init(5);
+			se->Play(false);
 		}
 	}
 	else {

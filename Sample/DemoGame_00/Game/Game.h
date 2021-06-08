@@ -8,9 +8,18 @@ class GameCamera;
 class SkyCube;
 class Fade;
 class Enemy;
+class SoundSource;
 
 class Game : public IGameObject
 {
+public:
+	enum EnGameState
+	{
+		enGameState_DuringGamePlay,			//ゲームプレイ中。
+		enGameState_GameOver,				//ゲームオーバー。
+		enGameState_GameClear,				//ゲームクリア。
+		enGameState_GameClear_Idle			//ゲームクリア(待機中)。
+	};
 public:
 	//////////////////////////////////////
 	// メンバ関数。
@@ -20,7 +29,6 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-
 	/// <summary>
 	/// 獲得した☆の数を+1する。
 	/// </summary>
@@ -28,19 +36,45 @@ public:
 	{
 		m_starCount++;
 	}
+	/// <summary>
+	/// ゲームオーバーを通知する。
+	/// </summary>
+	void NotifyGameOver();
+	/// <summary>
+	/// ゲームクリアを通知する。
+	/// </summary>
+	void NotifyGameClear();
+	void NotifyGameClearIdle();
+	/// <summary>
+	/// リスタートを通知する。
+	/// </summary>
+	void NotifyReStart();
 private:
+	/// <summary>
+	/// フォントの更新。
+	/// </summary>
 	void UpdateFont();
-	Player*		m_player = nullptr;			//プレイヤー。
-	Background* m_background = nullptr;		//背景。
-	GameCamera* m_gameCamera = nullptr;		//ゲームカメラ。
-	std::vector<Enemy*>		m_enemys;		//エネミーのリスト。
-	LevelRender	m_levelRender;				//レベル。
-	SkyCube*	m_skyCube = nullptr;		//スカイキューブ。
-	bool		m_isWaitFadeout = false;
-	Fade*		m_fade = nullptr;			//フェード。
-	int			m_starCount = 0;			//獲得した☆の数。
-	FontRender	m_starCountFont;			//獲得した☆の数を表示するフォント。
-	float		m_timer = 90.0f;			//タイマー。
-	FontRender	m_timerFont;				//タイマーを表示するフォント。
+	/// <summary>
+	/// タイマーを加算する。
+	/// </summary>
+	void CountTimer();
+private:
+	Player*			m_player = nullptr;			//プレイヤー。
+	Background*		m_background = nullptr;		//背景。
+	GameCamera*		m_gameCamera = nullptr;		//ゲームカメラ。
+	std::vector<Enemy*>		m_enemys;			//エネミーのリスト。
+	LevelRender		m_levelRender;				//レベル。
+	SkyCube*		m_skyCube = nullptr;		//スカイキューブ。
+	bool			m_isWaitFadeout = false;
+	Fade*			m_fade = nullptr;			//フェード。
+	int				m_starCount = 0;			//獲得した☆の数。
+	FontRender		m_starCountFont;			//獲得した☆の数を表示するフォント。
+	Vector3			m_starCountFontPosition;
+	float			m_timer = 0.0f;				//タイマー。
+	FontRender		m_timerFont;				//タイマーを表示するフォント。
+	EnGameState		m_gameState = enGameState_DuringGamePlay;		//ゲームステート。
+	SpriteRender	m_pressA;
+
+	SoundSource* m_bgm = nullptr;
 };
 

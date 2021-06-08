@@ -26,7 +26,7 @@ public:
 	/// パスデータを読み込む。
 	/// </summary>
 	/// <param name="filePath">ファイルパス。</param>
-	void ReadPath(const wchar_t* filePath);
+	void ReadPath(const char* filePath);
 	/// <summary>
 	/// 移動方向のベクトルを取得。
 	/// </summary>
@@ -34,6 +34,14 @@ public:
 	const Vector3& GetMoveVector() const
 	{
 		return m_moveVector;
+	}
+	/// <summary>
+	/// 停止中？
+	/// </summary>
+	/// <returns>停止中ならtrue。</returns>
+	const bool GetIsStop() const
+	{
+		return m_isStop;
 	}
 private:
 	Vector3			m_position = Vector3::Zero;					//座標

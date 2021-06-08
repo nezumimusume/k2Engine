@@ -25,7 +25,7 @@ void MovedPath::Init(const Vector3& position, const float moveSpeed)
 	m_point = m_path.GetNearPoint(m_position);
 }
 
-void MovedPath::ReadPath(const wchar_t* filePath)
+void MovedPath::ReadPath(const char* filePath)
 {
 	m_path.Load(filePath);
 }
@@ -105,7 +105,7 @@ const Vector3& MovedPath::Move()
 				else {
 					rot.SetRotation(Vector3::AxisY, -ADD_DEGREE * g_gameTime->GetFrameDeltaTime());
 				}
-				rot.Add(m_moveVector);
+				rot.Apply(m_moveVector);
 				m_timer += g_gameTime->GetFrameDeltaTime();
 			}
 		}

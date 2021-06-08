@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "Fade.h"
 
+namespace
+{
+	const Vector3	SCALE = Vector3(1.456f, 1.456f, 1.0f);
+	const Vector3	POSITIOIN = Vector3(-100.0f, 3.75, 0.0f);
+}
 
 Fade::Fade()
 {
@@ -13,7 +18,10 @@ Fade::~Fade()
 
 bool Fade::Start()
 {
-	m_spriteRender.Init("Assets/sprite/fade.dds", FRAME_BUFFER_W, FRAME_BUFFER_H);
+	m_spriteRender.Init("Assets/sprite/fade.dds", 1024, 512);
+	m_spriteRender.SetScale(SCALE);
+	m_spriteRender.SetPosition(POSITIOIN);
+	m_spriteRender.Update();
 	return true;
 }
 

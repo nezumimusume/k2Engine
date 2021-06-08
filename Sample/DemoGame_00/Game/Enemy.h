@@ -1,6 +1,19 @@
 #pragma once
+
+//クラス宣言。
+class MovedPath;
+class Player;
+class Game;
+
 class Enemy : public IGameObject
 {
+public:
+	enum EnEnemyState
+	{
+		enEnemyState_Idle,
+		enEnemyState_Run,
+		enEnemyState_Num
+	};
 public:
 	////////////////////////////////////
 	// メンバ関数
@@ -10,7 +23,11 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-
+	/// <summary>
+	/// パスデータを読み込む。
+	/// </summary>
+	/// <param name="number">番号。</param>
+	void LoadPath(const int number);
 	/// <summary>
 	/// 座標を設定。
 	/// </summary>
@@ -52,10 +69,27 @@ private:
 	/// アニメーションの再生。
 	/// </summary>
 	void PlayAnimation();
+	/// <summary>
+	/// プレイヤーを探索する。
+	/// </summary>
+	void SearchPlayer();
+	/// <summary>
+	/// プレイヤーのポインタを取得する。
+	/// </summary>
+	/// <returns>プレイヤーのポインタを取得済みならtrue。</returns>
+	bool GetPlayer()
+	{
+		if (m_player == nullptr)
+		{
+			m_player = FindGO<Player>("player");
+			return false;
+		}
+		return true;
+	}
 	ModelRender			m_modelRender;				//モデルレンダ―。
 	Vector3				m_position;					//座標。
 	CharacterController m_charaCon;					//キャラクターコントローラー。
-	Vector3				m_moveSpeed;				//移動速度。
+	Vector3				m_moveVector;				//移動方向ベクトル。
 	Vector3				m_scale = Vector3::One;		//スケール。
 	Quaternion			m_rotation;					//クォータニオン。
 	enum EnAnimationClip {							//アニメーション。
@@ -64,6 +98,8 @@ private:
 		enAnimationClip_Num,
 	};
 	AnimationClip		m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
-	int m_enemyState = 0;							//エネミーのステート(状態)を表す変数。
+	EnEnemyState		m_enemyState = enEnemyState_Idle;			//エネミーのステート(状態)を表す変数。
+	std::unique_ptr<MovedPath>	m_movedPath;
+	Player*				m_player = nullptr;			//プレイヤー。
 };
 

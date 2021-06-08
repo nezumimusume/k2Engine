@@ -23,22 +23,22 @@ public:
 	/// パスデータを読み込む。
 	/// </summary>
 	/// <param name="filePath">ファイルパス。</param>
-	void Load(const wchar_t* filePath);
+	void Load(const char* filePath);
 	/// <summary>
 	/// パスのポイントの数を取得。
 	/// </summary>
 	/// <returns>パスのポイントの数。</returns>
 	const int GetNumberPoint() const
 	{
-		return m_pointList.size();
+		return m_pointMap.size();
 	}
 	/// <summary>
 	/// 最初のポイントを取得。
 	/// </summary>
 	/// <returns> 最初のポイント。</returns>
- 	const Point* GetFistPoint() const
+ 	const Point* GetFistPoint()
 	{
-		return &m_pointList[0];
+		return &m_pointMap[0];
 	}
 	/// <summary>
 	/// 現在の座標から一番近いポイントを取得。
@@ -53,6 +53,6 @@ public:
 	/// <returns>ポイント。</returns>
 	const Point* GetNextPoint(const int number);
 private:
-	std::vector<Point>		m_pointList;			//ポイントのリスト。
+	std::map<const int ,Point>		m_pointMap;			//ポイントのマップ。
 };
 

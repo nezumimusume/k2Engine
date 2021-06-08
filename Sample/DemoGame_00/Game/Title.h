@@ -1,6 +1,7 @@
 #pragma once
 
 class Fade;
+class SoundSource;
 
 class Title : public IGameObject
 {
@@ -12,7 +13,9 @@ public:
 	void Render(RenderContext& rc);
 private:
 	SpriteRender		m_spriteRender;			//スプライトレンダ―。
+	SpriteRender		m_pressA;				//PRESSAボタン画像。
 	bool				m_isWaitFadeout = false;
 	Fade*				m_fade = nullptr;
+	SoundSource*		m_bgm = nullptr;
 };
 
