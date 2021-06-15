@@ -6,6 +6,7 @@
 
 #include "graphics/RenderingEngine.h"
 #include "sound/SoundEngine.h"
+#include "collision/CollisionObject.h"
 
 #include "Game.h"
 
@@ -45,6 +46,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//レンダリングエンジンを初期化
 	g_renderingEngine = new RenderingEngine();
 	g_renderingEngine->Init();
+	g_collisionObjectManager = new CollisionObjectManager();
 	//エフェクトエンジンの初期化。
 	EffectEngine::CreateInstance();
 
@@ -89,6 +91,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
 		g_soundEngine->Update();
+		PhysicsWorld::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 		g_engine->EndFrame();
 	
 	}

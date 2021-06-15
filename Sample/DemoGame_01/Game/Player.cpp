@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 
+#include "collision/CollisionObject.h"
 #include "FireBall.h"
 
 
@@ -152,7 +153,15 @@ void Player::Attack()
 	if (g_pad[0]->IsTrigger(enButtonY))
 	{
 		m_isAttack = true;
-
+		auto collisionObject = NewGO<CollisionObject>(0);
+		Vector3 collisionPosition = m_position;
+		Vector3 toPos = Vector3::AxisZ;
+		m_rotation.Apply(toPos);
+		collisionPosition += toPos * 50.0f;
+		collisionPosition.y += 70.0f;
+		collisionObject->CreateSphere(collisionPosition, Quaternion::Identity, 40.0f);
+		collisionObject->SetTimeLimit(1.0f);
+		collisionObject->SetName("player_attack");
 	}
 }
 

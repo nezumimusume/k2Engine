@@ -84,6 +84,10 @@ public:
 		btRot = btQuaternion(rot.x, rot.y, rot.z, rot.w);
 		btTrans.setRotation(btRot);
 	}
+	btCollisionObject& GetbtCollisionObject()
+	{
+		return m_ghostObject;
+	}
 private:
 	/// <summary>
 	/// ゴースト作成処理の共通処理。

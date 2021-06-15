@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Enemy.h"
 
+#include "collision/CollisionObject.h"
+
 Enemy::Enemy()
 {
 
@@ -53,6 +55,8 @@ void Enemy::Update()
 	PlayAnimation();
 	//ステートの管理。
 	ManageState();
+	//当たり判定。
+	Collision();
 
 	m_modelRender.Update();
 }
@@ -200,6 +204,33 @@ void Enemy::PlayAnimation()
 	case 3:
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
+	}
+}
+
+void Enemy::Collision()
+{
+	{
+		auto collisions = g_collisionObjectManager->FindCollisionObjects("fire");
+
+		for (auto collision : collisions)
+		{
+			if (collision->GetIsCollision(m_charaCon) == true)
+			{
+				DeleteGO(this);
+			}
+		}
+	}
+
+	{
+		auto collisions = g_collisionObjectManager->FindCollisionObjects("player_attack");
+
+		for (auto collision : collisions)
+		{
+			if (collision->GetIsCollision(m_charaCon) == true)
+			{
+				DeleteGO(this);
+			}
+		}
 	}
 }
 

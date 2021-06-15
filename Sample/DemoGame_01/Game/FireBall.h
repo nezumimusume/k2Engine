@@ -1,6 +1,7 @@
 #pragma once
 
 class EffectEmitter;
+class CollisionObject;
 
 class FireBall : public IGameObject
 {
@@ -24,5 +25,6 @@ private:
 	Vector3				m_moveSpeed;
 	EffectEmitter*		m_effectEmitter = nullptr;
 	float				m_timer = 0.0f;
+	CollisionObject*	m_collisionObject;
 };
 

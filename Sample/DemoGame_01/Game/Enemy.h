@@ -32,6 +32,7 @@ private:
 	/// ステートを管理。
 	/// </summary>
 	void ManageState();
+	void Collision();
 	enum EnAnimationClip {							//アニメーション。
 		enAnimationClip_Idle,
 		enAnimationClip_Walk,

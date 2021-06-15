@@ -16,6 +16,9 @@
     <Filter Include="level2DRender">
       <UniqueIdentifier>{f1c1e7b1-a2da-4466-a50a-8201c631849c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="collision">
+      <UniqueIdentifier>{82315e07-0f58-4477-a304-86ab70241d6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics\ModelRender.cpp">
@@ -75,6 +78,9 @@
     </ClCompile>
     <ClCompile Include="level2DRender\MapChip2DRender.cpp">
       <Filter>level2DRender</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\collision\CollisionObject.cpp">
+      <Filter>collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +147,9 @@
     </ClInclude>
     <ClInclude Include="graphics\IRenderer.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\collision\CollisionObject.h">
+      <Filter>collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
