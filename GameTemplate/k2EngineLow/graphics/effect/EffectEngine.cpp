@@ -10,7 +10,8 @@ EffectEngine::EffectEngine()
 		m_instance == nullptr,
 		"EffectEngineのインスタンスを複数作ることはできません。"
 	);
-	auto format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	//auto format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	auto format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 	auto commandQueue = g_graphicsEngine->GetCommandQueue();
 	// レンダラーを作成。

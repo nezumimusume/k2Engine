@@ -27,6 +27,14 @@ public:
 	/// この関数を呼び出すとエフェクトの再生が開始されます。
 	/// </remark>
 	void Play();
+	/// <summary>
+	/// 停止。
+	/// </summary>              
+	void Stop()
+	{
+		//再生中のエフェクトを停止する。
+		EffectEngine::GetInstance()->Stop(m_handle);
+	}
 	/*!
 	*@brief	座標を設定。
 	*/

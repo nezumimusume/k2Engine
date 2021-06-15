@@ -21,8 +21,12 @@ void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 
     g_renderingEngine->SetMainRenderTargetAndDepthStencilBuffer(rc);
 
+    //メインレンダーターゲットをPRESENTからRENDERTARGETへ。
+    rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
     //ここでエフェクトドローするよ。
     EffectEngine::GetInstance()->Draw();
+    //メインレンダーターゲットをTARGETからPRESENTへ。
+    rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 
     m_bloom.Render(rc, mainRenderTarget);
     m_dof.Render(rc, mainRenderTarget);

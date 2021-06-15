@@ -1,9 +1,9 @@
 #pragma once
-class Player : public IGameObject
+class Enemy : public IGameObject
 {
 public:
-	Player();
-	~Player();
+	Enemy();
+	~Enemy();
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
@@ -20,15 +20,10 @@ public:
 	{
 		m_rotation = rotation;
 	}
-	bool GetIsEnableMove() const
-	{
-		return m_playerState != 3 && m_playerState != 4;
-	}
 private:
 	void Move();
 	void Rotation();
 	void Attack();
-	void MagicAttack();
 	/// <summary>
 	/// アニメーションの再生。
 	/// </summary>
@@ -42,7 +37,6 @@ private:
 		enAnimationClip_Walk,
 		enAnimationClip_Run,
 		enAnimationClip_Attack,
-		enAnimationClip_MagicAttack,
 		enAnimationClip_Damage,
 		enAnimationClip_Down,
 		enAnimationClip_Num,
@@ -53,8 +47,8 @@ private:
 	Vector3				m_moveSpeed;				//移動速度。
 	Quaternion			m_rotation;					//クォータニオン。
 	CharacterController	m_charaCon;
-	int					m_playerState = 0;
+	int					m_EnemyState = 0;
 	bool				m_isAttack = false;
-	bool				m_isMagicAttack = false;
 };
+
 

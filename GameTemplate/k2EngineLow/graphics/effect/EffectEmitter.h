@@ -32,6 +32,13 @@ public:
 		m_effect.Play();
 	}
 	/// <summary>
+	/// エフェクトを停止する。
+	/// </summary>
+	void Stop()
+	{
+		m_effect.Stop();
+	}
+	/// <summary>
 	/// 座標を設定。
 	/// </summary>
 	/// <param name="position">座標。/param>

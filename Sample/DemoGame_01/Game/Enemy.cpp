@@ -1,40 +1,34 @@
 #include "stdafx.h"
-#include "Player.h"
+#include "Enemy.h"
 
-#include "FireBall.h"
-
-
-
-Player::Player()
+Enemy::Enemy()
 {
 
 }
 
-Player::~Player()
+Enemy::~Enemy()
 {
 
 }
 
-bool Player::Start()
+bool Enemy::Start()
 {
-	m_animationClips[enAnimationClip_Idle].Load("Assets/animData/human/idle.tka");
+	m_animationClips[enAnimationClip_Idle].Load("Assets/animData/enemy/idle.tka");
 	m_animationClips[enAnimationClip_Idle].SetLoopFlag(true);
-	m_animationClips[enAnimationClip_Walk].Load("Assets/animData/human/walk.tka");
+	m_animationClips[enAnimationClip_Walk].Load("Assets/animData/enemy/walk.tka");
 	m_animationClips[enAnimationClip_Walk].SetLoopFlag(true);
-	m_animationClips[enAnimationClip_Run].Load("Assets/animData/human/run.tka");
+	m_animationClips[enAnimationClip_Run].Load("Assets/animData/enemy/run.tka");
 	m_animationClips[enAnimationClip_Run].SetLoopFlag(true);
-	m_animationClips[enAnimationClip_Attack].Load("Assets/animData/human/attack.tka");
+	m_animationClips[enAnimationClip_Attack].Load("Assets/animData/enemy/attack.tka");
 	m_animationClips[enAnimationClip_Attack].SetLoopFlag(false);
-	m_animationClips[enAnimationClip_MagicAttack].Load("Assets/animData/human/magicattack.tka");
-	m_animationClips[enAnimationClip_MagicAttack].SetLoopFlag(false);
-	m_animationClips[enAnimationClip_Damage].Load("Assets/animData/human/damage_receive.tka");
+	m_animationClips[enAnimationClip_Damage].Load("Assets/animData/enemy/damage_receive.tka");
 	m_animationClips[enAnimationClip_Damage].SetLoopFlag(false);
-	m_animationClips[enAnimationClip_Down].Load("Assets/animData/human/down.tka");
+	m_animationClips[enAnimationClip_Down].Load("Assets/animData/enemy/down.tka");
 	m_animationClips[enAnimationClip_Down].SetLoopFlag(false);
 
-	m_modelRender.Init("Assets/modelData/human/human.tkm",m_animationClips,enAnimationClip_Num);
+	m_modelRender.Init("Assets/modelData/enemy/enemy.tkm", m_animationClips, enAnimationClip_Num);
 	//m_modelRender.PlayAnimation(enAnimationClip_Run);
-	//m_modelRender.Init("Assets/modelData/human.tkm");
+	//m_modelRender.Init("Assets/modelData/enemy.tkm");
 	m_modelRender.SetPosition(m_position);
 
 
@@ -44,11 +38,10 @@ bool Player::Start()
 		100.0f,			//高さ。
 		m_position		//座標。
 	);
-
 	return true;
 }
 
-void Player::Update()
+void Enemy::Update()
 {
 	//移動処理。
 	Move();
@@ -56,8 +49,6 @@ void Player::Update()
 	Rotation();
 	//攻撃処理。
 	Attack();
-	//魔法攻撃。
-	MagicAttack();
 	//アニメーションの再生。
 	PlayAnimation();
 	//ステートの管理。
@@ -66,12 +57,13 @@ void Player::Update()
 	m_modelRender.Update();
 }
 
-void Player::Move()
+void Enemy::Move()
 {
-	if (GetIsEnableMove() == false)
+	if (m_EnemyState == 3)
 	{
 		return;
 	}
+
 
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
@@ -89,8 +81,8 @@ void Player::Move()
 	cameraRight.y = 0.0f;
 	cameraRight.Normalize();
 	//XZ成分の移動速度をクリア。
-	m_moveSpeed += cameraForward * lStick_y * 250.0f;	//奥方向への移動速度を加算。
-	m_moveSpeed += cameraRight * lStick_x * 250.0f;		//右方向への移動速度を加算。
+	//m_moveSpeed += cameraForward * lStick_y * 250.0f;	//奥方向への移動速度を加算。
+	//m_moveSpeed += cameraRight * lStick_x * 250.0f;		//右方向への移動速度を加算。
 	/*if (g_pad[0]->IsTrigger(enButtonA) //Aボタンが押されたら
 		&& m_charaCon.IsOnGround()  //かつ、地面に居たら
 		) {
@@ -112,7 +104,7 @@ void Player::Move()
 	m_modelRender.SetPosition(modelPosition);
 }
 
-void Player::Rotation()
+void Enemy::Rotation()
 {
 	if (fabsf(m_moveSpeed.x) < 0.001f
 		&& fabsf(m_moveSpeed.z) < 0.001f) {
@@ -133,9 +125,9 @@ void Player::Rotation()
 	m_modelRender.SetRotation(m_rotation);
 }
 
-void Player::Attack()
+void Enemy::Attack()
 {
-	if (m_playerState == 3)
+	if (m_EnemyState == 3)
 	{
 		if (m_modelRender.IsPlayingAnimation() == false)
 		{
@@ -144,10 +136,6 @@ void Player::Attack()
 		return;
 	}
 
-	if (GetIsEnableMove() == false)
-	{
-		return;
-	}
 
 	if (g_pad[0]->IsTrigger(enButtonY))
 	{
@@ -156,51 +144,19 @@ void Player::Attack()
 	}
 }
 
-void Player::MagicAttack()
-{
-	if (m_playerState == 4)
-	{
-		if (m_modelRender.IsPlayingAnimation() == false)
-		{
-			m_isMagicAttack = false;
-		}
-		return;
-	}
-
-	if(GetIsEnableMove() == false)
-	{
-		return;
-	}
-
-	if (g_pad[0]->IsTrigger(enButtonX))
-	{
-		FireBall* fireBall = NewGO<FireBall>(0);
-		fireBall->SetPosition(m_position);
-		fireBall->SetRotation(m_rotation);
-		m_isMagicAttack = true;
-
-	}
-}
-
-void Player::ManageState()
+void Enemy::ManageState()
 {
 	//地面に付いていなかったら。
 	/*if (m_charaCon.IsOnGround() == false)
 	{
-		m_playerState = 
+		m_EnemyState =
 		return;
 	}
 	*/
 
 	if (m_isAttack == true)
 	{
-		m_playerState = 3;
-		return;
-	}
-
-	if (m_isMagicAttack == true)
-	{
-		m_playerState = 4;
+		m_EnemyState = 3;
 		return;
 	}
 
@@ -208,35 +164,35 @@ void Player::ManageState()
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{
-		if (m_moveSpeed.LengthSq() >= 200*200.0f)
+		if (m_moveSpeed.LengthSq() >= 200 * 200.0f)
 		{
 			//ステートを走りにする。
-			m_playerState = 2;
+			m_EnemyState = 2;
 		}
 		else
 		{
 			//歩きにする。
-			m_playerState = 1;
+			m_EnemyState = 1;
 		}
-		
+
 	}
 	//xとzの移動速度が無かったら(スティックの入力が無かったら)。
 	else
 	{
 		//ステートを待機にする。
-		m_playerState = 0;
+		m_EnemyState = 0;
 	}
 }
 
-void Player::PlayAnimation()
+void Enemy::PlayAnimation()
 {
-	switch (m_playerState)
+	switch (m_EnemyState)
 	{
 	case 0:
-		m_modelRender.PlayAnimation(enAnimationClip_Idle,0.5f);
+		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.5f);
 		break;
 	case 1:
-		m_modelRender.PlayAnimation(enAnimationClip_Walk,0.1f);
+		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
 		break;
 	case 2:
 		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
@@ -244,13 +200,10 @@ void Player::PlayAnimation()
 	case 3:
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
-	case 4:
-		m_modelRender.PlayAnimation(enAnimationClip_MagicAttack, 0.1f);
-		break;
 	}
 }
 
-void Player::Render(RenderContext& rc)
+void Enemy::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
 }

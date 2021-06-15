@@ -7,6 +7,7 @@ class Player;
 class GameCamera;
 class SkyCube;
 class Background;
+class Enemy;
 
 class Game : public IGameObject
 {
@@ -28,5 +29,6 @@ private:
 	GameCamera*			m_gameCamera = nullptr;
 	SkyCube*			m_skyCube = nullptr;
 	Background*			m_background = nullptr;
+	Enemy*				m_enemy = nullptr;
 };
 

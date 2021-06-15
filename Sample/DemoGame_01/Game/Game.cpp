@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "GameCamera.h"
 #include "Background.h"
+#include "Enemy.h"
 
 #include "nature/SkyCube.h"
 
@@ -18,6 +19,7 @@ Game::~Game()
 	DeleteGO(m_skyCube);
 	DeleteGO(m_player);
 	DeleteGO(m_background);
+	DeleteGO(m_enemy);
 }
 
 bool Game::Start()
@@ -40,6 +42,15 @@ bool Game::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
+		else if (objData.EqualObjectName(L"enemy") == true) {
+			//エネミー。
+			//エネミーのインスタンスを生成する。
+			m_enemy = NewGO<Enemy>(0, "enemy");
+			m_enemy->SetPosition(objData.position);
+			m_enemy->SetRotation(objData.rotation);
+			//trueにすると、レベルの方でモデルが読み込まれない。
+			return true;
+		}
 		else if (objData.EqualObjectName(L"background") == true) {
 			m_background = NewGO<Background>(0, "background");
 			m_background->SetPosition(objData.position);
@@ -49,6 +60,8 @@ bool Game::Start()
 		}
 		return true;
 		});
+
+	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 	return true;
 }
