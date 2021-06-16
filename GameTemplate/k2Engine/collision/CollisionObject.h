@@ -132,21 +132,29 @@ public:
 		});
 		return isCollision;
 	}
+	/// <summary>
+	/// ゴーストオブジェクトを取得。
+	/// </summary>
+	/// <returns>ゴーストオブジェクト。</returns>
 	PhysicsGhostObject& GetGhostObject()
 	{
 		return m_physicsGhostObject;
 	}
+	/// <summary>
+	/// btコリジョンオブジェクトを取得。
+	/// </summary>
+	/// <returns>btコリジョンオブジェクト。</returns>
 	btCollisionObject& GetbtCollisionObject()
 	{
 		return m_physicsGhostObject.GetbtCollisionObject();
 	}
 private:
-	Vector3					m_position;
-	PhysicsGhostObject		m_physicsGhostObject;
-	const char*				m_name = nullptr;
-	float					m_timer = 0.0f;
-	float					m_timeLimit = 0.0f;
-	bool					m_isEnableAutoDelete = true;
+	Vector3						m_position;
+	PhysicsGhostObject			m_physicsGhostObject;
+	const char*					m_name = nullptr;
+	float						m_timer = 0.0f;
+	float						m_timeLimit = 0.0f;
+	bool						m_isEnableAutoDelete = true;
 };
 
 class CollisionObjectManager
