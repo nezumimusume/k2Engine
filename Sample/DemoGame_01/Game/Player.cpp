@@ -32,7 +32,8 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_Damage].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_Down].Load("Assets/animData/human/down.tka");
 	m_animationClips[enAnimationClip_Down].SetLoopFlag(false);
-
+	m_animationClips[enAnimationClip_PushLever].Load("Assets/animData/human/push_lever.tka");
+	m_animationClips[enAnimationClip_PushLever].SetLoopFlag(false);
 	m_modelRender.Init("Assets/modelData/human/human.tkm",m_animationClips,enAnimationClip_Num);
 	//m_modelRender.PlayAnimation(enAnimationClip_Run);
 	//m_modelRender.Init("Assets/modelData/human.tkm");
@@ -59,6 +60,8 @@ void Player::Update()
 	Attack();
 	//魔法攻撃。
 	MagicAttack();
+	//レバーを押す。
+	PushLever();
 	//アニメーションの再生。
 	PlayAnimation();
 	//ステートの管理。
@@ -132,6 +135,10 @@ void Player::Rotation()
 
 	//回転を設定する。
 	m_modelRender.SetRotation(m_rotation);
+
+	//プレイヤーの前ベクトルを計算する。
+	m_forward = Vector3::AxisZ;
+	m_rotation.Apply(m_forward);
 }
 
 void Player::Attack()
@@ -155,9 +162,8 @@ void Player::Attack()
 		m_isAttack = true;
 		auto collisionObject = NewGO<CollisionObject>(0);
 		Vector3 collisionPosition = m_position;
-		Vector3 toPos = Vector3::AxisZ;
-		m_rotation.Apply(toPos);
-		collisionPosition += toPos * 50.0f;
+		//座標をプレイヤーの前に設定する。
+		collisionPosition += m_forward * 70.0f;
 		collisionPosition.y += 70.0f;
 		collisionObject->CreateSphere(collisionPosition, Quaternion::Identity, 40.0f);
 		collisionObject->SetTimeLimit(1.0f);
@@ -191,6 +197,35 @@ void Player::MagicAttack()
 	}
 }
 
+void Player::PushLever()
+{
+	if (m_playerState == 5)
+	{
+		if (m_modelRender.IsPlayingAnimation() == false)
+		{
+			m_isPushLever = false;
+		}
+		return;
+	}
+
+	if (GetIsEnableMove() == false)
+	{
+		return;
+	}
+
+	if (g_pad[0]->IsTrigger(enButtonA))
+	{
+		auto collisionObject = NewGO<CollisionObject>(0);
+		Vector3 collisionPosition = m_position;
+		//座標をプレイヤーの前に設定する。
+		collisionPosition += m_forward * 50.0f;
+		//collisionPosition.y += 70.0f;
+		collisionObject->CreateSphere(collisionPosition, Quaternion::Identity, 70.0f);
+		collisionObject->SetName("push_lever");
+		m_isPushLever = true;
+	}
+}
+
 void Player::ManageState()
 {
 	//地面に付いていなかったら。
@@ -210,6 +245,12 @@ void Player::ManageState()
 	if (m_isMagicAttack == true)
 	{
 		m_playerState = 4;
+		return;
+	}
+
+	if (m_isPushLever == true)
+	{
+		m_playerState = 5;
 		return;
 	}
 
@@ -255,6 +296,11 @@ void Player::PlayAnimation()
 		break;
 	case 4:
 		m_modelRender.PlayAnimation(enAnimationClip_MagicAttack, 0.1f);
+		break;
+	case 5:
+		m_modelRender.PlayAnimation(enAnimationClip_PushLever, 0.1f);
+		break;
+	default:
 		break;
 	}
 }

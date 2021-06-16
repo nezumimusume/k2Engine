@@ -8,6 +8,8 @@ class GameCamera;
 class SkyCube;
 class Background;
 class Enemy;
+class Lever;
+class Door;
 
 class Game : public IGameObject
 {
@@ -30,5 +32,7 @@ private:
 	SkyCube*			m_skyCube = nullptr;
 	Background*			m_background = nullptr;
 	Enemy*				m_enemy = nullptr;
+	std::vector<Lever*>	m_leverVector;
+	std::vector<Door*>  m_doorVector;
 };
 

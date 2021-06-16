@@ -35,6 +35,17 @@ public:
 	{
 		m_rigidBody.SetFriction(friction);
 	}
+	btCollisionObject* GetbtCollisionObject()
+	{
+		return m_rigidBody.GetBody();
+	}
+	/// <summary>
+	/// 剛体を破棄。
+	/// </summary>
+	void Release()
+	{
+		m_rigidBody.Release();
+	}
 private:
 	MeshCollider m_meshCollider;		//メッシュコライダー。
 	RigidBody m_rigidBody;				//剛体。

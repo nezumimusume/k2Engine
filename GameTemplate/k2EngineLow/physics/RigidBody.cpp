@@ -23,6 +23,11 @@ void RigidBody::Init(RigidBodyInitData& initData)
 }
 RigidBody::~RigidBody()
 {
+	Release();
+}
+
+void RigidBody::Release()
+{
 	if (m_rigidBody) {
 		PhysicsWorld::GetInstance()->RemoveRigidBody(*this);
 	}

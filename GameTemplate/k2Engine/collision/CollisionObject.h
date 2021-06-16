@@ -107,7 +107,7 @@ public:
 	/// </summary>
 	/// <param name="collisionObject">衝突判定したいコリジョンオブジェクト。</param>
 	/// <returns>衝突したらtrue。</returns>
-	bool GetIsCollision(CollisionObject& collisionObject) 
+	const bool IsHit(CollisionObject& collisionObject) const
 	{
 		bool isCollision = false;
 		PhysicsWorld::GetInstance()->ContactTest(&collisionObject.GetbtCollisionObject(), [&](const btCollisionObject& contactObject) {
@@ -122,7 +122,7 @@ public:
 	/// </summary>
 	/// <param name="collisionObject">衝突判定したいキャラコン。</param>
 	/// <returns>衝突したらtrue。</returns>
-	bool GetIsCollision(CharacterController& characterController)
+	const bool IsHit(CharacterController& characterController) const
 	{
 		bool isCollision = false;
 		PhysicsWorld::GetInstance()->ContactTest(characterController, [&](const btCollisionObject& contactObject) {
@@ -132,6 +132,22 @@ public:
 		});
 		return isCollision;
 	}
+	//何故か反応しないので現在は使用不可。
+	/*/// <summary>
+	/// コリジョンオブジェクトとフィジックススタティックオブジェクトの当たり判定。
+	/// </summary>
+	/// <param name="physicsStaticObject">衝突判定したいフィジックススタティックオブジェクト。</param>
+	/// <returns>衝突したらtrue。</returns>
+	bool IsHit(PhysicsStaticObject& physicsStaticObject)
+	{
+		bool isCollision = false;
+		PhysicsWorld::GetInstance()->ContactTest(physicsStaticObject.GetbtCollisionObject(), [&](const btCollisionObject& contactObject) {
+			if (m_physicsGhostObject.IsSelf(contactObject) == true) {
+				isCollision = true;
+			}
+			});
+		return isCollision;
+	}*/
 	/// <summary>
 	/// ゴーストオブジェクトを取得。
 	/// </summary>
@@ -183,13 +199,12 @@ public:
 		}
 		return nullptr;
 	}
-
 	/// <summary>
 	/// 名前が前方一致するコリジョンオブジェクトを検索する。こちらは1つだけ。
 	/// </summary>
 	/// <param name="name">名前。</param>
 	/// <returns>コリジョンオブジェクト。見つからなかった場合はnullptr。</returns>
-	CollisionObject* FindMatchForwardNameCollisionObject(const char* name)
+	const CollisionObject* FindMatchForwardNameCollisionObject(const char* name) const
 	{
 		for (auto collisionObject : m_collisionObjectVector)
 		{
@@ -206,35 +221,32 @@ public:
 		}
 		return nullptr;
 	}
-
 	/// <summary>
 	/// 名前が完全一致するコリジョンオブジェクトを検索する。こちらは複数。
 	/// </summary>
 	/// <param name="name">名前。</param>
 	/// <returns>コリジョンオブジェクトの配列。</returns>
-	std::vector<CollisionObject*>& FindCollisionObjects(const char* name)
+	const std::vector<CollisionObject*>& FindCollisionObjects(const char* name)
 	{
-		static std::vector<CollisionObject*> collisionObjectVector;
-		collisionObjectVector.clear();
+		m_findMatchForwardNameCollisionObjectVector.clear();
 		for (auto collisionObject : m_collisionObjectVector)
 		{
 			//名前一致！
 			if (strcmp(collisionObject->GetName(), name) == 0)
 			{
-				collisionObjectVector.push_back(collisionObject);
+				m_findMatchForwardNameCollisionObjectVector.push_back(collisionObject);
 			}
 		}
-		return collisionObjectVector;
+		return m_findMatchForwardNameCollisionObjectVector;
 	}
 	/// <summary>
 	/// 名前が前方一致するコリジョンオブジェクトを検索する。こちらは複数。
 	/// </summary>
 	/// <param name="name">名前。</param>
 	/// <returns>コリジョンオブジェクトの配列。</returns>
-	std::vector<CollisionObject*>& FindMatchForwardNameCollisionObjects(const char* name)
+	const std::vector<CollisionObject*>& FindMatchForwardNameCollisionObjects(const char* name)
 	{
-		static std::vector<CollisionObject*> collisionObjectVector;
-		collisionObjectVector.clear();
+		m_findsCollisionObjectVector.clear();
 		for (auto collisionObject : m_collisionObjectVector)
 		{
 			auto len = strlen(name);
@@ -245,10 +257,10 @@ public:
 			}
 			if (strncmp(name, collisionObject->GetName(), len) == 0)
 			{
-				collisionObjectVector.push_back(collisionObject);
+				m_findsCollisionObjectVector.push_back(collisionObject);
 			}
 		}
-		return collisionObjectVector;
+		return m_findsCollisionObjectVector;
 	}
 	/// <summary>
 	/// 配列からコリジョンオブジェクトを削除。
@@ -270,6 +282,7 @@ public:
 	}
 private:
 	std::vector<CollisionObject*>		m_collisionObjectVector;
-
+	std::vector<CollisionObject*>		m_findsCollisionObjectVector;
+	std::vector<CollisionObject*>		m_findMatchForwardNameCollisionObjectVector;
 };
 extern CollisionObjectManager* g_collisionObjectManager;

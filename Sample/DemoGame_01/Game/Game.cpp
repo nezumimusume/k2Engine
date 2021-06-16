@@ -5,6 +5,8 @@
 #include "GameCamera.h"
 #include "Background.h"
 #include "Enemy.h"
+#include "Lever.h"
+#include "Door.h"
 
 #include "nature/SkyCube.h"
 
@@ -20,6 +22,14 @@ Game::~Game()
 	DeleteGO(m_player);
 	DeleteGO(m_background);
 	DeleteGO(m_enemy);
+	for (auto lever : m_leverVector)
+	{
+		DeleteGO(lever);
+	}
+	for (auto door : m_doorVector)
+	{
+		DeleteGO(door);
+	}
 }
 
 bool Game::Start()
@@ -56,6 +66,24 @@ bool Game::Start()
 			m_background->SetPosition(objData.position);
 			m_background->SetScale(objData.scale);
 			m_background->SetRotation(objData.rotation);
+			return true;
+		}
+		else if (objData.ForwardMatchName(L"lever") == true) {
+			auto lever = NewGO<Lever>(0, "lever");
+
+			lever->SetPosition(objData.position);
+			lever->SetScale(objData.scale);
+			lever->SetRotation(objData.rotation);
+			m_leverVector.push_back(lever);
+			return true;
+		}
+		else if (objData.ForwardMatchName(L"door") == true) {
+			auto door = NewGO<Door>(0, "door");
+
+			door->SetPosition(objData.position);
+			door->SetScale(objData.scale);
+			door->SetRotation(objData.rotation);
+			m_doorVector.push_back(door);
 			return true;
 		}
 		return true;

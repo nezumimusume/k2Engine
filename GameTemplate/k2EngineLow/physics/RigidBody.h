@@ -147,6 +147,7 @@ public:
 	{
 		SetAngularFactor({ x, y, z });
 	}
+	void Release();
 private:
 	std::unique_ptr<btRigidBody>			m_rigidBody;		//剛体。
 	std::unique_ptr<btDefaultMotionState>	m_myMotionState;	//モーションステート。

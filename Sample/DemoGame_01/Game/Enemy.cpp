@@ -204,17 +204,19 @@ void Enemy::PlayAnimation()
 	case 3:
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
+	default:
+		break;
 	}
 }
 
 void Enemy::Collision()
 {
 	{
-		auto collisions = g_collisionObjectManager->FindCollisionObjects("fire");
+		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("fire");
 
 		for (auto collision : collisions)
 		{
-			if (collision->GetIsCollision(m_charaCon) == true)
+			if (collision->IsHit(m_charaCon) == true)
 			{
 				DeleteGO(this);
 			}
@@ -226,7 +228,7 @@ void Enemy::Collision()
 
 		for (auto collision : collisions)
 		{
-			if (collision->GetIsCollision(m_charaCon) == true)
+			if (collision->IsHit(m_charaCon) == true)
 			{
 				DeleteGO(this);
 			}

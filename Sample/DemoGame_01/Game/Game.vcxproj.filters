@@ -17,6 +17,8 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FireBall.cpp" />
+    <ClCompile Include="Lever.cpp" />
+    <ClCompile Include="Door.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -29,5 +31,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="FireBall.h" />
+    <ClInclude Include="Lever.h" />
+    <ClInclude Include="Door.h" />
   </ItemGroup>
 </Project>

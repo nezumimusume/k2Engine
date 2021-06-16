@@ -43,7 +43,7 @@ void FireBall::Update()
 
 	m_timer += g_gameTime->GetFrameDeltaTime();
 
-	if (m_timer >= 1.0f)
+	if (m_timer >= 0.7f)
 	{
 		DeleteGO(this);
 	}
