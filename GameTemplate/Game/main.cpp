@@ -83,6 +83,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
 		g_soundEngine->Update();
+		PhysicsWorld::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 		g_engine->EndFrame();
 	
 	}

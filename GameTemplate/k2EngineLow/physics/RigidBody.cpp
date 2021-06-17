@@ -17,6 +17,8 @@ void RigidBody::Init(RigidBodyInitData& initData)
 	btLocalInteria.setZ(initData.localInteria.z);
 	
 	btRigidBody::btRigidBodyConstructionInfo btRbInfo(initData.mass, m_myMotionState.get(), initData.collider->GetBody(), btLocalInteria);
+	//”½”­—Í‚ğİ’èB
+	btRbInfo.m_restitution = initData.restitution;
 	m_rigidBody = std::make_unique<btRigidBody>(btRbInfo);
 	
 	PhysicsWorld::GetInstance()->AddRigidBody(*this);
