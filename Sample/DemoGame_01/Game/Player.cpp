@@ -280,6 +280,7 @@ void Player::ManageState()
 
 void Player::PlayAnimation()
 {
+	m_modelRender.SetAnimationSpeed(1.0f);
 	switch (m_playerState)
 	{
 	case 0:
@@ -292,9 +293,11 @@ void Player::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
 		break;
 	case 3:
+		m_modelRender.SetAnimationSpeed(1.5f);
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
 	case 4:
+		m_modelRender.SetAnimationSpeed(1.5f);
 		m_modelRender.PlayAnimation(enAnimationClip_MagicAttack, 0.1f);
 		break;
 	case 5:

@@ -126,7 +126,14 @@ public:
 	{
 		m_isShadowCaster = flag;
 	}
-
+	/// <summary>
+	/// アニメーション再生の速度を設定する。
+	/// </summary>
+	/// <param name="animationSpeed">数値の分だけ倍にする。</param>
+	void SetAnimationSpeed(const float animationSpeed)
+	{
+		m_animationSpeed = animationSpeed;
+	}
 private:
 	/// <summary>
 	/// スケルトンの初期化。
@@ -189,5 +196,6 @@ private:
 	bool						m_isUpdateAnimation = true;			//アニメーションを更新する？
 	Skeleton					m_skeleton;							//骨。
 	bool						m_isShadowCaster = true;			//シャドウキャスターフラグ
+	float						m_animationSpeed = 1.0f;
 };
 
