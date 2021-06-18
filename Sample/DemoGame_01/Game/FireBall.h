@@ -6,7 +6,7 @@ class CollisionObject;
 class FireBall : public IGameObject
 {
 public:
-	FireBall(){}
+	FireBall();
 	~FireBall();
 	bool Start();
 	void Update();

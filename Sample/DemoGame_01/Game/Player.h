@@ -23,9 +23,13 @@ public:
 	{
 		m_rotation = rotation;
 	}
+	//動ける状態かどうかを取得。
 	bool GetIsEnableMove() const
 	{
-		return m_playerState != 3 && m_playerState != 4 && m_playerState != 5;
+		return m_playerState != 3 && 
+			m_playerState != 4 && 
+			m_playerState != 5 &&
+			m_playerState != 6;
 	}
 private:
 	void Move();
@@ -33,6 +37,9 @@ private:
 	void Attack();
 	void MagicAttack();
 	void PushLever();
+	void ReceiveDamage();
+	void MakeAttackCollision();
+	void MakeFireBall();
 	/// <summary>
 	/// アニメーションの再生。
 	/// </summary>
@@ -41,6 +48,8 @@ private:
 	/// ステートを管理。
 	/// </summary>
 	void ManageState();
+	//アニメーションイベント
+	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	enum EnAnimationClip {							//アニメーション。
 		enAnimationClip_Idle,
 		enAnimationClip_Walk,
@@ -61,8 +70,10 @@ private:
 	CharacterController	m_charaCon;
 	int					m_playerState = 0;
 	bool				m_isAttack = false;
+	bool				m_isUnderAttack = false;
 	bool				m_isMagicAttack = false;
 	bool				m_isPushLever = false;
-
+	bool				m_isReceiveDamage = false;
+	int					m_swordBoneId = -1;
 };
 

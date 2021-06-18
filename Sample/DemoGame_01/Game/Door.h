@@ -8,6 +8,7 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 	void Open();
+	void Close();
 	void SetPosition(const Vector3& position)
 	{
 		m_position = position;
@@ -19,6 +20,14 @@ public:
 	void SetScale(const Vector3& scale)
 	{
 		m_scale = scale;
+	}
+	void SetDoorNumber(const int doorNumber)
+	{
+		m_doorNumber = doorNumber;
+	}
+	const int GetDoorNumber() const
+	{
+		return m_doorNumber;
 	}
 private:
 	void PlayAnimation();
@@ -35,5 +44,6 @@ private:
 	AnimationClip				m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
 	PhysicsStaticObject			m_physicsStaticObject;
 	int							m_doorState = 0;
+	int							m_doorNumber = 0;
 };
 

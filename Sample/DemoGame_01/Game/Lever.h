@@ -22,13 +22,24 @@ public:
 	{
 		m_rotation = rotation;
 	}
+	void SetLeverNumber(const int leverNumber)
+	{
+		m_leverNumber = leverNumber;
+	}
+	const int GetLeverNumber() const
+	{
+		return m_leverNumber;
+	}
 	void PushLever();
+	void PullLever();
 private:
 	void PlayAnimation();
 	void OpenDoor();
+	void CloseDoor();
 	enum EnAnimationClip {							//アニメーション。
 		enAnimationClip_Idle,
 		enAnimationClip_On,
+		enAnimationClip_Off,
 		enAnimationClip_Num,
 	};
 	AnimationClip			m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
@@ -38,5 +49,6 @@ private:
 	Quaternion				m_rotation;
 	CollisionObject*		m_collisionObject = nullptr;
 	int						m_leverState = 0;
+	int						m_leverNumber = 0;
 };
 

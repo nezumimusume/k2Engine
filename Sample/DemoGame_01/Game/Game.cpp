@@ -74,6 +74,7 @@ bool Game::Start()
 			lever->SetPosition(objData.position);
 			lever->SetScale(objData.scale);
 			lever->SetRotation(objData.rotation);
+			lever->SetLeverNumber(objData.number);
 			m_leverVector.push_back(lever);
 			return true;
 		}
@@ -83,6 +84,7 @@ bool Game::Start()
 			door->SetPosition(objData.position);
 			door->SetScale(objData.scale);
 			door->SetRotation(objData.rotation);
+			door->SetDoorNumber(objData.number);
 			m_doorVector.push_back(door);
 			return true;
 		}

@@ -53,10 +53,19 @@ void LevelRender::Init(
 			std::swap(levelObjData.scale.y, levelObjData.scale.z);
 			//Zup⇔Yup　終わり。
 
-			levelObjData.number = m_bonelist[i]->GetNo();
+			
 
 			levelObjData.name = m_bonelist[i]->GetName();
-
+			std::wstring name = levelObjData.name;
+			//@があるかどうか、検索する。
+			int pos = name.find('@');
+			//@が存在していれば、@後の数字を取得する。
+			if (pos != std::wstring::npos)
+			{
+				std::wstring number = name.substr(pos + 1);
+				//wchar型をint型に変換している。
+				levelObjData.number = std::stoi(number.c_str());
+			}
 			//パスの作成
 			wchar_t filePath[256];
 			swprintf_s(filePath, L"Assets/modelData/%s.tkm", levelObjData.name);

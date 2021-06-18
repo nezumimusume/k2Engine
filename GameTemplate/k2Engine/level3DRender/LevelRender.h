@@ -14,7 +14,7 @@ struct LevelObjectData {
 	Quaternion rotation;	//!<回転。
 	Vector3 scale;			//!<拡大率。
 	const wchar_t* name;	//!<名前。
-	int number;
+	int number = 0;
 	/*!
 	* @brief	引数で渡したオブジェクト名のオブジェクトか調べる。
 	*@param[in]	objName		調べる名前。

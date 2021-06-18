@@ -134,6 +134,28 @@ public:
 	{
 		m_animationSpeed = animationSpeed;
 	}
+	/// <summary>
+	/// ボーンの名前からボーン番号を検索。
+	/// </summary>
+	/// <param name="boneName">ボーンの名前</param>
+	/// <returns>ボーン番号。見つからなかった場合は-1が返ってきます。</returns>
+	int FindBoneID(const wchar_t* boneName) const
+	{
+		return m_skeleton.FindBoneID(boneName);
+	}
+	/// <summary>
+	/// ボーン番号からボーンを取得。
+	/// </summary>
+	/// <param name="boneNo">ボーン番号</param>
+	/// <returns>ボーン</returns>
+	Bone* GetBone(int boneNo) const
+	{
+		return m_skeleton.GetBone(boneNo);
+	}
+	void AddAnimationEvent(AnimationEventListener eventListener)
+	{
+		m_animation.AddAnimationEventListener(eventListener);
+	}
 private:
 	/// <summary>
 	/// スケルトンの初期化。

@@ -28,7 +28,7 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_Attack].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_MagicAttack].Load("Assets/animData/human/magicattack.tka");
 	m_animationClips[enAnimationClip_MagicAttack].SetLoopFlag(false);
-	m_animationClips[enAnimationClip_Damage].Load("Assets/animData/human/damage_receive.tka");
+	m_animationClips[enAnimationClip_Damage].Load("Assets/animData/human/receivedamage.tka");
 	m_animationClips[enAnimationClip_Damage].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_Down].Load("Assets/animData/human/down.tka");
 	m_animationClips[enAnimationClip_Down].SetLoopFlag(false);
@@ -47,6 +47,12 @@ bool Player::Start()
 		m_position		//座標。
 	);
 
+	m_swordBoneId = m_modelRender.FindBoneID(L"Sword");
+
+	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
+		OnAnimationEvent(clipName, eventName);
+	});
+
 	return true;
 }
 
@@ -62,6 +68,8 @@ void Player::Update()
 	MagicAttack();
 	//レバーを押す。
 	PushLever();
+	//被ダメージ。
+	ReceiveDamage();
 	//アニメーションの再生。
 	PlayAnimation();
 	//ステートの管理。
@@ -148,6 +156,11 @@ void Player::Attack()
 		if (m_modelRender.IsPlayingAnimation() == false)
 		{
 			m_isAttack = false;
+			return;
+		}
+		if (m_isUnderAttack == true)
+		{
+			MakeAttackCollision();
 		}
 		return;
 	}
@@ -160,14 +173,7 @@ void Player::Attack()
 	if (g_pad[0]->IsTrigger(enButtonY))
 	{
 		m_isAttack = true;
-		auto collisionObject = NewGO<CollisionObject>(0);
-		Vector3 collisionPosition = m_position;
-		//座標をプレイヤーの前に設定する。
-		collisionPosition += m_forward * 70.0f;
-		collisionPosition.y += 70.0f;
-		collisionObject->CreateSphere(collisionPosition, Quaternion::Identity, 40.0f);
-		collisionObject->SetTimeLimit(1.0f);
-		collisionObject->SetName("player_attack");
+		//m_isUnderAttack = false;
 	}
 }
 
@@ -189,9 +195,6 @@ void Player::MagicAttack()
 
 	if (g_pad[0]->IsTrigger(enButtonX))
 	{
-		FireBall* fireBall = NewGO<FireBall>(0);
-		fireBall->SetPosition(m_position);
-		fireBall->SetRotation(m_rotation);
 		m_isMagicAttack = true;
 
 	}
@@ -221,8 +224,43 @@ void Player::PushLever()
 		collisionPosition += m_forward * 50.0f;
 		//collisionPosition.y += 70.0f;
 		collisionObject->CreateSphere(collisionPosition, Quaternion::Identity, 70.0f);
-		collisionObject->SetName("push_lever");
+		collisionObject->SetName("lever");
 		m_isPushLever = true;
+	}
+}
+
+void Player::MakeAttackCollision()
+{
+	auto collisionObject = NewGO<CollisionObject>(0);
+	Matrix matrix = m_modelRender.GetBone(m_swordBoneId)->GetWorldMatrix();
+	collisionObject->CreateBox(m_position, Quaternion::Identity, Vector3(100.0f, 10.0f, 10.0f));
+	collisionObject->SetWorldMatrix(matrix);
+	collisionObject->SetName("player_attack");
+}
+
+void Player::MakeFireBall()
+{
+	FireBall* fireBall = NewGO<FireBall>(0);
+	Vector3 fireBallPosition = m_position;
+	fireBallPosition.y += 70.0f;
+	fireBall->SetPosition(fireBallPosition);
+	fireBall->SetRotation(m_rotation);
+}
+
+void Player::ReceiveDamage()
+{
+	if (m_playerState == 6)
+	{
+		if (m_modelRender.IsPlayingAnimation() == false)
+		{
+			m_isReceiveDamage = false;
+		}
+		return;
+	}
+
+	if (g_pad[0]->IsTrigger(enButtonB))
+	{
+		m_isReceiveDamage = true;
 	}
 }
 
@@ -254,7 +292,12 @@ void Player::ManageState()
 		return;
 	}
 
-	//地面に付いていたら。
+	if (m_isReceiveDamage == true)
+	{
+		m_playerState = 6;
+		return;
+	}
+
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{
@@ -287,9 +330,11 @@ void Player::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_Idle,0.5f);
 		break;
 	case 1:
+		m_modelRender.SetAnimationSpeed(1.2f);
 		m_modelRender.PlayAnimation(enAnimationClip_Walk,0.1f);
 		break;
 	case 2:
+		m_modelRender.SetAnimationSpeed(1.2f);
 		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
 		break;
 	case 3:
@@ -303,8 +348,25 @@ void Player::PlayAnimation()
 	case 5:
 		m_modelRender.PlayAnimation(enAnimationClip_PushLever, 0.1f);
 		break;
+	case 6:
+		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
+		break;
 	default:
 		break;
+	}
+}
+
+void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
+{
+	(void)clipName;
+	if (wcscmp(eventName, L"attack_start") == 0) {
+		m_isUnderAttack = true;
+	}
+	else if (wcscmp(eventName, L"attack_end") == 0) {
+		m_isUnderAttack = false;
+	}
+	else if (wcscmp(eventName, L"magic_attack") == 0) {
+		MakeFireBall();
 	}
 }
 

@@ -42,6 +42,11 @@ void Door::Open()
 	m_doorState = 1;
 }
 
+void Door::Close()
+{
+	m_doorState = 2;
+}
+
 void Door::PlayAnimation()
 {
 	switch (m_doorState)
@@ -55,7 +60,6 @@ void Door::PlayAnimation()
 	default:
 		break;
 	}
-	//m_modelRender.PlayAnimation(enAnimationClip_Open);
 }
 
 void Door::ReleasePhysicsObject()

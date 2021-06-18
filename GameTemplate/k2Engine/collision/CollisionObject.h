@@ -83,16 +83,30 @@ public:
 	/// <param name="position"></param>
 	void SetPosition(const Vector3& position)
 	{
-		m_position = position;
-		m_physicsGhostObject.SetPosition(m_position);
+		m_physicsGhostObject.SetPosition(position);
 	}
 	/// <summary>
-	/// 座標を取得。
+	/// 回転を設定。
 	/// </summary>
-	/// <returns></returns>
-	const Vector3& GetPosition() const
+	/// <param name="rotation"></param>
+	void SetRotation(const Quaternion& rotation)
 	{
-		return m_position;
+		m_physicsGhostObject.SetRotation(rotation);
+	}
+	/// <summary>
+	/// 行列を設定。
+	/// </summary>
+	/// <param name="rotation">行列。</param>
+	void SetWorldMatrix(const Matrix& matrix)
+	{
+		Vector3 position;
+		position.x = matrix.m[3][0];
+		position.y = matrix.m[3][1];
+		position.z = matrix.m[3][2];
+		SetPosition(position);
+		Quaternion rotation;
+		rotation.SetRotation(matrix);
+		SetRotation(rotation);
 	}
 	/// <summary>
 	/// 自動で削除するかどうかを設定する。
@@ -165,7 +179,6 @@ public:
 		return m_physicsGhostObject.GetbtCollisionObject();
 	}
 private:
-	Vector3						m_position;
 	PhysicsGhostObject			m_physicsGhostObject;
 	const char*					m_name = nullptr;
 	float						m_timer = 0.0f;
