@@ -3,6 +3,8 @@
 
 #include "collision/CollisionObject.h"
 #include "graphics/effect/EffectEmitter.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 
 FireBall::FireBall()
 {
@@ -33,9 +35,15 @@ bool FireBall::Start()
 	m_effectEmitter->Play();
 
 	m_collisionObject = NewGO<CollisionObject>(0);
-	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 60.0f);
+	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 40.0f);
 	m_collisionObject->SetName("fire");
 	m_collisionObject->SetIsEnableAutoDelete(false);
+	// step-1 
+	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/fire.wav");
+	SoundSource* se = NewGO<SoundSource>(0);
+	se->Init(1);
+	se->Play(false);
+	se->SetVolume(0.7f);
 	return true;
 }
 

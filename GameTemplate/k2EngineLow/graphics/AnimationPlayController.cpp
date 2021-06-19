@@ -165,16 +165,21 @@ void AnimationPlayController::ProgressKeyframeNo(float deltaTime)
 		m_currentKeyFrameNo++;
 	}
 }
-void AnimationPlayController::Update(float deltaTime, Animation* animation)
+void AnimationPlayController::Update(
+	float deltaTime, 
+	Animation* animation,
+	bool isInvokeAnimationEvent )
 {
 	if(m_animationClip == nullptr){
 		return ;
 	}
 
 	m_time += deltaTime;
-		
-	//アニメーションイベントの発生。
-	InvokeAnimationEvent(animation);
+	
+	if (isInvokeAnimationEvent) {
+		//アニメーションイベントの発生。
+		InvokeAnimationEvent(animation);
+	}
 	//キーフレーム番号を進める。
 	ProgressKeyframeNo(deltaTime);
 		

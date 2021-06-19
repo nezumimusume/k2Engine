@@ -4,7 +4,9 @@
 #include "collision/CollisionObject.h"
 #include "FireBall.h"
 
-
+#include "graphics/effect/EffectEmitter.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 
 Player::Player()
 {
@@ -53,6 +55,8 @@ bool Player::Start()
 		OnAnimationEvent(clipName, eventName);
 	});
 
+	EffectEngine::GetInstance()->ResistEffect(1, u"Assets/effect/efk/enemy_slash_01.efk");
+	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/magic.wav");
 	return true;
 }
 
@@ -196,7 +200,9 @@ void Player::MagicAttack()
 	if (g_pad[0]->IsTrigger(enButtonX))
 	{
 		m_isMagicAttack = true;
-
+		SoundSource* se = NewGO<SoundSource>(0);
+		se->Init(0);
+		se->Play(false);
 	}
 }
 
@@ -342,7 +348,7 @@ void Player::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
 	case 4:
-		m_modelRender.SetAnimationSpeed(1.5f);
+		m_modelRender.SetAnimationSpeed(1.2f);
 		m_modelRender.PlayAnimation(enAnimationClip_MagicAttack, 0.1f);
 		break;
 	case 5:
@@ -361,6 +367,20 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	(void)clipName;
 	if (wcscmp(eventName, L"attack_start") == 0) {
 		m_isUnderAttack = true;
+		EffectEmitter* effectEmitter = NewGO<EffectEmitter>(0);
+		effectEmitter->Init(1);
+		effectEmitter->SetScale(Vector3::One * 12.0f);
+		Vector3 effectPosition = m_position;
+		effectPosition.y += 70.0f;
+		//effectPosition += m_forward * 10.0f;
+		effectEmitter->SetPosition(effectPosition);
+		Quaternion rotation;
+		rotation = m_rotation;
+		rotation.AddRotationDegY(360.0f);
+		rotation.AddRotationDegZ(180.0f);
+		effectEmitter->SetRotation(rotation);
+		effectEmitter->Play();
+
 	}
 	else if (wcscmp(eventName, L"attack_end") == 0) {
 		m_isUnderAttack = false;

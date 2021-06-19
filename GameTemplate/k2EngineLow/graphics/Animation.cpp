@@ -52,13 +52,14 @@ void Animation::UpdateLocalPose(float deltaTime)
 		m_numAnimationPlayController = 1;
 		m_interpolateTime = 1.0f;
 	}
+	//
 	for (int i = 0; i < m_numAnimationPlayController-1; i++) {
 		int index = GetAnimationControllerIndex(m_startAnimationPlayController, i );
-		m_animationPlayController[index].Update(deltaTime, this);
+		m_animationPlayController[index].Update(deltaTime, this, false);
 	}
 	//最後のポーズだけ進めていく。
 	int lastIndex = GetLastAnimationControllerIndex();
-	m_animationPlayController[lastIndex].Update(deltaTime, this);
+	m_animationPlayController[lastIndex].Update(deltaTime, this, true);
 		
 }
 Vector3 Animation::CalcFootstepDeltaValueInWorldSpace(Quaternion rotation, Vector3 scale) const

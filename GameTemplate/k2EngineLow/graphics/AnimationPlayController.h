@@ -63,7 +63,7 @@ public:
 	* @brief	アニメーションを進める。
 	*@param[in]	deltaTime		アニメーションを進める時間。
 	*/
-	void Update(float deltaTime, Animation* animation);
+	void Update(float deltaTime, Animation* animation,bool isInvokeAnimationEvent);
 	/*!
 		* @brief	ローカルボーン行列を取得。
 		*/
