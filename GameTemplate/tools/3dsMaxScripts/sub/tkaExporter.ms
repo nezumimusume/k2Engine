@@ -21,6 +21,7 @@ endFrame = 0
 */
 fn SaveAnimationClip=
 (
+	
     filepath = getSaveFileName caption:"" types: "animation clip (*tka)|*.tka|All Files (*.*)|*.*|"
 
     if filepath != undefined then
@@ -44,7 +45,8 @@ fn SaveAnimationClip=
         WriteLong file numKey
         --アニメーションイベントの数を出力
         numNoteTrack = numNoteTracks selection[1]
-
+		
+		
         if numNoteTrack > 0 then(
             --ノートキーの数を出力
             nt = getNoteTrack selection[1] 1

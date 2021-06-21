@@ -280,6 +280,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 				--アニメーション進行中の処理。
 				BuildOutputNodeInfo skeletonRoot -1
 				try(
+					select skeletonRoot
 					SaveAnimationClip()
 				)catch(
 					messageBox "ファイルの保存に失敗しました"

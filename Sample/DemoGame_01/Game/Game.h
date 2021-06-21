@@ -10,6 +10,7 @@ class Background;
 class Enemy;
 class Lever;
 class Door;
+class SoundSource;
 
 class Game : public IGameObject
 {
@@ -22,17 +23,19 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
+	void NotifyGameOver();
 	//////////////////////////////////////
 	// ÉÅÉìÉoïœêîÅB
 	//////////////////////////////////////
 private:
-	LevelRender			m_levelRender;
-	Player*				m_player = nullptr;
-	GameCamera*			m_gameCamera = nullptr;
-	SkyCube*			m_skyCube = nullptr;
-	Background*			m_background = nullptr;
-	Enemy*				m_enemy = nullptr;
-	std::vector<Lever*>	m_leverVector;
-	std::vector<Door*>  m_doorVector;
+	LevelRender				m_levelRender;
+	Player*					m_player = nullptr;
+	GameCamera*				m_gameCamera = nullptr;
+	SkyCube*				m_skyCube = nullptr;
+	Background*				m_background = nullptr;
+	Enemy*					m_enemy = nullptr;
+	std::vector<Lever*>		m_leverVector;
+	std::vector<Door*>		m_doorVector;
+	SoundSource*			m_bgm = nullptr;
 };
 

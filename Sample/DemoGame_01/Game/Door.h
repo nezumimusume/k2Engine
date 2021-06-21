@@ -2,13 +2,21 @@
 class Door : public IGameObject
 {
 public:
+	enum EnDoorState {
+		enDoorState_Idle,
+		enDoorState_Open,
+		enDoorState_Open_Idle,
+		enDoorState_Close,
+		enDoorState_Close_Idle
+	};
+public:
 	Door();
 	~Door();
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-	void Open();
-	void Close();
+	void NotifyOpen();
+	void NotifyClose();
 	void SetPosition(const Vector3& position)
 	{
 		m_position = position;
@@ -32,6 +40,10 @@ public:
 private:
 	void PlayAnimation();
 	void ReleasePhysicsObject();
+	void CreatePhysicsObject();
+	void ManageState();
+	void ProcessOpenStateTransition();
+	void ProcessCloseStateTransition();
 	ModelRender					m_modelRender;
 	Vector3						m_position;
 	Quaternion					m_rotation;
@@ -39,11 +51,12 @@ private:
 	enum EnAnimationClip {							//アニメーション。
 		enAnimationClip_Idle,
 		enAnimationClip_Open,
+		enAnimationClip_Close,
 		enAnimationClip_Num,
 	};
 	AnimationClip				m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
 	PhysicsStaticObject			m_physicsStaticObject;
-	int							m_doorState = 0;
+	EnDoorState					m_doorState = enDoorState_Idle;
 	int							m_doorNumber = 0;
 };
 

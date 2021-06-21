@@ -5,6 +5,14 @@ class CollisionObject;
 class Lever : public IGameObject
 {
 public:
+	enum EnLeverState {
+		enLeverState_Idle,
+		enLeverState_Push,
+		enLeverState_Push_Idle,
+		enLeverState_Pull,
+		enLeverState_Pull_Idle
+	};
+public:
 	Lever();
 	~Lever();
 	bool Start();
@@ -30,12 +38,21 @@ public:
 	{
 		return m_leverNumber;
 	}
-	void PushLever();
-	void PullLever();
 private:
+	void ProcessTransitionPushState();
+	void ProcessTransitionPushIdleState();
+	void ProcessTransitionPullState();
+	void ProcessTransitionPullIdleState();
 	void PlayAnimation();
-	void OpenDoor();
-	void CloseDoor();
+	void ManageState();
+	void ProcessIdleStateTransition();
+	void ProcessPushStateTransition();
+	void ProcessPushIdleStateTransition();
+	void ProcessPullStateTransition();
+	void ProcessPullIdleStateTransition();
+
+
+	
 	enum EnAnimationClip {							//アニメーション。
 		enAnimationClip_Idle,
 		enAnimationClip_On,
@@ -48,7 +65,7 @@ private:
 	Vector3					m_scale = Vector3::One;
 	Quaternion				m_rotation;
 	CollisionObject*		m_collisionObject = nullptr;
-	int						m_leverState = 0;
+	EnLeverState			m_leverState = enLeverState_Idle;
 	int						m_leverNumber = 0;
 };
 

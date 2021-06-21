@@ -121,10 +121,10 @@ public:
 	/// </summary>
 	/// <param name="collisionObject">衝突判定したいコリジョンオブジェクト。</param>
 	/// <returns>衝突したらtrue。</returns>
-	const bool IsHit(CollisionObject& collisionObject) const
+	const bool IsHit(CollisionObject* collisionObject) const
 	{
 		bool isCollision = false;
-		PhysicsWorld::GetInstance()->ContactTest(&collisionObject.GetbtCollisionObject(), [&](const btCollisionObject& contactObject) {
+		PhysicsWorld::GetInstance()->ContactTest(&collisionObject->GetbtCollisionObject(), [&](const btCollisionObject& contactObject) {
 			if (m_physicsGhostObject.IsSelf(contactObject) == true) {
 				isCollision = true;
 			}
@@ -178,12 +178,29 @@ public:
 	{
 		return m_physicsGhostObject.GetbtCollisionObject();
 	}
+	/// <summary>
+	/// 当たり判定が有効かどうかを設定する。
+	/// </summary>
+	/// <param name="isEnable">有効にしたいならtrue。</param>
+	void SetIsEnable(bool isEnable)
+	{
+		m_isEnable = isEnable;
+	}
+	/// <summary>
+	/// 当たり判定が有効かどうかを取得する。
+	/// </summary>
+	/// <returns>当たり判定が有効ならtrue。</returns>
+	const bool IsEnable() const
+	{
+		return m_isEnable;
+	}
 private:
-	PhysicsGhostObject			m_physicsGhostObject;
-	const char*					m_name = nullptr;
-	float						m_timer = 0.0f;
-	float						m_timeLimit = 0.0f;
-	bool						m_isEnableAutoDelete = true;
+	PhysicsGhostObject			m_physicsGhostObject;				//ゴーストオブジェクト。
+	const char*					m_name = nullptr;					//名前。
+	float						m_timer = 0.0f;						//タイマー。
+	float						m_timeLimit = 0.0f;					//削除されるまでの時間。
+	bool						m_isEnableAutoDelete = true;		//自動で削除されるならtrue。
+	bool						m_isEnable = true;					//trueなら当たり判定有効。
 };
 
 class CollisionObjectManager
@@ -207,7 +224,11 @@ public:
 			//名前一致！
 			if (strcmp(collisionObject->GetName(), name) == 0)
 			{
-				return collisionObject;
+				//当たり判定が有効なら。
+				if (collisionObject->IsEnable() == true)
+				{
+					return collisionObject;
+				}
 			}
 		}
 		return nullptr;
@@ -229,7 +250,11 @@ public:
 			}
 			if (strncmp(name, collisionObject->GetName(), len) == 0)
 			{
-				return collisionObject;
+				//当たり判定が有効なら。
+				if (collisionObject->IsEnable() == true)
+				{
+					return collisionObject;
+				}
 			}
 		}
 		return nullptr;
@@ -247,7 +272,11 @@ public:
 			//名前一致！
 			if (strcmp(collisionObject->GetName(), name) == 0)
 			{
-				m_findMatchForwardNameCollisionObjectVector.push_back(collisionObject);
+				//当たり判定が有効なら。
+				if (collisionObject->IsEnable() == true)
+				{
+					m_findMatchForwardNameCollisionObjectVector.push_back(collisionObject);
+				}
 			}
 		}
 		return m_findMatchForwardNameCollisionObjectVector;
@@ -270,7 +299,11 @@ public:
 			}
 			if (strncmp(name, collisionObject->GetName(), len) == 0)
 			{
-				m_findsCollisionObjectVector.push_back(collisionObject);
+				//当たり判定が有効なら。
+				if (collisionObject->IsEnable() == true)
+				{
+					m_findsCollisionObjectVector.push_back(collisionObject);
+				}
 			}
 		}
 		return m_findsCollisionObjectVector;

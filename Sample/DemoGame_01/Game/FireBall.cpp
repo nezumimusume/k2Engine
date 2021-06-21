@@ -29,21 +29,21 @@ bool FireBall::Start()
 	m_moveSpeed = Vector3::AxisZ;
 	m_rotation.Apply(m_moveSpeed);
 	m_position += m_moveSpeed * 50.0f;
-	m_moveSpeed *= 2000.0f;
+	m_moveSpeed *= 1200.0f;
 	m_rotation.AddRotationDegY(360.0f);
 	m_effectEmitter->SetRotation(m_rotation);
 	m_effectEmitter->Play();
 
 	m_collisionObject = NewGO<CollisionObject>(0);
 	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 40.0f);
-	m_collisionObject->SetName("fire");
+	m_collisionObject->SetName("player_fireball");
 	m_collisionObject->SetIsEnableAutoDelete(false);
 	// step-1 
-	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/fire.wav");
+	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/fire_cut_cut.wav");
 	SoundSource* se = NewGO<SoundSource>(0);
 	se->Init(1);
 	se->Play(false);
-	se->SetVolume(0.7f);
+	se->SetVolume(1.5f);
 	return true;
 }
 
@@ -55,7 +55,7 @@ void FireBall::Update()
 
 	m_timer += g_gameTime->GetFrameDeltaTime();
 
-	if (m_timer >= 0.4f)
+	if (m_timer >= 0.7f)
 	{
 		DeleteGO(this);
 	}

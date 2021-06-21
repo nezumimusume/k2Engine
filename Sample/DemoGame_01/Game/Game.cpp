@@ -9,6 +9,8 @@
 #include "Door.h"
 
 #include "nature/SkyCube.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 
 Game::Game()
 {
@@ -30,6 +32,7 @@ Game::~Game()
 	{
 		DeleteGO(door);
 	}
+	DeleteGO(m_bgm);
 }
 
 bool Game::Start()
@@ -93,7 +96,17 @@ bool Game::Start()
 
 	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
+	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/game.wav");
+	m_bgm = NewGO<SoundSource>(0);
+	m_bgm->Init(2);
+	m_bgm->Play(true);
+	m_bgm->SetVolume(0.2f);
 	return true;
+}
+
+void Game::NotifyGameOver()
+{
+
 }
 
 void Game::Update()

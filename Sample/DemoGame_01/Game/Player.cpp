@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Player.h"
 
-#include "collision/CollisionObject.h"
+#include "Game.h"
 #include "FireBall.h"
 
+#include "collision/CollisionObject.h"
 #include "graphics/effect/EffectEmitter.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
@@ -57,6 +58,7 @@ bool Player::Start()
 
 	EffectEngine::GetInstance()->ResistEffect(1, u"Assets/effect/efk/enemy_slash_01.efk");
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/magic.wav");
+	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/slash.wav");
 	return true;
 }
 
@@ -66,24 +68,23 @@ void Player::Update()
 	Move();
 	//回転処理。
 	Rotation();
+	//当たり判定。
+	Collision();
 	//攻撃処理。
 	Attack();
-	//魔法攻撃。
-	MagicAttack();
-	//レバーを押す。
-	PushLever();
-	//被ダメージ。
-	ReceiveDamage();
 	//アニメーションの再生。
 	PlayAnimation();
-	//ステートの管理。
+	//ステートの遷移処理。
 	ManageState();
 
+
+	//モデルの更新。
 	m_modelRender.Update();
 }
 
 void Player::Move()
 {
+	//移動できない状態であれば、移動処理はしない。
 	if (GetIsEnableMove() == false)
 	{
 		return;
@@ -107,6 +108,7 @@ void Player::Move()
 	//XZ成分の移動速度をクリア。
 	m_moveSpeed += cameraForward * lStick_y * 250.0f;	//奥方向への移動速度を加算。
 	m_moveSpeed += cameraRight * lStick_x * 250.0f;		//右方向への移動速度を加算。
+	//現在y軸移動は無し。
 	/*if (g_pad[0]->IsTrigger(enButtonA) //Aボタンが押されたら
 		&& m_charaCon.IsOnGround()  //かつ、地面に居たら
 		) {
@@ -124,6 +126,7 @@ void Player::Move()
 		m_moveSpeed.y = 0.0f;
 	}
 	Vector3 modelPosition = m_position;
+	//ちょっとだけモデルの座標を挙げる。
 	modelPosition.y += 2.5f;
 	m_modelRender.SetPosition(modelPosition);
 }
@@ -153,85 +156,74 @@ void Player::Rotation()
 	m_rotation.Apply(m_forward);
 }
 
+void Player::Collision()
+{
+	if (m_playerState == enPlayerState_ReceiveDamage ||
+		m_playerState == enPlayerState_Down ||
+		m_playerState == enPlayerState_GameOver)
+	{
+		return;
+	}
+
+	{
+		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_attack");
+		for (auto collision : collisions)
+		{
+			if (collision->IsHit(m_charaCon))
+			{
+				m_hp -= 1;
+				if (m_hp <= 0)
+				{
+					m_playerState = enPlayerState_Down;
+				}
+				else {
+					m_playerState = enPlayerState_ReceiveDamage;
+				}
+				SoundSource* se = NewGO<SoundSource>(0);
+				se->Init(4);
+				se->Play(false);
+				se->SetVolume(0.4f);
+				return;
+			}
+		}
+	}
+
+	{
+		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_fireball");
+		for (auto collision : collisions)
+		{
+			if (collision->IsHit(m_charaCon))
+			{
+				m_hp -= 1;
+				if (m_hp <= 0)
+				{
+					m_playerState = enPlayerState_Down;
+				}
+				else {
+					m_playerState = enPlayerState_ReceiveDamage;
+				}
+				SoundSource* se = NewGO<SoundSource>(0);
+				se->Init(4);
+				se->Play(false);
+				se->SetVolume(0.6f);
+				return;
+			}
+		}
+	}
+}
+
 void Player::Attack()
 {
-	if (m_playerState == 3)
-	{
-		if (m_modelRender.IsPlayingAnimation() == false)
-		{
-			m_isAttack = false;
-			return;
-		}
-		if (m_isUnderAttack == true)
-		{
-			MakeAttackCollision();
-		}
-		return;
-	}
-
-	if (GetIsEnableMove() == false)
+	if (m_playerState != enPlayerState_Attack)
 	{
 		return;
 	}
 
-	if (g_pad[0]->IsTrigger(enButtonY))
+	//攻撃判定中であれば。
+	if (m_isUnderAttack == true)
 	{
-		m_isAttack = true;
-		//m_isUnderAttack = false;
-	}
-}
-
-void Player::MagicAttack()
-{
-	if (m_playerState == 4)
-	{
-		if (m_modelRender.IsPlayingAnimation() == false)
-		{
-			m_isMagicAttack = false;
-		}
-		return;
-	}
-
-	if(GetIsEnableMove() == false)
-	{
-		return;
-	}
-
-	if (g_pad[0]->IsTrigger(enButtonX))
-	{
-		m_isMagicAttack = true;
-		SoundSource* se = NewGO<SoundSource>(0);
-		se->Init(0);
-		se->Play(false);
-	}
-}
-
-void Player::PushLever()
-{
-	if (m_playerState == 5)
-	{
-		if (m_modelRender.IsPlayingAnimation() == false)
-		{
-			m_isPushLever = false;
-		}
-		return;
-	}
-
-	if (GetIsEnableMove() == false)
-	{
-		return;
-	}
-
-	if (g_pad[0]->IsTrigger(enButtonA))
-	{
-		auto collisionObject = NewGO<CollisionObject>(0);
-		Vector3 collisionPosition = m_position;
-		//座標をプレイヤーの前に設定する。
-		collisionPosition += m_forward * 50.0f;
-		//collisionPosition.y += 70.0f;
-		collisionObject->CreateSphere(collisionPosition, Quaternion::Identity, 70.0f);
-		collisionObject->SetName("lever");
-		m_isPushLever = true;
+		//攻撃用のコリジョンを作成する。
+		MakeAttackCollision();
 	}
 }
 
@@ -253,77 +245,156 @@ void Player::MakeFireBall()
 	fireBall->SetRotation(m_rotation);
 }
 
-void Player::ReceiveDamage()
+void Player::MakePushLeverCollision()
 {
-	if (m_playerState == 6)
-	{
-		if (m_modelRender.IsPlayingAnimation() == false)
-		{
-			m_isReceiveDamage = false;
-		}
-		return;
-	}
-
-	if (g_pad[0]->IsTrigger(enButtonB))
-	{
-		m_isReceiveDamage = true;
-	}
+	auto collisionObject = NewGO<CollisionObject>(0);
+	Vector3 collisionPosition = m_position;
+	//座標をプレイヤーの前に設定する。
+	collisionPosition += m_forward * 50.0f;
+	//collisionPosition.y += 70.0f;
+	collisionObject->CreateSphere(collisionPosition, Quaternion::Identity, 70.0f);
+	collisionObject->SetName("player_lever");
 }
 
-void Player::ManageState()
+void Player::ProcessCommonStateTranstion()
 {
-	//地面に付いていなかったら。
-	/*if (m_charaCon.IsOnGround() == false)
-	{
-		m_playerState = 
-		return;
-	}
-	*/
-
-	if (m_isAttack == true)
-	{
-		m_playerState = 3;
-		return;
-	}
-
-	if (m_isMagicAttack == true)
-	{
-		m_playerState = 4;
-		return;
-	}
-
-	if (m_isPushLever == true)
-	{
-		m_playerState = 5;
-		return;
-	}
-
-	if (m_isReceiveDamage == true)
-	{
-		m_playerState = 6;
-		return;
-	}
-
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{
-		if (m_moveSpeed.LengthSq() >= 200*200.0f)
+		if (m_moveSpeed.LengthSq() >= 200.0f * 200.0f)
 		{
 			//ステートを走りにする。
-			m_playerState = 2;
+			m_playerState = enPlayerState_Run;
 		}
 		else
 		{
 			//歩きにする。
-			m_playerState = 1;
+			m_playerState = enPlayerState_Walk;
 		}
-		
+
 	}
 	//xとzの移動速度が無かったら(スティックの入力が無かったら)。
 	else
 	{
 		//ステートを待機にする。
-		m_playerState = 0;
+		m_playerState = enPlayerState_Idle;
+	}
+
+	if (g_pad[0]->IsTrigger(enButtonY))
+	{
+		m_playerState = enPlayerState_Attack;
+		m_isUnderAttack = false;
+	}
+	else if (g_pad[0]->IsTrigger(enButtonX))
+	{
+		m_playerState = enPlayerState_MagicAttack;
+		SoundSource* se = NewGO<SoundSource>(0);
+		se->Init(0);
+		se->SetVolume(0.5f);
+		se->Play(false);
+	}
+	else if (g_pad[0]->IsTrigger(enButtonA))
+	{
+		m_playerState = enPlayerState_PushLever;
+		MakePushLeverCollision();
+	}
+}
+
+void Player::ProcessIdleStateTransition()
+{
+	ProcessCommonStateTranstion();
+}
+
+void Player::ProcessWalkStateTransition()
+{
+	ProcessCommonStateTranstion();
+}
+
+void Player::ProcessRunStateTransition()
+{
+	ProcessCommonStateTranstion();
+}
+
+void Player::ProcessAttackStateTransition()
+{
+	//攻撃アニメーションの再生が終わったら。
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		//ステートを遷移する。
+		ProcessCommonStateTranstion();
+	}
+}
+
+void Player::ProcessMagicAttackStateTransition()
+{
+	//魔法攻撃アニメーションの再生が終わったら。
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		//ステートを遷移する。
+		ProcessCommonStateTranstion();
+	}
+}
+
+void Player::ProcessReceiveDamageStateTransition()
+{
+	//被ダメージアニメーションの再生が終わったら。
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		//ステートを遷移する。
+		ProcessCommonStateTranstion();
+	}
+}
+
+void Player::ProcessPushLeverStateTransition()
+{
+	//レバーを押すアニメーションの再生が終わったら。
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		//ステートを遷移する。
+		ProcessCommonStateTranstion();
+	}
+}
+
+void Player::ProcessDownStateTransition()
+{
+	//ダウンアニメーションの再生が終わったら。
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		//ゲームオーバーを通知する。
+		Game* game = FindGO<Game>("game");
+		game->NotifyGameOver();
+		m_playerState = enPlayerState_GameOver;
+	}
+}
+
+void Player::ManageState()
+{
+	switch (m_playerState)
+	{
+	case enPlayerState_Idle:
+		ProcessIdleStateTransition();
+		break;
+	case enPlayerState_Walk:
+		ProcessWalkStateTransition();
+		break;
+	case enPlayerState_Run:
+		ProcessRunStateTransition();
+		break;
+	case enPlayerState_Attack:
+		ProcessAttackStateTransition();
+		break;
+	case enPlayerState_MagicAttack:
+		ProcessMagicAttackStateTransition();
+		break;
+	case enPlayerState_PushLever:
+		ProcessPushLeverStateTransition();
+		break;
+	case enPlayerState_ReceiveDamage:
+		ProcessReceiveDamageStateTransition();
+		break;
+	case enPlayerState_Down:
+		ProcessDownStateTransition();
+		break;
 	}
 }
 
@@ -332,30 +403,35 @@ void Player::PlayAnimation()
 	m_modelRender.SetAnimationSpeed(1.0f);
 	switch (m_playerState)
 	{
-	case 0:
-		m_modelRender.PlayAnimation(enAnimationClip_Idle,0.5f);
+	case enPlayerState_Idle:
+		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.5f);
 		break;
-	case 1:
+	case enPlayerState_Walk:
 		m_modelRender.SetAnimationSpeed(1.2f);
-		m_modelRender.PlayAnimation(enAnimationClip_Walk,0.1f);
+		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
 		break;
-	case 2:
+	case enPlayerState_Run:
 		m_modelRender.SetAnimationSpeed(1.2f);
 		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
 		break;
-	case 3:
+	case enPlayerState_Attack:
 		m_modelRender.SetAnimationSpeed(1.5f);
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
-	case 4:
+	case enPlayerState_MagicAttack:
 		m_modelRender.SetAnimationSpeed(1.2f);
 		m_modelRender.PlayAnimation(enAnimationClip_MagicAttack, 0.1f);
 		break;
-	case 5:
+	case enPlayerState_PushLever:
 		m_modelRender.PlayAnimation(enAnimationClip_PushLever, 0.1f);
 		break;
-	case 6:
+	case enPlayerState_ReceiveDamage:
 		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
+		break;
+	case enPlayerState_Down:
+		m_modelRender.PlayAnimation(enAnimationClip_Down, 0.1f);
+		break;
+	case enPlayerState_GameOver:
 		break;
 	default:
 		break;
@@ -367,6 +443,7 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	(void)clipName;
 	if (wcscmp(eventName, L"attack_start") == 0) {
 		m_isUnderAttack = true;
+		//攻撃エフェクトを発生させる。
 		EffectEmitter* effectEmitter = NewGO<EffectEmitter>(0);
 		effectEmitter->Init(1);
 		effectEmitter->SetScale(Vector3::One * 12.0f);
@@ -380,7 +457,10 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		rotation.AddRotationDegZ(180.0f);
 		effectEmitter->SetRotation(rotation);
 		effectEmitter->Play();
-
+		SoundSource* se = NewGO<SoundSource>(0);
+		se->Init(3);
+		se->Play(false);
+		se->SetVolume(0.8f);
 	}
 	else if (wcscmp(eventName, L"attack_end") == 0) {
 		m_isUnderAttack = false;

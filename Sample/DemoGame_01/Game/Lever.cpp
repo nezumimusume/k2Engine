@@ -38,45 +38,33 @@ bool Lever::Start()
 
 void Lever::Update()
 {
-	PushLever();
-	PullLever();
 	PlayAnimation();
-	OpenDoor();
-	CloseDoor();
-
+	ManageState();
 	m_modelRender.Update();
 }
 
-void Lever::PushLever()
+void Lever::ProcessTransitionPushState()
 {
-	if (m_leverState != 0 && m_leverState != 4)
-	{
-		return;
-	}
-	auto collisions = g_collisionObjectManager->FindCollisionObjects("lever");
+	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_lever");
 
 	for (auto collision : collisions)
 	{
-		if (collision->IsHit(*m_collisionObject) == true)
+		if (collision->IsHit(m_collisionObject) == true)
 		{
-			m_leverState = 1;
+			m_leverState = enLeverState_Push;
 		}
 	}
 }
 
-void Lever::PullLever()
+void Lever::ProcessTransitionPullState()
 {
-	if (m_leverState != 3)
-	{
-		return;
-	}
-	auto collisions = g_collisionObjectManager->FindCollisionObjects("lever");
+	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_lever");
 
 	for (auto collision : collisions)
 	{
-		if (collision->IsHit(*m_collisionObject) == true)
+		if (collision->IsHit(m_collisionObject) == true)
 		{
-			m_leverState = 2;
+			m_leverState = enLeverState_Pull;
 			break;
 		}
 	}
@@ -86,13 +74,13 @@ void Lever::PlayAnimation()
 {
 	switch (m_leverState)
 	{
-	case 0:
+	case enLeverState_Idle:
 		m_modelRender.PlayAnimation(enAnimationClip_Idle);
 		break;
-	case 1:
+	case enLeverState_Push:
 		m_modelRender.PlayAnimation(enAnimationClip_On);
 		break;
-	case 2:
+	case enLeverState_Pull:
 		m_modelRender.PlayAnimation(enAnimationClip_Off);
 		break;
 	default:
@@ -100,47 +88,93 @@ void Lever::PlayAnimation()
 	}
 }
 
-void Lever::OpenDoor()
+void Lever::ProcessTransitionPushIdleState()
 {
-	if (m_leverState == 1)
+	if (m_modelRender.IsPlayingAnimation() == false)
 	{
-		if (m_modelRender.IsPlayingAnimation() == false)
+		auto doors = FindGOs<Door>("door");
+		for (auto door : doors)
 		{
-			auto doors = FindGOs<Door>("door");
-			for (auto door : doors)
+			//番号が同じなら、ドアをオープン。
+			if (m_leverNumber == door->GetDoorNumber())
 			{
-				//番号が同じなら、ドアをオープン。
-				if (m_leverNumber == door->GetDoorNumber())
-				{
-					door->Open();
-					m_leverState = 3;
-					break;
-				}
+				door->NotifyOpen();
+				m_leverState = enLeverState_Push_Idle;
+				break;
 			}
-			
 		}
 	}
 }
 
-void Lever::CloseDoor()
+void Lever::ProcessTransitionPullIdleState()
 {
-	if (m_leverState == 2)
+	if (m_modelRender.IsPlayingAnimation() == false)
 	{
-		if (m_modelRender.IsPlayingAnimation() == false)
+		auto doors = FindGOs<Door>("door");
+		for (auto door : doors)
 		{
-			auto doors = FindGOs<Door>("door");
-			for (auto door : doors)
+			//番号が同じなら、ドアをクローズ。
+			if (m_leverNumber == door->GetDoorNumber())
 			{
-				//番号が同じなら、ドアをオープン。
-				if (m_leverNumber == door->GetDoorNumber())
-				{
-					door->Close();
-					m_leverState = 4;
-					break;
-				}
+				door->NotifyClose();
+				m_leverState = enLeverState_Pull_Idle;
+				break;
 			}
-
 		}
+	}
+}
+
+void Lever::ProcessIdleStateTransition()
+{
+	//待機状態から押す状態への遷移。
+	ProcessTransitionPushState();
+}
+
+void Lever::ProcessPushStateTransition()
+{
+	//押す状態から待機状態への遷移。
+	ProcessTransitionPushIdleState();
+}
+
+void Lever::ProcessPushIdleStateTransition()
+{
+	//待機状態から引く状態への遷移。
+	ProcessTransitionPullState();
+}
+
+void Lever::ProcessPullStateTransition()
+{
+	//引く状態から待機状態への遷移。
+	ProcessTransitionPullIdleState();
+}
+
+void Lever::ProcessPullIdleStateTransition()
+{
+	//待機状態から押す状態への遷移。
+	ProcessTransitionPushState();
+}
+
+void Lever::ManageState()
+{
+	switch (m_leverState)
+	{
+	case enLeverState_Idle:
+		ProcessIdleStateTransition();
+		break;
+	case enLeverState_Push:
+		ProcessPushStateTransition();
+		break;
+	case enLeverState_Push_Idle:
+		ProcessPushIdleStateTransition();
+		break;
+	case enLeverState_Pull:
+		ProcessPullStateTransition();
+		break;
+	case enLeverState_Pull_Idle:
+		ProcessPullIdleStateTransition();
+		break;
+	default:
+		break;
 	}
 }
 
