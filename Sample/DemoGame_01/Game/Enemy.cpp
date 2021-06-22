@@ -33,12 +33,16 @@ bool Enemy::Start()
 	m_animationClips[enAnimationClip_Run].SetLoopFlag(true);
 	m_animationClips[enAnimationClip_Attack].Load("Assets/animData/enemy/attack.tka");
 	m_animationClips[enAnimationClip_Attack].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_MagicAttack].Load("Assets/animData/enemy/magicattack.tka");
+	m_animationClips[enAnimationClip_MagicAttack].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_Damage].Load("Assets/animData/enemy/receivedamage.tka");
 	m_animationClips[enAnimationClip_Damage].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_Down].Load("Assets/animData/enemy/down.tka");
 	m_animationClips[enAnimationClip_Down].SetLoopFlag(false);
 	m_modelRender.Init("Assets/modelData/enemy/enemy.tkm", m_animationClips, enAnimationClip_Num);
 	m_modelRender.SetPosition(m_position);
+	m_spawnPosition = m_position;
+	m_modelRender.SetRotation(m_rotation);
 
 
 	//キャラクターコントローラーを初期化。
@@ -55,6 +59,7 @@ bool Enemy::Start()
 		});
 
 	EffectEngine::GetInstance()->ResistEffect(1, u"Assets/effect/efk/enemy_slash_01.efk");
+	EffectEngine::GetInstance()->ResistEffect(2, u"Assets/effect/efk/cast_fire.efk");
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/magic.wav");
 	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/slash.wav");
 	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/hit.wav");
@@ -67,8 +72,8 @@ bool Enemy::Start()
 
 void Enemy::Update()
 {
-	//移動処理。
-	Move(); 
+	//追跡処理。
+	Chase();
 	//回転処理。
 	Rotation();
 	//当たり判定。
@@ -87,55 +92,6 @@ void Enemy::Update()
 	
 	//モデルの更新。
 	m_modelRender.Update();
-}
-
-void Enemy::Move()
-{
-	//移動できない状態であれば、移動処理はしない。
-	if (GetIsEnableMove() == false)
-	{
-		return;
-	}
-
-	m_moveSpeed.x = 0.0f;
-	m_moveSpeed.z = 0.0f;
-
-	//このフレームの移動量を求める。
-	//左スティックの入力量を受け取る。
-	float lStick_x = g_pad[0]->GetLStickXF();
-	float lStick_y = g_pad[0]->GetLStickYF();
-	//カメラの前方方向と右方向を取得。
-	Vector3 cameraForward = g_camera3D->GetForward();
-	Vector3 cameraRight = g_camera3D->GetRight();
-	//XZ平面での前方方向、右方向に変換する。
-	cameraForward.y = 0.0f;
-	cameraForward.Normalize();
-	cameraRight.y = 0.0f;
-	cameraRight.Normalize();
-	//XZ成分の移動速度をクリア。
-	//m_moveSpeed += cameraForward * lStick_y * 250.0f;	//奥方向への移動速度を加算。
-	//m_moveSpeed += cameraRight * lStick_x * 250.0f;		//右方向への移動速度を加算。
-	//現在y軸移動は無し。
-	/*if (g_pad[0]->IsTrigger(enButtonA) //Aボタンが押されたら
-		&& m_charaCon.IsOnGround()  //かつ、地面に居たら
-		) {
-		//ジャンプする。
-		m_moveSpeed.y = 400.0f;	//上方向に速度を設定して、
-	}
-	*/
-
-	//m_moveSpeed.y -= 980.0f * g_gameTime->GetFrameDeltaTime();
-	//キャラクターコントローラーを使用して、座標を更新。
-
-	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
-	if (m_charaCon.IsOnGround()) {
-		//地面についた。
-		m_moveSpeed.y = 0.0f;
-	}
-	Vector3 modelPosition = m_position;
-	//ちょっとだけモデルの座標を挙げる。
-	modelPosition.y += 2.5f;
-	m_modelRender.SetPosition(modelPosition);
 }
 
 void Enemy::Rotation()
@@ -165,7 +121,21 @@ void Enemy::Rotation()
 
 void Enemy::Chase()
 {
+	//追跡ステートでないなら、追跡処理はしない。
+	if (m_enemyState != enEnemyState_Chase)
+	{
+		return;
+	}
 
+	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
+	if (m_charaCon.IsOnGround()) {
+		//地面についた。
+		m_moveSpeed.y = 0.0f;
+	}
+	Vector3 modelPosition = m_position;
+	//ちょっとだけモデルの座標を挙げる。
+	modelPosition.y += 2.5f;
+	m_modelRender.SetPosition(modelPosition);
 }
 
 void Enemy::Collision()
@@ -264,72 +234,127 @@ void Enemy::MakeAttackCollision()
 	collisionObject->SetName("enemy_attack");
 }
 
-void Enemy::ProcessCommonStateTranstion()
+void Enemy::MakeFireBall()
 {
+	FireBall* fireBall = NewGO<FireBall>(0);
+	Vector3 fireBallPosition = m_position;
+	fireBallPosition.y += 70.0f;
+	fireBall->SetPosition(fireBallPosition);
+	fireBall->SetRotation(m_rotation);
+	fireBall->SetEnMagician(FireBall::enMagician_Enemy);
+}
+
+void Enemy::ProcessCommonStateTransition()
+{
+	m_idleTimer = 0.0f;
+	m_chaseTimer = 0.0f;
+
+	{
+		Vector3 diff = m_spawnPosition - m_position;
+
+	}
+
+
 	Vector3 diff = m_player->GetPosition() - m_position;
-
+	
 	//距離がある程度近かったら。
-	/*if (diff.LengthSq() <= 600.0 * 600.0f)
+	if (diff.LengthSq() <= 650.0 * 650.0f)
 	{
-		int ram = rand() % 100;
-		if (ram > 70)
+		diff.Normalize();
+		//移動速度を設定する。
+		m_moveSpeed = diff * 150.0f;
+		//攻撃できる距離なら。
+		if (IsCanAttack())
 		{
-			m_enemyState = enEnemyState_Chase;
+			//乱数によって、攻撃するか待機させるかを決定する。	
+			int ram = rand() % 100;
+			if (ram > 30)
+			{
+				//攻撃ステートに移行する。
+				m_enemyState = enEnemyState_Attack;
+				m_isUnderAttack = false;
+				return;
+			}
+			else
+			{
+				//待機ステートに移行する。
+				m_enemyState = enEnemyState_Idle;
+				return;
+			}
+		
 		}
-		else {
-			m_enemyState = enEnemyState_Chase;
+		//攻撃できない距離なら。
+		else 
+		{
+			//乱数によって、追跡させるか魔法攻撃をするか決定する。	
+			int ram = rand() % 100;
+			if (ram > 40)
+			{
+				//追跡ステートに移行する。
+				m_enemyState = enEnemyState_Chase;
+				return;
+			
+			}
+			
+			else {
+				//魔法攻撃ステートに移行する。
+				m_enemyState = enEnemyState_MagicAttack;
+				EffectEmitter* effect = NewGO<EffectEmitter>(0);
+				effect->Init(2);
+				Vector3 effectPosition = m_position;
+				effect->SetPosition(m_position);
+				effect->SetScale(Vector3::One * 10.0f);
+				effect->Play();
+				return;
+			}
 		}
 	}
-	*/
-	//xかzの移動速度があったら(スティックの入力があったら)。
-	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
-	{
-		/*if (m_moveSpeed.LengthSq() >= 200.0f * 200.0f)
-		{
-			//ステートを走りにする。
-			m_enemyState = enEnemyState_Run;
-		}
-		else
-		{
-			//歩きにする。
-			m_enemyState = enEnemyState_Walk;
-		}
-		*/
-		m_enemyState = enEnemyState_Chase;
-
-	}
-	//xとzの移動速度が無かったら(スティックの入力が無かったら)。
 	else
 	{
-		//ステートを待機にする。
+		//待機ステートに移行する。
 		m_enemyState = enEnemyState_Idle;
-	}
-
-	if (g_pad[0]->IsTrigger(enButtonY))
-	{
-		m_enemyState = enEnemyState_Attack;
-		m_isUnderAttack = false;
+		return;
+	
 	}
 }
 
 void Enemy::ProcessIdleStateTransition()
 {
-	ProcessCommonStateTranstion();
+	m_idleTimer += g_gameTime->GetFrameDeltaTime();
+	//待機時間がある程度経過したら。
+	if (m_idleTimer >= 0.9f)
+	{
+		//他のステートへ移行する。
+		ProcessCommonStateTransition();
+	}
+	
 }
 
 void Enemy::ProcessWalkStateTransition()
 {
-	ProcessCommonStateTranstion();
+	ProcessCommonStateTransition();
 }
 
 void Enemy::ProcessRunStateTransition()
 {
-	ProcessCommonStateTranstion();
+	ProcessCommonStateTransition();
 }
 
 void Enemy::ProcessChaseStateTransition()
 {
-	ProcessCommonStateTranstion();
+	//攻撃できる距離なら。
+	if (IsCanAttack())
+	{
+		//追跡ステートから他のステートへ移行する。
+		ProcessCommonStateTransition();
+		return;
+	}
+	m_chaseTimer += g_gameTime->GetFrameDeltaTime();
+	//追跡時間がある程度経過したら。
+	if (m_chaseTimer >= 1.5f)
+	{
+		ProcessCommonStateTransition();
+	}
 }
 
 void Enemy::ProcessAttackStateTransition()
@@ -338,7 +363,17 @@ void Enemy::ProcessAttackStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//ステートを遷移する。
-		ProcessCommonStateTranstion();
+		ProcessCommonStateTransition();
+	}
+}
+
+void Enemy::ProcessMagicAttackStateTransition()
+{
+	//魔法攻撃アニメーションの再生が終わったら。
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		//ステートを遷移する。
+		ProcessCommonStateTransition();
 	}
 }
 
@@ -347,8 +382,12 @@ void Enemy::ProcessReceiveDamageStateTransition()
 	//被ダメージアニメーションの再生が終わったら。
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
-		//ステートを遷移する。
-		ProcessCommonStateTranstion();
+		//攻撃されたら距離関係無しに、取り敢えず追跡させる。
+		m_enemyState = enEnemyState_Chase;
+		Vector3 diff = m_player->GetPosition() - m_position;
+		diff.Normalize();
+		//移動速度を設定する。
+		m_moveSpeed = diff * 150.0f;
 	}
 }
 
@@ -381,6 +420,9 @@ void Enemy::ManageState()
 	case enEnemyState_Attack:
 		ProcessAttackStateTransition();
 		break;
+	case enEnemyState_MagicAttack:
+		ProcessMagicAttackStateTransition();
+		break;
 	case enEnemyState_ReceiveDamage:
 		ProcessReceiveDamageStateTransition();
 		break;
@@ -412,10 +454,15 @@ void Enemy::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
 		break;
 	case enEnemyState_Attack:
-		m_modelRender.SetAnimationSpeed(1.5f);
+		m_modelRender.SetAnimationSpeed(1.6f);
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
+	case enEnemyState_MagicAttack:
+		m_modelRender.SetAnimationSpeed(1.2f);
+		m_modelRender.PlayAnimation(enAnimationClip_MagicAttack, 0.1f);
+		break;
 	case enEnemyState_ReceiveDamage:
+		m_modelRender.SetAnimationSpeed(1.3f);
 		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
 		break;
 	case enEnemyState_Down:
@@ -453,6 +500,20 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	else if (wcscmp(eventName, L"attack_end") == 0) {
 		m_isUnderAttack = false;
 	}
+	else if (wcscmp(eventName, L"magic_attack") == 0) {
+		MakeFireBall();
+	}
+}
+
+const bool Enemy::IsCanAttack() const
+{
+	Vector3 diff = m_player->GetPosition() - m_position;
+	//距離がかなり近かったら。
+	if (diff.LengthSq() <= 100.0f * 100.0f)
+	{
+		return true;
+	}
+	return false;
 }
 
 void Enemy::Render(RenderContext& rc)

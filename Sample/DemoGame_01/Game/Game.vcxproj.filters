@@ -19,6 +19,8 @@
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="Lever.cpp" />
     <ClCompile Include="Door.cpp" />
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="HUD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -33,5 +35,7 @@
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="Lever.h" />
     <ClInclude Include="Door.h" />
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="HUD.h" />
   </ItemGroup>
 </Project>

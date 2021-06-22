@@ -23,7 +23,6 @@ Game::~Game()
 	DeleteGO(m_skyCube);
 	DeleteGO(m_player);
 	DeleteGO(m_background);
-	DeleteGO(m_enemy);
 	for (auto lever : m_leverVector)
 	{
 		DeleteGO(lever);
@@ -32,6 +31,12 @@ Game::~Game()
 	{
 		DeleteGO(door);
 	}
+	const auto& enemys = FindGOs<Enemy>("enemy");
+	for (auto enemy : enemys)
+	{
+		DeleteGO(enemy);
+	}
+
 	DeleteGO(m_bgm);
 }
 
@@ -55,12 +60,12 @@ bool Game::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
-		else if (objData.EqualObjectName(L"enemy") == true) {
+		else if (objData.ForwardMatchName(L"enemy") == true) {
 			//エネミー。
 			//エネミーのインスタンスを生成する。
-			m_enemy = NewGO<Enemy>(0, "enemy");
-			m_enemy->SetPosition(objData.position);
-			m_enemy->SetRotation(objData.rotation);
+			Enemy* enemy = NewGO<Enemy>(0, "enemy");
+			enemy->SetPosition(objData.position);
+			enemy->SetRotation(objData.rotation);
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}

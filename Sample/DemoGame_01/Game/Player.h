@@ -78,7 +78,7 @@ private:
 	/// <summary>
 	/// 共通のステート遷移処理。
 	/// </summary>
-	void ProcessCommonStateTranstion();
+	void ProcessCommonStateTransition();
 	/// <summary>
 	/// 待機ステートの遷移処理。
 	/// </summary>

@@ -4,6 +4,8 @@
 #include "Door.h"
 
 #include "collision/CollisionObject.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 
 Lever::Lever()
 {
@@ -33,6 +35,8 @@ bool Lever::Start()
 	m_collisionObject->CreateBox(m_position, m_rotation, Vector3::One * 70.0f);
 	m_collisionObject->SetName("lever");
 	m_collisionObject->SetIsEnableAutoDelete(false);
+
+	g_soundEngine->ResistWaveFileBank(6, "Assets/sound/lever.wav");
 	return true;
 }
 
@@ -52,6 +56,10 @@ void Lever::ProcessTransitionPushState()
 		if (collision->IsHit(m_collisionObject) == true)
 		{
 			m_leverState = enLeverState_Push;
+			SoundSource* se = NewGO<SoundSource>(0);
+			se->Init(6);
+			se->Play(false);
+			se->SetVolume(0.7f);
 		}
 	}
 }
@@ -65,6 +73,10 @@ void Lever::ProcessTransitionPullState()
 		if (collision->IsHit(m_collisionObject) == true)
 		{
 			m_leverState = enLeverState_Pull;
+			SoundSource* se = NewGO<SoundSource>(0);
+			se->Init(6);
+			se->Play(false);
+			se->SetVolume(0.7f);
 			break;
 		}
 	}

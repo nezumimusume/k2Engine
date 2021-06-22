@@ -1,7 +1,7 @@
 #pragma once
 
 /// <summary>
-/// スプライトレンラー。
+/// スプライトレンダラー。
 /// </summary>
 class SpriteRender : public IRenderer
 {

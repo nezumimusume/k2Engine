@@ -35,8 +35,16 @@ bool FireBall::Start()
 	m_effectEmitter->Play();
 
 	m_collisionObject = NewGO<CollisionObject>(0);
-	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 40.0f);
-	m_collisionObject->SetName("player_fireball");
+	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 35.0f);
+	if (m_enMagician == enMagician_Player)
+	{
+		m_collisionObject->SetName("player_fireball");
+	}
+	else if (m_enMagician == enMagician_Enemy)
+	{
+		m_collisionObject->SetName("enemy_fireball");
+	}
+	
 	m_collisionObject->SetIsEnableAutoDelete(false);
 	// step-1 
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/fire_cut_cut.wav");

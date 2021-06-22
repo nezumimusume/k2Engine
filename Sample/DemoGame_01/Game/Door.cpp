@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Door.h"
 
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
+
 Door::Door()
 {
 
@@ -26,6 +29,8 @@ bool Door::Start()
 
 	m_modelRender.Update();
 	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+
+	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/door_cut_pitch.wav");
 	return true;
 }
 
@@ -40,11 +45,19 @@ void Door::Update()
 void Door::NotifyOpen()
 {
 	m_doorState = enDoorState_Open;
+	SoundSource* se = NewGO<SoundSource>(0);
+	se->Init(5);
+	se->Play(false);
+	se->SetVolume(0.7f);
 }
 
 void Door::NotifyClose()
 {
 	m_doorState = enDoorState_Close;
+	SoundSource* se = NewGO<SoundSource>(0);
+	se->Init(5);
+	se->Play(false);
+	se->SetVolume(0.7f);
 }
 
 void Door::PlayAnimation()
@@ -56,9 +69,11 @@ void Door::PlayAnimation()
 		break;
 	case enDoorState_Open:
 		m_modelRender.PlayAnimation(enAnimationClip_Open);
+		m_modelRender.SetAnimationSpeed(0.6f);
 		break;
 	case enDoorState_Close:
 		m_modelRender.PlayAnimation(enAnimationClip_Close);
+		m_modelRender.SetAnimationSpeed(0.6f);
 		break;
 	default:
 		break;

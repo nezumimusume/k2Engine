@@ -57,6 +57,8 @@ bool Player::Start()
 	});
 
 	EffectEngine::GetInstance()->ResistEffect(1, u"Assets/effect/efk/enemy_slash_01.efk");
+	EffectEngine::GetInstance()->ResistEffect(2, u"Assets/effect/efk/cast_fire.efk");
+
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/magic.wav");
 	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/slash.wav");
 	return true;
@@ -231,7 +233,7 @@ void Player::MakeAttackCollision()
 {
 	auto collisionObject = NewGO<CollisionObject>(0);
 	Matrix matrix = m_modelRender.GetBone(m_swordBoneId)->GetWorldMatrix();
-	collisionObject->CreateBox(m_position, Quaternion::Identity, Vector3(100.0f, 10.0f, 10.0f));
+	collisionObject->CreateBox(m_position, Quaternion::Identity, Vector3(110.0f, 15.0f, 15.0f));
 	collisionObject->SetWorldMatrix(matrix);
 	collisionObject->SetName("player_attack");
 }
@@ -243,6 +245,7 @@ void Player::MakeFireBall()
 	fireBallPosition.y += 70.0f;
 	fireBall->SetPosition(fireBallPosition);
 	fireBall->SetRotation(m_rotation);
+	fireBall->SetEnMagician(FireBall::enMagician_Player);
 }
 
 void Player::MakePushLeverCollision()
@@ -256,7 +259,7 @@ void Player::MakePushLeverCollision()
 	collisionObject->SetName("player_lever");
 }
 
-void Player::ProcessCommonStateTranstion()
+void Player::ProcessCommonStateTransition()
 {
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
@@ -292,6 +295,13 @@ void Player::ProcessCommonStateTranstion()
 		se->Init(0);
 		se->SetVolume(0.5f);
 		se->Play(false);
+
+		EffectEmitter* effect = NewGO<EffectEmitter>(0);
+		effect->Init(2);
+		Vector3 effectPosition = m_position;
+		effect->SetPosition(m_position);
+		effect->SetScale(Vector3::One * 10.0f);
+		effect->Play();
 	}
 	else if (g_pad[0]->IsTrigger(enButtonA))
 	{
@@ -302,17 +312,17 @@ void Player::ProcessCommonStateTranstion()
 
 void Player::ProcessIdleStateTransition()
 {
-	ProcessCommonStateTranstion();
+	ProcessCommonStateTransition();
 }
 
 void Player::ProcessWalkStateTransition()
 {
-	ProcessCommonStateTranstion();
+	ProcessCommonStateTransition();
 }
 
 void Player::ProcessRunStateTransition()
 {
-	ProcessCommonStateTranstion();
+	ProcessCommonStateTransition();
 }
 
 void Player::ProcessAttackStateTransition()
@@ -321,7 +331,7 @@ void Player::ProcessAttackStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//ステートを遷移する。
-		ProcessCommonStateTranstion();
+		ProcessCommonStateTransition();
 	}
 }
 
@@ -331,7 +341,7 @@ void Player::ProcessMagicAttackStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//ステートを遷移する。
-		ProcessCommonStateTranstion();
+		ProcessCommonStateTransition();
 	}
 }
 
@@ -341,7 +351,7 @@ void Player::ProcessReceiveDamageStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//ステートを遷移する。
-		ProcessCommonStateTranstion();
+		ProcessCommonStateTransition();
 	}
 }
 
@@ -351,7 +361,7 @@ void Player::ProcessPushLeverStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//ステートを遷移する。
-		ProcessCommonStateTranstion();
+		ProcessCommonStateTransition();
 	}
 }
 
@@ -446,7 +456,7 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		//攻撃エフェクトを発生させる。
 		EffectEmitter* effectEmitter = NewGO<EffectEmitter>(0);
 		effectEmitter->Init(1);
-		effectEmitter->SetScale(Vector3::One * 12.0f);
+		effectEmitter->SetScale(Vector3::One * 11.0f);
 		Vector3 effectPosition = m_position;
 		effectPosition.y += 70.0f;
 		//effectPosition += m_forward * 10.0f;
