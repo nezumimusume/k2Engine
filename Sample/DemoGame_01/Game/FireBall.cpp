@@ -25,7 +25,7 @@ bool FireBall::Start()
 	m_effectEmitter = NewGO <EffectEmitter>(0);
 	m_effectEmitter->Init(0);
 	
-	m_effectEmitter->SetScale(Vector3::One * 20.0f);
+	m_effectEmitter->SetScale(m_scale * 20.0f);
 	m_moveSpeed = Vector3::AxisZ;
 	m_rotation.Apply(m_moveSpeed);
 	m_position += m_moveSpeed * 50.0f;
@@ -35,7 +35,7 @@ bool FireBall::Start()
 	m_effectEmitter->Play();
 
 	m_collisionObject = NewGO<CollisionObject>(0);
-	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 35.0f);
+	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 35.0f * m_scale.z);
 	if (m_enMagician == enMagician_Player)
 	{
 		m_collisionObject->SetName("player_fireball");

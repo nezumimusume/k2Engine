@@ -7,6 +7,9 @@
 #include "Enemy.h"
 #include "Lever.h"
 #include "Door.h"
+#include "Boss.h"
+#include "Fade.h"
+#include "Title.h"
 
 #include "nature/SkyCube.h"
 #include "sound/SoundEngine.h"
@@ -36,7 +39,7 @@ Game::~Game()
 	{
 		DeleteGO(enemy);
 	}
-
+	DeleteGO(FindGO<Boss>("boss"));
 	DeleteGO(m_bgm);
 }
 
@@ -66,6 +69,20 @@ bool Game::Start()
 			Enemy* enemy = NewGO<Enemy>(0, "enemy");
 			enemy->SetPosition(objData.position);
 			enemy->SetRotation(objData.rotation);
+			enemy->SetHP(5);
+			m_numEnemy++;
+			//trueにすると、レベルの方でモデルが読み込まれない。
+			return true;
+		}
+		else if (objData.ForwardMatchName(L"boss") == true) {
+			//エネミー。
+			//エネミーのインスタンスを生成する。
+			Boss* boss = NewGO<Boss>(0, "enemy");
+			boss->SetPosition(objData.position);
+			boss->SetRotation(objData.rotation);
+			boss->SetScale(objData.scale);
+			boss->SetHP(15);
+			m_numEnemy++;
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
@@ -106,17 +123,32 @@ bool Game::Start()
 	m_bgm->Init(2);
 	m_bgm->Play(true);
 	m_bgm->SetVolume(0.2f);
+
+	m_fade = FindGO<Fade>("fade");
+	m_fade->StartFadeIn();
 	return true;
+}
+
+void Game::NotifyGameClear()
+{
+	m_isWaitFadeout = true;
+	m_fade->StartFadeOut();
 }
 
 void Game::NotifyGameOver()
 {
-
+	m_isWaitFadeout = true;
+	m_fade->StartFadeOut();
 }
 
 void Game::Update()
 {
-	
+	if (m_isWaitFadeout) {
+		if (!m_fade->IsFade()) {
+			NewGO<Title>(0, "title");
+			DeleteGO(this);
+		}
+	}
 }
 
 void Game::Render(RenderContext& rc)

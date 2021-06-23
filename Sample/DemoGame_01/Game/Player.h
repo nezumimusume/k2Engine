@@ -2,6 +2,7 @@
 
 class Lever;
 class Collision;
+class Game;
 
 class Player : public IGameObject
 {
@@ -15,7 +16,7 @@ public:
 		enPlayerState_PushLever,
 		enPlayerState_ReceiveDamage,
 		enPlayerState_Down,
-		enPlayerState_GameOver
+		enPlayerState_Clear
 	};
 public:
 	Player();
@@ -44,7 +45,7 @@ public:
 			m_playerState != enPlayerState_ReceiveDamage &&
 			m_playerState != enPlayerState_PushLever &&
 			m_playerState != enPlayerState_Down &&
-			m_playerState != enPlayerState_GameOver;
+			m_playerState != enPlayerState_Clear;
 	}
 private:
 	void Move();
@@ -73,6 +74,7 @@ private:
 		enAnimationClip_Damage,
 		enAnimationClip_Down,
 		enAnimationClip_PushLever,
+		enAnimationClip_Winner,
 		enAnimationClip_Num,
 	};
 	/// <summary>
@@ -111,10 +113,12 @@ private:
 	/// ダウンステートの遷移処理。
 	/// </summary>
 	void ProcessDownStateTransition();
+	void ProcessClearStateTransition();
 	
 	AnimationClip			m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
 	ModelRender				m_modelRender;
 	Vector3					m_position;
+	Vector3					m_spawnPosition;
 	Vector3					m_moveSpeed;				//移動速度。
 	Vector3					m_forward = Vector3::AxisZ;
 	Quaternion				m_rotation;					//クォータニオン。
@@ -124,5 +128,6 @@ private:
 	bool					m_isUnderAttack = false;
 	int						m_swordBoneId = -1;
 	int						m_hp = 10;
+	Game*					m_game = nullptr;
 };
 

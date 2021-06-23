@@ -43,7 +43,7 @@ bool Enemy::Start()
 	m_modelRender.SetPosition(m_position);
 	m_spawnPosition = m_position;
 	m_modelRender.SetRotation(m_rotation);
-
+	m_modelRender.SetScale(m_scale);
 
 	//キャラクターコントローラーを初期化。
 	m_charaCon.Init(
@@ -67,6 +67,8 @@ bool Enemy::Start()
 	m_player = FindGO<Player>("player");
 	//乱数を初期化。
 	srand((unsigned)time(NULL));
+	m_forward = Vector3::AxisZ;
+	m_rotation.Apply(m_forward);
 	return true;
 }
 
@@ -88,6 +90,7 @@ void Enemy::Update()
 	PlayAnimation();
 	//ステートの遷移処理。
 	ManageState();
+	
 
 	
 	//モデルの更新。
@@ -209,6 +212,31 @@ void Enemy::Attack()
 	}
 }
 
+const bool Enemy::SearchPlayer() const
+{
+	Vector3 diff = m_player->GetPosition() - m_position;
+
+	//プレイヤーにある程度近かったら.。
+	if (diff.LengthSq() <= 700.0 * 700.0f)
+	{
+		//エネミーからプレイヤーに向かうベクトルを正規化する。
+		diff.Normalize();
+		//エネミーの正面のベクトルと、エネミーからプレイヤーに向かうベクトルの。
+		//内積(cosθ)を求める。
+		float cos = m_forward.Dot(diff);
+		//内積(cosθ)から角度(θ)を求める。
+		float angle = acosf(cos);
+		//角度(θ)が120°より小さければ。
+		if (angle <= (Math::PI / 180.0f) * 120.0f)
+		{
+			//プレイヤーを見つけた！
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void Enemy::ReceiveDamage()
 {
 	if (m_enemyState != enEnemyState_ReceiveDamage)
@@ -246,23 +274,23 @@ void Enemy::MakeFireBall()
 
 void Enemy::ProcessCommonStateTransition()
 {
+	//各タイマーを初期化。
 	m_idleTimer = 0.0f;
 	m_chaseTimer = 0.0f;
 
+	//まだ途中。
 	{
 		Vector3 diff = m_spawnPosition - m_position;
 
 	}
-
-
 	Vector3 diff = m_player->GetPosition() - m_position;
 	
-	//距離がある程度近かったら。
-	if (diff.LengthSq() <= 650.0 * 650.0f)
+	//プレイヤーを見つけたら。
+	if (SearchPlayer())
 	{
 		diff.Normalize();
 		//移動速度を設定する。
-		m_moveSpeed = diff * 150.0f;
+		m_moveSpeed = diff * 200.0f;
 		//攻撃できる距離なら。
 		if (IsCanAttack())
 		{
@@ -293,22 +321,32 @@ void Enemy::ProcessCommonStateTransition()
 				//追跡ステートに移行する。
 				m_enemyState = enEnemyState_Chase;
 				return;
-			
 			}
-			
 			else {
-				//魔法攻撃ステートに移行する。
-				m_enemyState = enEnemyState_MagicAttack;
-				EffectEmitter* effect = NewGO<EffectEmitter>(0);
-				effect->Init(2);
-				Vector3 effectPosition = m_position;
-				effect->SetPosition(m_position);
-				effect->SetScale(Vector3::One * 10.0f);
-				effect->Play();
-				return;
+				//現在が魔法攻撃ステートなら。
+				//連続で魔法を撃たせないようにする。
+				if (m_enemyState == enEnemyState_MagicAttack)
+				{
+					//追跡ステートに移行する。
+					m_enemyState = enEnemyState_Chase;
+					return;
+				}
+				else
+				{
+					//魔法攻撃ステートに移行する。
+					m_enemyState = enEnemyState_MagicAttack;
+					EffectEmitter* effect = NewGO<EffectEmitter>(0);
+					effect->Init(2);
+					Vector3 effectPosition = m_position;
+					effect->SetPosition(m_position);
+					effect->SetScale(Vector3::One * 10.0f);
+					effect->Play();
+					return;
+				}
 			}
 		}
 	}
+	//プレイヤーを見つけられなければ。
 	else
 	{
 		//待機ステートに移行する。
@@ -351,7 +389,7 @@ void Enemy::ProcessChaseStateTransition()
 	}
 	m_chaseTimer += g_gameTime->GetFrameDeltaTime();
 	//追跡時間がある程度経過したら。
-	if (m_chaseTimer >= 1.5f)
+	if (m_chaseTimer >= 0.8f)
 	{
 		ProcessCommonStateTransition();
 	}
@@ -396,6 +434,8 @@ void Enemy::ProcessDownStateTransition()
 	//ダウンアニメーションの再生が終わったら。
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
+		Game* game = FindGO<Game>("game");
+		game->AddDefeatedEnemyNumber();
 		DeleteGO(this);
 	}
 }

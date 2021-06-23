@@ -21,6 +21,8 @@
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Fade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -37,5 +39,7 @@
     <ClInclude Include="Door.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="HUD.h" />
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="Fade.h" />
   </ItemGroup>
 </Project>

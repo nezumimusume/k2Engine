@@ -24,6 +24,10 @@ public:
 	{
 		m_rotation = rotation;
 	}
+	void SetScale(const Vector3& scale)
+	{
+		m_scale = scale;
+	}
 	/// <summary>
 	/// èpé“Çê›íËÇ∑ÇÈÅB
 	/// </summary>
@@ -35,6 +39,7 @@ public:
 private:
 	Vector3					m_position;
 	Quaternion				m_rotation;
+	Vector3					m_scale = Vector3::One;
 	Vector3					m_moveSpeed;
 	EffectEmitter*			m_effectEmitter = nullptr;
 	float					m_timer = 0.0f;

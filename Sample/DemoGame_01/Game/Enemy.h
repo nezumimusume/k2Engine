@@ -8,7 +8,6 @@ public:
 	enum EnEnemyState {
 		enEnemyState_Idle,
 		enEnemyState_Chase,
-		enEnemyState_Return,
 		enEnemyState_Attack,
 		enEnemyState_MagicAttack,
 		enEnemyState_ReceiveDamage,
@@ -29,12 +28,20 @@ public:
 	{
 		return m_position;
 	}
+	void SetHP(const int hp)
+	{
+		m_hp = hp;
+	}
 	void SetRotation(const Quaternion& rotation)
 	{
 		m_rotation = rotation;
 	}
+	void SetScale(const Vector3& scale)
+	{
+		m_scale = scale;
+	}
 	//動ける状態かどうかを取得。
-	bool GetIsEnableMove() const
+	const bool GetIsEnableMove() const
 	{
 		return m_enemyState != enEnemyState_Attack &&
 			m_enemyState != enEnemyState_ReceiveDamage &&
@@ -47,6 +54,7 @@ private:
 	void ReceiveDamage();
 	void Down();
 	void Collision();
+	const bool SearchPlayer() const;
 	void MakeAttackCollision();
 	void MakeFireBall();
 	/// <summary>
@@ -105,7 +113,6 @@ private:
 	/// ダウンステートの遷移処理。
 	/// </summary>
 	void ProcessDownStateTransition();
-	void ProcessReturnStateTransition();
 	/// <summary>
 	/// 攻撃できる距離かどうか調べる。
 	/// </summary>
@@ -119,6 +126,7 @@ private:
 	Vector3					m_moveSpeed;				//移動速度。
 	Vector3					m_forward = Vector3::AxisZ;
 	Quaternion				m_rotation;					//クォータニオン。
+	Vector3					m_scale = Vector3::One;
 	CharacterController		m_charaCon;
 
 	EnEnemyState			m_enemyState = enEnemyState_Idle;

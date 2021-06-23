@@ -37,10 +37,13 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_Down].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_PushLever].Load("Assets/animData/human/push_lever.tka");
 	m_animationClips[enAnimationClip_PushLever].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_Winner].Load("Assets/animData/human/winner.tka");
+	m_animationClips[enAnimationClip_Winner].SetLoopFlag(false);
 	m_modelRender.Init("Assets/modelData/human/human.tkm",m_animationClips,enAnimationClip_Num);
 	//m_modelRender.PlayAnimation(enAnimationClip_Run);
 	//m_modelRender.Init("Assets/modelData/human.tkm");
 	m_modelRender.SetPosition(m_position);
+	m_spawnPosition = m_position;
 
 
 	//キャラクターコントローラーを初期化。
@@ -61,6 +64,9 @@ bool Player::Start()
 
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/magic.wav");
 	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/slash.wav");
+	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/hit_pitch.wav");
+
+	m_game = FindGO<Game>("game");
 	return true;
 }
 
@@ -162,7 +168,7 @@ void Player::Collision()
 {
 	if (m_playerState == enPlayerState_ReceiveDamage ||
 		m_playerState == enPlayerState_Down ||
-		m_playerState == enPlayerState_GameOver)
+		m_playerState == enPlayerState_Clear)
 	{
 		return;
 	}
@@ -182,9 +188,9 @@ void Player::Collision()
 					m_playerState = enPlayerState_ReceiveDamage;
 				}
 				SoundSource* se = NewGO<SoundSource>(0);
-				se->Init(4);
+				se->Init(7);
 				se->Play(false);
-				se->SetVolume(0.4f);
+				se->SetVolume(0.7f);
 				return;
 			}
 		}
@@ -205,9 +211,9 @@ void Player::Collision()
 					m_playerState = enPlayerState_ReceiveDamage;
 				}
 				SoundSource* se = NewGO<SoundSource>(0);
-				se->Init(4);
+				se->Init(7);
 				se->Play(false);
-				se->SetVolume(0.6f);
+				se->SetVolume(0.7f);
 				return;
 			}
 		}
@@ -261,6 +267,14 @@ void Player::MakePushLeverCollision()
 
 void Player::ProcessCommonStateTransition()
 {
+	//敵を全滅させたら。
+	if (m_game->IsWannihilationEnemy())
+	{
+		m_playerState = enPlayerState_Clear;
+		return;
+	}
+
+
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{
@@ -371,9 +385,17 @@ void Player::ProcessDownStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//ゲームオーバーを通知する。
-		Game* game = FindGO<Game>("game");
-		game->NotifyGameOver();
-		m_playerState = enPlayerState_GameOver;
+		m_game->NotifyGameOver();
+		
+	}
+}
+
+void Player::ProcessClearStateTransition()
+{
+	//ウィナーアニメーションの再生が終わったら。
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		m_game->NotifyGameClear();
 	}
 }
 
@@ -404,6 +426,9 @@ void Player::ManageState()
 		break;
 	case enPlayerState_Down:
 		ProcessDownStateTransition();
+		break;
+	case enPlayerState_Clear:
+		ProcessClearStateTransition();
 		break;
 	}
 }
@@ -441,7 +466,8 @@ void Player::PlayAnimation()
 	case enPlayerState_Down:
 		m_modelRender.PlayAnimation(enAnimationClip_Down, 0.1f);
 		break;
-	case enPlayerState_GameOver:
+	case enPlayerState_Clear:
+		m_modelRender.PlayAnimation(enAnimationClip_Winner, 0.1f);
 		break;
 	default:
 		break;

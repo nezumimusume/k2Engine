@@ -30,7 +30,7 @@ bool Door::Start()
 	m_modelRender.Update();
 	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
-	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/door_cut_pitch.wav");
+	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/door_cut.wav");
 	return true;
 }
 
