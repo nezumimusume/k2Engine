@@ -481,21 +481,12 @@ void Boss::PlayAnimation()
 	case enBossState_Idle:
 		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.5f);
 		break;
-		/*case enBossState_Walk:
-			m_modelRender.SetAnimationSpeed(1.2f);
-			m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
-			break;
-		case enBossState_Run:
-			m_modelRender.SetAnimationSpeed(1.2f);
-			m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
-			break;
-		*/
 	case enBossState_Chase:
 		m_modelRender.SetAnimationSpeed(1.6f);
 		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
 		break;
 	case enBossState_Attack:
-		m_modelRender.SetAnimationSpeed(0.9f);
+		m_modelRender.SetAnimationSpeed(1.2f);
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
 	case enBossState_MagicAttack:

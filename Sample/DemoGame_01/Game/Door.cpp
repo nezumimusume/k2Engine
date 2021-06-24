@@ -57,7 +57,7 @@ void Door::NotifyClose()
 	SoundSource* se = NewGO<SoundSource>(0);
 	se->Init(5);
 	se->Play(false);
-	se->SetVolume(0.7f);
+	se->SetVolume(0.6f);
 }
 
 void Door::PlayAnimation()

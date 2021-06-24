@@ -158,7 +158,6 @@
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
-    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Lever.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -178,7 +177,6 @@
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
-    <ClInclude Include="HUD.h" />
     <ClInclude Include="Lever.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />

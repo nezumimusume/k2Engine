@@ -21,6 +21,7 @@ FireBall::~FireBall()
 bool FireBall::Start()
 {
 	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/efk/magic_fire.efk");
+	//EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/ochi/shield.efk");
 
 	m_effectEmitter = NewGO <EffectEmitter>(0);
 	m_effectEmitter->Init(0);

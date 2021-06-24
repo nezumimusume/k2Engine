@@ -77,7 +77,7 @@ bool Game::Start()
 		else if (objData.ForwardMatchName(L"boss") == true) {
 			//エネミー。
 			//エネミーのインスタンスを生成する。
-			Boss* boss = NewGO<Boss>(0, "enemy");
+			Boss* boss = NewGO<Boss>(0, "boss");
 			boss->SetPosition(objData.position);
 			boss->SetRotation(objData.rotation);
 			boss->SetScale(objData.scale);

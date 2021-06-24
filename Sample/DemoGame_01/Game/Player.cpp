@@ -21,6 +21,7 @@ Player::~Player()
 
 bool Player::Start()
 {
+	//アニメーションをロードする。
 	m_animationClips[enAnimationClip_Idle].Load("Assets/animData/human/idle.tka");
 	m_animationClips[enAnimationClip_Idle].SetLoopFlag(true);
 	m_animationClips[enAnimationClip_Walk].Load("Assets/animData/human/walk.tka");
@@ -39,12 +40,10 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_PushLever].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_Winner].Load("Assets/animData/human/winner.tka");
 	m_animationClips[enAnimationClip_Winner].SetLoopFlag(false);
+	//モデルレンダ―を初期化。
 	m_modelRender.Init("Assets/modelData/human/human.tkm",m_animationClips,enAnimationClip_Num);
-	//m_modelRender.PlayAnimation(enAnimationClip_Run);
-	//m_modelRender.Init("Assets/modelData/human.tkm");
-	m_modelRender.SetPosition(m_position);
-	m_spawnPosition = m_position;
 
+	m_modelRender.SetPosition(m_position);
 
 	//キャラクターコントローラーを初期化。
 	m_charaCon.Init(
@@ -53,15 +52,19 @@ bool Player::Start()
 		m_position		//座標。
 	);
 
+	//剣に設定したボーンのIDを取得する。
 	m_swordBoneId = m_modelRender.FindBoneID(L"Sword");
 
+	//アニメーションイベント用の関数を設定する。
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
 		OnAnimationEvent(clipName, eventName);
 	});
 
+	//各エフェクトをロードする。
 	EffectEngine::GetInstance()->ResistEffect(1, u"Assets/effect/efk/enemy_slash_01.efk");
 	EffectEngine::GetInstance()->ResistEffect(2, u"Assets/effect/efk/cast_fire.efk");
 
+	//各サウンドをロードする。
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/magic.wav");
 	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/slash.wav");
 	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/hit_pitch.wav");
@@ -85,7 +88,6 @@ void Player::Update()
 	//ステートの遷移処理。
 	ManageState();
 
-
 	//モデルの更新。
 	m_modelRender.Update();
 }
@@ -97,7 +99,6 @@ void Player::Move()
 	{
 		return;
 	}
-
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 
@@ -123,11 +124,11 @@ void Player::Move()
 		//ジャンプする。
 		m_moveSpeed.y = 400.0f;	//上方向に速度を設定して、
 	}
+
+	m_moveSpeed.y -= 980.0f * g_gameTime->GetFrameDeltaTime();
 	*/
 
-	//m_moveSpeed.y -= 980.0f * g_gameTime->GetFrameDeltaTime();
 	//キャラクターコントローラーを使用して、座標を更新。
-
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 	if (m_charaCon.IsOnGround()) {
 		//地面についた。
@@ -159,13 +160,14 @@ void Player::Rotation()
 	//回転を設定する。
 	m_modelRender.SetRotation(m_rotation);
 
-	//プレイヤーの前ベクトルを計算する。
+	//プレイヤーの正面ベクトルを計算する。
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
 }
 
 void Player::Collision()
 {
+	//被ダメージ、ダウン中、クリア時はダメージ判定をしない。
 	if (m_playerState == enPlayerState_ReceiveDamage ||
 		m_playerState == enPlayerState_Down ||
 		m_playerState == enPlayerState_Clear)
@@ -174,19 +176,28 @@ void Player::Collision()
 	}
 
 	{
+		//敵の攻撃用のコリジョンの配列を取得する。
 		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_attack");
+		//配列をfor文で回す。
 		for (auto collision : collisions)
 		{
+			//コリジョンとキャラコンが衝突したら。
 			if (collision->IsHit(m_charaCon))
 			{
+				//HPを減らす。
 				m_hp -= 1;
-				if (m_hp <= 0)
+				//HPが0になったら。
+				if (m_hp == 0)
 				{
+					//ダウンさせる。
 					m_playerState = enPlayerState_Down;
 				}
+				//HPが0ではなかったら。
 				else {
+					//被ダメージリアクションをさせる。
 					m_playerState = enPlayerState_ReceiveDamage;
 				}
+				//効果音を再生する。
 				SoundSource* se = NewGO<SoundSource>(0);
 				se->Init(7);
 				se->Play(false);
@@ -197,19 +208,28 @@ void Player::Collision()
 	}
 
 	{
+		//敵の撃ったファイヤーボールのコリジョンの配列を取得する。
 		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_fireball");
+		//配列をfor文で回す。
 		for (auto collision : collisions)
 		{
+			//コリジョンとキャラコンが衝突したら。
 			if (collision->IsHit(m_charaCon))
 			{
+				//HPを減らす。
 				m_hp -= 1;
-				if (m_hp <= 0)
+				//HPが0になったら。
+				if (m_hp == 0)
 				{
+					//ダウンさせる。
 					m_playerState = enPlayerState_Down;
 				}
+				//HPが0ではなかったら。
 				else {
+					//被ダメージリアクションをさせる。
 					m_playerState = enPlayerState_ReceiveDamage;
 				}
+				//効果音を再生する。
 				SoundSource* se = NewGO<SoundSource>(0);
 				se->Init(7);
 				se->Play(false);
@@ -222,6 +242,7 @@ void Player::Collision()
 
 void Player::Attack()
 {
+	//攻撃中でないなら、処理をしない。
 	if (m_playerState != enPlayerState_Attack)
 	{
 		return;
@@ -237,32 +258,64 @@ void Player::Attack()
 
 void Player::MakeAttackCollision()
 {
+	//コリジョンオブジェクトを作成する。
 	auto collisionObject = NewGO<CollisionObject>(0);
+	//剣のボーンのワールド行列を取得する。
 	Matrix matrix = m_modelRender.GetBone(m_swordBoneId)->GetWorldMatrix();
+	//ボックス状のコリジョンを作成する。
 	collisionObject->CreateBox(m_position, Quaternion::Identity, Vector3(110.0f, 15.0f, 15.0f));
+	//剣のボーンのワールド行列をコリジョンに適用させる。
 	collisionObject->SetWorldMatrix(matrix);
 	collisionObject->SetName("player_attack");
 }
 
 void Player::MakeFireBall()
 {
+	//ファイヤーボールを作成する。
 	FireBall* fireBall = NewGO<FireBall>(0);
 	Vector3 fireBallPosition = m_position;
+	//座標を少し上にする。
 	fireBallPosition.y += 70.0f;
 	fireBall->SetPosition(fireBallPosition);
 	fireBall->SetRotation(m_rotation);
+	//術者はプレイヤーにする。
 	fireBall->SetEnMagician(FireBall::enMagician_Player);
 }
 
 void Player::MakePushLeverCollision()
 {
+	//コリジョンオブジェクトを作成する。
 	auto collisionObject = NewGO<CollisionObject>(0);
 	Vector3 collisionPosition = m_position;
-	//座標をプレイヤーの前に設定する。
+	//座標をプレイヤーの少し前に設定する。
 	collisionPosition += m_forward * 50.0f;
-	//collisionPosition.y += 70.0f;
+	//球状のコリジョンを作成する。
 	collisionObject->CreateSphere(collisionPosition, Quaternion::Identity, 70.0f);
 	collisionObject->SetName("player_lever");
+}
+
+void Player::MakeSlashingEffect()
+{
+	//攻撃エフェクトを発生させる。
+	EffectEmitter* effectEmitter = NewGO<EffectEmitter>(0);
+	effectEmitter->Init(1);
+	effectEmitter->SetScale(Vector3::One * 11.0f);
+	Vector3 effectPosition = m_position;
+	//座標を少し上にする。
+	effectPosition.y += 70.0f;
+	effectEmitter->SetPosition(effectPosition);
+	Quaternion rotation;
+	rotation = m_rotation;
+	//回転させる。
+	rotation.AddRotationDegY(360.0f);
+	rotation.AddRotationDegZ(180.0f);
+	effectEmitter->SetRotation(rotation);
+	effectEmitter->Play();
+
+	SoundSource* se = NewGO<SoundSource>(0);
+	se->Init(3);
+	se->Play(false);
+	se->SetVolume(0.8f);
 }
 
 void Player::ProcessCommonStateTransition()
@@ -270,23 +323,63 @@ void Player::ProcessCommonStateTransition()
 	//敵を全滅させたら。
 	if (m_game->IsWannihilationEnemy())
 	{
+		//クリアステートに移行する。
 		m_playerState = enPlayerState_Clear;
 		return;
 	}
-
+	//Yボタンが押されたら。
+	if (g_pad[0]->IsTrigger(enButtonY))
+	{
+		//攻撃ステートに移行する。
+		m_playerState = enPlayerState_Attack;
+		//フラグをfalseにする。
+		m_isUnderAttack = false;
+		return;
+	}
+	//Xボタンが押されたら。
+	else if (g_pad[0]->IsTrigger(enButtonX))
+	{
+		//魔法攻撃ステートに移行する。
+		m_playerState = enPlayerState_MagicAttack;
+		//効果音を発生させる。
+		SoundSource* se = NewGO<SoundSource>(0);
+		se->Init(0);
+		se->SetVolume(0.5f);
+		se->Play(false);
+		//エフェクトを発生させる。
+		EffectEmitter* effect = NewGO<EffectEmitter>(0);
+		effect->Init(2);
+		Vector3 effectPosition = m_position;
+		effect->SetPosition(m_position);
+		effect->SetScale(Vector3::One * 10.0f);
+		effect->Play();
+		return;
+	}
+	//Aボタンが押されたら。
+	else if (g_pad[0]->IsTrigger(enButtonA))
+	{
+		//レバーを押すステートに移行する。
+		m_playerState = enPlayerState_PushLever;
+		//レバーを押すためのコリジョンを作成する。
+		MakePushLeverCollision();
+		return;
+	}
 
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{
+		//移動速度が一定以上だったら。
 		if (m_moveSpeed.LengthSq() >= 200.0f * 200.0f)
 		{
 			//ステートを走りにする。
 			m_playerState = enPlayerState_Run;
+			return;
 		}
 		else
 		{
 			//歩きにする。
 			m_playerState = enPlayerState_Walk;
+			return;
 		}
 
 	}
@@ -295,47 +388,25 @@ void Player::ProcessCommonStateTransition()
 	{
 		//ステートを待機にする。
 		m_playerState = enPlayerState_Idle;
-	}
-
-	if (g_pad[0]->IsTrigger(enButtonY))
-	{
-		m_playerState = enPlayerState_Attack;
-		m_isUnderAttack = false;
-	}
-	else if (g_pad[0]->IsTrigger(enButtonX))
-	{
-		m_playerState = enPlayerState_MagicAttack;
-		SoundSource* se = NewGO<SoundSource>(0);
-		se->Init(0);
-		se->SetVolume(0.5f);
-		se->Play(false);
-
-		EffectEmitter* effect = NewGO<EffectEmitter>(0);
-		effect->Init(2);
-		Vector3 effectPosition = m_position;
-		effect->SetPosition(m_position);
-		effect->SetScale(Vector3::One * 10.0f);
-		effect->Play();
-	}
-	else if (g_pad[0]->IsTrigger(enButtonA))
-	{
-		m_playerState = enPlayerState_PushLever;
-		MakePushLeverCollision();
+		return;
 	}
 }
 
 void Player::ProcessIdleStateTransition()
 {
+	//ステートを遷移する。
 	ProcessCommonStateTransition();
 }
 
 void Player::ProcessWalkStateTransition()
 {
+	//ステートを遷移する。
 	ProcessCommonStateTransition();
 }
 
 void Player::ProcessRunStateTransition()
 {
+	//ステートを遷移する。
 	ProcessCommonStateTransition();
 }
 
@@ -392,9 +463,10 @@ void Player::ProcessDownStateTransition()
 
 void Player::ProcessClearStateTransition()
 {
-	//ウィナーアニメーションの再生が終わったら。
+	//勝利アニメーションの再生が終わったら。
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
+		//ゲームクリアを通知する。
 		m_game->NotifyGameClear();
 	}
 }
@@ -403,31 +475,49 @@ void Player::ManageState()
 {
 	switch (m_playerState)
 	{
+	//待機ステートの時。
 	case enPlayerState_Idle:
+		//待機ステートのステート遷移処理。
 		ProcessIdleStateTransition();
 		break;
+	//歩きステートの時。
 	case enPlayerState_Walk:
+		//歩きステートのステート遷移処理。
 		ProcessWalkStateTransition();
 		break;
+	//走りステートの時。
 	case enPlayerState_Run:
+		//走りステートのステート遷移処理。
 		ProcessRunStateTransition();
 		break;
+	//攻撃ステートの時。
 	case enPlayerState_Attack:
+		//攻撃ステートのステート遷移処理。
 		ProcessAttackStateTransition();
 		break;
+	//魔法攻撃ステートの時。
 	case enPlayerState_MagicAttack:
+		//魔法攻撃ステートのステート遷移処理。
 		ProcessMagicAttackStateTransition();
 		break;
+	//レバーを押すステートの時。
 	case enPlayerState_PushLever:
+		//レバーを押すステートのステート遷移処理。
 		ProcessPushLeverStateTransition();
 		break;
+	//被ダメージ時ステートの時。
 	case enPlayerState_ReceiveDamage:
+		//被ダメージ時ステートのステート遷移処理。
 		ProcessReceiveDamageStateTransition();
 		break;
+	//ダウンステートの時。
 	case enPlayerState_Down:
+		//ダウンステートのステート遷移処理。
 		ProcessDownStateTransition();
 		break;
+	//クリアステートの時。
 	case enPlayerState_Clear:
+		//クリアステートのステート遷移処理。
 		ProcessClearStateTransition();
 		break;
 	}
@@ -438,35 +528,53 @@ void Player::PlayAnimation()
 	m_modelRender.SetAnimationSpeed(1.0f);
 	switch (m_playerState)
 	{
+	//待機ステートの時。
 	case enPlayerState_Idle:
+		//待機アニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.5f);
 		break;
+	//歩きステートの時。
 	case enPlayerState_Walk:
 		m_modelRender.SetAnimationSpeed(1.2f);
+		//歩きアニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
 		break;
+	//走りステートの時。
 	case enPlayerState_Run:
 		m_modelRender.SetAnimationSpeed(1.2f);
+		//走りアニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
 		break;
+	//攻撃ステートの時。
 	case enPlayerState_Attack:
 		m_modelRender.SetAnimationSpeed(1.5f);
+		//攻撃アニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
+	//魔法攻撃ステートの時。
 	case enPlayerState_MagicAttack:
 		m_modelRender.SetAnimationSpeed(1.2f);
+		//魔法攻撃アニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_MagicAttack, 0.1f);
 		break;
+	//レバーを押すステートの時。
 	case enPlayerState_PushLever:
+		//レバーを押すアニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_PushLever, 0.1f);
 		break;
+	//被ダメージステートの時。
 	case enPlayerState_ReceiveDamage:
+		//被ダメージアニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
 		break;
+	//ダウンステートの時。
 	case enPlayerState_Down:
+		//ダウンアニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_Down, 0.1f);
 		break;
+	//クリアステートの時。
 	case enPlayerState_Clear:
+		//クリアアニメーションを再生。
 		m_modelRender.PlayAnimation(enAnimationClip_Winner, 0.1f);
 		break;
 	default:
@@ -477,36 +585,27 @@ void Player::PlayAnimation()
 void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 {
 	(void)clipName;
+	//キーの名前が「attack_start」の時。
 	if (wcscmp(eventName, L"attack_start") == 0) {
+		//斬撃エフェクトを作成する。
+		MakeSlashingEffect();
+		//攻撃中にする。
 		m_isUnderAttack = true;
-		//攻撃エフェクトを発生させる。
-		EffectEmitter* effectEmitter = NewGO<EffectEmitter>(0);
-		effectEmitter->Init(1);
-		effectEmitter->SetScale(Vector3::One * 11.0f);
-		Vector3 effectPosition = m_position;
-		effectPosition.y += 70.0f;
-		//effectPosition += m_forward * 10.0f;
-		effectEmitter->SetPosition(effectPosition);
-		Quaternion rotation;
-		rotation = m_rotation;
-		rotation.AddRotationDegY(360.0f);
-		rotation.AddRotationDegZ(180.0f);
-		effectEmitter->SetRotation(rotation);
-		effectEmitter->Play();
-		SoundSource* se = NewGO<SoundSource>(0);
-		se->Init(3);
-		se->Play(false);
-		se->SetVolume(0.8f);
 	}
+	//キーの名前が「attack_end」の時。
 	else if (wcscmp(eventName, L"attack_end") == 0) {
+		//攻撃を終わる。
 		m_isUnderAttack = false;
 	}
+	//キーの名前が「magic_attack」の時。
 	else if (wcscmp(eventName, L"magic_attack") == 0) {
+		//ファイヤーボールを作成する。
 		MakeFireBall();
 	}
 }
 
 void Player::Render(RenderContext& rc)
 {
+	//モデルを描画する。
 	m_modelRender.Draw(rc);
 }

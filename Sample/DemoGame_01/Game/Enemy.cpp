@@ -290,7 +290,7 @@ void Enemy::ProcessCommonStateTransition()
 	{
 		diff.Normalize();
 		//移動速度を設定する。
-		m_moveSpeed = diff * 200.0f;
+		m_moveSpeed = diff * 250.0f;
 		//攻撃できる距離なら。
 		if (IsCanAttack())
 		{
@@ -425,7 +425,7 @@ void Enemy::ProcessReceiveDamageStateTransition()
 		Vector3 diff = m_player->GetPosition() - m_position;
 		diff.Normalize();
 		//移動速度を設定する。
-		m_moveSpeed = diff * 150.0f;
+		m_moveSpeed = diff * 250.0f;
 	}
 }
 

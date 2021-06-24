@@ -14,65 +14,84 @@ Lever::Lever()
 
 Lever::~Lever()
 {
+	//コリジョンオブジェクトを削除する。
 	DeleteGO(m_collisionObject);
 }
 
 bool Lever::Start()
 {
+	//アニメーションを読み込む。
 	m_animationClips[enAnimationClip_Idle].Load("Assets/animData/lever/idle.tka");
 	m_animationClips[enAnimationClip_Idle].SetLoopFlag(false);
-	m_animationClips[enAnimationClip_On].Load("Assets/animData/lever/on.tka");
-	m_animationClips[enAnimationClip_On].SetLoopFlag(false);
-	m_animationClips[enAnimationClip_Off].Load("Assets/animData/lever/off.tka");
-	m_animationClips[enAnimationClip_Off].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_Push].Load("Assets/animData/lever/push.tka");
+	m_animationClips[enAnimationClip_Push].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_Pull].Load("Assets/animData/lever/pull.tka");
+	m_animationClips[enAnimationClip_Pull].SetLoopFlag(false);
+	//モデルを読み込む。
 	m_modelRender.Init("Assets/modelData/lever/lever.tkm", m_animationClips, enAnimationClip_Num);
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetScale(m_scale);
 	m_modelRender.SetRotation(m_rotation);
 
-	//当たり判定用のコリジョンを作成。
+	//コリジョンオブジェクトを作成。
 	m_collisionObject = NewGO<CollisionObject>(0);
+	//ボックス状のコリジョンを作成。
 	m_collisionObject->CreateBox(m_position, m_rotation, Vector3::One * 70.0f);
 	m_collisionObject->SetName("lever");
 	m_collisionObject->SetIsEnableAutoDelete(false);
 
+	//音を読み込む。
 	g_soundEngine->ResistWaveFileBank(6, "Assets/sound/lever.wav");
 	return true;
 }
 
 void Lever::Update()
 {
+	//アニメーションを再生する。
 	PlayAnimation();
+	//ステート管理。
 	ManageState();
+
+	//モデルの更新。
 	m_modelRender.Update();
 }
 
 void Lever::ProcessTransitionPushState()
 {
+	//プレイヤーが作成した、レバー用のコリジョンの配列を取得。
 	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_lever");
 
+	//for文で配列を回す。
 	for (auto collision : collisions)
 	{
+		//レバー自身のコリジョンとプレイヤーの作成したコリジョンが衝突したら。
 		if (collision->IsHit(m_collisionObject) == true)
 		{
+			//押すステートに遷移させる。
 			m_leverState = enLeverState_Push;
+			//効果音を流す。
 			SoundSource* se = NewGO<SoundSource>(0);
 			se->Init(6);
 			se->Play(false);
-			se->SetVolume(0.7f);
+			se->SetVolume(0.6f);
 		}
 	}
 }
 
 void Lever::ProcessTransitionPullState()
 {
+	//プレイヤーが作成した、レバー用のコリジョンの配列を取得。
 	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_lever");
 
+	//for文で配列を回す。
 	for (auto collision : collisions)
 	{
+		//レバー自身のコリジョンとプレイヤーの作成したコリジョンが衝突したら。
 		if (collision->IsHit(m_collisionObject) == true)
 		{
+			//引くステートに遷移する。
 			m_leverState = enLeverState_Pull;
+			//効果音を流す。
 			SoundSource* se = NewGO<SoundSource>(0);
 			se->Init(6);
 			se->Play(false);
@@ -86,14 +105,16 @@ void Lever::PlayAnimation()
 {
 	switch (m_leverState)
 	{
+	//待機ステートなら。
 	case enLeverState_Idle:
+		//待機アニメーションを再生する。
 		m_modelRender.PlayAnimation(enAnimationClip_Idle);
 		break;
 	case enLeverState_Push:
-		m_modelRender.PlayAnimation(enAnimationClip_On);
+		m_modelRender.PlayAnimation(enAnimationClip_Push);
 		break;
 	case enLeverState_Pull:
-		m_modelRender.PlayAnimation(enAnimationClip_Off);
+		m_modelRender.PlayAnimation(enAnimationClip_Pull);
 		break;
 	default:
 		break;
