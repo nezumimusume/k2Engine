@@ -1,17 +1,22 @@
 #pragma once
 
+//クラス宣言。
 class Player;
 
+/// <summary>
+/// エネミー。
+/// </summary>
 class Enemy : public IGameObject
 {
 public:
+	//エネミーステート。
 	enum EnEnemyState {
-		enEnemyState_Idle,
-		enEnemyState_Chase,
-		enEnemyState_Attack,
-		enEnemyState_MagicAttack,
-		enEnemyState_ReceiveDamage,
-		enEnemyState_Down,
+		enEnemyState_Idle,					//待機。
+		enEnemyState_Chase,					//追跡。
+		enEnemyState_Attack,				//攻撃。
+		enEnemyState_MagicAttack,			//魔法攻撃。
+		enEnemyState_ReceiveDamage,			//被ダメージ。
+		enEnemyState_Down,					//ダウン。
 	};
 public:
 	Enemy();
@@ -19,64 +24,90 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-
+	/// <summary>
+	/// 座標を設定する。
+	/// </summary>
+	/// <param name="position">座標。</param>
 	void SetPosition(const Vector3& position)
 	{
 		m_position = position;
 	}
+	/// <summary>
+	/// 座標を取得する。
+	/// </summary>
+	/// <returns>座標。</returns>
 	const Vector3& GetPosition() const
 	{
 		return m_position;
 	}
+	/// <summary>
+	/// HPを設定する。
+	/// </summary>
+	/// <param name="hp">HP。</param>
 	void SetHP(const int hp)
 	{
 		m_hp = hp;
 	}
+	/// <summary>
+	/// 回転を設定する。
+	/// </summary>
+	/// <param name="rotation">回転。</param>
 	void SetRotation(const Quaternion& rotation)
 	{
 		m_rotation = rotation;
 	}
+	/// <summary>
+	/// 大きさを設定する。
+	/// </summary>
+	/// <param name="scale">大きさ。</param>
 	void SetScale(const Vector3& scale)
 	{
 		m_scale = scale;
 	}
-	//動ける状態かどうかを取得。
-	const bool GetIsEnableMove() const
-	{
-		return m_enemyState != enEnemyState_Attack &&
-			m_enemyState != enEnemyState_ReceiveDamage &&
-			m_enemyState != enEnemyState_Down;
-	}
 private:
+	/// <summary>
+	/// 追跡処理。
+	/// </summary>
 	void Chase();
+	/// <summary>
+	/// 回転処理。
+	/// </summary>
 	void Rotation();
+	/// <summary>
+	/// 攻撃処理。
+	/// </summary>
 	void Attack();
-	void ReceiveDamage();
-	void Down();
+	/// <summary>
+	/// プレイヤーの攻撃との当たり判定処理。
+	/// </summary>
 	void Collision();
+	/// <summary>
+	/// プレイヤーを探索する。
+	/// </summary>
+	/// <returns>プレイヤーが見つかったらtrue。</returns>
 	const bool SearchPlayer() const;
+	/// <summary>
+	/// 攻撃用の当たり判定コリジョンを作成する。
+	/// </summary>
 	void MakeAttackCollision();
+	/// <summary>
+	/// ファイヤーボールをを作成する。
+	/// </summary>
 	void MakeFireBall();
 	/// <summary>
 	/// アニメーションの再生。
 	/// </summary>
 	void PlayAnimation();
 	/// <summary>
+	/// アニメーションイベント用の関数。
+	/// </summary>
+	/// <param name="clipName">アニメーションの名前。</param>
+	/// <param name="eventName">アニメーションイベントのキーの名前。</param>
+	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
+	/// <summary>
 	/// 各ステートの遷移処理。
 	/// </summary>
 	void ManageState();
-	//アニメーションイベント
-	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
-	enum EnAnimationClip {							//アニメーション。
-		enAnimationClip_Idle,
-		enAnimationClip_Walk,
-		enAnimationClip_Run,
-		enAnimationClip_Attack,
-		enAnimationClip_MagicAttack,
-		enAnimationClip_Damage,
-		enAnimationClip_Down,
-		enAnimationClip_Num,
-	};
 	/// <summary>
 	/// 共通のステート遷移処理。
 	/// </summary>
@@ -119,23 +150,31 @@ private:
 	/// <returns>攻撃できるならtrue。</returns>
 	const bool IsCanAttack() const;
 	
-	AnimationClip			m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
-	ModelRender				m_modelRender;
-	Vector3					m_position;
-	Vector3					m_spawnPosition;
-	Vector3					m_moveSpeed;				//移動速度。
-	Vector3					m_forward = Vector3::AxisZ;
-	Quaternion				m_rotation;					//クォータニオン。
-	Vector3					m_scale = Vector3::One;
-	CharacterController		m_charaCon;
-
-	EnEnemyState			m_enemyState = enEnemyState_Idle;
-	bool					m_isUnderAttack = false;
-	int						m_swordBoneId = -1;
-	int						m_hp = 10;
-	Player*					m_player = nullptr;
-	float					m_chaseTimer = 0.0f;
-	float					m_idleTimer = 0.0f;
+	enum EnAnimationClip {						//アニメーション。
+		enAnimationClip_Idle,					//待機アニメーション。
+		enAnimationClip_Walk,					//歩きアニメーション。
+		enAnimationClip_Run,					//走りアニメーション。
+		enAnimationClip_Attack,					//攻撃アニメーション。
+		enAnimationClip_MagicAttack,			//魔法攻撃アニメーション。
+		enAnimationClip_Damage,					//被ダメージアニメーション。
+		enAnimationClip_Down,					//ダウンアニメーション。
+		enAnimationClip_Num,					//アニメーションの数。
+	};
+	AnimationClip				m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
+	ModelRender					m_modelRender;								//モデルレンダー。
+	Vector3						m_position;									//座標。
+	Vector3						m_moveSpeed;								//移動速度。
+	Vector3						m_forward = Vector3::AxisZ;					//エネミーの正面ベクトル。
+	Quaternion					m_rotation;									//回転。
+	Vector3						m_scale = Vector3::One;						//大きさ。
+	CharacterController			m_charaCon;									//キャラコン。
+	EnEnemyState				m_enemyState = enEnemyState_Idle;			//エネミーステート。
+	bool						m_isUnderAttack = false;					//攻撃中か？
+	int							m_swordBoneId = -1;							//剣のボーンのID。
+	int							m_hp = 0;									//HP。
+	Player*						m_player = nullptr;							//プレイヤー。
+	float						m_chaseTimer = 0.0f;						//追跡タイマー。
+	float						m_idleTimer = 0.0f;							//待機タイマー。
 };
 
 

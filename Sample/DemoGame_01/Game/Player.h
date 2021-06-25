@@ -57,7 +57,7 @@ public:
 	/// 動ける状態(ステート)かどうかを取得。
 	/// </summary>
 	/// <returns>動ける状態(ステート)ならtrue。</returns>
-	bool GetIsEnableMove() const
+	bool IsEnableMove() const
 	{
 		return m_playerState != enPlayerState_Attack &&
 			m_playerState != enPlayerState_MagicAttack &&
@@ -80,7 +80,7 @@ private:
 	/// </summary>
 	void Attack();
 	/// <summary>
-	/// 敵の攻撃との当たり判定。
+	/// 敵の攻撃との当たり判定処理。
 	/// </summary>
 	void Collision();
 	/// <summary>
@@ -113,19 +113,6 @@ private:
 	/// <param name="clipName">アニメーションの名前。</param>
 	/// <param name="eventName">アニメーションイベントのキーの名前。</param>
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
-	//アニメーション。
-	enum EnAnimationClip {							
-		enAnimationClip_Idle,				//待機アニメーション。	
-		enAnimationClip_Walk,				//歩きアニメーション。
-		enAnimationClip_Run,				//走りアニメーション。
-		enAnimationClip_Attack,				//攻撃アニメーション。
-		enAnimationClip_MagicAttack,		//魔法攻撃アニメーション。
-		enAnimationClip_Damage,				//被ダメージアニメーション。
-		enAnimationClip_Down,				//ダウンアニメーション。
-		enAnimationClip_PushLever,			//レバーを押すアニメーション。
-		enAnimationClip_Winner,				//勝利アニメーション。
-		enAnimationClip_Num,				//アニメーションの数。
-	};
 	/// <summary>
 	/// 共通のステート遷移処理。
 	/// </summary>
@@ -167,6 +154,19 @@ private:
 	/// </summary>
 	void ProcessClearStateTransition();
 	
+	//アニメーション。
+	enum EnAnimationClip {
+		enAnimationClip_Idle,				//待機アニメーション。	
+		enAnimationClip_Walk,				//歩きアニメーション。
+		enAnimationClip_Run,				//走りアニメーション。
+		enAnimationClip_Attack,				//攻撃アニメーション。
+		enAnimationClip_MagicAttack,		//魔法攻撃アニメーション。
+		enAnimationClip_Damage,				//被ダメージアニメーション。
+		enAnimationClip_Down,				//ダウンアニメーション。
+		enAnimationClip_PushLever,			//レバーを押すアニメーション。
+		enAnimationClip_Winner,				//勝利アニメーション。
+		enAnimationClip_Num,				//アニメーションの数。
+	};
 	AnimationClip			m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
 	ModelRender				m_modelRender;								//モデルレンダ―。
 	Vector3					m_position;									//座標。

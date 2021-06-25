@@ -110,10 +110,14 @@ void Lever::PlayAnimation()
 		//待機アニメーションを再生する。
 		m_modelRender.PlayAnimation(enAnimationClip_Idle);
 		break;
+	//押すステートの時。
 	case enLeverState_Push:
+		//押すアニメーションを再生する。
 		m_modelRender.PlayAnimation(enAnimationClip_Push);
 		break;
+	//引くステートのとき。
 	case enLeverState_Pull:
+		//引くアニメーションを再生する。
 		m_modelRender.PlayAnimation(enAnimationClip_Pull);
 		break;
 	default:
@@ -123,14 +127,18 @@ void Lever::PlayAnimation()
 
 void Lever::ProcessTransitionPushIdleState()
 {
+	//押すアニメーションの再生が終わったら。
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
+		//ドアのオブジェクトの配列を取得する。
 		auto doors = FindGOs<Door>("door");
+		//for文で配列を回す。
 		for (auto door : doors)
 		{
-			//番号が同じなら、ドアをオープン。
+			//レバーの番号とドアの番号が一致していたら。
 			if (m_leverNumber == door->GetDoorNumber())
 			{
+				//ドアに開けることを通知する。
 				door->NotifyOpen();
 				m_leverState = enLeverState_Push_Idle;
 				break;
@@ -141,14 +149,18 @@ void Lever::ProcessTransitionPushIdleState()
 
 void Lever::ProcessTransitionPullIdleState()
 {
+	//引くアニメーションの再生が終わったら。
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
+		//ドアのオブジェクトの配列を取得する。
 		auto doors = FindGOs<Door>("door");
+		//for文で配列を回す。
 		for (auto door : doors)
 		{
-			//番号が同じなら、ドアをクローズ。
+			//レバーの番号とドアの番号が一致していたら。
 			if (m_leverNumber == door->GetDoorNumber())
 			{
+				//ドアに閉めることを通知する。
 				door->NotifyClose();
 				m_leverState = enLeverState_Pull_Idle;
 				break;
@@ -191,19 +203,29 @@ void Lever::ManageState()
 {
 	switch (m_leverState)
 	{
+	//待機ステートの時。
 	case enLeverState_Idle:
+		//待機ステートのステート遷移処理。
 		ProcessIdleStateTransition();
 		break;
+	//押すステートの時。
 	case enLeverState_Push:
+		//押すステートのステート遷移処理。
 		ProcessPushStateTransition();
 		break;
+	//押し終わったステートの時。
 	case enLeverState_Push_Idle:
+		//押し終わったステートのステート遷移処理。
 		ProcessPushIdleStateTransition();
 		break;
+	//引くステートの時。
 	case enLeverState_Pull:
+		//引くステートのステート遷移処理。
 		ProcessPullStateTransition();
 		break;
+	//引き終わったステートの時。
 	case enLeverState_Pull_Idle:
+		//引き終わったステートのステート遷移処理。
 		ProcessPullIdleStateTransition();
 		break;
 	default:
@@ -213,5 +235,6 @@ void Lever::ManageState()
 
 void Lever::Render(RenderContext& rc)
 {
+	//モデルを描画する。
 	m_modelRender.Draw(rc);
 }

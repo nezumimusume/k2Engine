@@ -95,7 +95,7 @@ void Player::Update()
 void Player::Move()
 {
 	//移動できない状態であれば、移動処理はしない。
-	if (GetIsEnableMove() == false)
+	if (IsEnableMove() == false)
 	{
 		return;
 	}
@@ -310,6 +310,7 @@ void Player::MakeSlashingEffect()
 	rotation.AddRotationDegY(360.0f);
 	rotation.AddRotationDegZ(180.0f);
 	effectEmitter->SetRotation(rotation);
+	//エフェクトを再生する。
 	effectEmitter->Play();
 
 	SoundSource* se = NewGO<SoundSource>(0);
