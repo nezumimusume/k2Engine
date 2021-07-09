@@ -72,6 +72,10 @@ public:
 	template<class T>
 	T* NewGameObject(int prio, const char* objectName)
 	{
+		if (m_isActive == false)
+		{
+			return nullptr; 
+		}
 		T* newObject = new T();
 		newObject->SetName(objectName);
 		m_gameObjectListArray.at(prio).push_back(newObject);
@@ -82,7 +86,12 @@ public:
 		*/
 	void DeleteGameObject( IGameObject* gameObject )
 	{
-		if (gameObject != nullptr) {
+		if (m_isActive == false)
+		{
+			return;
+		}
+		if (gameObject != nullptr) 
+		{
 			gameObject->Dead();
 		}
 	}
@@ -95,7 +104,10 @@ public:
 	template<class T>
 	T* FindGameObject(const char* objectName)
 	{
-		
+		if (m_isActive == false)
+		{
+			return nullptr;
+		}
 		for (auto goList : m_gameObjectListArray) {
 			for (auto go : goList) {
 				if (go->IsMatchName(objectName)) {
@@ -112,6 +124,10 @@ public:
 	template<class T>
 	void QueryGameObjects(const char* objectName, std::function<bool(T* go)> func)
 	{
+		if (m_isActive == false)
+		{
+			return;
+		}
 		for (auto goList : m_gameObjectListArray) {
 			for (auto go : goList) {
 				if (strcmp(go->m_name.cstr(), objectName) == 0) {
@@ -130,6 +146,10 @@ public:
 	{
 		static std::vector<T*> objectVector;
 		objectVector.clear();
+		if (m_isActive == false)
+		{
+			return objectVector;
+		}
 		for (auto goList : m_gameObjectListArray) {
 			for (auto go : goList) {
 				if (go->IsMatchName(objectName)) {
@@ -146,18 +166,21 @@ private:
 	//全てのゲームオブジェクトを削除する。
 	void DeleteAllGameObjects()
 	{
+		m_isActive = false;
 		for (auto gameObjects : m_gameObjectListArray)
 		{
-			for (auto gameObject : gameObjects)
+			for (auto itr = gameObjects.begin(); itr != gameObjects.end(); ++itr) 
 			{
-				delete gameObject;
+				delete* itr;
 			}
+			
 		}
 	}
 	enum { GAME_OBJECT_PRIO_MAX = 255 };		//!<ゲームオブジェクトの優先度の最大値。
 	typedef std::list<IGameObject*>	 GameObjectList;
 	std::array<GameObjectList, GAME_OBJECT_PRIO_MAX>	m_gameObjectListArray;							//!<ゲームオブジェクトの優先度付きリスト。
-	static GameObjectManager* m_instance;		//唯一のインスタンスのアドレスを記録する変数。
+	static GameObjectManager*							m_instance;		//唯一のインスタンスのアドレスを記録する変数。
+	bool												m_isActive = true;
 };
 
 

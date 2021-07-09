@@ -139,7 +139,7 @@ public:
 		
 	friend class CGameObjectManager;
 protected:
-	std::string m_name;								//ゲームオブジェクトの名前
+	std::string m_name = "default";					//ゲームオブジェクトの名前
 	bool m_isStart = false;							//Startの開始フラグ。
 	bool m_isDead = false;							//死亡フラグ。
 	bool m_isRegistDeadList = false;				//死亡リストに積まれている。
