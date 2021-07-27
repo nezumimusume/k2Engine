@@ -23,6 +23,7 @@ void Ssao::Init(RenderTarget& mainRenderTarget)
     SpriteInitData spriteInitData;
     spriteInitData.m_textures[0] = &g_renderingEngine->GetZPrepassDepthTexture();
     spriteInitData.m_textures[1] = &g_renderingEngine->GetGBufferNormalTexture();
+    spriteInitData.m_textures[2] = &g_renderingEngine->GetGBufferWorldTexture();
     // ‰ğ‘œ“x‚ÍmainRenderTarget‚Ì•‚Æ‚‚³
     spriteInitData.m_width = mainRenderTarget.GetWidth();
     spriteInitData.m_height = mainRenderTarget.GetHeight();

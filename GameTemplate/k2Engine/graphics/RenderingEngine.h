@@ -87,6 +87,14 @@ public:
         return m_gBuffer[enGBufferNormal].GetRenderTargetTexture();
     }
     /// <summary>
+    /// GBufferのワールド座標テクスチャを取得。
+    /// </summary>
+    /// <returns></returns>
+    Texture& GetGBufferWorldTexture()
+    {
+        return m_gBuffer[enGBufferWorldPos].GetRenderTargetTexture();
+    }
+    /// <summary>
     /// 不透明オブジェクトの描画完了時のメインレンダリングターゲットの
     /// スナップショットを取得
     /// </summary>

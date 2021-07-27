@@ -27,6 +27,7 @@ struct PSInput {
 Texture2D<float4> zPrepassTexture : register(t0);     //深度値レンダーターゲットのシェーダーリソース。
 Texture2D<float4> ssaoTexture : register(t0);     //ssaoレンダーターゲットのシェーダーリソース。
 Texture2D<float4> normalTexture : register(t1);       //法線レンダ―ターゲットのシェーダーリソース。
+Texture2D<float4> worldTexture : register(t2);       //ワールド座標レンダ―ターゲットのシェーダーリソース。
 
 sampler Sampler : register(s0);     //サンプラー。
 
@@ -46,6 +47,8 @@ float random(float2 uv)
 
 float4 PSMain(PSInput input) : SV_Target0
 {
+
+	const float SAMPLING_RATIO = 2.0;       // サンプル点の数の比較係数
   
 	//深度値マップから深度値ゲット。
 	float dp = zPrepassTexture.Sample(Sampler, input.uv).x;
@@ -57,8 +60,10 @@ float4 PSMain(PSInput input) : SV_Target0
 
 	//SSAO。
 	//uv値から、元の座標を復元。
-	float4 respos = mul(invproj, float4(input.uv*float2(2, -2) + float2(-1, 1), dp, 1));
+	//float4 respos = mul(invproj, float4(input.uv*float2(2, -2) + float2(-1, 1), dp, 1));
+	float4 respos = mul(view, worldTexture.Sample(Sampler, input.uv));
 	respos.xyz = respos.xyz / respos.w;
+
 	float div = 0.0f;
 	float ao = 0.0f;
 	//法線ベクトルを法線マップから取得して、元の法線の値に戻している。
@@ -73,6 +78,7 @@ float4 PSMain(PSInput input) : SV_Target0
 	float4 rpos;
 	float realDepth;
 
+	int count = 0;
 	if (dp < 1.0f) {
 		for (int i = 0; i < trycnt; ++i) {
 			//乱数から適当なベクトルを作成する。
@@ -86,35 +92,54 @@ float4 PSMain(PSInput input) : SV_Target0
 			float sgn = sign(dt);
 			//-の場合は+に変換する。
 			omega *= sgn;
+			
+			//内積の符号を-なら+にする。
+			dt *= sgn;
+			//cosΘの総和を求めたいので、加算する。
+			div += dt;
+			
+
 			//求めた元の座標に適当なベクトルを加算し。
 			//ビュー行列とプロジェクション行列より、スクリーン上の座標を求める。
 			rpos = mul(proj, float4(respos.xyz + omega * radius, 1));
 			//rpos = mul(proj, mul(view,float4(respos.xyz + omega * radius, 1)));
 			//wで割る。
 			rpos.xyz /= rpos.w;
-			//内積の符号を-なら+にする。
-			dt *= sgn;
-			//cosΘの総和を求めたいので、加算する。
-			div += dt;
 
 			//rpos.xy *= float2(0.5f, -0.5f);
 			//rpos.xy += 0.5f;
+			//UV座標に変換。
+			//rpos.xy = (rpos.xy + float2(1, -1))* float2(0.5f, -0.5f);
+			//スクリーン座標をUV座標に変換。
+			rpos.xy *= float2(0.5f, -0.5f);
+			rpos.xy += 0.5f;
 
-			rpos.xy = (rpos.xy + float2(1, -1))* float2(0.5f, -0.5f);
+			if (rpos.x >= 0.0f && rpos.x <= 1.0f
+				&& rpos.y >= 0.0f && rpos.y <= 1.0f)
+			{
+				//実際の深度値を持ってくる。
+				realDepth = zPrepassTexture.Sample(Sampler, rpos.xy).x;
 
-			realDepth = zPrepassTexture.Sample(Sampler, rpos.xy).x;
+				//深度値マップから実際の深度値を比較して、遮蔽されていたら1.0f*cosΘを加算する。
+				//ao += step(realDepth, rpos.z) * dt;
+				if (rpos.z < realDepth)
+				{
+					count++;
+				}
 
-			//深度値マップから実際の深度値を比較して、遮蔽されていたら1.0f*cosΘを加算する。
-			ao += step(realDepth, rpos.z)*dt;
-
-			sumDepth += abs(realDepth - rpos.z);
-
+				sumDepth += abs(realDepth - rpos.z);
+			}
 		}
 		//cosΘの総和(全てが遮蔽されていた時の値)で割る。
-		ao /= div;
+		// /= div;
 		sumDepth /= trycnt;
 	
 	}
+
+	// 遮蔽されないポイントの数から環境遮蔽係数を求める
+	float a = clamp(float(count) * SAMPLING_RATIO / float(trycnt), 0.0, 1.0);
+
+
 	float brightNess = 0.0f;
 	//サンプリングした深度値-計算した深度値の平均。
 	//brightNess = sumDepth;
@@ -123,7 +148,7 @@ float4 PSMain(PSInput input) : SV_Target0
 	//brightNess = rpos.z;
 	//サンプリングした深度値。
 	//brightNess = realDepth;
-	return float4(brightNess, brightNess, brightNess, 1.0f);
+	return float4(a, a, a, 1.0f);
 }
 
 //SSAO(��Z�p�̖��x�̂ݏ���Ԃ���΂悢)

@@ -79,7 +79,7 @@
     <ClCompile Include="level2DRender\MapChip2DRender.cpp">
       <Filter>level2DRender</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\collision\CollisionObject.cpp">
+    <ClCompile Include="collision\CollisionObject.cpp">
       <Filter>collision</Filter>
     </ClCompile>
   </ItemGroup>
@@ -148,7 +148,7 @@
     <ClInclude Include="graphics\IRenderer.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\collision\CollisionObject.h">
+    <ClInclude Include="collision\CollisionObject.h">
       <Filter>collision</Filter>
     </ClInclude>
   </ItemGroup>

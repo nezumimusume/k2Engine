@@ -71,33 +71,32 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	{
 		//レンダリング開始。
 		g_engine->BeginFrame();
-		
+
 
 		//////////////////////////////////////
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
-		
+
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 
 		//エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-		
-		
+
+
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 		//レンダリングエンジンを実行。
 		//ここでエフェクトをドロー。
 		g_renderingEngine->Execute(renderContext);
-	
+
 		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
-	
-	
+
+
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
 		g_soundEngine->Update();
-		PhysicsWorld::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 		g_engine->EndFrame();
-	
+
 	}
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
