@@ -58,7 +58,7 @@ void LevelRender::Init(
 			levelObjData.name = m_bonelist[i]->GetName();
 			std::wstring name = levelObjData.name;
 			//@があるかどうか、検索する。
-			int pos = name.find('@');
+			int pos = static_cast<int>(name.find('@'));
 			//@が存在していれば、@後の数字を取得する。
 			if (pos != std::wstring::npos)
 			{
