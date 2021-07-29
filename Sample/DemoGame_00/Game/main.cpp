@@ -14,6 +14,7 @@
 
 
 
+
 void ReportLiveObjects()
 {
 	IDXGIDebug* pDxgiDebug;
@@ -62,10 +63,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
-
+	Stopwatch sw;
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+		sw.Start();
 		//レンダリング開始。
 		g_engine->BeginFrame();
 		
@@ -93,6 +95,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//////////////////////////////////////
 		g_soundEngine->Update();
 		g_engine->EndFrame();
+		sw.Stop();
+		char text[256];
+		sprintf(text, "time = %f\n", sw.GetElapsedMillisecond());
+		OutputDebugStringA(text);
 	
 	}
 	//ゲームオブジェクトマネージャーを削除。

@@ -13,7 +13,9 @@ public:
     /// ライトビュープロジェクションクロップ行列を計算する
     /// </summary>
     /// <param name="lightDirection">ライトの方向</param>
-    void CalcLightViewProjectionCropMatrix(Vector3 lightDirection);
+    void CalcLightViewProjectionCropMatrix(
+        Vector3 lightDirection,
+        float cascadeAreaRateTbl[NUM_SHADOW_MAP]);
     /// <summary>
     /// 計算されたライトビュープロジェクションクロップ行列を取得
     /// </summary>

@@ -2,7 +2,10 @@
 #include "CascadeShadowMapMatrix.h"
 
 
-void CascadeShadowMapMatrix::CalcLightViewProjectionCropMatrix(Vector3 lightDirection)
+void CascadeShadowMapMatrix::CalcLightViewProjectionCropMatrix(
+    Vector3 lightDirection,
+    float cascadeAreaRateTbl[NUM_SHADOW_MAP]
+)
 {
     //ライトカメラを計算する
     Camera lightCamera;
@@ -31,9 +34,9 @@ void CascadeShadowMapMatrix::CalcLightViewProjectionCropMatrix(Vector3 lightDire
 
     // 分割エリアの最大深度値を定義する
     float cascadeAreaTbl[NUM_SHADOW_MAP] = {
-        g_camera3D->GetFar() * 0.05f,     // 近影を映す最大深度値
-        g_camera3D->GetFar() * 0.3f,     // 中影を映す最大深度値
-        g_camera3D->GetFar(),            // 遠影を映す最大深度値。3枚目の最大深度はカメラのFarクリップ
+        g_camera3D->GetFar() * cascadeAreaRateTbl[SHADOW_MAP_AREA_NEAR],     // 近影を映す最大深度値
+        g_camera3D->GetFar() * cascadeAreaRateTbl[SHADOW_MAP_AREA_MIDDLE],   // 中影を映す最大深度値
+        g_camera3D->GetFar() * cascadeAreaRateTbl[SHADOW_MAP_AREA_FAR] ,     // 遠影を映す最大深度値。3枚目の最大深度はカメラのFarクリップ
     };
     // カメラの前方向、右方向、上方向を求める
     // 前方向と右方向はすでに計算済みなので、それを引っ張ってくる
