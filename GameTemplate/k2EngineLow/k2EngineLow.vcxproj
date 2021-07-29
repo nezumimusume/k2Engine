@@ -318,7 +318,6 @@
     <ClInclude Include="tkFile\TkaFile.h" />
     <ClInclude Include="tkFile\TkmFile.h" />
     <ClInclude Include="tkFile\TksFile.h" />
-    <ClInclude Include="util\Stopwatch.h" />
     <ClInclude Include="util\TResourceBank.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

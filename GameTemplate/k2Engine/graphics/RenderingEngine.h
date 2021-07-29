@@ -123,6 +123,27 @@ public:
     {
         rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_gBuffer[enGBufferAlbedo].GetDSVCpuDescriptorHandle());
     }
+    /// <summary>
+    /// カスケードシャドウのエリア率を設定。
+    /// </summary>
+    /// <remark>
+    /// ゲームカメラの近平面から遠平面までのエリアの、何%の範囲を近距離用の高解像度のシャドウマップに、
+    /// 何%を中距離用のシャドウマップに、何%を遠距離用のシャドウマップに描画するかを指定したもの。
+    /// 例えば、nearArea  = 0.1(10%)、middleArea = 0.3(30%), farArea = 0.8(80%)と指定されていたら、
+    /// カメラから10%のエリアは近距離用のシャドウマップに描画、
+    /// カメラから10%～30%のエリアは中距離用のシャドウマップに描画、
+    /// カメラから30%～80%のエリアは遠距離用のシャドウマップに描画となる。
+    /// 影の品質の調整に使ってください。
+    /// </remark>
+    /// <param name="nearArea">近影エリア率。0.0f～1.0f</param>
+    /// <param name="nearArea">中影エリア率。0.0f～1.0f</param>
+    /// <param name="nearArea">遠影エリア率。0.0f～1.0f</param>
+    void  SetCascadeNearAreaRates(float nearArea, float middleArea, float farArea)
+    {
+        for (auto& renderer : m_shadowMapRenders) {
+            renderer.SetCascadeNearAreaRates(nearArea, middleArea, farArea);
+        }
+    }
 private:
     /// <summary>
     /// G-Bufferを初期化

@@ -16,6 +16,7 @@
 
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+#include "graphics/RenderingEngine.h"
 
 namespace
 {
@@ -56,6 +57,8 @@ Game::~Game()
 
 bool Game::Start()
 {
+	//カスケードシャドウの近影エリア率を
+	g_renderingEngine->SetCascadeNearAreaRates(0.01f, 0.05f, 0.3f);
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
 	g_camera3D->SetFar(40000.0f);
 	

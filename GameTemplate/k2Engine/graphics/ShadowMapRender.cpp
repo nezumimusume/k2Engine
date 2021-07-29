@@ -49,7 +49,10 @@ void ShadowMapRender::Render(
     if (lightDirection.LengthSq() < 0.001f) {
         return;
     }
-    m_cascadeShadowMapMatrix.CalcLightViewProjectionCropMatrix(lightDirection);
+    m_cascadeShadowMapMatrix.CalcLightViewProjectionCropMatrix(
+        lightDirection,
+        m_cascadeAreaRateArray
+    );
 
     int shadowMapNo = 0;
     for (auto& shadowMap : m_shadowMaps) {

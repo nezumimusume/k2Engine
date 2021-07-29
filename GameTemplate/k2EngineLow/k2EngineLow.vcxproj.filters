@@ -432,9 +432,6 @@
     <ClInclude Include="tkFile\TkmFile.h">
       <Filter>tkFile</Filter>
     </ClInclude>
-    <ClInclude Include="util\Stopwatch.h">
-      <Filter>util</Filter>
-    </ClInclude>
     <ClInclude Include="util\TResourceBank.h">
       <Filter>util</Filter>
     </ClInclude>
