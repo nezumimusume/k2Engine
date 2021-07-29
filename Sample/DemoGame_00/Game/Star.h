@@ -29,7 +29,7 @@ public:
 	}
 private:
 	Vector3				m_position;						//座用。
-	Vector3				m_scale = Vector3::One * 0.5f;	//大きさ。
+	Vector3				m_scale = Vector3::One * 0.3f;	//大きさ。
 	Player*				m_player = nullptr;
 	bool				m_isGet = false;
 	float				m_jumpSpeed = 0.0f;
