@@ -53,7 +53,7 @@ SPSIn VSMainInstancing(SVSIn vsIn, uint instanceID : SV_InstanceID)
 /// <summary>
 /// スキンありメッシュの頂点シェーダーのエントリー関数。
 /// </summary>
-SPSIn VSSkinMain( SVSIn vsIn ) 
+SPSIn VSMainSkin( SVSIn vsIn ) 
 {
 	return VSMainCore(vsIn, CalcSkinMatrix(vsIn));
 }
@@ -61,5 +61,11 @@ SPSIn VSSkinMain( SVSIn vsIn )
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
     return float4( psIn.depth.x, psIn.depth.y, psIn.depth.z, 1.0f );
+}
+SPSIn VSMainSkinInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
+{
+    float4x4 mWorld = CalcSkinMatrix(vsIn);
+    mWorld = mWorld * g_worldMatrixArray[instanceID];
+    return VSMainCore(vsIn, mWorld);
 }
 

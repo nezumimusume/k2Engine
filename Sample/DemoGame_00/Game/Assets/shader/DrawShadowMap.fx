@@ -42,9 +42,15 @@ SPSIn VSMainInstancing(SVSIn vsIn, uint instanceID : SV_InstanceID)
 /// <summary>
 /// スキンありメッシュの頂点シェーダーのエントリー関数。
 /// </summary>
-SPSIn VSSkinMain( SVSIn vsIn ) 
+SPSIn VSMainSkin( SVSIn vsIn ) 
 {
 	return VSMainCore(vsIn, CalcSkinMatrix(vsIn));
+}
+SPSIn VSMainSkinInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
+{
+    float4x4 mWorld = CalcSkinMatrix(vsIn);
+    mWorld = mWorld * g_worldMatrixArray[instanceID];
+    return VSMainCore(vsIn, mWorld);
 }
 /// <summary>
 /// シャドウマップ描画用のピクセルシェーダー
