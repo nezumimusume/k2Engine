@@ -59,36 +59,40 @@ float3 GetNormalFromNormalMap(float3 normal, float3 tangent, float3 biNormal, fl
 
 
 // モデル用の頂点シェーダーのエントリーポイント
-SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
+SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal)
 {
     SPSIn psIn;
-    float4x4 m;
-    if( hasSkin ){
-        m = CalcSkinMatrix(vsIn);
-    }else{
-        m = mWorld;
-    }
     
-    psIn.pos = mul(m, vsIn.pos); // モデルの頂点をワールド座標系に変換
+    psIn.pos = mul(mWorldLocal, vsIn.pos); // モデルの頂点をワールド座標系に変換
     // 頂点シェーダーからワールド座標を出力
     psIn.worldPos = psIn.pos;
 
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
-    psIn.normal = normalize(mul(m, vsIn.normal));
-    psIn.tangent = normalize(mul(m, vsIn.tangent));
-    psIn.biNormal = normalize(mul(m, vsIn.biNormal));
+    psIn.normal = normalize(mul(mWorldLocal, vsIn.normal));
+    psIn.tangent = normalize(mul(mWorldLocal, vsIn.tangent));
+    psIn.biNormal = normalize(mul(mWorldLocal, vsIn.biNormal));
     psIn.uv = vsIn.uv;
 
     return psIn;
 }
 SPSIn VSMain( SVSIn vsIn )
 {
-    return VSMainCore(vsIn, false);
+    return VSMainCore(vsIn, mWorld);
 }
 SPSIn VSMainSkin( SVSIn vsIn )
 {
-    return VSMainCore(vsIn, true);
+    return VSMainCore(vsIn, CalcSkinMatrix(vsIn));
+}
+SPSIn VSMainInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
+{
+    return VSMainCore(vsIn, g_worldMatrixArray[instanceID]);
+}
+SPSIn VSMainSkinInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
+{
+    float4x4 mWorldLocal = CalcSkinMatrix(vsIn);
+    mWorldLocal = mul( g_worldMatrixArray[instanceID], mWorldLocal );
+    return VSMainCore(vsIn, mWorldLocal);
 }
 SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
 {
