@@ -237,13 +237,21 @@ private:
 	/// </summary>
 	/// <param name="renderingEngine">レンダリングエンジン</param>
 	/// <param name="tkmFilePath">tkmファイルパス</param>
-	void InitModelOnShadowMap(RenderingEngine& renderingEngine,const char* tkmFilePath);
+	void InitModelOnShadowMap(
+		RenderingEngine& renderingEngine,
+		const char* tkmFilePath,
+		EnModelUpAxis modelUpAxis
+	);
 	/// <summary>
 	/// ZPrepass描画用のモデルを初期化。
 	/// </summary>
 	/// <param name="renderingEngine"></param>
 	/// <param name="tkmFilePath"></param>
-	void InitModelOnZprepass(RenderingEngine& renderingEngine,const char* tkmFilePath);
+	void InitModelOnZprepass(
+		RenderingEngine& renderingEngine,
+		const char* tkmFilePath,
+		EnModelUpAxis modelUpAxis
+	);
 	
 	/// <summary>
 	/// インスタンシング描画用の初期化処理を実行。

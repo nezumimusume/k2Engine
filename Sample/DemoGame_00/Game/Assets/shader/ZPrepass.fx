@@ -64,8 +64,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 }
 SPSIn VSMainSkinInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
 {
-    float4x4 mWorld = CalcSkinMatrix(vsIn);
-    mWorld = mWorld * g_worldMatrixArray[instanceID];
-    return VSMainCore(vsIn, mWorld);
+    float4x4 mWorldLocal = CalcSkinMatrix(vsIn);
+    mWorldLocal = mul( g_worldMatrixArray[instanceID], mWorldLocal );
+    return VSMainCore(vsIn, mWorldLocal);
 }
 

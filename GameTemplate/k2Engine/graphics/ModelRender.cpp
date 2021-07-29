@@ -59,9 +59,9 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	//インスタンシング描画用のデータを初期化。
 	InitInstancingDraw(maxInstance);
 	//ZPrepass描画用のモデルを初期化。
-	InitModelOnZprepass(*g_renderingEngine, filePath);
+	InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 	//シャドウマップ描画用のモデルを初期化。
-	InitModelOnShadowMap(*g_renderingEngine, filePath);
+	InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 
 }
 
@@ -76,9 +76,9 @@ void ModelRender::InitForwardRendering(ModelInitData& initData)
 	m_forwardRenderModel.Init(initData);
 
 	//ZPrepass描画用のモデルを初期化。
-	InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath);
+	InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 	//シャドウマップ描画用のモデルを初期化。
-	InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath);
+	InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 }
 
 void ModelRender::Init(const char* filePath,
@@ -97,9 +97,9 @@ void ModelRender::Init(const char* filePath,
 	// GBuffer描画用のモデルを初期化。
 	InitModelOnRenderGBuffer(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
 	// ZPrepass描画用のモデルを初期化。
-	InitModelOnZprepass(*g_renderingEngine, filePath);
+	InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 	// シャドウマップ描画用のモデルを初期化。
-	InitModelOnShadowMap(*g_renderingEngine, filePath);
+	InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 }
 
 void ModelRender::InitSkeleton(const char* filePath)
@@ -176,11 +176,15 @@ void ModelRender::InitModelOnRenderGBuffer(
 	m_renderToGBufferModel.Init(modelInitData);
 
 }
-void ModelRender::InitModelOnShadowMap(RenderingEngine& renderingEngine, const char* tkmFilePath)
+void ModelRender::InitModelOnShadowMap(
+	RenderingEngine& renderingEngine, 
+	const char* tkmFilePath,
+	EnModelUpAxis modelUpAxis
+)
 {
 	ModelInitData modelInitData;
 	modelInitData.m_tkmFilePath = tkmFilePath;
-
+	modelInitData.m_modelUpAxis = modelUpAxis;
 	// 頂点シェーダーのエントリーポイントをセットアップ。
 	SetupVertexShaderEntryPointFunc(modelInitData);
 
@@ -208,12 +212,17 @@ void ModelRender::InitModelOnShadowMap(RenderingEngine& renderingEngine, const c
 	}
 }
 
-void ModelRender::InitModelOnZprepass(RenderingEngine& renderingEngine, const char* tkmFilePath)
+void ModelRender::InitModelOnZprepass(
+	RenderingEngine& renderingEngine, 
+	const char* tkmFilePath,
+	EnModelUpAxis modelUpAxis
+)
 {
 	ModelInitData modelInitData;
 	modelInitData.m_tkmFilePath = tkmFilePath;
 	modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
-	
+	modelInitData.m_modelUpAxis = modelUpAxis;
+
 	// 頂点シェーダーのエントリーポイントをセットアップ。
 	SetupVertexShaderEntryPointFunc(modelInitData);
 
