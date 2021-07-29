@@ -187,7 +187,8 @@ void MeshParts::Draw(
 	RenderContext& rc,
 	const Matrix& mWorld,
 	const Matrix& mView,
-	const Matrix& mProj
+	const Matrix& mProj,
+	int numInstance
 )
 {
 	//メッシュごとにドロー
@@ -223,7 +224,7 @@ void MeshParts::Draw(
 			rc.SetIndexBuffer(*ib);
 
 			//4. ドローコールを実行。
-			rc.DrawIndexed(ib->GetCount());
+			rc.DrawIndexedInstance(ib->GetCount(), numInstance);
 			descriptorHeapNo++;
 		}
 	}

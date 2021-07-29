@@ -48,9 +48,10 @@ void Model::Init(const ModelInitData& initData)
 	
 }
 
-void Model::UpdateWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale)
+
+Matrix Model::CalcWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale)
 {
-	Matrix mBias;
+	Matrix mBias, mWorld;
 	if (m_modelUpAxis == enModelUpAxisZ) {
 		//Z-up
 		mBias.MakeRotationX(Math::PI * -0.5f);
@@ -59,9 +60,9 @@ void Model::UpdateWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale)
 	mTrans.MakeTranslation(pos);
 	mRot.MakeRotationFromQuaternion(rot);
 	mScale.MakeScaling(scale);
-	m_world = mBias * mScale * mRot * mTrans;
+	mWorld = mBias * mScale * mRot * mTrans;
+	return mWorld;
 }
-
 //todo ここも変更する必要あり？？
 void Model::ChangeAlbedoMap(const char* materialName, Texture& albedoMap)
 {
@@ -76,26 +77,45 @@ void Model::ChangeAlbedoMap(const char* materialName, Texture& albedoMap)
 	m_meshParts.CreateDescriptorHeaps();
 	
 }
-void Model::Draw(RenderContext& rc)
+void Model::Draw(
+	RenderContext& rc, 
+	int numInstance
+)
 {
 	m_meshParts.Draw(
 		rc, 
-		m_world, 
+		m_worldMatrix,
 		g_camera3D->GetViewMatrix(), 
-		g_camera3D->GetProjectionMatrix()
+		g_camera3D->GetProjectionMatrix(),
+		numInstance
 	);
 }
-void Model::Draw(RenderContext& rc, Camera& camera)
+void Model::Draw(
+	RenderContext& rc, 
+	Camera& camera, 
+	int numInstance
+)
 {
-	Draw(rc, camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	Draw(
+		rc, 
+		camera.GetViewMatrix(), 
+		camera.GetProjectionMatrix(),
+		numInstance
+	);
 }
 
-void Model::Draw(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix)
+void Model::Draw(
+	RenderContext& rc, 
+	const Matrix& viewMatrix, 
+	const Matrix& projMatrix,
+	int numInstance
+)
 {
 	m_meshParts.Draw(
 		rc,
-		m_world,
+		m_worldMatrix,
 		viewMatrix,
-		projMatrix
+		projMatrix,
+		numInstance
 	);
 }

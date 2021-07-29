@@ -17,13 +17,20 @@ public:
 	/// <param name="filePath">ファイルパス。</param>
 	/// <param name="animationClips">アニメーションクリップ。</param>
 	/// <param name="numAnimationClips">アニメーションクリップの数。</param>
-	/// <param name="">モデルの上方向。</param>
-	/// <param name="">trueなら影が落ちる。</param>
-	void Init(const char* filePath,
+	/// <param name="enModelUpAxis">モデルの上方向。</param>
+	/// <param name="isShadowReciever">シャドウレシーバーフラグtrueなら影が落ちる。</param>
+	/// <param name="maxInstance">
+	/// インスタンスの最大数。この引数を１より大きくするとインスタンシング描画が行われます。
+	/// インスタンシング描画を行う際は描画したいインスタンスの数分だけ、UpdateInstancingDraw()を呼び出す必要があります。
+	/// インスタンシング描画の詳細はSmaple_XXを参照してください。
+	/// </param>
+	void Init(
+		const char* filePath,
 		AnimationClip* animationClips = nullptr,
 		int numAnimationClips = 0,
 		EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
-		bool isShadowReciever = true);
+		bool isShadowReciever = true,
+		int maxInstance = 1 );
 	/// <summary>
 	/// 初期化。
 	/// フォワードレンダリング。
@@ -32,13 +39,20 @@ public:
 	/// <param name="filePath">ファイルパス。</param>
 	/// <param name="animationClips">アニメーションクリップ。</param>
 	/// <param name="numAnimationClips">アニメーションクリップの数。</param>
-	/// <param name="">モデルの上方向。</param>
-	/// <param name="">trueなら影が落ちる。</param>
-	void InitForwardRendering(const char* filePath,
+	/// <param name="enModelUpAxis">モデルの上方向。</param>
+	/// <param name="isShadowReciever">trueなら影が落ちる。</param>
+	/// <param name="maxInstance">
+	/// インスタンスの最大数。この引数を１より大きくするとインスタンシング描画が行われます。
+	/// インスタンシング描画を行う際は描画したいインスタンスの数分だけ、UpdateInstancingDraw()を呼び出す必要があります。
+	/// インスタンシング描画の詳細はSmaple_XXを参照してください。
+	/// </param>	
+	void InitForwardRendering(
+		const char* filePath,
 		AnimationClip* animationClips = nullptr,
 		int numAnimationClips = 0,
 		EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
-		bool isShadowReciever = true);
+		bool isShadowReciever = true,
+		int maxInstance = 1);
 	/// <summary>
 	/// Sky用。
 	/// </summary>
@@ -47,7 +61,15 @@ public:
 	/// <summary>
 	/// 更新処理。
 	/// </summary>
+	
 	void Update();
+	/// <summary>
+	/// インスタンシングデータの更新。
+	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <param name="rot">回転</param>
+	/// <param name="scale">拡大率</param>
+	void UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale);
 	/// <summary>
 	/// 描画処理。
 	/// </summary>
@@ -81,8 +103,11 @@ public:
 	}
 
 	/// <summary>
-	/// 座標、回転、拡大を全て更新。
+	/// 座標、回転、拡大を全て設定。
 	/// </summary>
+	/// <remark>
+	/// インスタンシング描画が有効の場合は、この設定は無視されます。
+	/// </remark>
 	/// <param name="pos">座標。</param>
 	/// <param name="rotation">回転。</param>
 	/// <param name="scale">拡大。</param>
@@ -96,6 +121,9 @@ public:
 	/// <summary>
 	/// 座標を設定。
 	/// </summary>
+	/// <remark>
+	/// インスタンシング描画が有効の場合は、この設定は無視されます。
+	/// </remark>
 	/// <param name="pos">座標。</param>
 	void SetPosition(const Vector3& pos)
 	{
@@ -105,6 +133,9 @@ public:
 	/// <summary>
 	/// 回転を設定。
 	/// </summary>
+	/// <remark>
+	/// インスタンシング描画が有効の場合は、この設定は無視されます。
+	/// </remark>
 	/// <param name="rotation">回転。</param>
 	void SetRotation(const Quaternion& rotation)
 	{
@@ -112,9 +143,12 @@ public:
 	}
 
 	/// <summary>
-	/// 大きさ。
+	/// 拡大率を設定。
 	/// </summary>
-	/// <param name="scale">大きさ。</param>
+	/// <remark>
+	/// インスタンシング描画が有効の場合は、この設定は無視されます。
+	/// </remark>
+	/// <param name="scale">拡大率。</param>
 	void SetScale(const Vector3& scale)
 	{
 		m_scale = scale;
@@ -197,12 +231,25 @@ private:
 	/// </summary>
 	void OnForwardRender(RenderContext& rc) override;
 private:
+
 	/// <summary>
-	 /// 共通の初期化処理
-	 /// </summary>
-	 /// <param name="renderingEngine">レンダリングエンジン</param>
-	 /// <param name="tkmFilePath">tkmファイルパス</param>
-	void InitCommon(RenderingEngine& renderingEngine, const char* tkmFilePath);
+	/// シャドウマップ描画用のモデルを初期化。
+	/// </summary>
+	/// <param name="renderingEngine">レンダリングエンジン</param>
+	/// <param name="tkmFilePath">tkmファイルパス</param>
+	void InitShadowMapModel(RenderingEngine& renderingEngine,const char* tkmFilePath);
+	/// <summary>
+	/// ZPrepass
+	/// </summary>
+	/// <param name="renderingEngine"></param>
+	/// <param name="tkmFilePath"></param>
+	void InitZprepassModel(RenderingEngine& renderingEngine,const char* tkmFilePath);
+	
+	/// <summary>
+	/// インスタンシング描画用の初期化処理を実行。
+	/// </summary>
+	/// <param name="maxInstance">最大インスタンス数</param>
+	void InitInstancingDraw(int maxInstance);
 private:
 	AnimationClip*				m_animationClips = nullptr;			//アニメーションクリップ。
 	int							m_numAnimationClips = 0;			//アニメーションクリップの数。
@@ -219,5 +266,11 @@ private:
 	Skeleton					m_skeleton;							//骨。
 	bool						m_isShadowCaster = true;			//シャドウキャスターフラグ
 	float						m_animationSpeed = 1.0f;
+	int							m_numInstance = 0;					//インスタンスの数。
+	int							m_maxInstance = 1;					//最大インスタンス数。
+	int							m_fixNumInstanceOnFrame = 0;		//このフレームに描画するインスタンスの数の確定数。。
+	bool						m_isEnableInstancingDraw = false;	//インスタンシング描画が有効？
+	std::unique_ptr<Matrix[]>	m_worldMatrixArray;					//ワールド行列の配列。
+	StructuredBuffer			m_worldMatrixArraySB;				//ワールド行列の配列のストラクチャードバッファ。
 };
 

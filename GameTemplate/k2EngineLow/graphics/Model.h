@@ -57,33 +57,67 @@ public:
 	/// <param name="pos">座標</param>
 	/// <param name="rot">回転</param>
 	/// <param name="scale">拡大率</param>
-	void UpdateWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale);
-
+	void UpdateWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale)
+	{
+		m_worldMatrix = CalcWorldMatrix(pos, rot, scale);
+	}
+	
+	/// <summary>
+	/// ワールド行列を計算
+	/// </summary>
+	/// <remark>
+	/// Modelクラスの設定に基づいたワールド行列の計算が行われます。
+	/// 計算されたワールド行列が戻り値として返されます。
+	/// 本関数はUpdateWorldMatrixから呼ばれています。
+	/// 本関数はワールド行列を計算して、戻すだけです。
+	/// Model::m_worldMatrixが更新されるわけではないので、注意してください。
+	/// 本クラスの設定に基づいて計算されたワールド行列が必要な場合に使用してください
+	/// </remark>
+	/// <param name="pos">座標</param>
+	/// <param name="rot">回転</param>
+	/// <param name="scale">拡大率</param>
+	/// <returns>ワールド行列</returns>
+	Matrix CalcWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale);
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
-	void Draw(RenderContext& renderContext);
+	/// <param name="numInstance">インスタンスの数</param>
+	void Draw(
+		RenderContext& renderContext, 
+		int numInstance = 1
+	);
 	/// <summary>
 	/// 描画(カメラ指定版)
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
 	/// <param name="camera">カメラ</param>
-	void Draw(RenderContext& renderContext, Camera& camera);
+	/// <param name="numInstance">インスタンスの数</param>
+	void Draw(
+		RenderContext& renderContext, 
+		Camera& camera, 
+		int numInstance = 1
+	);
 	/// <summary>
 	/// 描画(カメラ行列指定版)
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
 	/// <param name="viewMatrix">ビュー行列</param>
 	/// <param name="projMatrix">プロジェクション行列</param>
-	void Draw(RenderContext& renderContext, const Matrix& viewMatrix, const Matrix& projMatrix);
+	/// <param name="numInstance">インスタンスの数</param>
+	void Draw(
+		RenderContext& renderContext, 
+		const Matrix& viewMatrix, 
+		const Matrix& projMatrix, 
+		int numInstance = 1
+	);
 	/// <summary>
 	/// ワールド行列を取得。
 	/// </summary>
 	/// <returns></returns>
 	const Matrix& GetWorldMatrix() const
 	{
-		return m_world;
+		return m_worldMatrix;
 	}
 	/// <summary>
 	/// メッシュに対して問い合わせを行う。
@@ -125,7 +159,7 @@ public:
 	}
 private:
 	bool m_isInited = false;						//初期化されている？
-	Matrix m_world;									//ワールド行列。
+	Matrix m_worldMatrix;							//ワールド行列。
 	TkmFile* m_tkmFile;								//tkmファイル。
 	Skeleton m_skeleton;							//スケルトン。
 	MeshParts m_meshParts;							//メッシュパーツ。

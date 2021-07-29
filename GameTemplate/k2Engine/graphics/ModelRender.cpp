@@ -6,8 +6,11 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	AnimationClip* animationClips,
 	int numAnimationClips,
 	EnModelUpAxis enModelUpAxis,
-	bool isShadowReciever)
+	bool isShadowReciever,
+	int maxInstance)
 {
+	//インスタンシング描画用のデータを初期化。
+	InitInstancingDraw(1);
 	InitSkeleton(filePath);
 	InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
 	ModelInitData initData;
@@ -29,27 +32,48 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	initData.m_modelUpAxis = enModelUpAxis;
 	
 	initData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	if (m_isEnableInstancingDraw) {
+		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+		initData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+	}
 	//作成した初期化データをもとにモデルを初期化する、
 	m_forwardRenderModel.Init(initData);
-	InitCommon(*g_renderingEngine, filePath);
+	//インスタンシング描画用のデータを初期化。
+	InitInstancingDraw(maxInstance);
+	//ZPrepass描画用のモデルを初期化。
+	InitZprepassModel(*g_renderingEngine, filePath);
+	//シャドウマップ描画用のモデルを初期化。
+	InitShadowMapModel(*g_renderingEngine, filePath);
+
 }
 
 void ModelRender::InitForwardRendering(ModelInitData& initData)
 {
+	//インスタンシング描画用のデータを初期化。
+	InitInstancingDraw(1);
 	InitSkeleton(initData.m_tkmFilePath);
 
 	initData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	//作成した初期化データをもとにモデルを初期化する。
 	m_forwardRenderModel.Init(initData);
-	InitCommon(*g_renderingEngine, initData.m_tkmFilePath);
+
+	//todo これはあかんな。
+	
+	//ZPrepass描画用のモデルを初期化。
+	InitZprepassModel(*g_renderingEngine, initData.m_tkmFilePath);
+	//シャドウマップ描画用のモデルを初期化。
+	InitShadowMapModel(*g_renderingEngine, initData.m_tkmFilePath);
 }
 
 void ModelRender::Init(const char* filePath,
 	AnimationClip* animationClips,
 	int numAnimationClips,
 	EnModelUpAxis enModelUpAxis,
-	bool isShadowReciever)
+	bool isShadowReciever,
+	int maxInstance)
 {
+	//インスタンシング描画用のデータを初期化。
+	InitInstancingDraw(maxInstance);
 	InitSkeleton(filePath);
 	InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
 	ModelInitData modelInitData;
@@ -74,10 +98,17 @@ void ModelRender::Init(const char* filePath,
 	modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	modelInitData.m_colorBufferFormat[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	modelInitData.m_colorBufferFormat[4] = DXGI_FORMAT_R8G8B8A8_UNORM;
-
+	if (m_isEnableInstancingDraw) {
+		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+	}
 	m_renderToGBufferModel.Init(modelInitData);
 
-	InitCommon(*g_renderingEngine, filePath);
+	
+	//ZPrepass描画用のモデルを初期化。
+	InitZprepassModel(*g_renderingEngine, filePath);
+	//シャドウマップ描画用のモデルを初期化。
+	InitShadowMapModel(*g_renderingEngine, filePath);
 }
 
 void ModelRender::InitSkeleton(const char* filePath)
@@ -100,51 +131,92 @@ void ModelRender::InitAnimation(AnimationClip* animationClips, int numAnimationC
 	}
 }
 
-void ModelRender::InitCommon(RenderingEngine& renderingEngine, const char* tkmFilePath)
+void ModelRender::InitInstancingDraw(int maxInstance)
 {
-	//ZPrepass描画用のモデルを初期化
-	{
-
-		ModelInitData modelInitData;
-		modelInitData.m_tkmFilePath = tkmFilePath;
-		modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
-		if (m_animationClips != nullptr) {
-			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
-			//スケルトンを指定する。
-			modelInitData.m_skeleton = &m_skeleton;
-		}
-		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-
-		m_zprepassModel.Init(modelInitData);
+	m_maxInstance = maxInstance;
+	if (m_maxInstance > 1) {
+		//インスタンシング描画を行うので、
+		//それ用のデータを構築する。
+		//ワールド行列の配列のメモリを確保する。
+		m_worldMatrixArray = std::make_unique<Matrix[]>(m_maxInstance);
+		//ワールド行列をGPUに転送するためのストラクチャードバッファを確保。
+		m_worldMatrixArraySB.Init(
+			sizeof(Matrix),
+			m_maxInstance,
+			nullptr
+		);
+		m_isEnableInstancingDraw = true;
 	}
-	//シャドウマップ描画用のモデルを初期化
-	{
-		ModelInitData modelInitData;
-		modelInitData.m_tkmFilePath = tkmFilePath;
-		if (m_animationClips != nullptr) {
-			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
-			//スケルトンを指定する。
-			modelInitData.m_skeleton = &m_skeleton;
-		}
-		
-		modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
-		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
-		for (
-			int ligNo = 0;
-			ligNo < NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT;
-			ligNo++)
-		{
-			m_shadowModels[ligNo][0].Init(modelInitData);
-			m_shadowModels[ligNo][1].Init(modelInitData);
-			m_shadowModels[ligNo][2].Init(modelInitData);
-		}
+}
+void ModelRender::InitShadowMapModel(RenderingEngine& renderingEngine, const char* tkmFilePath)
+{
+	ModelInitData modelInitData;
+	modelInitData.m_tkmFilePath = tkmFilePath;
+	if (m_animationClips != nullptr) {
+		modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		//スケルトンを指定する。
+		modelInitData.m_skeleton = &m_skeleton;
 	}
 
+	modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
+	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
+	
+	if (m_isEnableInstancingDraw) {
+		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+	}
+
+	for (
+		int ligNo = 0;
+		ligNo < NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT;
+		ligNo++)
+	{
+		m_shadowModels[ligNo][0].Init(modelInitData);
+		m_shadowModels[ligNo][1].Init(modelInitData);
+		m_shadowModels[ligNo][2].Init(modelInitData);
+	}
 }
 
+void ModelRender::InitZprepassModel(RenderingEngine& renderingEngine, const char* tkmFilePath)
+{
+	ModelInitData modelInitData;
+	modelInitData.m_tkmFilePath = tkmFilePath;
+	modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
+	if (m_animationClips != nullptr) {
+		modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		//スケルトンを指定する。
+		modelInitData.m_skeleton = &m_skeleton;
+	}
+	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	if (m_isEnableInstancingDraw) {
+		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+	}
+
+	m_zprepassModel.Init(modelInitData);
+}
+void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
+{
+	if (!m_isEnableInstancingDraw) {
+		return;
+	}
+
+	// インスタンシング描画を行う。
+	m_worldMatrixArray[m_numInstance] = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
+	if (m_numInstance == 0) {
+		//インスタンス数が0の場合のみアニメーションの更新を行う。
+		//アニメーションを進める。
+		m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
+		//todo アニメーションの対応はひとまず後で・・・。
+	}
+	m_numInstance++;
+	
+}
 void ModelRender::Update()
 {
-
+	if (m_isEnableInstancingDraw) {
+		return;
+	}
 	m_zprepassModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	if (m_renderToGBufferModel.IsInited()) {
 		m_renderToGBufferModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -157,6 +229,7 @@ void ModelRender::Update()
 			model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 		}
 	}
+	
 	if (m_skeleton.IsInited()) {
 		if (m_renderToGBufferModel.IsInited())
 		{
@@ -175,6 +248,15 @@ void ModelRender::Update()
 void ModelRender::Draw(RenderContext& rc)
 {
 	g_renderingEngine->AddRenderObject(this);
+	if (m_isEnableInstancingDraw) {
+		// このフレームで描画するインスタンスの数を確定する。
+		m_fixNumInstanceOnFrame = m_numInstance;
+		// インスタンスの数計測用の変数をクリア。
+		m_numInstance = 0;
+	}
+	else {
+		m_fixNumInstanceOnFrame = 1;
+	}
 }
 void ModelRender::OnRenderShadowMap(
 	RenderContext& rc,
@@ -183,23 +265,28 @@ void ModelRender::OnRenderShadowMap(
 	const Matrix& lvpMatrix)
 {
 	if (m_isShadowCaster) {
-		m_shadowModels[ligNo][shadowMapNo].Draw(rc, g_matIdentity, lvpMatrix);
+		m_shadowModels[ligNo][shadowMapNo].Draw(
+			rc, 
+			g_matIdentity, 
+			lvpMatrix, 
+			m_fixNumInstanceOnFrame
+		);
 	}
 }
 
 void ModelRender::OnZPrepass(RenderContext& rc)
 {
-	m_zprepassModel.Draw(rc);
+	m_zprepassModel.Draw(rc, m_fixNumInstanceOnFrame);
 }
 void ModelRender::OnRenderToGBuffer(RenderContext& rc)
 {
 	if (m_renderToGBufferModel.IsInited()) {
-		m_renderToGBufferModel.Draw(rc);
+		m_renderToGBufferModel.Draw(rc, m_fixNumInstanceOnFrame);
 	}
 }
 void ModelRender::OnForwardRender(RenderContext& rc)
 {
 	if (m_forwardRenderModel.IsInited()) {
-		m_forwardRenderModel.Draw(rc);
+		m_forwardRenderModel.Draw(rc, m_fixNumInstanceOnFrame);
 	}
 }

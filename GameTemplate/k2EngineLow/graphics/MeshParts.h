@@ -62,8 +62,13 @@ public:
 	/// <param name="mWorld">ワールド行列</param>
 	/// <param name="mView">ビュー行列</param>
 	/// <param name="mProj">プロジェクション行列</param>
-	/// <param name="light">ライト</param>
-	void Draw(RenderContext& rc, const Matrix& mWorld, const Matrix& mView, const Matrix& mProj);
+	/// <param name="numInstance">インスタンスの数</param>
+	void Draw(
+		RenderContext& rc, 
+		const Matrix& mWorld, 
+		const Matrix& mView, 
+		const Matrix& mProj,
+		int numInstance );
 	/// <summary>
 	/// スケルトンを関連付ける。
 	/// </summary>
