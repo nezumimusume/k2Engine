@@ -12,6 +12,7 @@
 #include "Title.h"
 
 #include "Fade.h"
+#include "StarRender.h"
 
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
@@ -49,6 +50,8 @@ Game::~Game()
 		DeleteGO(star);
 	}
 	DeleteGO(m_bgm);
+	auto starRender = FindGO<StarRender>("StarRender");
+	DeleteGO(starRender);
 }
 
 bool Game::Start()
@@ -60,6 +63,7 @@ bool Game::Start()
 
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 
+	int numStar = 0;
 	//レベルを構築する。
 	m_levelRender.Init("Assets/level3D/stage.tkl", [&](LevelObjectData& objData) {
 		if (objData.EqualObjectName(L"unityChan") == true) {
@@ -91,11 +95,16 @@ bool Game::Start()
 		else if (objData.ForwardMatchName(L"star") == true) {
 			auto star = NewGO<Star>(0, "star");
 			star->SetPosition(objData.position);
+			numStar++;
 			return true;
 		}
 
 		return true;
 	});
+
+	//Starレンダラーを作成。
+	auto starRender = NewGO<StarRender>(0, "StarRender");
+	starRender->SetMaxStar(numStar);
 
 	m_fade = FindGO<Fade>("fade");
 	m_fade->StartFadeIn();

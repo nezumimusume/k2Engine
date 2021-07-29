@@ -78,8 +78,13 @@ void ModelRender::Init(const char* filePath,
 	InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
 	ModelInitData modelInitData;
 	modelInitData.m_fxFilePath = "Assets/shader/RenderToGBufferFor3DModel.fx";
-	modelInitData.m_vsEntryPointFunc = "VSMain";
-
+	if (m_isEnableInstancingDraw) {
+		//インスタンシング描画。
+		modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
+	}
+	else {
+		modelInitData.m_vsEntryPointFunc = "VSMain";
+	}
 	if (m_animationClips != nullptr) {
 		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
 		modelInitData.m_vsSkinEntryPointFunc = "VSMainSkin";
@@ -152,6 +157,10 @@ void ModelRender::InitShadowMapModel(RenderingEngine& renderingEngine, const cha
 {
 	ModelInitData modelInitData;
 	modelInitData.m_tkmFilePath = tkmFilePath;
+	if (m_isEnableInstancingDraw) {
+		modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
+	}
+
 	if (m_animationClips != nullptr) {
 		modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
 		//スケルトンを指定する。
@@ -182,7 +191,10 @@ void ModelRender::InitZprepassModel(RenderingEngine& renderingEngine, const char
 	ModelInitData modelInitData;
 	modelInitData.m_tkmFilePath = tkmFilePath;
 	modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
-	if (m_animationClips != nullptr) {
+	if (m_isEnableInstancingDraw) {
+		modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
+	}
+	if (m_animationClips != nullptr) {	
 		modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
 		//スケルトンを指定する。
 		modelInitData.m_skeleton = &m_skeleton;
@@ -253,6 +265,8 @@ void ModelRender::Draw(RenderContext& rc)
 		m_fixNumInstanceOnFrame = m_numInstance;
 		// インスタンスの数計測用の変数をクリア。
 		m_numInstance = 0;
+		// ワールド行列の配列をストラクチャードバッファにコピー。
+		m_worldMatrixArraySB.Update(m_worldMatrixArray.get());
 	}
 	else {
 		m_fixNumInstanceOnFrame = 1;

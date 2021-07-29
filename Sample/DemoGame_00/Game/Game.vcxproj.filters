@@ -30,6 +30,7 @@
     <ClCompile Include="Path.cpp">
       <Filter>enemy</Filter>
     </ClCompile>
+    <ClCompile Include="StarRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -52,5 +53,6 @@
     <ClInclude Include="Path.h">
       <Filter>enemy</Filter>
     </ClInclude>
+    <ClInclude Include="StarRender.h" />
   </ItemGroup>
 </Project>

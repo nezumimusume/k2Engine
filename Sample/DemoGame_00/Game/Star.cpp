@@ -3,15 +3,15 @@
 
 #include "Player.h"
 #include "Game.h"
+#include "StarRender.h"
 
 #include "sound/SoundSource.h"
 #include "sound/SoundEngine.h"
 
 bool Star::Start()
 {
-	m_modelRender.Init("Assets/modelData/star.tkm");
-	m_modelRender.SetPosition(m_position);
-	m_modelRender.SetScale(m_scale);
+
+	m_starRender = FindGO<StarRender>("StarRender");
 
 	m_player = FindGO<Player>("player");
 
@@ -45,13 +45,14 @@ void Star::Update()
 			DeleteGO(this);
 		}
 	}
-	m_modelRender.SetPosition(m_position);
-	m_modelRender.SetRotation(m_rotation);
 
-	m_modelRender.Update();
+	m_starRender->UpdateInstancingData(
+		m_position, 
+		m_rotation, 
+		m_scale
+	);
 }
 
 void Star::Render(RenderContext& rc)
 {
-	m_modelRender.Draw(rc);
 }
