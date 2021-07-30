@@ -4,10 +4,13 @@
 #include<InitGUID.h>
 #include<dxgidebug.h>
 
-#include "sound/SoundEngine.h"
 #include "graphics/RenderingEngine.h"
+#include "sound/SoundEngine.h"
+#include "collision/CollisionObject.h"
 
 #include "Game.h"
+
+
 
 void ReportLiveObjects()
 {
@@ -43,10 +46,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//レンダリングエンジンを初期化
 	g_renderingEngine = new RenderingEngine();
 	g_renderingEngine->Init();
+	g_collisionObjectManager = new CollisionObjectManager();
 	//エフェクトエンジンの初期化。
 	EffectEngine::CreateInstance();
 
-	auto game = NewGO<Game>(0, "game");
+
+
+	//Gameクラスのオブジェクトを作成。
+	NewGO<Game>(0, "game");
+	
+	
+
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
@@ -58,34 +68,32 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	{
 		//レンダリング開始。
 		g_engine->BeginFrame();
-		
+
 
 		//////////////////////////////////////
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
-		
+
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 
-
-		
 		//エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-		
+
+
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-		//レンダリングエンジンを実行
-		//ここでエフェクトをドローしています。
+		//レンダリングエンジンを実行。
+		//ここでエフェクトをドロー。
 		g_renderingEngine->Execute(renderContext);
-	
+
 		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
-	
-	
+
+
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
 		g_soundEngine->Update();
-		PhysicsWorld::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 		g_engine->EndFrame();
-	
+
 	}
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
