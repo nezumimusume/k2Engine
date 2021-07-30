@@ -2,6 +2,24 @@
 #include "ModelRender.h"
 #include "RenderingEngine.h"
 
+void ModelRender::SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData)
+{
+	if (m_isEnableInstancingDraw) {
+		//インスタンシング描画。
+		modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
+	}
+	else {
+		modelInitData.m_vsEntryPointFunc = "VSMain";
+	}
+	if (m_animationClips != nullptr) {
+		if (m_isEnableInstancingDraw) {
+			modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinInstancing"; 
+		}
+		else {
+			modelInitData.m_vsSkinEntryPointFunc = "VSMainSkin";
+		}
+	}
+}
 void ModelRender::InitForwardRendering(const char* filePath,
 	AnimationClip* animationClips,
 	int numAnimationClips,
@@ -41,9 +59,9 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	//インスタンシング描画用のデータを初期化。
 	InitInstancingDraw(maxInstance);
 	//ZPrepass描画用のモデルを初期化。
-	InitZprepassModel(*g_renderingEngine, filePath);
+	InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 	//シャドウマップ描画用のモデルを初期化。
-	InitShadowMapModel(*g_renderingEngine, filePath);
+	InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 
 }
 
@@ -57,12 +75,10 @@ void ModelRender::InitForwardRendering(ModelInitData& initData)
 	//作成した初期化データをもとにモデルを初期化する。
 	m_forwardRenderModel.Init(initData);
 
-	//todo これはあかんな。
-	
 	//ZPrepass描画用のモデルを初期化。
-	InitZprepassModel(*g_renderingEngine, initData.m_tkmFilePath);
+	InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 	//シャドウマップ描画用のモデルを初期化。
-	InitShadowMapModel(*g_renderingEngine, initData.m_tkmFilePath);
+	InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 }
 
 void ModelRender::Init(const char* filePath,
@@ -72,48 +88,18 @@ void ModelRender::Init(const char* filePath,
 	bool isShadowReciever,
 	int maxInstance)
 {
-	//インスタンシング描画用のデータを初期化。
+	// インスタンシング描画用のデータを初期化。
 	InitInstancingDraw(maxInstance);
+	// スケルトンを初期化。
 	InitSkeleton(filePath);
+	// アニメーションを初期化。
 	InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
-	ModelInitData modelInitData;
-	modelInitData.m_fxFilePath = "Assets/shader/RenderToGBufferFor3DModel.fx";
-	if (m_isEnableInstancingDraw) {
-		//インスタンシング描画。
-		modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
-	}
-	else {
-		modelInitData.m_vsEntryPointFunc = "VSMain";
-	}
-	if (m_animationClips != nullptr) {
-		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
-		modelInitData.m_vsSkinEntryPointFunc = "VSMainSkin";
-		//スケルトンを指定する。
-		modelInitData.m_skeleton = &m_skeleton;
-	}
-	if (isShadowReciever) {
-		modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
-	}
-	//モデルの上方向を指定する。
-	modelInitData.m_modelUpAxis = enModelUpAxis;
-
-	modelInitData.m_tkmFilePath = filePath;
-	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	modelInitData.m_colorBufferFormat[1] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	modelInitData.m_colorBufferFormat[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	modelInitData.m_colorBufferFormat[4] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	if (m_isEnableInstancingDraw) {
-		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
-		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
-	}
-	m_renderToGBufferModel.Init(modelInitData);
-
-	
-	//ZPrepass描画用のモデルを初期化。
-	InitZprepassModel(*g_renderingEngine, filePath);
-	//シャドウマップ描画用のモデルを初期化。
-	InitShadowMapModel(*g_renderingEngine, filePath);
+	// GBuffer描画用のモデルを初期化。
+	InitModelOnRenderGBuffer(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
+	// ZPrepass描画用のモデルを初期化。
+	InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
+	// シャドウマップ描画用のモデルを初期化。
+	InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 }
 
 void ModelRender::InitSkeleton(const char* filePath)
@@ -153,16 +139,56 @@ void ModelRender::InitInstancingDraw(int maxInstance)
 		m_isEnableInstancingDraw = true;
 	}
 }
-void ModelRender::InitShadowMapModel(RenderingEngine& renderingEngine, const char* tkmFilePath)
+void ModelRender::InitModelOnRenderGBuffer(
+	RenderingEngine& renderingEngine,
+	const char* tkmFilePath,
+	EnModelUpAxis enModelUpAxis,
+	bool isShadowReciever
+)
+{
+	ModelInitData modelInitData;
+	modelInitData.m_fxFilePath = "Assets/shader/RenderToGBufferFor3DModel.fx";
+
+	// 頂点シェーダーのエントリーポイントをセットアップ。
+	SetupVertexShaderEntryPointFunc(modelInitData);
+
+	if (m_animationClips != nullptr) {
+		//スケルトンを指定する。
+		modelInitData.m_skeleton = &m_skeleton;
+	}
+
+	if (isShadowReciever) {
+		modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
+	}
+	//モデルの上方向を指定する。
+	modelInitData.m_modelUpAxis = enModelUpAxis;
+
+	modelInitData.m_tkmFilePath = tkmFilePath;
+	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	modelInitData.m_colorBufferFormat[1] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	modelInitData.m_colorBufferFormat[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	modelInitData.m_colorBufferFormat[4] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	if (m_isEnableInstancingDraw) {
+		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+	}
+	m_renderToGBufferModel.Init(modelInitData);
+
+}
+void ModelRender::InitModelOnShadowMap(
+	RenderingEngine& renderingEngine, 
+	const char* tkmFilePath,
+	EnModelUpAxis modelUpAxis
+)
 {
 	ModelInitData modelInitData;
 	modelInitData.m_tkmFilePath = tkmFilePath;
-	if (m_isEnableInstancingDraw) {
-		modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
-	}
+	modelInitData.m_modelUpAxis = modelUpAxis;
+	// 頂点シェーダーのエントリーポイントをセットアップ。
+	SetupVertexShaderEntryPointFunc(modelInitData);
 
 	if (m_animationClips != nullptr) {
-		modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
 		//スケルトンを指定する。
 		modelInitData.m_skeleton = &m_skeleton;
 	}
@@ -186,19 +212,25 @@ void ModelRender::InitShadowMapModel(RenderingEngine& renderingEngine, const cha
 	}
 }
 
-void ModelRender::InitZprepassModel(RenderingEngine& renderingEngine, const char* tkmFilePath)
+void ModelRender::InitModelOnZprepass(
+	RenderingEngine& renderingEngine, 
+	const char* tkmFilePath,
+	EnModelUpAxis modelUpAxis
+)
 {
 	ModelInitData modelInitData;
 	modelInitData.m_tkmFilePath = tkmFilePath;
 	modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
-	if (m_isEnableInstancingDraw) {
-		modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
-	}
-	if (m_animationClips != nullptr) {	
-		modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+	modelInitData.m_modelUpAxis = modelUpAxis;
+
+	// 頂点シェーダーのエントリーポイントをセットアップ。
+	SetupVertexShaderEntryPointFunc(modelInitData);
+
+	if (m_animationClips != nullptr) {
 		//スケルトンを指定する。
 		modelInitData.m_skeleton = &m_skeleton;
 	}
+
 	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	if (m_isEnableInstancingDraw) {
 		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
@@ -216,10 +248,14 @@ void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot
 	// インスタンシング描画を行う。
 	m_worldMatrixArray[m_numInstance] = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
 	if (m_numInstance == 0) {
-		//インスタンス数が0の場合のみアニメーションの更新を行う。
+		//インスタンス数が0の場合のみアニメーション関係の更新を行う。
+		// スケルトンを更新。
+		// 各インスタンスのワールド空間への変換は、
+		// インスタンスごとに行う必要があるので、頂点シェーダーで行う。
+		// なので、単位行列を渡して、モデル空間でボーン行列を構築する。
+		m_skeleton.Update(g_matIdentity);
 		//アニメーションを進める。
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
-		//todo アニメーションの対応はひとまず後で・・・。
 	}
 	m_numInstance++;
 	

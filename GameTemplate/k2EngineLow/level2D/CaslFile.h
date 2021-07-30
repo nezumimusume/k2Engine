@@ -34,7 +34,7 @@ public:
 	/// Caslデータの数を取得。
 	/// </summary>
 	/// <returns>Caslデータの数。</returns>
-	const int GetNumCaslData() const
+	int GetNumCaslData() const
 	{
 		return static_cast<int>(m_caslDataList.size());
 	}

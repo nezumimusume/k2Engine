@@ -237,19 +237,41 @@ private:
 	/// </summary>
 	/// <param name="renderingEngine">レンダリングエンジン</param>
 	/// <param name="tkmFilePath">tkmファイルパス</param>
-	void InitShadowMapModel(RenderingEngine& renderingEngine,const char* tkmFilePath);
+	void InitModelOnShadowMap(
+		RenderingEngine& renderingEngine,
+		const char* tkmFilePath,
+		EnModelUpAxis modelUpAxis
+	);
 	/// <summary>
-	/// ZPrepass
+	/// ZPrepass描画用のモデルを初期化。
 	/// </summary>
 	/// <param name="renderingEngine"></param>
 	/// <param name="tkmFilePath"></param>
-	void InitZprepassModel(RenderingEngine& renderingEngine,const char* tkmFilePath);
+	void InitModelOnZprepass(
+		RenderingEngine& renderingEngine,
+		const char* tkmFilePath,
+		EnModelUpAxis modelUpAxis
+	);
 	
 	/// <summary>
 	/// インスタンシング描画用の初期化処理を実行。
 	/// </summary>
 	/// <param name="maxInstance">最大インスタンス数</param>
 	void InitInstancingDraw(int maxInstance);
+	/// <summary>
+	/// GBuffer描画用のモデルを初期化。
+	/// </summary>
+	/// <param name="renderingEngine">レンダリングエンジン</param>
+	/// <param name="tkmFilePath">tkmファイルパス</param>
+	void InitModelOnRenderGBuffer(
+		RenderingEngine& renderingEngine, 
+		const char* tkmFilePath, 
+		EnModelUpAxis enModelUpAxis,
+		bool isShadowReciever );
+	/// <summary>
+	/// 各種モデルの頂点シェーダーのエントリーポイントを設定。
+	/// </summary>
+	void SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData);
 private:
 	AnimationClip*				m_animationClips = nullptr;			//アニメーションクリップ。
 	int							m_numAnimationClips = 0;			//アニメーションクリップの数。

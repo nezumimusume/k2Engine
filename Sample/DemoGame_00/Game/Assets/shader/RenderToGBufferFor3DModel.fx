@@ -88,6 +88,12 @@ SPSIn VSMainInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
 {
     return VSMainCore(vsIn, g_worldMatrixArray[instanceID]);
 }
+SPSIn VSMainSkinInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
+{
+    float4x4 mWorldLocal = CalcSkinMatrix(vsIn);
+    mWorldLocal = mul( g_worldMatrixArray[instanceID], mWorldLocal );
+    return VSMainCore(vsIn, mWorldLocal);
+}
 SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
 {
     // G-Bufferに出力
