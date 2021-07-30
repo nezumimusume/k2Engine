@@ -14,8 +14,8 @@ void CaslFile::Load(const char* filePath)
 	//.ddsフォルダパスを設定。。
 	std::string ddsFolderPath = filePath;
 	int pos = (int)ddsFolderPath.rfind("/");
-	ddsFolderPath = ddsFolderPath.substr(0, pos + 1);
-	int ddsFolderPathCount = ddsFolderPath.length();
+	ddsFolderPath = ddsFolderPath.substr(0, static_cast<size_t>(pos) + 1);
+	int ddsFolderPathCount = static_cast<int>(ddsFolderPath.length());
 
 	//画像の数を取得。
 	int numLevel = ReadInteger(fp);
@@ -37,7 +37,7 @@ void CaslFile::Load(const char* filePath)
 		//画像の名前の長さを取得。
 		int nameCount = ReadInteger(fp);
 		//画像の名前を取得。
-		caslData.get()->name = std::make_unique<char[]>(nameCount + 1);
+		caslData.get()->name = std::make_unique<char[]>(static_cast<size_t>(nameCount) + 1);
 		fread(caslData.get()->name.get(), nameCount, 1, fp);
 		ReadOnlyOneCharacter(fp);
 
@@ -45,7 +45,7 @@ void CaslFile::Load(const char* filePath)
 		int fileNameCount = ReadInteger(fp);
 
 		//ファイルパスを取得。
-		caslData.get()->fileName = std::make_unique<char[]>(fileNameCount + 1);
+		caslData.get()->fileName = std::make_unique<char[]>(static_cast<size_t>(fileNameCount) + 1);
 		fread(caslData.get()->fileName.get(), fileNameCount, 1, fp);
 		ReadOnlyOneCharacter(fp);
 
@@ -67,11 +67,11 @@ void CaslFile::Load(const char* filePath)
 		//ddsファイルパスの名前の長さを取得。
 		int ddsFileNameCount = ReadInteger(fp);
 		//ddsファイルパスを取得。
-		caslData.get()->ddsFileName = std::make_unique<char[]>(ddsFileNameCount + 1);
+		caslData.get()->ddsFileName = std::make_unique<char[]>(static_cast<size_t>(ddsFileNameCount) + 1);
 		fread(caslData.get()->ddsFileName.get(), ddsFileNameCount, 1, fp);
 
 		//.ddsファイルパスを設定する。
-		caslData.get()->ddsFilePath = std::make_unique<char[]>(ddsFolderPathCount + ddsFileNameCount + 1);
+		caslData.get()->ddsFilePath = std::make_unique<char[]>(static_cast<size_t>(ddsFolderPathCount) + static_cast<size_t>(ddsFileNameCount) + 1);
 		//フォルダパスと.ddsファイルの名前を連結する。
 		std::string ddsFilePath = ddsFolderPath + caslData.get()->ddsFileName.get();
 		std::char_traits<char>::copy(caslData.get()->ddsFilePath.get(), ddsFilePath.c_str(), ddsFilePath.size() + 1);
@@ -128,5 +128,5 @@ float CaslFile::ReadDecimal(FILE* file) const
 		}
 	}
 	//string型をfloat型に変換する。
-	return atof(number.c_str());
+	return static_cast<float>(atof(number.c_str()));
 }

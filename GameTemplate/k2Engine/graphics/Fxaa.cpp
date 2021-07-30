@@ -30,8 +30,8 @@ void Fxaa::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
     rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
     // レンダリングターゲットを設定
     rc.SetRenderTargetAndViewport(mainRenderTarget);
-    m_cB.bufferW = g_graphicsEngine->GetFrameBufferWidth();
-    m_cB.bufferH = g_graphicsEngine->GetFrameBufferHeight();
+    m_cB.bufferW = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
+    m_cB.bufferH = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
     //描画。
     m_finalSprite.Draw(rc);
     // レンダリングターゲットへの書き込み終了待ち

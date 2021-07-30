@@ -9,7 +9,7 @@ public:
 	{
 		auto it = m_resourceMap.find(filePath);
 		if (it != m_resourceMap.end()) {
-			//ãƒãƒ³ã‚¯ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã€‚
+			//ƒoƒ“ƒN‚É“o˜^‚³‚ê‚Ä‚¢‚éB
 			return it->second.get();
 		}
 		return nullptr;
@@ -18,7 +18,7 @@ public:
 	{
 		auto it = m_resourceMap.find(filePath);
 		if (it == m_resourceMap.end()) {
-			//æœªç™»éŒ²ã€‚
+			//–¢“o˜^B
 			m_resourceMap.insert(
 				std::pair< std::string, TResourcePtr>(filePath, resource )
 			);

@@ -32,7 +32,7 @@
 
 #include "graphics/d3dx12.h"
 
-const int MAX_RENDERING_TARGET = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;	//レンダリングターゲットの最大数。
+const int MAX_RENDERING_TARGET = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;	//�����_�����O�^�[�Q�b�g�̍ő吔�B
 
 using namespace Microsoft::WRL;
 
@@ -72,9 +72,9 @@ using namespace Microsoft::WRL;
 
 #include "graphics/GaussianBlur.h"
 
-const UINT FRAME_BUFFER_W = 1280;				//フレームバッファの幅。
-const UINT FRAME_BUFFER_H = 720;				//フレームバッファの高さ。
-static const int MAX_BONE = 512;	//!<ボーンの最大数。
+const UINT FRAME_BUFFER_W = 1280;				//�t���[���o�b�t�@�̕��B
+const UINT FRAME_BUFFER_H = 720;				//�t���[���o�b�t�@�̍����B
+static const int MAX_BONE = 512;	//!<�{�[���̍ő吔�B
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"

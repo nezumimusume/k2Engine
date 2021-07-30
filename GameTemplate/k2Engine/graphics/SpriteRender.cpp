@@ -10,8 +10,8 @@ void SpriteRender::Init(const char* filePath, const float w, const float h, Alph
 	//Sprite表示用のシェーダーのファイルパスを指定する。
 	initData.m_fxFilePath = "Assets/shader/sprite.fx";
 	//スプライトの幅と高さを指定する。
-	initData.m_width = w;
-	initData.m_height = h;
+	initData.m_width = static_cast<UINT>(w);
+	initData.m_height = static_cast<UINT>(h);
 	initData.m_alphaBlendMode = alphaBlendMode;
 	initData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	//Sprite初期化オブジェクトを使用して、Spriteを初期化する。

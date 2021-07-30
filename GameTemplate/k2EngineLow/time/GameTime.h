@@ -64,7 +64,7 @@ public:
 	void EndMeasurement()
 	{
 		m_sw.Stop();
-		PushFrameDeltaTime(m_sw.GetElapsed());
+		PushFrameDeltaTime(static_cast<float>(m_sw.GetElapsed()));
 	}
 private:
 	friend class K2Engine;
