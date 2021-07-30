@@ -62,7 +62,7 @@ void LevelRender::Init(
 			//@‚ª‘¶İ‚µ‚Ä‚¢‚ê‚ÎA@Œã‚Ì”š‚ğæ“¾‚·‚éB
 			if (pos != std::wstring::npos)
 			{
-				std::wstring number = name.substr(pos + 1);
+				std::wstring number = name.substr(static_cast<size_t>(pos) + 1);
 				//wcharŒ^‚ğintŒ^‚É•ÏŠ·‚µ‚Ä‚¢‚éB
 				levelObjData.number = std::stoi(number.c_str());
 			}
