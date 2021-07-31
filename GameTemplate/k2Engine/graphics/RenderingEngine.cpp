@@ -155,7 +155,7 @@ void RenderingEngine::InitDeferredLighting()
     spriteInitData.m_fxFilePath = "Assets/shader/DeferredLighting.fx";
     spriteInitData.m_expandConstantBuffer = &m_deferredLightingCB;
     spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
-    for (int i = 0; i < NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT; i++)
+    for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
     {
         for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
         {
@@ -302,7 +302,7 @@ void RenderingEngine::DeferredLighting(RenderContext& rc)
 {
     // ディファードライティングに必要なライト情報を更新する
     m_deferredLightingCB.m_light.eyePos = g_camera3D->GetPosition();
-    for (int i = 0; i < NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT; i++)
+    for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
     {
         for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
         {

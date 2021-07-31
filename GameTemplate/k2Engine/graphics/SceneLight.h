@@ -8,14 +8,24 @@ struct DirectionalLight
     Vector4 color;      // ライトのカラー
 };
 
+// ポイントライト。
+struct PointLight
+{
+    Vector3 position;       // 座標
+    float pad0;
+    Vector3 positionInView; // カメラ空間での座標
+    float pad1;
+    Vector3 color;          // ライトのカラー
+    float range;            // ライトの影響を与える範囲
+};
 // ライト構造体
 struct Light
 {
-    std::array<DirectionalLight,
-        NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT>
-        directionalLight; // ディレクションライト
+    DirectionalLight directionalLight[MAX_DIRECTIONAL_LIGHT];   // ディレクショナルライトの配列。
+    PointLight pointLights[MAX_POINT_LIGHT];                    // ポイントライトの配列。
+    Matrix mViewProjInv;    // ビュープロジェクション行列の逆行列
     Vector3 eyePos;         // カメラの位置
-    float pad;
+    int numPointLight;      // ポイントライトの数。
     Vector3 ambinetLight;   // 環境光
 };
 

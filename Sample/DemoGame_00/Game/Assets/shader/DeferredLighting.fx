@@ -6,6 +6,7 @@
 // 定数
 ///////////////////////////////////////
 static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
+static const int MAX_POINT_LIGHT = 1000;    // ポイントライトの最大数
 static const float PI = 3.1415926f;         // π
 static const int NUM_SHADOW_MAP = 3;        // シャドウマップの枚数。
 ///////////////////////////////////////
@@ -17,6 +18,14 @@ struct DirectionalLight
     float3 direction;   // ライトの方向
     int castShadow;     // 影をキャストする？
     float4 color;       // ライトの色
+};
+// ポイントライト
+struct PointLight
+{
+    float3 position;        // 座標
+    float3 positionInView;  // カメラ空間での座標
+    float3 color;           // カラー
+    float range;            // 範囲
 };
 //頂点シェーダーへの入力構造体。
 struct VSInput
@@ -45,8 +54,10 @@ cbuffer cb : register(b0)
 cbuffer LightCb : register(b1)
 {
     DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];
+    PointLight pointLight[MAX_POINT_LIGHT];
+    float4x4 mViewProjInv;  // ビュープロジェクション行列の逆行列
     float3 eyePos;          // カメラの視点
-    float specPow;          // スペキュラの絞り
+    int numPointLight;      // ポイントライトの数。    
     float3 ambientLight;    // 環境光
     float4x4 mlvp[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
 };

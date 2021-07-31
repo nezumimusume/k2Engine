@@ -91,6 +91,9 @@
     <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\LightCulling.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -165,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.h">
       <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\LightCulling.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

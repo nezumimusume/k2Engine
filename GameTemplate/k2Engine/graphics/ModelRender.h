@@ -298,7 +298,7 @@ private:
 	Model						m_zprepassModel;					//ZPrepassで描画されるモデル
 	Model						m_forwardRenderModel;				//フォワードレンダリングの描画パスで描画されるモデル
 	Model						m_renderToGBufferModel;				//RenderToGBufferで描画されるモデル
-	Model						m_shadowModels[NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	//シャドウマップに描画するモデル
+	Model						m_shadowModels[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	//シャドウマップに描画するモデル
 	bool						m_isUpdateAnimation = true;			//アニメーションを更新する？
 	Skeleton					m_skeleton;							//骨。
 	bool						m_isShadowCaster = true;			//シャドウキャスターフラグ

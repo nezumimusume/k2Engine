@@ -1,7 +1,10 @@
 #pragma once
 
-// ディファードライティングで使用されるディレクションライトの数
-const int NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT = 4;
+// シーンのディレクションライトの最大数
+const int MAX_DIRECTIONAL_LIGHT = 4;
+// シーンのポイントライトの最大数。
+const int MAX_POINT_LIGHT = 1000;
+
 // シャドウマップ
 enum {
 	SHADOW_MAP_AREA_NEAR,		//近影範囲のシャドウマップ。

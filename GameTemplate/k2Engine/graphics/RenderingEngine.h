@@ -213,10 +213,10 @@ private:
     {
         Light m_light;      // ライト
         float pad;          // パディング
-        Matrix mlvp[NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
+        Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
     };
 
-    ShadowMapRender m_shadowMapRenders[NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT];   // シャドウマップへの描画処理
+    ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];        // シャドウマップへの描画処理
     SDeferredLightingCB m_deferredLightingCB;                       // ディファードライティング用の定数バッファ
     Sprite m_copyMainRtToFrameBufferSprite;                         // メインレンダリングターゲットをフレームバッファにコピーするためのスプライト
     Sprite m_diferredLightingSprite;                                // ディファードライティングを行うためのスプライト

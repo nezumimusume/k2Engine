@@ -208,10 +208,7 @@ void ModelRender::InitModelOnShadowMap(
 		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 	}
 
-	for (
-		int ligNo = 0;
-		ligNo < NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT;
-		ligNo++)
+	for (int ligNo = 0; ligNo < MAX_DIRECTIONAL_LIGHT; ligNo++)
 	{
 		m_shadowModels[ligNo][0].Init(modelInitData);
 		m_shadowModels[ligNo][1].Init(modelInitData);
