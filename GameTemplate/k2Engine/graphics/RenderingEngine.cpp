@@ -135,52 +135,15 @@ void RenderingEngine::InitCopyMainRenderTargetToFrameBufferSprite()
 }
 void RenderingEngine::InitDeferredLighting()
 {
-    int frameBuffer_w = g_graphicsEngine->GetFrameBufferWidth();
-    int frameBuffer_h = g_graphicsEngine->GetFrameBufferHeight();
-
-    // 太陽光
-    m_deferredLightingCB.m_light.directionalLight[0].color.x = 3.0f;
-    m_deferredLightingCB.m_light.directionalLight[0].color.y = 3.0f;
-    m_deferredLightingCB.m_light.directionalLight[0].color.z = 3.0f;
-
-    m_deferredLightingCB.m_light.directionalLight[0].direction.x = 1.0f;
-    m_deferredLightingCB.m_light.directionalLight[0].direction.y = -1.0f;
-    m_deferredLightingCB.m_light.directionalLight[0].direction.z = 1.0f;
-    m_deferredLightingCB.m_light.directionalLight[0].direction.Normalize();
-    m_deferredLightingCB.m_light.directionalLight[0].castShadow = true;
-
-    //
-    m_deferredLightingCB.m_light.directionalLight[1].color.x = 3.0f;
-    m_deferredLightingCB.m_light.directionalLight[1].color.y = 3.0f;
-    m_deferredLightingCB.m_light.directionalLight[1].color.z = 3.0f;
-
-    m_deferredLightingCB.m_light.directionalLight[1].direction.x = -1.0f;
-    m_deferredLightingCB.m_light.directionalLight[1].direction.y = -1.0f;
-    m_deferredLightingCB.m_light.directionalLight[1].direction.z = 1.0f;
-    m_deferredLightingCB.m_light.directionalLight[1].direction.Normalize();
-    m_deferredLightingCB.m_light.directionalLight[1].castShadow = true;
-
-    // 地面からの照り返し
-    m_deferredLightingCB.m_light.directionalLight[2].color.x = 0.6f;
-    m_deferredLightingCB.m_light.directionalLight[2].color.y = 0.6f;
-    m_deferredLightingCB.m_light.directionalLight[2].color.z = 0.6f;
-
-    m_deferredLightingCB.m_light.directionalLight[2].direction.x = -1.0f;
-    m_deferredLightingCB.m_light.directionalLight[2].direction.y = 1.0f;
-    m_deferredLightingCB.m_light.directionalLight[2].direction.z = 1.0f;
-    m_deferredLightingCB.m_light.directionalLight[2].direction.Normalize();
-
-    m_deferredLightingCB.m_light.ambinetLight.x = 0.4f;
-    m_deferredLightingCB.m_light.ambinetLight.y = 0.4f;
-    m_deferredLightingCB.m_light.ambinetLight.z = 0.4f;
-    m_deferredLightingCB.m_light.eyePos = g_camera3D->GetPosition();
+    // シーンライトを初期化する。
+    m_sceneLight.Init();
 
     // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
     SpriteInitData spriteInitData;
 
     // 画面全体にレンダリングするので幅と高さはフレームバッファーの幅と高さと同じ
-    spriteInitData.m_width = frameBuffer_w;
-    spriteInitData.m_height = frameBuffer_h;
+    spriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
+    spriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
 
     // ディファードライティングで使用するテクスチャを設定
     int texNo = 0;
@@ -206,6 +169,9 @@ void RenderingEngine::InitDeferredLighting()
 }
 void RenderingEngine::Execute(RenderContext& rc)
 {
+    // シーンライトのデータをコピー。
+    m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
+
     // シャドウマップへの描画
     RenderToShadowMap(rc);
 

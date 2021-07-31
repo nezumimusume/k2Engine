@@ -3,7 +3,7 @@
 #include "MyRenderer.h"
 #include "ShadowMapRender.h"
 #include "PostEffect.h"
-
+#include "SceneLight.h"
 
 class IRenderer;
 
@@ -13,24 +13,7 @@ class IRenderer;
 class RenderingEngine : public Noncopyable
 {
 public:
-    // ディレクションライト
-    struct DirectionalLight
-    {
-        Vector3 direction;  // ライトの方向
-        int castShadow;     // 影をキャストする？
-        Vector4 color;      // ライトのカラー
-    };
-
-    // ライト構造体
-    struct Light
-    {
-        std::array<DirectionalLight,
-            NUM_DEFERRED_LIGHTING_DIRECTIONAL_LIGHT>
-            directionalLight; // ディレクションライト
-        Vector3 eyePos;         // カメラの位置
-        float pad;
-        Vector3 ambinetLight;   // 環境光
-    };
+  
 
     //メインレンダリングターゲットのスナップショット
     enum class EnMainRTSnapshot
@@ -116,8 +99,7 @@ public:
     /// <param name="color"></param>
     void SetDirectionLight(int lightNo, Vector3 direction, Vector3 color)
     {
-        m_deferredLightingCB.m_light.directionalLight[lightNo].direction = direction;
-        m_deferredLightingCB.m_light.directionalLight[lightNo].color = color;
+        m_sceneLight.SetDirectionLight(lightNo, direction, color);
     }
     void SetMainRenderTargetAndDepthStencilBuffer(RenderContext& rc)
     {
@@ -244,6 +226,7 @@ private:
     RenderTarget m_gBuffer[enGBufferNum];                           // G-Buffer
     PostEffect m_postEffect;                                        // ポストエフェクト
     std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。
+    SceneLight m_sceneLight;                                        // シーンライト。
 };
 
 extern RenderingEngine* g_renderingEngine;
