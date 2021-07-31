@@ -1,8 +1,11 @@
 #pragma once
 
 #include "MyRenderer.h"
+#include "geometry/AABB.h"
 
 class RenderingEngine;
+
+
 /// <summary>
 /// スキンモデルレンダー。
 /// </summary>
@@ -272,6 +275,18 @@ private:
 	/// 各種モデルの頂点シェーダーのエントリーポイントを設定。
 	/// </summary>
 	void SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData);
+	/// <summary>
+	/// モデルを内包するバウンディングボリュームを初期化。
+	/// </summary>
+	/// <remark>
+	/// AABBを構築します。
+	/// </remark>
+	void InitBoundingVolume();
+	/// <summary>
+	/// ビューカリングを行う。
+	/// </summary>
+	/// <returns>trueが返ってくるとカリングされている。</returns>
+	bool IsViewCulling(const Matrix& mWorld);
 private:
 	AnimationClip*				m_animationClips = nullptr;			//アニメーションクリップ。
 	int							m_numAnimationClips = 0;			//アニメーションクリップの数。
@@ -294,5 +309,6 @@ private:
 	bool						m_isEnableInstancingDraw = false;	//インスタンシング描画が有効？
 	std::unique_ptr<Matrix[]>	m_worldMatrixArray;					//ワールド行列の配列。
 	StructuredBuffer			m_worldMatrixArraySB;				//ワールド行列の配列のストラクチャードバッファ。
+	AABB						m_aabb;								//モデルを内包するAABB
 };
 

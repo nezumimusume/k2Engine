@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.cpp" />
     <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\SceneLight.cpp" />
     <ClCompile Include="camera\CameraCollisionSolver.cpp" />
     <ClCompile Include="camera\SpringCamera.cpp" />
@@ -46,6 +47,7 @@
     <ClCompile Include="nature\SkyCube.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.h" />
     <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\SceneLight.h" />
     <ClInclude Include="camera\CameraCollisionSolver.h" />
     <ClInclude Include="camera\SpringCamera.h" />

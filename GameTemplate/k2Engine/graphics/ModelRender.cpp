@@ -62,7 +62,8 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 	//シャドウマップ描画用のモデルを初期化。
 	InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
-
+	//バウンディングボリュームを初期化。
+	InitBoundingVolume();
 }
 
 void ModelRender::InitForwardRendering(ModelInitData& initData)
@@ -79,6 +80,9 @@ void ModelRender::InitForwardRendering(ModelInitData& initData)
 	InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 	//シャドウマップ描画用のモデルを初期化。
 	InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
+
+	//バウンディングボリュームを初期化。
+	InitBoundingVolume();
 }
 
 void ModelRender::Init(const char* filePath,
@@ -100,6 +104,8 @@ void ModelRender::Init(const char* filePath,
 	InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 	// シャドウマップ描画用のモデルを初期化。
 	InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
+	// バウンディングボリュームを初期化。
+	InitBoundingVolume();
 }
 
 void ModelRender::InitSkeleton(const char* filePath)
@@ -139,6 +145,7 @@ void ModelRender::InitInstancingDraw(int maxInstance)
 		m_isEnableInstancingDraw = true;
 	}
 }
+
 void ModelRender::InitModelOnRenderGBuffer(
 	RenderingEngine& renderingEngine,
 	const char* tkmFilePath,
@@ -244,9 +251,13 @@ void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot
 	if (!m_isEnableInstancingDraw) {
 		return;
 	}
-
+	auto wlorldMatrix = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
+	// インスタンシング描画はここでビューカリングを行う。
+	if ( IsViewCulling(wlorldMatrix)) {
+		return;
+	}
 	// インスタンシング描画を行う。
-	m_worldMatrixArray[m_numInstance] = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
+	m_worldMatrixArray[m_numInstance] = wlorldMatrix;
 	if (m_numInstance == 0) {
 		//インスタンス数が0の場合のみアニメーション関係の更新を行う。
 		// スケルトンを更新。
@@ -259,6 +270,21 @@ void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot
 	}
 	m_numInstance++;
 	
+}
+void ModelRender::InitBoundingVolume()
+{
+	// tkmファイルからモデルの最小座標と最大座標を調べる。
+	Vector3 vMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
+	Vector3 vMin = {  FLT_MAX,  FLT_MAX,  FLT_MAX };
+
+	const auto& tkmFile = m_zprepassModel.GetTkmFile();
+	tkmFile.QueryMeshParts([&](const TkmFile::SMesh& mesh) {
+		for (const auto& vertex : mesh.vertexBuffer) {
+			vMax.Max( vertex.pos );
+			vMin.Min( vertex.pos );
+		}
+	});
+	m_aabb.Init(vMax, vMin);
 }
 void ModelRender::Update()
 {
@@ -291,10 +317,56 @@ void ModelRender::Update()
 	
 	//アニメーションを進める。
 	m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
-}
 
+	
+}
+bool ModelRender::IsViewCulling(const Matrix& mWorld)
+{
+	// AABBを構成する8頂点のワールド座標を計算する。
+	Vector3 worldPos[8];
+	m_aabb.CalcVertexPositions(
+		worldPos,
+		mWorld
+	);
+
+	Vector4 vMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX };
+	Vector4 vMin = {  FLT_MAX,  FLT_MAX,  FLT_MAX, FLT_MAX };
+	const auto& viewProjMatrix = g_camera3D->GetViewProjectionMatrix();
+
+	for (Vector4 v : worldPos) {
+		
+		viewProjMatrix.Apply(v);
+		v.x /= v.w;
+		v.y /= v.w;
+		v.z /= v.w;
+
+		vMax.Max(v);
+		vMin.Min(v);
+	}
+
+	if (vMax.x > -1.0f
+		&& vMax.y > -1.0f
+		&& vMax.z > 0.0f
+		&& vMin.x < 1.0f
+		&& vMin.y < 1.0f
+		&& vMin.z < 1.0f
+		) {
+		//画面に映る。
+		return false;
+	}
+	// カリングされているので、画面に映らない。
+	return true;
+
+}
 void ModelRender::Draw(RenderContext& rc)
 {
+	// ビューカリングを行う。
+	if ( m_isEnableInstancingDraw == false
+		&& IsViewCulling(m_zprepassModel.GetWorldMatrix())
+	) {
+		return;
+	}
+	
 	g_renderingEngine->AddRenderObject(this);
 	if (m_isEnableInstancingDraw) {
 		// このフレームで描画するインスタンスの数を確定する。

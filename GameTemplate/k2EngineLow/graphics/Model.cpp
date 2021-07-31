@@ -111,6 +111,10 @@ void Model::Draw(
 	int numInstance
 )
 {
+	if (numInstance == 0) {
+		// インスタンスの数が0なのでリターン。
+		return;
+	}
 	m_meshParts.Draw(
 		rc,
 		m_worldMatrix,

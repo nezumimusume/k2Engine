@@ -19,6 +19,9 @@
     <Filter Include="collision">
       <UniqueIdentifier>{82315e07-0f58-4477-a304-86ab70241d6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{91130330-71ee-4430-980d-034ff3f51553}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics\ModelRender.cpp">
@@ -84,6 +87,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\SceneLight.cpp">
       <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.cpp">
+      <Filter>geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\SceneLight.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.h">
+      <Filter>geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

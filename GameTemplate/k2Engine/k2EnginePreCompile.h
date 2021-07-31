@@ -3,6 +3,7 @@
 
 #include "k2EngineLowPreCompile.h"
 
+#include "geometry/AABB.h"
 #include "graphics/IRenderer.h"
 #include "graphics/ModelRender.h"
 #include "graphics/SpriteRender.h"

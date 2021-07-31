@@ -41,7 +41,9 @@ public:
 private:
 	ID3D12Resource* m_buffersOnGPU[2] = {nullptr};
 	void* m_buffersOnCPU[2] = { nullptr };		//CPU側からアクセスできるするストラクチャバッファのアドレス。
-	int m_numElement = 0;				//要素数。
-	int m_sizeOfElement = 0;			//エレメントのサイズ。
-	bool m_isInited = false;			//初期化済み？
+	int m_numElement = 0;						//要素数。
+	int m_sizeOfElement = 0;					//エレメントのサイズ。
+	bool m_isInited = false;					
+	
+	//初期化済み？
 };
