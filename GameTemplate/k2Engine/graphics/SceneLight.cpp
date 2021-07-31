@@ -25,7 +25,7 @@ void SceneLight::Init()
     m_light.directionalLight[1].direction.y = -1.0f;
     m_light.directionalLight[1].direction.z = 1.0f;
     m_light.directionalLight[1].direction.Normalize();
-    m_light.directionalLight[1].castShadow = true;
+    m_light.directionalLight[1].castShadow = false;
 
     // ínñ Ç©ÇÁÇÃè∆ÇËï‘Çµ
     m_light.directionalLight[2].color.x = 0.6f;
