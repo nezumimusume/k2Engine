@@ -43,7 +43,7 @@ struct Level2DObjectData {
 /// <summary>
 /// ƒŒƒxƒ‹2D
 /// </summary>
-class Level2D {
+class Level2D : public Noncopyable{
 private:
 	using MapChip2DPtr = std::unique_ptr<MapChip2D>;
 public:

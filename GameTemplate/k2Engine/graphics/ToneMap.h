@@ -1,5 +1,5 @@
 #pragma once
-class ToneMap
+class ToneMap : public Noncopyable
 {
 public:
 	ToneMap();

@@ -7,7 +7,7 @@
 /// <summary>
 /// フォント
 /// </summary>
-class Font{
+class Font : public Noncopyable{
 public:
 	/// <summary>
 	/// 描画開始

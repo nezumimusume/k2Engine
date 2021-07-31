@@ -7,7 +7,7 @@
 /// </remarks>
 #pragma once
 
-class TkaFile {
+class TkaFile : public Noncopyable{
 public:
 	/// <summary>
 	/// アニメーションクリップのヘッダー。

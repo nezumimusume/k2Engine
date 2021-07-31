@@ -15,7 +15,7 @@
 /// シェーダーでの動的分岐を減らすことができ、シェーダ―プログラムをシンプルにすることができるようになっています。
 /// このクラスでロードされているテクスチャは、Assets/modelData/presetの下に用意されています。
 /// </remarks>
-class NullTextureMaps {
+class NullTextureMaps : public Noncopyable{
 public:
 	/// <summary>
 	/// 初期化。

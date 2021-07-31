@@ -7,7 +7,7 @@
 /// <summary>
 /// カメラクラス。
 /// </summary>
-class Camera  {
+class Camera  : public Noncopyable{
 public:
 	/// <summary>
 	/// 射影行列の更新方法。

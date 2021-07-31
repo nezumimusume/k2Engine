@@ -42,7 +42,7 @@ struct ModelInitData {
 /// <summary>
 /// モデルクラス。
 /// </summary>
-class Model {
+class Model : public Noncopyable{
 
 public:
 

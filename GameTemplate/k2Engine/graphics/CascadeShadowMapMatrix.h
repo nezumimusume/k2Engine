@@ -6,7 +6,7 @@
 /// <summary>
 /// カスケードシャドウマップ法で使用される行列クラス
 /// </summary>
-class CascadeShadowMapMatrix
+class CascadeShadowMapMatrix : public Noncopyable
 {
 public:
     /// <summary>

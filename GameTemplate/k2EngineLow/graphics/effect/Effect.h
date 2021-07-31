@@ -7,7 +7,7 @@
 /*!
 * @brief	エフェクト。
 */
-class Effect {
+class Effect : public Noncopyable{
 public:
 	Effect();
 	~Effect();

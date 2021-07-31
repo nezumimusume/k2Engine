@@ -5,7 +5,7 @@
 /// <summary>
 /// ボーン。
 /// </summary>
-class Bone {
+class Bone : public Noncopyable{
 public:
 	/// <summary>
 	/// コンストラクタ。

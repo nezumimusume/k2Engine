@@ -7,7 +7,7 @@ namespace raytracing {
 	/// <summary>
 	/// レイトレ用のパイプラインステートオブジェクト。
 	/// </summary>
-	class PSO {
+	class PSO : public Noncopyable{
 	private:
 		/// <summary>
 		/// ルートシグネチャ定義。

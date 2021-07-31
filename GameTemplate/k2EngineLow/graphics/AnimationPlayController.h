@@ -15,7 +15,7 @@ class Bone;
 * @details
 *  一つのアニメーションクリップに対してアニメーションを進めて、ローカルポーズを計算します。
 */
-class AnimationPlayController{
+class AnimationPlayController : public Noncopyable{
 public:
 	/*!
 	* @brief	コンストラクタ。

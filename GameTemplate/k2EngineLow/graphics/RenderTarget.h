@@ -8,7 +8,7 @@ class GraphicsEngine;
 /// <summary>
 /// レンダリングターゲット。
 /// </summary>
-class RenderTarget {
+class RenderTarget : public Noncopyable{
 public:
 	/// <summary>
 	/// デストラクタ。

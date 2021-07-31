@@ -6,7 +6,7 @@
 
 class CharacterController;
 
-class PhysicsWorld
+class PhysicsWorld : public Noncopyable
 {
 	static PhysicsWorld* m_instance;	//唯一のインスタンス。
 	std::unique_ptr<btDefaultCollisionConfiguration> 	 m_collisionConfig;

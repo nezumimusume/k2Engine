@@ -12,7 +12,7 @@ struct LevelObjectData;
 /// <summary>
 /// マップチップレンダー。
 /// </summary>
-class MapChipRender
+class MapChipRender : public Noncopyable
 {
 public:
 	MapChipRender(const LevelObjectData& objData, const char* filePath);

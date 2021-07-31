@@ -1,7 +1,7 @@
 #pragma once
 
 /// <summary>
-/// ‹óƒNƒ‰ƒX
+/// ?
 /// </summary>
 class SkyCube : public IGameObject
 {

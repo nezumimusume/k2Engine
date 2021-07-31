@@ -14,7 +14,7 @@ typedef std::shared_ptr<WaveFile>	WaveFilePtr;
 /// WaveFile::Resistで波形データをロードして、バンクに登録することができます。
 /// バンクに登録された波形データは、SoundSource::Initで利用します。
 /// </summary>
-class WaveFileBank{
+class WaveFileBank : public Noncopyable{
 public:
 	/// <summary>
 	/// コンストラクタ。

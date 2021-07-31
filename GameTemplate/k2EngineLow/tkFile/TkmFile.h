@@ -12,7 +12,7 @@
 /// <summary>
 /// tkmファイルクラス。
 /// </summary>
-class  TkmFile {
+class  TkmFile : public Noncopyable{
 public:
 	/// <summary>
 	/// マテリアル

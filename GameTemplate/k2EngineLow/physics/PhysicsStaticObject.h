@@ -11,7 +11,7 @@
 /// <summary>
 /// 静的物理オブジェクト
 /// </summary>
-class PhysicsStaticObject{
+class PhysicsStaticObject : public Noncopyable{
 public:
 	/// <summary>
 	/// コンストラクタ

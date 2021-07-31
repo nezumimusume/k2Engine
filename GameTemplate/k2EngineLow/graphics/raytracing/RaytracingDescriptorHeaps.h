@@ -4,7 +4,7 @@ namespace raytracing {
 	/// <summary>
 	/// レイトレーシングで使用するディスクリプタヒープ
 	/// </summary>
-	class DescriptorHeaps {
+	class DescriptorHeaps : public Noncopyable{
 	public:
 		/// <summary>
 		/// 各種リソースをディスクリプタヒープに登録していく。

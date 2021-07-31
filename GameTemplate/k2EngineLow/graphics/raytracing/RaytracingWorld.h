@@ -13,7 +13,7 @@ namespace raytracing {
 	/// <summary>
 	/// レイトレワールド
 	/// </summary>
-	class World
+	class World : public Noncopyable
 	{
 	public:
 		/// <summary>

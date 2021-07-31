@@ -41,7 +41,7 @@ struct Level2DObjectData {
 /// <summary>
 /// ƒŒƒxƒ‹2D
 /// </summary>
-class Level2DRender {
+class Level2DRender : public Noncopyable{
 private:
 	using MapChip2DRenderPtr = std::unique_ptr<MapChip2DRender>;
 public:

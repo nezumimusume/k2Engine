@@ -23,7 +23,7 @@
 /// 2　インスタンスの数を一つに制限する機能。
 /// </reramk>
 /// 
-class GameObjectManager {
+class GameObjectManager : public Noncopyable{
 private:
 	GameObjectManager();
 	~GameObjectManager();

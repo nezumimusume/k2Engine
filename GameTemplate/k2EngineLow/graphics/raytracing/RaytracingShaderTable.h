@@ -12,7 +12,7 @@ namespace raytracing {
 	/// シェーダーテーブルはレイのディスパッチで使用される、
 	/// シェーダーやリソースのディスクリプタヒープのアドレスなどが登録されているテーブルです。
 	/// </remark>
-	class ShaderTable {
+	class ShaderTable : public Noncopyable{
 	public:
 		/// <summary>
 		/// シェーダーテーブルを初期化。

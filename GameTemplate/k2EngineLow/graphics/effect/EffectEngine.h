@@ -5,7 +5,7 @@
 /// <summary>
 /// エフェクトエンジンクラス。
 /// </summary>
-class EffectEngine {
+class EffectEngine : public Noncopyable{
 	static EffectEngine* m_instance;	//唯一のインスタンス。
 	EffekseerRenderer::RendererRef m_renderer;	//レンダラー。
 	Effekseer::RefPtr<EffekseerRenderer::SingleFrameMemoryPool> m_memoryPool;	//メモリプール。

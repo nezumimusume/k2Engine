@@ -3,7 +3,7 @@
 /// <summary>
 /// レンダーラーの基底クラス。
 /// </summary>
-class IRenderer {
+class IRenderer : public Noncopyable{
 public:
 	/// <summary>
 	/// シャドウマップへの描画パスから呼ばれる処理。

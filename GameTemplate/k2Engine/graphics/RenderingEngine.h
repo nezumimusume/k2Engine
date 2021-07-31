@@ -10,7 +10,7 @@ class IRenderer;
 /// <summary>
 /// レンダリングエンジン。
 /// </summary>
-class RenderingEngine
+class RenderingEngine : public Noncopyable
 {
 public:
     // ディレクションライト
@@ -243,11 +243,7 @@ private:
     RenderTarget m_mainRTSnapshots[(int)EnMainRTSnapshot::enNum];   // メインレンダリングターゲットのスナップショット
     RenderTarget m_gBuffer[enGBufferNum];                           // G-Buffer
     PostEffect m_postEffect;                                        // ポストエフェクト
-    /*std::vector< Model* > m_zprepassModels;                         // ZPrepassの描画パスで描画されるモデルのリスト
-    std::vector< Model* > m_renderToGBufferModels;                  // Gバッファへの描画パスで描画するモデルのリスト
-    std::vector< Model* > m_forwardRenderModels;                    // フォワードレンダリングの描画パスで描画されるモデルのリスト
-    std::vector< IRender* > m_render2DObject;                       // 2D描画オブジェクトのリスト。*/
-    std::vector< IRenderer* > m_renderObjects;                        // 描画オブジェクトのリスト。
+    std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。
 };
 
 extern RenderingEngine* g_renderingEngine;

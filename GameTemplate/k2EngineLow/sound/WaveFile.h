@@ -10,7 +10,7 @@
 /// Read()で同期読み込み、ReadAsync()は非同期読み込みが行われます。
 /// ReadAsyncを利用した場合はWaveFile::IsReadEndを利用して同期をとってください。
 /// </summary>
-class WaveFile {
+class WaveFile : public Noncopyable{
 public:
 	/// <summary>
 	/// コンストラクタ。

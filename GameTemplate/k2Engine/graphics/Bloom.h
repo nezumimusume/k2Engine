@@ -3,7 +3,7 @@
 /// <summary>
 /// ƒuƒ‹[ƒ€B
 /// </summary>
-class Bloom
+class Bloom : public Noncopyable
 {
 public:
     /// <summary>

@@ -1,7 +1,7 @@
 #pragma once
 
 
-class ConstantBuffer{
+class ConstantBuffer : public Noncopyable{
 public:
 	/// <summary>
 	/// コンストラクタ

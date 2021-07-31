@@ -3,7 +3,7 @@
 #include <memory>
 
 template<class TResource>
-class TResourceBank {
+class TResourceBank : public Noncopyable{
 public:
 	TResource* Get(const char* filePath)
 	{

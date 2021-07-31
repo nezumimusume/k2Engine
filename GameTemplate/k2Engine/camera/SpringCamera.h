@@ -8,7 +8,7 @@
 /// カメラの目標となる注視点と視点を設定してください。
 /// Update関数を実行することで、カメラが設定された目標座標に追従していきます。
 /// </summary>
-class SpringCamera
+class SpringCamera : public Noncopyable
 {
 public:
 	/// <summary>

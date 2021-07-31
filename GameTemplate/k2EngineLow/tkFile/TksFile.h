@@ -7,7 +7,7 @@
 /// </remarks>
 #pragma once
 
-class TksFile {
+class TksFile : public Noncopyable{
 public:
 	/// <summary>
 	/// ƒ{[ƒ“B

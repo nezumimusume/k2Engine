@@ -9,7 +9,7 @@ struct LevelObjectData;
 /// <summary>
 /// マップチップ。
 /// </summary>
-class MapChip
+class MapChip : public Noncopyable
 {
 public:
 	MapChip(const LevelObjectData& objData, const char* filePath);

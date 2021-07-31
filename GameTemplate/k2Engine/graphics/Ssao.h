@@ -2,7 +2,7 @@
 /// <summary>
 /// Ssao(スクリーンスペースアンビエントオクルージョン)。
 /// </summary>
-class Ssao
+class Ssao : public Noncopyable
 {
 public:
     /// <summary>

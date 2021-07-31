@@ -1,7 +1,7 @@
 #pragma once
 
 class Shader;
-class RootSignature {
+class RootSignature : public Noncopyable{
 public:
 	~RootSignature()
 	{

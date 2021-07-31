@@ -14,7 +14,7 @@ struct RigidBodyInitData {
 /// <summary>
 /// „‘ÌƒNƒ‰ƒXB
 /// </summary>
-class RigidBody {
+class RigidBody : public Noncopyable{
 public:
 	~RigidBody();
 	/// <summary>

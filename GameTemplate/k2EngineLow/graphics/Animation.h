@@ -27,7 +27,7 @@ using AnimationEventListener = std::function<void(const wchar_t* clipName, const
 ///		この機能を活用することで、アニメータが作成した歩きアニメーションなどに移動量を
 ///		含むことができ、アニメータが意図した移動を行うことができます。
 /// </remarks>
-class Animation {
+class Animation : public Noncopyable{
 public:
 
 	/// <summary>

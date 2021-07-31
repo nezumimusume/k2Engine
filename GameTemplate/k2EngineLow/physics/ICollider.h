@@ -8,7 +8,7 @@ class btCollisionShape;
 /// <summary>
 /// コライダーのインターフェースクラス。
 /// </summary>
-class ICollider {
+class ICollider : public Noncopyable{
 public:
 	virtual btCollisionShape* GetBody() const = 0;
 };

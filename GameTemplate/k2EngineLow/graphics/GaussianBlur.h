@@ -3,7 +3,7 @@
 /// <summary>
 /// ガウシアンブラークラス。
 /// </summary>
-class GaussianBlur {
+class GaussianBlur : public Noncopyable{
 public:
 	/// <summary>
 	/// 初期化。

@@ -16,7 +16,7 @@
  *@endcode
  *
  */
-class Stopwatch {
+class Stopwatch : public Noncopyable{
 public:
 	/*!
 	 *@brief	コンストラクタ。

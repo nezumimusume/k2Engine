@@ -4,7 +4,7 @@ struct CaslData;
 /// <summary>
 /// マップチップ2D。
 /// </summary>
-class MapChip2D
+class MapChip2D : public Noncopyable
 {
 public:
 	/// <summary>

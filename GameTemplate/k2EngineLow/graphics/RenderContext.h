@@ -11,7 +11,7 @@ namespace raytracing{
 /// <summary>
 /// レンダリングコンテキスト。
 /// </summary>
-class RenderContext {
+class RenderContext : public Noncopyable{
 public:
 	/// <summary>
 	/// 初期化。

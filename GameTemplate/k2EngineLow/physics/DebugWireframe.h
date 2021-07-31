@@ -3,7 +3,7 @@
 #include "graphics/Shader.h"
 
 class DebugWireframe :
-	public btIDebugDraw
+	public btIDebugDraw, public Noncopyable
 {
 public:
 	DebugWireframe();

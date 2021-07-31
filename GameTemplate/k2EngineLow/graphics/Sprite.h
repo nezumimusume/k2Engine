@@ -51,7 +51,7 @@ struct SpriteInitData {
 /// <summary>
 /// スプライトクラス。
 /// </summary>
-class Sprite  {
+class Sprite  : public Noncopyable{
 public:
 	static const Vector2	DEFAULT_PIVOT;					//!<ピボット。
 	virtual ~Sprite();

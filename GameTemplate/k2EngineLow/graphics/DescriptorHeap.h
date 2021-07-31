@@ -3,7 +3,7 @@
 /// <summary>
 /// ディスクリプタヒープ。
 /// </summary>
-class DescriptorHeap {
+class DescriptorHeap : public Noncopyable{
 public:
 	/// <summary>
 	/// コンストラクタ

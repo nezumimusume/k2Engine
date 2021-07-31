@@ -4,7 +4,7 @@
 /// <summary>
 /// 頂点バッファ
 /// </summary>
-class VertexBuffer {
+class VertexBuffer : public Noncopyable{
 		
 public:
 	/// <summary>

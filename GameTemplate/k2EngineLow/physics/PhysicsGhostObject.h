@@ -6,7 +6,7 @@
 /// キャラクターのチェックポイント通過判定、クリア判定などの
 /// キャラクターがすり抜ける必要のあるあたり判定に使えます。
 /// </summary>
-class PhysicsGhostObject{
+class PhysicsGhostObject : public Noncopyable{
 public:
 	~PhysicsGhostObject()
 	{

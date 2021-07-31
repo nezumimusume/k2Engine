@@ -4,7 +4,7 @@
 /// <summary>
 /// パイプラインステート。
 /// </summary>
-class PipelineState {
+class PipelineState : public Noncopyable{
 public:
 	/// <summary>
 	/// デストラクタ。

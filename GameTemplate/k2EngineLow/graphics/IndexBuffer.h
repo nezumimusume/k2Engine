@@ -5,7 +5,7 @@
 /// </summary>
 /// <remarks>
 /// </remarks>
-class IndexBuffer {
+class IndexBuffer : public Noncopyable{
 public:
 	/// <summary>
 	/// デストラクタ。

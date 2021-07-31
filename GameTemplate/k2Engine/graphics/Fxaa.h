@@ -2,7 +2,7 @@
 /// <summary>
 /// FXAAÅB
 /// </summary>
-class Fxaa
+class Fxaa : public Noncopyable
 {
 public:
     /// <summary>

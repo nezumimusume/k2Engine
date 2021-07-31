@@ -19,7 +19,7 @@ struct KeyFrame {
 /*!
 *@brief	アニメーションイベント。
 */
-class AnimationEvent {
+class AnimationEvent : public Noncopyable{
 public:
 	
 	/*!

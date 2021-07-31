@@ -1,7 +1,7 @@
 #pragma once
 
 
-class Shader {
+class Shader : public Noncopyable{
 public:
 	/// <summary>
 	/// ピクセルシェーダーをロード。

@@ -30,7 +30,7 @@ enum EnButton{
 /*!
 *@brief	パッド
 */
-class GamePad {
+class GamePad : public Noncopyable{
 public:
 	static const int CONNECT_PAD_MAX = 4;		//接続可能なパッドの最大数。
 	/*!

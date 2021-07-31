@@ -36,6 +36,7 @@ const int MAX_RENDERING_TARGET = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;	//ƒŒƒ“ƒ
 
 using namespace Microsoft::WRL;
 
+#include "util/Noncopyable.h"
 #include "dbg/MyAssert.h"
 
 #include "time/GameTime.h"

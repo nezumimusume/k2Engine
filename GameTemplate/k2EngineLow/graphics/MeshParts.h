@@ -29,7 +29,7 @@ struct SMesh {
 /// <summary>
 /// メッシュパーツ。
 /// </summary>
-class MeshParts {
+class MeshParts : public Noncopyable{
 public:
 	/// <summary>
 	/// デストラクタ。

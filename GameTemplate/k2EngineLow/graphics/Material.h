@@ -4,7 +4,7 @@
 /// <summary>
 /// マテリアル。
 /// </summary>
-class Material {
+class Material : public Noncopyable{
 public:
 	/// <summary>
 	/// tkmファイルのマテリアル情報から初期化する。

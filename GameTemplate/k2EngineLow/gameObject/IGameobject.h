@@ -11,7 +11,7 @@ class RenderContext;
 /*!
 	*@brief	ゲームオブジェクト。
 	*/
-class IGameObject {
+class IGameObject : public Noncopyable{
 public:
 	/*!
 		*@brief	デストラクタ

@@ -5,7 +5,7 @@
 /// <summary>
 /// Caslファイルのデータ。
 /// </summary>
-struct CaslData
+struct CaslData : public Noncopyable
 {
 public:
 	std::unique_ptr<char[]> name;			//名前。

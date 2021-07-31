@@ -9,7 +9,7 @@
 /// <summary>
 /// ポストエフェクト。
 /// </summary>
-class PostEffect
+class PostEffect : public Noncopyable
 {
 public:
     /// <summary>

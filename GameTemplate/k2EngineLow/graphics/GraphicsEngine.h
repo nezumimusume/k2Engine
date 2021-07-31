@@ -17,7 +17,7 @@
 /// <summary>
 /// DirectX12に依存するグラフィックスエンジン
 /// </summary>
-class GraphicsEngine {
+class GraphicsEngine : public Noncopyable{
 public:
 	/// <summary>
 	/// デストラクタ。

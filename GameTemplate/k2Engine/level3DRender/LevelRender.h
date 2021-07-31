@@ -42,7 +42,7 @@ struct LevelObjectData {
 /*!
 *@brief	ƒŒƒxƒ‹B
 */
-class LevelRender {
+class LevelRender : public Noncopyable{
 private:
 	using MapChipRenderPtr = std::shared_ptr<MapChipRender>;
 public:

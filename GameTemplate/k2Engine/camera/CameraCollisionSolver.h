@@ -37,7 +37,7 @@
 ///		return 0;
 ///}
 /// </summary>
-class CameraCollisionSolver
+class CameraCollisionSolver : public Noncopyable
 {
 public:
 	/// <summary>

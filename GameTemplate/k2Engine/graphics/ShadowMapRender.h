@@ -8,7 +8,7 @@ class IRenderer;
 /// <summary>
 /// シャドウマップへの描画処理
 /// </summary>
-class ShadowMapRender
+class ShadowMapRender : public Noncopyable
 {
 public:
     /// <summary>

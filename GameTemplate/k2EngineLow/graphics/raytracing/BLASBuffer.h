@@ -8,8 +8,8 @@ namespace raytracing {
 	/// BLAS( Bottom level acceleration structures )とは
 	/// レイトレワールドに登録されているジオメトリのデータ構造です。
 	/// BLASに3Dモデルのポリゴン情報が登録されることになります。
-	/// </remark
-	class BLASBuffer
+	/// </remark>
+	class BLASBuffer : public Noncopyable
 	{
 	public:
 		/// <summary>

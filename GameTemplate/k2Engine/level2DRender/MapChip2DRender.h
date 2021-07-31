@@ -4,7 +4,7 @@ struct Level2DObjectData;
 /// <summary>
 /// マップチップ2D。
 /// </summary>
-class MapChip2DRender
+class MapChip2DRender : public Noncopyable
 {
 public:
 	/// <summary>

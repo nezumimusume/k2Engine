@@ -3,7 +3,7 @@
 /// <summary>
 /// ”íÊŠE[“xB
 /// </summary>
-class Dof
+class Dof : public Noncopyable
 {
 public:
     /// <summary>

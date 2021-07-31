@@ -14,7 +14,7 @@
 /// font.Draw("Hello world", pos, color, rot, scale, pivot);
 /// font.EndDraw( renderContext );
 /// </example>
-class FontEngine {
+class FontEngine : public Noncopyable{
 	
 public:
 	/// <summary>

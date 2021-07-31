@@ -12,7 +12,7 @@ class K2Engine;
 /*!
  *@brief	ƒQ[ƒ€ŠÔB
  */
-class GameTime{
+class GameTime : public Noncopyable{
 	GameTime() 
 	{
 	}

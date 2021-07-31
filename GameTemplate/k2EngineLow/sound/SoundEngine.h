@@ -12,7 +12,7 @@ class SoundSource;
 /// <summary>
 /// サウンドエンジン。
 /// </summary>
-class SoundEngine{
+class SoundEngine : public Noncopyable{
 public:
 	/// <summary>
 	/// コンストラクタ。

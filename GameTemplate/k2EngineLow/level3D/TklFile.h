@@ -3,7 +3,7 @@
 /// <summary>
 /// tklファイルを読み込む。
 /// </summary>
-class TklFile
+class TklFile : public Noncopyable
 {
 public:
 	//オブジェクトデーター。

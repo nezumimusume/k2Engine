@@ -13,7 +13,7 @@ class Model;
 namespace raytracing {
 	
 
-	class Engine
+	class Engine : public Noncopyable
 	{
 	public:
 		/// <summary>

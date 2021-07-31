@@ -1,5 +1,5 @@
 
-class IShaderResource {
+class IShaderResource : public Noncopyable{
 public:
 	virtual ~IShaderResource()
 	{
