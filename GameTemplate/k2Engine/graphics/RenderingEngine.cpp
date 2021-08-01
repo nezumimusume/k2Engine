@@ -3,7 +3,7 @@
 
 
 RenderingEngine* g_renderingEngine = nullptr;
-
+SceneLight* g_sceneLight = nullptr;
 void RenderingEngine::Init()
 {
     InitZPrepassRenderTarget();
@@ -13,7 +13,14 @@ void RenderingEngine::Init()
     InitCopyMainRenderTargetToFrameBufferSprite();
     InitShadowMapRender();
     InitDeferredLighting();
+    m_lightCulling.Init(
+        m_zprepassRenderTarget.GetRenderTargetTexture(),
+        m_diferredLightingSprite.GetExpandConstantBufferGPU(),
+        m_pointLightNoListInTileUAV
+    );
     m_postEffect.Init(m_mainRenderTarget, m_zprepassRenderTarget);
+    // シーンライト
+    g_sceneLight = &m_sceneLight;
 }
 void RenderingEngine::InitShadowMapRender()
 {
@@ -138,6 +145,12 @@ void RenderingEngine::InitDeferredLighting()
     // シーンライトを初期化する。
     m_sceneLight.Init();
 
+    // タイルごとのポイントライトの番号を記録するリストのUAVを作成。
+    m_pointLightNoListInTileUAV.Init(
+        sizeof(int),
+        MAX_POINT_LIGHT * NUM_TILE,
+        nullptr);
+
     // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
     SpriteInitData spriteInitData;
 
@@ -155,6 +168,8 @@ void RenderingEngine::InitDeferredLighting()
     spriteInitData.m_fxFilePath = "Assets/shader/DeferredLighting.fx";
     spriteInitData.m_expandConstantBuffer = &m_deferredLightingCB;
     spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
+    spriteInitData.m_expandShaderResoruceView = &m_pointLightNoListInTileUAV;
+
     for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
     {
         for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
@@ -169,6 +184,10 @@ void RenderingEngine::InitDeferredLighting()
 }
 void RenderingEngine::Execute(RenderContext& rc)
 {
+    
+    // シーンライトの更新。
+    m_sceneLight.Update();
+
     // シーンライトのデータをコピー。
     m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
 
@@ -177,6 +196,9 @@ void RenderingEngine::Execute(RenderContext& rc)
 
     // ZPrepass
     ZPrepass(rc);
+
+    // ライトカリング
+    m_lightCulling.Execute(rc);
 
     // G-Bufferへのレンダリング
     RenderToGBuffer(rc);

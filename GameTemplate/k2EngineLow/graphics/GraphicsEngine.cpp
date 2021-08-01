@@ -67,9 +67,6 @@ bool GraphicsEngine::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeig
 	//
 	g_graphicsEngine = this;
 
-	
-
-
 	m_frameBufferWidth = frameBufferWidth;
 	m_frameBufferHeight = frameBufferHeight;
 

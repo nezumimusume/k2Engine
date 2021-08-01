@@ -9,7 +9,7 @@ class Texture;
 //スプライトに設定できる最大テクスチャ数。
 const int MAX_TEXTURE = 32;	
 //拡張SRVが設定されるレジスタの開始番号。
-const int EXPAND_SRV_REG__START_NO = 10;
+const int EXPAND_SRV_REG__START_NO = 20;
 
 class IShaderResource;
 
@@ -95,6 +95,14 @@ public:
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
 	void Draw(RenderContext& renderContext);
+	/// <summary>
+	/// ユーザー定義の拡張定数バッファを取得。
+	/// </summary>
+	/// <returns></returns>
+	ConstantBuffer& GetExpandConstantBufferGPU() 
+	{
+		return m_userExpandConstantBufferGPU;
+	}
 private:
 	/// <summary>
 	/// テクスチャを初期化。

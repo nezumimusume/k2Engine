@@ -85,13 +85,13 @@
     <ClCompile Include="collision\CollisionObject.cpp">
       <Filter>collision</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\SceneLight.cpp">
+    <ClCompile Include="graphics\LightCulling.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.cpp">
+    <ClCompile Include="geometry\AABB.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\LightCulling.cpp">
+    <ClCompile Include="graphics\SceneLight.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -163,13 +163,13 @@
     <ClInclude Include="collision\CollisionObject.h">
       <Filter>collision</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\SceneLight.h">
+    <ClInclude Include="graphics\LightCulling.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.h">
+    <ClInclude Include="geometry\AABB.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\LightCulling.h">
+    <ClInclude Include="graphics\SceneLight.h">
       <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>

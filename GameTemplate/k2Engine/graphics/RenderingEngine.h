@@ -4,6 +4,7 @@
 #include "ShadowMapRender.h"
 #include "PostEffect.h"
 #include "SceneLight.h"
+#include "LightCulling.h"
 
 class IRenderer;
 
@@ -14,7 +15,6 @@ class RenderingEngine : public Noncopyable
 {
 public:
   
-
     //メインレンダリングターゲットのスナップショット
     enum class EnMainRTSnapshot
     {
@@ -25,12 +25,13 @@ public:
     // レンダリングパス
     enum class EnRenderingPass
     {
-        enRenderToShadowMap,    //シャドウマップへの描画パス
-        enZPrepass,             //ZPrepass
-        enRenderToGBuffer,      //G-Bufferへの描画パス
-        enForwardRender,        //フォワードレンダリングの描画パス
-        enPostEffect,           //ポストエフェクト
-        enRender2D,             //2D描画。
+        enRenderToShadowMap,    // シャドウマップへの描画パス
+        enZPrepass,             // ZPrepass
+        enLightCulling,         // ライトカリング。
+        enRenderToGBuffer,      // G-Bufferへの描画パス
+        enForwardRender,        // フォワードレンダリングの描画パス
+        enPostEffect,           // ポストエフェクト
+        enRender2D,             // 2D描画。
     };
     /// <summary>
     /// レンダリングパイプラインを初期化
@@ -215,8 +216,8 @@ private:
         float pad;          // パディング
         Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
     };
-
-    ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];        // シャドウマップへの描画処理
+    LightCulling m_lightCulling;                                    // ライトカリング。 
+    ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
     SDeferredLightingCB m_deferredLightingCB;                       // ディファードライティング用の定数バッファ
     Sprite m_copyMainRtToFrameBufferSprite;                         // メインレンダリングターゲットをフレームバッファにコピーするためのスプライト
     Sprite m_diferredLightingSprite;                                // ディファードライティングを行うためのスプライト
@@ -225,8 +226,10 @@ private:
     RenderTarget m_mainRTSnapshots[(int)EnMainRTSnapshot::enNum];   // メインレンダリングターゲットのスナップショット
     RenderTarget m_gBuffer[enGBufferNum];                           // G-Buffer
     PostEffect m_postEffect;                                        // ポストエフェクト
+    RWStructuredBuffer m_pointLightNoListInTileUAV;                 // タイルごとのポイントライトのリストのUAV。
     std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。
     SceneLight m_sceneLight;                                        // シーンライト。
 };
 
 extern RenderingEngine* g_renderingEngine;
+extern SceneLight* g_sceneLight;

@@ -8,3 +8,5 @@
 #include "graphics/ModelRender.h"
 #include "graphics/SpriteRender.h"
 #include "graphics/FontRender.h"
+#include "graphics/SceneLight.h"
+#include "graphics/RenderingEngine.h"

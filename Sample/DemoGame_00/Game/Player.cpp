@@ -18,7 +18,7 @@ Player::Player()
 
 Player::~Player()
 {
-
+	g_sceneLight->DeletePointLight(m_pointLight);
 }
 
 bool Player::Start()
@@ -46,6 +46,8 @@ bool Player::Start()
 
 	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/gameover.wav");
 	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/gameclear.wav");
+
+	m_pointLight = g_sceneLight->NewPointLight();
 	return true;
 }
 
@@ -68,6 +70,10 @@ void Player::Update()
 	m_forward.x = mRot.m[2][0];
 	m_forward.y = mRot.m[2][1];
 	m_forward.z = mRot.m[2][2];
+
+	m_pointLight->SetPosition( m_position.x, m_position.y + 5.0f, m_position.z );
+	m_pointLight->SetColor(5.0f, 5.0f, 5.0f);
+	m_pointLight->SetRange(1000.0f);
 }
 
 void Player::Move()

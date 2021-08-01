@@ -19,20 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.cpp" />
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\LightCulling.cpp" />
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\SceneLight.cpp" />
     <ClCompile Include="camera\CameraCollisionSolver.cpp" />
     <ClCompile Include="camera\SpringCamera.cpp" />
     <ClCompile Include="collision\CollisionObject.cpp" />
+    <ClCompile Include="geometry\AABB.cpp" />
     <ClCompile Include="graphics\Bloom.cpp" />
     <ClCompile Include="graphics\CascadeShadowMapMatrix.cpp" />
     <ClCompile Include="graphics\Dof.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
     <ClCompile Include="graphics\Fxaa.cpp" />
+    <ClCompile Include="graphics\LightCulling.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\PostEffect.cpp" />
     <ClCompile Include="graphics\RenderingEngine.cpp" />
+    <ClCompile Include="graphics\SceneLight.cpp" />
     <ClCompile Include="graphics\ShadowMapRender.cpp" />
     <ClCompile Include="graphics\SpriteRender.cpp" />
     <ClCompile Include="graphics\Ssao.cpp" />
@@ -48,22 +48,22 @@
     <ClCompile Include="nature\SkyCube.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\AABB.h" />
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\LightCulling.h" />
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\SceneLight.h" />
     <ClInclude Include="camera\CameraCollisionSolver.h" />
     <ClInclude Include="camera\SpringCamera.h" />
     <ClInclude Include="collision\CollisionObject.h" />
+    <ClInclude Include="geometry\AABB.h" />
     <ClInclude Include="graphics\Bloom.h" />
     <ClInclude Include="graphics\CascadeShadowMapMatrix.h" />
     <ClInclude Include="graphics\Dof.h" />
     <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\Fxaa.h" />
     <ClInclude Include="graphics\IRenderer.h" />
+    <ClInclude Include="graphics\LightCulling.h" />
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\MyRenderer.h" />
     <ClInclude Include="graphics\PostEffect.h" />
     <ClInclude Include="graphics\RenderingEngine.h" />
+    <ClInclude Include="graphics\SceneLight.h" />
     <ClInclude Include="graphics\ShadowMapRender.h" />
     <ClInclude Include="graphics\SpriteRender.h" />
     <ClInclude Include="graphics\Ssao.h" />

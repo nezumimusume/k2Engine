@@ -9,14 +9,117 @@ struct DirectionalLight
 };
 
 // ポイントライト。
+
+/// <summary>
+/// ポイントライト構造体
+/// </summary>
+/// <remark>
+/// この構造体はPOD型として扱っています。
+/// 本構造体に仮想関数などは絶対に追加しないようにしてください。
+/// memcpy、memsetなどの関数を利用している可能性があります。
+/// 仮想関数などを追加すると、仮想関数テーブルが壊されます。
+/// 
+/// また、この構造体のオブジェクトのデータはシェーダー側に定数バッファとして転送されています。
+/// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
+/// </remark>
 struct PointLight
 {
+private:
     Vector3 position;       // 座標
-    float pad0;
+    int isUse = false;      // 使用中フラグ。
     Vector3 positionInView; // カメラ空間での座標
     float pad1;
     Vector3 color;          // ライトのカラー
-    float range;            // ライトの影響を与える範囲
+    float range = 10;       // ライトの影響を与える範囲
+public:
+    
+    /// <summary>
+    /// 座標を設定。
+    /// </summary>
+    /// <param name="position"></param>
+    void SetPosition(const Vector3& position)
+    {
+        this->position = position;
+    }
+    void SetPosition(float x, float y, float z)
+    {
+        SetPosition({ x, y, z });
+    }
+    /// <summary>
+    /// カラーを設定。
+    /// </summary>
+    /// <param name="color"></param>
+    void SetColor(const Vector3& color)
+    {
+        this->color = color;
+    }
+    void SetColor( float r, float g, float b)
+    {
+        SetColor({ r, g, b });
+    }
+    /// <summary>
+    /// 範囲を設定。
+    /// </summary>
+    /// <param name="range"></param>
+    void SetRange(float range)
+    {
+        this->range = range;
+    }
+    /// <summary>
+    /// 座標を取得。
+    /// </summary>
+    /// <returns></returns>
+    const Vector3& GetPosition() const
+    {
+        return position;
+    }
+    /// <summary>
+    /// カラーを取得。
+    /// </summary>
+    /// <returns></returns>
+    const Vector3& GetColor() const
+    {
+        return color;
+    }
+    /// <summary>
+    /// 影響範囲を取得。
+    /// </summary>
+    /// <returns></returns>
+    float GetRange() const
+    {
+        return range;
+    }
+    /// <summary>
+    /// ポイントライトを使用中にする。
+    /// </summary>
+    /// /// <remark>
+    /// この関数はk2Engine内部で利用されています。
+    /// ゲーム側からは使用しないように注意してください。
+    /// </remark>
+    void Use()
+    {
+        isUse = true;
+    }
+    /// <summary>
+    /// ポイントライトを未使用にする。
+    /// </summary>
+    /// <remark>
+    /// この関数はk2Engine内部で利用されています。
+    /// ゲーム側からは使用しないように注意してください。
+    /// </remark>
+    void UnUse()
+    {
+        isUse = false;
+    }
+    /// <summary>
+    /// 更新。
+    /// </summary>
+    /// <remark>
+    /// この関数はk2Engine内部で利用されています。
+    /// ゲーム側からは使用しないように注意してください。
+    /// </remark>
+    void Update();
+    
 };
 // ライト構造体
 struct Light
@@ -57,6 +160,49 @@ public:
         m_light.directionalLight[lightNo].direction = direction;
         m_light.directionalLight[lightNo].color = color;
     }
+    /// <summary>
+    /// シーンにポイントライトを追加
+    /// </summary>
+    
+    /// <summary>
+    /// シーンにポイントライトを追加
+    /// </summary>
+    /// <remark>
+    /// 本関数を利用して追加したポイントライトは、
+    /// 不要になったらDeletePointLight()を使用して、削除してください。
+    /// </remark>
+    /// <returns>追加されたポイントライトのアドレス</returns>
+    PointLight* NewPointLight()
+    {
+        if (m_unusePointLightQueue.empty()) {
+            // これ以上ポイントライトを追加することはできない。
+            return nullptr;
+        }
+        // 未使用のポイントライトをでキューから取り出す。
+        auto* newPt = m_unusePointLightQueue.front();
+        // 使用中にする。
+        newPt->Use();
+        // 取り出した要素を先頭から除去。
+        m_unusePointLightQueue.pop_front();
+        return newPt;
+    }
+    /// <summary>
+    /// シーンからポイントライトを削除
+    /// </summary>
+    /// <param name="pointLight">削除するポイントライト</param>
+    void DeletePointLight( PointLight* pointLight )
+    {
+        // フラグを未使用に変更する。
+        pointLight->UnUse();
+        // 未使用リストに追加する。
+        m_unusePointLightQueue.push_back(pointLight);
+    }
+    /// <summary>
+    /// 更新
+    /// </summary>
+    void Update();
+    
 private:
     Light m_light;  //シーンライト。
+    std::deque< PointLight* > m_unusePointLightQueue; //未使用のポイントライトのキュー。
 };

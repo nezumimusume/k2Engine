@@ -1,10 +1,17 @@
 #include "k2EnginePreCompile.h"
 #include "SceneLight.h"
 
+void PointLight::Update()
+{
+    // 使用中のライトはカメラ空間での座標を計算する。
+    if (!isUse) {
+        return;
+    }
+    positionInView = position;
+    g_camera3D->GetViewMatrix().Apply(positionInView);
+}
 void SceneLight::Init()
 {
-
-
     // 太陽光
     m_light.directionalLight[0].color.x = 3.0f;
     m_light.directionalLight[0].color.y = 3.0f;
@@ -41,4 +48,18 @@ void SceneLight::Init()
     m_light.ambinetLight.y = 0.4f;
     m_light.ambinetLight.z = 0.4f;
     m_light.eyePos = g_camera3D->GetPosition();
+    m_light.numPointLight = 0;
+
+    // 全てのポイントライトを未使用にする
+    for (auto& pt : m_light.pointLights) {
+        pt.UnUse();
+        m_unusePointLightQueue.push_back(&pt);
+    }
+}
+void SceneLight::Update()
+{
+    for (auto& pt : m_light.pointLights) {
+        pt.Update();
+    }
+    m_light.numPointLight = MAX_POINT_LIGHT - m_unusePointLightQueue.size();
 }
