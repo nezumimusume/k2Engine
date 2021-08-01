@@ -245,6 +245,7 @@ void ModelRender::InitModelOnZprepass(
 }
 void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 {
+	MY_ASSERT(m_numInstance < m_maxInstance, "インスタンスの数が多すぎです。");
 	if (!m_isEnableInstancingDraw) {
 		return;
 	}
@@ -335,9 +336,9 @@ bool ModelRender::IsViewCulling(const Matrix& mWorld)
 	for (Vector4 v : worldPos) {
 		
 		viewProjMatrix.Apply(v);
-		v.x /= v.w;
-		v.y /= v.w;
-		v.z /= v.w;
+		v.x /= fabsf(v.w);
+		v.y /= fabsf(v.w);
+		v.z /= fabsf(v.w);
 
 		vMax.Max(v);
 		vMin.Min(v);
