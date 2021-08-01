@@ -319,6 +319,8 @@ void ModelRender::Update()
 }
 bool ModelRender::IsViewCulling(const Matrix& mWorld)
 {
+	// todo bug 
+	
 	// AABBを構成する8頂点のワールド座標を計算する。
 	Vector3 worldPos[8];
 	m_aabb.CalcVertexPositions(

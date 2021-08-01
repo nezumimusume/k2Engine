@@ -30,7 +30,9 @@ private:
     Vector3 positionInView; // カメラ空間での座標
     float pad1;
     Vector3 color;          // ライトのカラー
-    float range = 10;       // ライトの影響を与える範囲
+    float pad2;             
+    Vector3 attn;           // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ。
+    float pad3;
 public:
     
     /// <summary>
@@ -63,7 +65,15 @@ public:
     /// <param name="range"></param>
     void SetRange(float range)
     {
-        this->range = range;
+        attn.x = range;
+    }
+    /// <summary>
+    /// 影響率の累乗数を設定。
+    /// </summary>
+    /// <param name="powParam"></param>
+    void SetAffectPowParam(float powParam)
+    {
+        attn.y = powParam;
     }
     /// <summary>
     /// 座標を取得。
@@ -87,7 +97,7 @@ public:
     /// <returns></returns>
     float GetRange() const
     {
-        return range;
+        return attn.x;
     }
     /// <summary>
     /// ポイントライトを使用中にする。

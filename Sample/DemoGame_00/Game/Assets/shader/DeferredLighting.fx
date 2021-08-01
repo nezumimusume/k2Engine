@@ -29,7 +29,7 @@ struct PointLight
     float3 position;        // 座標
     float3 positionInView;  // カメラ空間での座標
     float3 color;           // カラー
-    float range;            // 範囲
+    float3 attn;            // 減衰パラメータ。
 };
 //頂点シェーダーへの入力構造体。
 struct VSInput
@@ -352,7 +352,8 @@ float4 PSMain(PSInput In) : SV_Target0
         );
         // 3. 影響率を計算する。影響率は0.0～1.0の範囲で、
         //     指定した距離（pointsLights[i].range）を超えたら、影響率は0.0になる
-        float affect = 1.0f - min(1.0f, distance / pointLight[ligNo].range);
+        float affect = 1.0f - min(1.0f, distance / pointLight[ligNo].attn.x);
+        affect = pow( affect, pointLight[ligNo].attn.y );
         lig += ptLig * affect;
        
     }

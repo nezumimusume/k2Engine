@@ -53,6 +53,7 @@ void SceneLight::Init()
     // 全てのポイントライトを未使用にする
     for (auto& pt : m_light.pointLights) {
         pt.UnUse();
+        pt.SetAffectPowParam(1.0f);
         m_unusePointLightQueue.push_back(&pt);
     }
 }
