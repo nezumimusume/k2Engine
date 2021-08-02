@@ -36,12 +36,6 @@ bool Enemy::Start()
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetScale(m_scale);
 
-	//キャラクターコントローラーを初期化。
-	m_charaCon.Init(
-		20.0f,			//半径。
-		100.0f,			//高さ。
-		m_position		//座標。
-	);
 	m_movedPath->Init(m_position, MOVE_SPPED);
 	return true;
 }

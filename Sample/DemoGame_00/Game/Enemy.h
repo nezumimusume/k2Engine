@@ -88,7 +88,6 @@ private:
 	}
 	ModelRender			m_modelRender;				//モデルレンダ―。
 	Vector3				m_position;					//座標。
-	CharacterController m_charaCon;					//キャラクターコントローラー。
 	Vector3				m_moveVector;				//移動方向ベクトル。
 	Vector3				m_scale = Vector3::One;		//スケール。
 	Quaternion			m_rotation;					//クォータニオン。

@@ -52,7 +52,7 @@ bool Game::Start()
 			return false;
 		}
 		return false;
-		});
+	});
 
 	return true;
 }

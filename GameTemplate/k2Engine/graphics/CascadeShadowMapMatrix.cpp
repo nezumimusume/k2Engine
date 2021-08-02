@@ -12,24 +12,25 @@ void CascadeShadowMapMatrix::CalcLightViewProjectionCropMatrix(
     float maxFar = 10000.0f;
     //ビュー行列を計算する。
     Matrix viewMatrix;
-    Vector3 lightPos = (sceneMaxPosition + sceneMinPosition) * 0.5f;
-    // ライトまでの距離は外から指定できるようにする
-    float lightMaxHeight = (sceneMaxPosition.y - sceneMinPosition.y) * 2.0f;
+    Vector3 lightTarget = ( sceneMaxPosition + sceneMinPosition ) * 0.5f;
+    Vector3 lightPos = lightTarget;
+    // ライトの高さは50m決め打ち。
+    float lightMaxHeight = 5000.0f;
     lightPos += (lightDirection) * (lightMaxHeight / lightDirection.y );    
     //上方向を設定
     if (fabsf(lightDirection.y) > 0.9999f) {
         //ほぼ真上、真下を向いている
-        viewMatrix.MakeLookAt(lightPos, g_vec3Zero, g_vec3AxisX);
+        viewMatrix.MakeLookAt(lightPos, lightTarget, g_vec3AxisX);
     }
     else {
-        viewMatrix.MakeLookAt(lightPos, g_vec3Zero, g_vec3AxisY);
+        viewMatrix.MakeLookAt(lightPos, lightTarget, g_vec3AxisY);
     }
     Matrix projMatrix;
     projMatrix.MakeOrthoProjectionMatrix(
         5000.0f,
         5000.0f,
         1.0f,
-        5000.0f
+        maxFar
     );
 
     // 分割エリアの最大深度値を定義する

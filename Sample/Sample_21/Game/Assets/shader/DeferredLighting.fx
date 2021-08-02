@@ -191,7 +191,7 @@ float CalcDiffuseFromFresnel(float3 N, float3 L, float3 V)
     return (FL*FV * energyFactor);
 }
 
-float CalcShadowRate(int ligNo, float3 worldPos)
+float CalcShadowRate(int ligNo, float3 worldPos, int isSoftShadow)
 {
     float shadow = 0.0f;
     for(int cascadeIndex = 0; cascadeIndex < NUM_SHADOW_MAP; cascadeIndex++)
@@ -206,12 +206,28 @@ float CalcShadowRate(int ligNo, float3 worldPos)
             && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
         {
             // シャドウマップから値をサンプリング
-            float2 shadowValue = g_shadowMap[ligNo][cascadeIndex].Sample(Sampler, shadowMapUV).xy;
+            float3 shadowValue = g_shadowMap[ligNo][cascadeIndex].Sample(Sampler, shadowMapUV).xyz;
 
             // まずこのピクセルが遮蔽されているか調べる
             if(zInLVP >= shadowValue.r + 0.001f)
             {
-                shadow = 1.0f;
+                if( isSoftShadow ){
+                    // ソフトシャドウ。
+                    // 遮蔽されているなら、チェビシェフの不等式を利用して光が当たる確率を求める
+                    float depth_sq = shadowValue.x * shadowValue.x;
+                    // このグループの分散具合を求める
+                    // 分散が大きいほど、varianceの数値は大きくなる
+                    float variance = min(max(shadowValue.y - depth_sq, 0.0001f), 1.0f);
+                    // このピクセルのライトから見た深度値とシャドウマップの平均の深度値の差を求める
+                    float md = zInLVP - shadowValue.x;
+                    // 光が届く確率を求める
+                    float lit_factor = variance / (variance + md * md);
+                    // 光が届く確率から影になる確率を計算する。
+                    shadow = 1.0f - pow( lit_factor, 5.0f ) ;
+                }else{
+                    // ハードシャドウ。
+                    shadow = 1.0f;
+                }
             }
             break;
         }
@@ -267,8 +283,8 @@ float3 CalcLighting(
     // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
     return diffuse * (1.0f - smooth) + spec * smooth;   
 }
-//ピクセルシェーダー。
-float4 PSMain(PSInput In) : SV_Target0
+//ピクセルシェーダーのコア。
+float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
 {
     //G-Bufferの内容を使ってライティング
     //アルベドカラーをサンプリング。
@@ -297,34 +313,33 @@ float4 PSMain(PSInput In) : SV_Target0
         float shadow = 0.0f;
         if( directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
-            shadow = CalcShadowRate( ligNo, worldPos ) * shadowParam.r;
+            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam.r;
         }
-        if( shadow < 0.9f){
-            lig += CalcLighting(
-                directionalLight[ligNo].direction,
-                directionalLight[ligNo].color,
-                normal,
-                toEye,
-                albedoColor,
-                metaric,
-                smooth,
-                specColor
-            );
-        }
+        
+        lig += CalcLighting(
+            directionalLight[ligNo].direction,
+            directionalLight[ligNo].color,
+            normal,
+            toEye,
+            albedoColor,
+            metaric,
+            smooth,
+            specColor
+        ) * ( 1.0f - shadow );
     }
     // 続いてポイントライト
     // スクリーンの左上を(0,0)、右下を(1,1)とする座標系に変換する
     // ビューポート座標系に変換する
     float2 viewportPos = In.pos.xy;
 
-    // step-16 このピクセルが含まれているタイルの番号を計算する
+    // このピクセルが含まれているタイルの番号を計算する
     // スクリーンをタイルで分割したときのセルのX座標を求める
     uint numCellX = (screenParam.z + TILE_WIDTH - 1) / TILE_WIDTH;
 
     // タイルインデックスを計算する
     uint tileIndex = floor(viewportPos.x / TILE_WIDTH) + floor(viewportPos.y / TILE_HEIGHT) * numCellX;
 
-    // step-17 含まれるタイルの影響リストの開始位置と終了位置を計算する
+    // 含まれるタイルの影響リストの開始位置と終了位置を計算する
     uint lightStart = tileIndex * numPointLight;
     uint lightEnd = lightStart + numPointLight;
     for (uint lightListIndex = lightStart; lightListIndex < lightEnd; lightListIndex++)
@@ -364,4 +379,12 @@ float4 PSMain(PSInput In) : SV_Target0
     finalColor.xyz = lig;
     return finalColor;
 }
-
+float4 PSMainSoftShadow(PSInput In) : SV_Target0
+{
+    return PSMainCore( In, true);
+}
+//ハードシャドウを行うピクセルシェーダー。
+float4 PSMainHardShadow(PSInput In) : SV_Target0
+{
+    return PSMainCore( In, false);
+} 
