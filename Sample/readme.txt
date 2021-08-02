@@ -87,4 +87,8 @@
 　　　　→DemoGame_00の☆は1000個以上配置されているが、特に処理に問題が無いのはこのため。
 　Sphere、SphereRender、Muscle、MuscleRenderを参照。
 
+・Sample_23
+　　ポイントライトのサンプル。
+　　　→懐中電灯のライトみたいな
+
 ↑ここまで実装した。
