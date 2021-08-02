@@ -14,18 +14,25 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Init();
+    /// <param name="isSoftShadow">
+    /// trueの場合、シャドウマップ法による、影生成がソフトシャドウになります。
+    /// ハードシャドウにしたい場合は、falseを指定してください。
+    /// </param>
+    void Init(bool isSoftShadow);
     
     /// <summary>
     /// 描画
     /// </summary>
     /// <param name="rc">レンダリングコンテキスト</param>
-    /// <param name="lightDirection">ライトの方向</param>
+    /// <param name="sceneMaxPosition">ゲームシーンの最大座標</param>
+    /// <param name="sceneMinPosition">ゲームシーンの最小座標</param>
     void Render(
         RenderContext& rc, 
         int ligNo, 
         Vector3& lightDirection,
-        std::vector< IRenderer* >& renderObjects
+        std::vector< IRenderer* >& renderObjects,
+        const Vector3& sceneMaxPosition,
+        const Vector3& sceneMinPosition
     );
     /// <summary>
     /// シャドウマップを取得
@@ -34,6 +41,9 @@ public:
     /// <returns></returns>
     Texture& GetShadowMap(int areaNo)
     {
+        if (m_isSoftShadow) {
+            return m_blur[areaNo].GetBokeTexture();
+        }
         return m_shadowMaps[areaNo].GetRenderTargetTexture();
     }
     /// <summary>
@@ -70,9 +80,11 @@ public:
         m_cascadeAreaRateArray[SHADOW_MAP_AREA_FAR] = farArea;
     }
 private:
-    CascadeShadowMapMatrix m_cascadeShadowMapMatrix;    //カスケードシャドウマップの行列を扱うオブジェクト
-    RenderTarget m_shadowMaps[NUM_SHADOW_MAP];          //シャドウマップ
-    std::vector< IRenderer* > m_renderers;              //シャドウマップへのレンダラーの配列。
+    CascadeShadowMapMatrix m_cascadeShadowMapMatrix;    // カスケードシャドウマップの行列を扱うオブジェクト
+    RenderTarget m_shadowMaps[NUM_SHADOW_MAP];          // シャドウマップ
+    std::vector< IRenderer* > m_renderers;              // シャドウマップへのレンダラーの配列。
     float m_cascadeAreaRateArray[NUM_SHADOW_MAP] = {   0.05f,0.3f, 1.0f  };
+    GaussianBlur m_blur[NUM_SHADOW_MAP];                // シャドウマップにブラーをかける処理。ソフトシャドウを行う際に使われます。
+    bool m_isSoftShadow = false;                        // ソフトシャドウ？
 };
    

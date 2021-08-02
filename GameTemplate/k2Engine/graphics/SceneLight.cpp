@@ -62,5 +62,5 @@ void SceneLight::Update()
     for (auto& pt : m_light.pointLights) {
         pt.Update();
     }
-    m_light.numPointLight = MAX_POINT_LIGHT - m_unusePointLightQueue.size();
+    m_light.numPointLight = MAX_POINT_LIGHT - static_cast<int>(m_unusePointLightQueue.size());
 }

@@ -3,17 +3,24 @@
 
 
 
-void ShadowMapRender::Init()
+void ShadowMapRender::Init(bool isSoftShadow)
 {
     float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+    DXGI_FORMAT colorFormat;
+    if (isSoftShadow) {
+        colorFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    }
+    else {
+        colorFormat = DXGI_FORMAT_R32_FLOAT;
+    }
     //近景用のシャドウマップ
     m_shadowMaps[0].Create(
         2048,
         2048,
         1,
         1,
-        DXGI_FORMAT_R32_FLOAT,
+        colorFormat,
         DXGI_FORMAT_D32_FLOAT,
         clearColor
     );
@@ -23,7 +30,7 @@ void ShadowMapRender::Init()
         1024,
         1,
         1,
-        DXGI_FORMAT_R32_FLOAT,
+        colorFormat,
         DXGI_FORMAT_D32_FLOAT,
         clearColor
     );
@@ -33,25 +40,38 @@ void ShadowMapRender::Init()
         512,
         1,
         1,
-        DXGI_FORMAT_R32_FLOAT,
+        colorFormat,
         DXGI_FORMAT_D32_FLOAT,
         clearColor
     );
+
+    if (isSoftShadow) {
+        // ソフトシャドウを行う。
+        m_blur[0].Init(&m_shadowMaps[0].GetRenderTargetTexture());
+        m_blur[1].Init(&m_shadowMaps[1].GetRenderTargetTexture());
+        m_blur[2].Init(&m_shadowMaps[2].GetRenderTargetTexture());
+    }
+    m_isSoftShadow = isSoftShadow;
 }
 
 void ShadowMapRender::Render(
     RenderContext& rc,
     int ligNo,
     Vector3& lightDirection,
-    std::vector< IRenderer* >& renderObjects
+    std::vector< IRenderer* >& renderObjects,
+    const Vector3& sceneMaxPosition,
+    const Vector3& sceneMinPosition
 )
 {
     if (lightDirection.LengthSq() < 0.001f) {
         return;
     }
+    // ライトの最大の高さをレンダラーのAABBから計算する。
     m_cascadeShadowMapMatrix.CalcLightViewProjectionCropMatrix(
         lightDirection,
-        m_cascadeAreaRateArray
+        m_cascadeAreaRateArray,
+        sceneMaxPosition,
+        sceneMinPosition
     );
 
     int shadowMapNo = 0;
@@ -75,6 +95,13 @@ void ShadowMapRender::Render(
         // 書き込み完了待ち
         rc.WaitUntilFinishDrawingToRenderTarget(shadowMap);
         shadowMapNo++;
+    }
+
+    if (m_isSoftShadow) {
+        // ブラーを実行する。
+        for (auto& blur : m_blur) {
+            blur.ExecuteOnGPU(rc, 1.0f);
+        }
     }
 }
   

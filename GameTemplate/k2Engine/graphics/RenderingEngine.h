@@ -14,7 +14,7 @@ class IRenderer;
 class RenderingEngine : public Noncopyable
 {
 public:
-  
+    
     //メインレンダリングターゲットのスナップショット
     enum class EnMainRTSnapshot
     {
@@ -36,7 +36,11 @@ public:
     /// <summary>
     /// レンダリングパイプラインを初期化
     /// </summary>
-    void Init();
+    /// <param name="isSoftShadow">
+    /// trueの場合、シャドウマップ法による、影生成がソフトシャドウになります。
+    /// ハードシャドウにしたい場合は、falseを指定してください。
+    /// </param>
+    void Init(bool isSoftShadow);
     
     /// <summary>
     /// 描画オブジェクトを追加。
@@ -107,6 +111,14 @@ public:
         rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_gBuffer[enGBufferAlbedo].GetDSVCpuDescriptorHandle());
     }
     /// <summary>
+    /// ソフトシャドウを行うか判定。
+    /// </summary>
+    /// <returns></returns>
+    bool IsSoftShadow() const
+    {
+        return m_isSoftShadow;
+    }
+    /// <summary>
     /// カスケードシャドウのエリア率を設定。
     /// </summary>
     /// <remark>
@@ -127,6 +139,7 @@ public:
             renderer.SetCascadeNearAreaRates(nearArea, middleArea, farArea);
         }
     }
+   
 private:
     /// <summary>
     /// G-Bufferを初期化
@@ -197,6 +210,7 @@ private:
     /// シャドウマップへの描画処理を初期化
     /// </summary>
     void InitShadowMapRender();
+    
 private:
     // GBufferの定義
     enum EnGBuffer
@@ -229,6 +243,10 @@ private:
     RWStructuredBuffer m_pointLightNoListInTileUAV;                 // タイルごとのポイントライトのリストのUAV。
     std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。
     SceneLight m_sceneLight;                                        // シーンライト。
+    bool m_isSoftShadow = false;                                    // ソフトシャドウフラグ。
+    Vector3 m_sceneMaxPosition;                                     // ゲームシーンの最大座標
+    Vector3 m_sceneMinPosition;                                     // ゲームシーンの最小座標。
+    bool m_isBuildSceneInfo = false;
 };
 
 extern RenderingEngine* g_renderingEngine;

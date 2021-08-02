@@ -195,14 +195,20 @@ void ModelRender::InitModelOnShadowMap(
 	// 頂点シェーダーのエントリーポイントをセットアップ。
 	SetupVertexShaderEntryPointFunc(modelInitData);
 
+	
 	if (m_animationClips != nullptr) {
 		//スケルトンを指定する。
 		modelInitData.m_skeleton = &m_skeleton;
 	}
 
 	modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
-	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
-	
+	if (g_renderingEngine->IsSoftShadow()) {
+		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	}
+	else {
+		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
+	};
+
 	if (m_isEnableInstancingDraw) {
 		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
@@ -210,9 +216,14 @@ void ModelRender::InitModelOnShadowMap(
 
 	for (int ligNo = 0; ligNo < MAX_DIRECTIONAL_LIGHT; ligNo++)
 	{
-		m_shadowModels[ligNo][0].Init(modelInitData);
-		m_shadowModels[ligNo][1].Init(modelInitData);
-		m_shadowModels[ligNo][2].Init(modelInitData);
+		ConstantBuffer* cameraParamCBArray = m_drawShadowMapCameraParamCB[ligNo];
+		Model* shadowModelArray = m_shadowModels[ligNo];
+		for (int shadowMapNo = 0; shadowMapNo < NUM_SHADOW_MAP; shadowMapNo++) {
+			cameraParamCBArray[shadowMapNo].Init(sizeof(Vector4), nullptr);
+			modelInitData.m_expandConstantBuffer = &cameraParamCBArray[shadowMapNo];
+			modelInitData.m_expandConstantBufferSize = sizeof(Vector4);
+			shadowModelArray[shadowMapNo].Init(modelInitData);
+		}
 	}
 }
 
@@ -250,6 +261,11 @@ void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot
 		return;
 	}
 	auto wlorldMatrix = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
+	if (m_numInstance == 0) {
+		// AABBの情報クリア。
+		m_aabbMax = { -FLT_MIN, -FLT_MIN, -FLT_MIN };
+		m_aabbMin = { FLT_MAX, FLT_MAX, FLT_MAX };
+	}
 	// インスタンシング描画はここでビューカリングを行う。
 	if ( IsViewCulling(wlorldMatrix)) {
 		return;
@@ -289,6 +305,10 @@ void ModelRender::Update()
 	if (m_isEnableInstancingDraw) {
 		return;
 	}
+	// 更新関数が呼ばれたAABBの情報をクリア。
+	m_aabbMax = { -FLT_MIN, -FLT_MIN, -FLT_MIN };
+	m_aabbMin = {  FLT_MAX,  FLT_MAX,  FLT_MAX };
+
 	m_zprepassModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	if (m_renderToGBufferModel.IsInited()) {
 		m_renderToGBufferModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -316,12 +336,9 @@ void ModelRender::Update()
 	//アニメーションを進める。
 	m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
 
-	
 }
 bool ModelRender::IsViewCulling(const Matrix& mWorld)
 {
-	// todo bug 
-	
 	// AABBを構成する8頂点のワールド座標を計算する。
 	Vector3 worldPos[8];
 	m_aabb.CalcVertexPositions(
@@ -334,7 +351,10 @@ bool ModelRender::IsViewCulling(const Matrix& mWorld)
 	const auto& viewProjMatrix = g_camera3D->GetViewProjectionMatrix();
 
 	for (Vector4 v : worldPos) {
-		
+		// シーンのジオメトリ情報を追加。
+		m_aabbMax.Max({ v.x, v.y, v.z });
+		m_aabbMin.Min({ v.x, v.y, v.z });
+
 		viewProjMatrix.Apply(v);
 		v.x /= fabsf(v.w);
 		v.y /= fabsf(v.w);
@@ -361,7 +381,7 @@ bool ModelRender::IsViewCulling(const Matrix& mWorld)
 void ModelRender::Draw(RenderContext& rc)
 {
 	// ビューカリングを行う。
-	if ( m_isEnableInstancingDraw == false
+	if ( m_isEnableInstancingDraw == false 
 		&& IsViewCulling(m_zprepassModel.GetWorldMatrix())
 	) {
 		return;
@@ -386,7 +406,12 @@ void ModelRender::OnRenderShadowMap(
 	int shadowMapNo,
 	const Matrix& lvpMatrix)
 {
+	
 	if (m_isShadowCaster) {
+		Vector4 cameraParam;
+		cameraParam.x = g_camera3D->GetNear();
+		cameraParam.y = g_camera3D->GetFar();
+		m_drawShadowMapCameraParamCB[ligNo][shadowMapNo].CopyToVRAM(cameraParam);
 		m_shadowModels[ligNo][shadowMapNo].Draw(
 			rc, 
 			g_matIdentity, 

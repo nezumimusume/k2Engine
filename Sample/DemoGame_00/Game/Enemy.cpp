@@ -56,6 +56,7 @@ void Enemy::LoadPath(const int number)
 
 void Enemy::Update()
 {
+	return;
 	if (GetPlayer() == false)
 	{
 		return;
@@ -168,5 +169,6 @@ void Enemy::SearchPlayer()
 
 void Enemy::Render(RenderContext& rc)
 {
+	return;
 	m_modelRender.Draw(rc);
 }

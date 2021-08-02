@@ -4,39 +4,39 @@
 
 void CascadeShadowMapMatrix::CalcLightViewProjectionCropMatrix(
     Vector3 lightDirection,
-    float cascadeAreaRateTbl[NUM_SHADOW_MAP]
+    float cascadeAreaRateTbl[NUM_SHADOW_MAP],
+    const Vector3& sceneMaxPosition,
+    const Vector3& sceneMinPosition
 )
 {
-    //ライトカメラを計算する
-    Camera lightCamera;
-    Vector3 lightPos;
-    float distLig = g_camera3D->GetFar() * 0.1f;
-    lightPos = lightDirection * -distLig;    // ライトまでの距離は外から指定できるようにする
-    lightCamera.SetPosition(lightPos);
-    lightCamera.SetTarget(0.0f, 0.0f, 0.0f);
+    float maxFar = 10000.0f;
+    //ビュー行列を計算する。
+    Matrix viewMatrix;
+    Vector3 lightPos = (sceneMaxPosition + sceneMinPosition) * 0.5f;
+    // ライトまでの距離は外から指定できるようにする
+    float lightMaxHeight = (sceneMaxPosition.y - sceneMinPosition.y) * 2.0f;
+    lightPos += (lightDirection) * (lightMaxHeight / lightDirection.y );    
     //上方向を設定
     if (fabsf(lightDirection.y) > 0.9999f) {
         //ほぼ真上、真下を向いている
-        lightCamera.SetUp(g_vec3AxisX);
+        viewMatrix.MakeLookAt(lightPos, g_vec3Zero, g_vec3AxisX);
     }
     else {
-        lightCamera.SetUp(g_vec3AxisY);
+        viewMatrix.MakeLookAt(lightPos, g_vec3Zero, g_vec3AxisY);
     }
-    lightCamera.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-    lightCamera.SetWidth(5000.0f);
-    lightCamera.SetHeight(5000.0f);
-    lightCamera.SetNear(1.0f);
-    lightCamera.SetFar(g_camera3D->GetFar());
-    lightCamera.Update();
-
-    const auto& lvpMatrix = lightCamera.GetViewProjectionMatrix();
-    // カメラのファークリップから計算するようにする
+    Matrix projMatrix;
+    projMatrix.MakeOrthoProjectionMatrix(
+        5000.0f,
+        5000.0f,
+        1.0f,
+        5000.0f
+    );
 
     // 分割エリアの最大深度値を定義する
     float cascadeAreaTbl[NUM_SHADOW_MAP] = {
-        g_camera3D->GetFar() * cascadeAreaRateTbl[SHADOW_MAP_AREA_NEAR],     // 近影を映す最大深度値
-        g_camera3D->GetFar() * cascadeAreaRateTbl[SHADOW_MAP_AREA_MIDDLE],   // 中影を映す最大深度値
-        g_camera3D->GetFar() * cascadeAreaRateTbl[SHADOW_MAP_AREA_FAR] ,     // 遠影を映す最大深度値。3枚目の最大深度はカメラのFarクリップ
+        maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_NEAR],     // 近影を映す最大深度値
+        maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_MIDDLE],   // 中影を映す最大深度値
+        maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_FAR] ,     // 遠影を映す最大深度値。3枚目の最大深度はカメラのFarクリップ
     };
     // カメラの前方向、右方向、上方向を求める
     // 前方向と右方向はすでに計算済みなので、それを引っ張ってくる
@@ -96,12 +96,21 @@ void CascadeShadowMapMatrix::CalcLightViewProjectionCropMatrix(
 
         // 遠平面の左下の頂点
         vertex[7] += farPos + cameraUp * -farY + cameraRight * -farX;
-
-        // step-8 8頂点をライトビュープロジェクション空間に変換して、8頂点の最大値、最小値を求める
+        
+        // 8頂点をカメラ空間に変換して、近平面と遠平面を求める。
+        float nearZ = FLT_MAX, farZ = -FLT_MAX;
+        for (auto v : vertex) {
+            viewMatrix.Apply(v);
+            nearZ = max( 0.0f, min(v.z, nearZ) );
+            farZ = max(v.z, farZ);
+        }
+        
+        // 8頂点をライトビュープロジェクション空間に変換して、8頂点の最大値、最小値を求める
+        Matrix lvpMatrix = viewMatrix * projMatrix;
         Vector3 vMax, vMin;
         vMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
         vMin = { FLT_MAX,  FLT_MAX,  FLT_MAX };
-        for (auto& v : vertex)
+        for (auto v : vertex)
         {
             lvpMatrix.Apply(v);
             vMax.Max(v);

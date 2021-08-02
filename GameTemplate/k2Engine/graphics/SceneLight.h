@@ -171,6 +171,15 @@ public:
         m_light.directionalLight[lightNo].color = color;
     }
     /// <summary>
+    /// 影をキャストする？
+    /// </summary>
+    /// <param name="ligNo"></param>
+    /// <returns></returns>
+    bool IsCastShadow(int ligNo)
+    {
+        return m_light.directionalLight[ligNo].castShadow;
+    }
+    /// <summary>
     /// シーンにポイントライトを追加
     /// </summary>
     

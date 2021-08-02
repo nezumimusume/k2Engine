@@ -50,5 +50,14 @@ public:
 	{
 
 	}
-
+	/// <summary>
+	/// レンダラーが描画するオブジェクトの最大座標と最小座標を取得。
+	/// </summary>
+	/// <param name="aabb"></param>
+	virtual void GetAABB(Vector3& vMax, Vector3& vMin, bool& isGet)
+	{
+		vMax.Set(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+		vMin.Set( FLT_MAX, FLT_MAX, FLT_MAX);
+		isGet = false;
+	}
 };

@@ -58,13 +58,13 @@ Game::~Game()
 bool Game::Start()
 {
 	//カスケードシャドウの近影エリア率を
-	g_renderingEngine->SetCascadeNearAreaRates(0.01f, 0.05f, 0.3f);
+	g_renderingEngine->SetCascadeNearAreaRates(0.1f, 0.2f, 0.3f);
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
 	g_camera3D->SetFar(40000.0f);
 	
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
-	m_skyCube = NewGO<SkyCube>(0, "skycube");
+	//m_skyCube = NewGO<SkyCube>(0, "skycube");
 
 	int numStar = 0;
 	//レベルを構築する。

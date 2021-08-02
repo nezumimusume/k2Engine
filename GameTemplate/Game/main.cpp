@@ -45,7 +45,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_soundEngine = new SoundEngine();
 	//レンダリングエンジンを初期化
 	g_renderingEngine = new RenderingEngine();
-	g_renderingEngine->Init();
+	g_renderingEngine->Init(true);
 	g_collisionObjectManager = new CollisionObjectManager();
 	//エフェクトエンジンの初期化。
 	EffectEngine::CreateInstance();

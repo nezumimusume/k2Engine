@@ -193,6 +193,12 @@ public:
 	{
 		m_animation.AddAnimationEventListener(eventListener);
 	}
+	void GetAABB(Vector3& vMax, Vector3& vMin, bool& isGet)
+	{
+		vMax = m_aabbMax;
+		vMin = m_aabbMin;
+		isGet = true;
+	}
 private:
 	/// <summary>
 	/// スケルトンの初期化。
@@ -288,27 +294,31 @@ private:
 	/// <returns>trueが返ってくるとカリングされている。</returns>
 	bool IsViewCulling(const Matrix& mWorld);
 private:
-	AnimationClip*				m_animationClips = nullptr;			//アニメーションクリップ。
-	int							m_numAnimationClips = 0;			//アニメーションクリップの数。
-	Vector3 					m_position = Vector3::Zero;			//座標。
-	Quaternion	 				m_rotation = Quaternion::Identity;	//回転。
-	Vector3						m_scale = Vector3::One;				//拡大率。
-	EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		//FBXの上方向。
-	Animation					m_animation;						//アニメーション。
-	Model						m_zprepassModel;					//ZPrepassで描画されるモデル
-	Model						m_forwardRenderModel;				//フォワードレンダリングの描画パスで描画されるモデル
-	Model						m_renderToGBufferModel;				//RenderToGBufferで描画されるモデル
-	Model						m_shadowModels[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	//シャドウマップに描画するモデル
-	bool						m_isUpdateAnimation = true;			//アニメーションを更新する？
-	Skeleton					m_skeleton;							//骨。
-	bool						m_isShadowCaster = true;			//シャドウキャスターフラグ
+		AnimationClip*				m_animationClips = nullptr;			// アニメーションクリップ。
+	int							m_numAnimationClips = 0;			// アニメーションクリップの数。
+	Vector3 					m_position = Vector3::Zero;			// 座標。
+	Quaternion	 				m_rotation = Quaternion::Identity;	// 回転。
+	Vector3						m_scale = Vector3::One;				// 拡大率。
+	EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		// FBXの上方向。
+	Animation					m_animation;						// アニメーション。
+	Model						m_zprepassModel;					// ZPrepassで描画されるモデル
+	Model						m_forwardRenderModel;				// フォワードレンダリングの描画パスで描画されるモデル
+	Model						m_renderToGBufferModel;				// RenderToGBufferで描画されるモデル
+	Model						m_shadowModels[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	// シャドウマップに描画するモデル
+	ConstantBuffer				m_drawShadowMapCameraParamCB[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];		// シャドウマップ作成時に必要なカメラパラメータ用の定数バッファ。
+	bool						m_isUpdateAnimation = true;			// アニメーションを更新する？
+	Skeleton					m_skeleton;							// 骨。
+	bool						m_isShadowCaster = true;			// シャドウキャスターフラグ
 	float						m_animationSpeed = 1.0f;
-	int							m_numInstance = 0;					//インスタンスの数。
-	int							m_maxInstance = 1;					//最大インスタンス数。
-	int							m_fixNumInstanceOnFrame = 0;		//このフレームに描画するインスタンスの数の確定数。。
-	bool						m_isEnableInstancingDraw = false;	//インスタンシング描画が有効？
-	std::unique_ptr<Matrix[]>	m_worldMatrixArray;					//ワールド行列の配列。
-	StructuredBuffer			m_worldMatrixArraySB;				//ワールド行列の配列のストラクチャードバッファ。
-	AABB						m_aabb;								//モデルを内包するAABB
+	int							m_numInstance = 0;					// インスタンスの数。
+	int							m_maxInstance = 1;					// 最大インスタンス数。
+	int							m_fixNumInstanceOnFrame = 0;		// このフレームに描画するインスタンスの数の確定数。。
+	bool						m_isEnableInstancingDraw = false;	// インスタンシング描画が有効？
+	std::unique_ptr<Matrix[]>	m_worldMatrixArray;					// ワールド行列の配列。
+	StructuredBuffer			m_worldMatrixArraySB;				// ワールド行列の配列のストラクチャードバッファ。
+	AABB						m_aabb;								// モデルを内包するAABB
+	bool						m_isViewCulling = false;			// ビューカリングされた？インスタンシング描画ではこのフラグは無効です。
+	Vector3						m_aabbMax = {-FLT_MAX, -FLT_MAX, -FLT_MAX }; // AABBの最大値
+	Vector3						m_aabbMin = { FLT_MAX, FLT_MAX, FLT_MAX };// AABBの最小値。
 };
 

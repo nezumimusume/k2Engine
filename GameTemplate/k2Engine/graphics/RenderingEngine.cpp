@@ -4,8 +4,12 @@
 
 RenderingEngine* g_renderingEngine = nullptr;
 SceneLight* g_sceneLight = nullptr;
-void RenderingEngine::Init()
+void RenderingEngine::Init(bool isSoftShadow)
 {
+    m_isSoftShadow = isSoftShadow;
+
+    m_sceneMaxPosition = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
+    m_sceneMinPosition = { FLT_MAX,  FLT_MAX,  FLT_MAX };
     InitZPrepassRenderTarget();
     InitMainRenderTarget();
     InitGBuffer();
@@ -26,7 +30,7 @@ void RenderingEngine::InitShadowMapRender()
 {
     // シャドウマップの描画処理の初期化
     for (auto& shadowMapRender : m_shadowMapRenders) {
-        shadowMapRender.Init();
+        shadowMapRender.Init(m_isSoftShadow);
     }
 }
 void RenderingEngine::InitZPrepassRenderTarget()
@@ -166,6 +170,12 @@ void RenderingEngine::InitDeferredLighting()
     }
 
     spriteInitData.m_fxFilePath = "Assets/shader/DeferredLighting.fx";
+    if (m_isSoftShadow) {
+        spriteInitData.m_psEntryPoinFunc = "PSMainSoftShadow";
+    }
+    else {
+        spriteInitData.m_psEntryPoinFunc = "PSMainHardShadow";
+    }
     spriteInitData.m_expandConstantBuffer = &m_deferredLightingCB;
     spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
     spriteInitData.m_expandShaderResoruceView = &m_pointLightNoListInTileUAV;
@@ -184,7 +194,19 @@ void RenderingEngine::InitDeferredLighting()
 }
 void RenderingEngine::Execute(RenderContext& rc)
 {
-    
+    // シーンのジオメトリ情報を構築。
+    m_isBuildSceneInfo = false;
+    for (auto renderer : m_renderObjects)
+    {
+        bool isGetAabb;
+        Vector3 vMin, vMax;
+        renderer->GetAABB(vMax, vMin, isGetAabb);
+        m_sceneMaxPosition.Max(vMax);
+        m_sceneMinPosition.Min(vMin);
+        if (isGetAabb) {
+            m_isBuildSceneInfo = true;
+        }
+    }
     // シーンライトの更新。
     m_sceneLight.Update();
 
@@ -227,15 +249,22 @@ void RenderingEngine::Execute(RenderContext& rc)
 
 void RenderingEngine::RenderToShadowMap(RenderContext& rc)
 {
+    if (m_isBuildSceneInfo == false) {
+        return;
+    }
     int ligNo = 0;
     for (auto& shadowMapRender : m_shadowMapRenders)
     {
-        shadowMapRender.Render(
-            rc,
-            ligNo,
-            m_deferredLightingCB.m_light.directionalLight[ligNo].direction,
-            m_renderObjects
-        );
+        if (m_sceneLight.IsCastShadow(ligNo)) {
+            shadowMapRender.Render(
+                rc,
+                ligNo,
+                m_deferredLightingCB.m_light.directionalLight[ligNo].direction,
+                m_renderObjects,
+                m_sceneMaxPosition,
+                m_sceneMinPosition
+            );
+        }
         ligNo++;
     }
 }

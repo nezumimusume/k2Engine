@@ -15,7 +15,10 @@ public:
     /// <param name="lightDirection">ライトの方向</param>
     void CalcLightViewProjectionCropMatrix(
         Vector3 lightDirection,
-        float cascadeAreaRateTbl[NUM_SHADOW_MAP]);
+        float cascadeAreaRateTbl[NUM_SHADOW_MAP],
+        const Vector3& sceneMaxPosition,
+        const Vector3& sceneMinPosition
+    );
     /// <summary>
     /// 計算されたライトビュープロジェクションクロップ行列を取得
     /// </summary>
@@ -26,6 +29,8 @@ public:
         return m_lvpcMatrix[shadowMapNo];
     }
 private:
-    std::array<Matrix, NUM_SHADOW_MAP> m_lvpcMatrix;		//ライトビュークロップ行列
+    Matrix m_lvpcMatrix[NUM_SHADOW_MAP];	//ライトビュークロップ行列
+    float m_near[NUM_SHADOW_MAP];
+    float m_far[NUM_SHADOW_MAP];
 };
   
