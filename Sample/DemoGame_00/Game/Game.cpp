@@ -27,6 +27,10 @@ namespace
 
 	const float PRESS_A_BUTTON_TEXTURE_SCALE = 0.839f;
 	const Vector3 PRESS_A_BUTTON_TEXTURE_POSITION = Vector3(0.0f, -280.0f, 0.0f);
+
+	const Vector3 POINTLIGHT_COLOR = Vector3(20.0f, 3.0f, 3.0f);
+	const float POINTLIGHT_RANGE = 220.0f;
+	const float POINTLIGHT_ATTEN_POW = 0.65f;
 }
 
 Game::Game()
@@ -53,6 +57,11 @@ Game::~Game()
 	DeleteGO(m_bgm);
 	auto starRender = FindGO<StarRender>("StarRender");
 	DeleteGO(starRender);
+
+	//ポイントライトを削除。
+	for (auto pt : m_pointLightList) {
+		g_sceneLight->DeletePointLight(pt);
+	}
 }
 
 bool Game::Start()
@@ -101,6 +110,15 @@ bool Game::Start()
 			auto star = NewGO<Star>(0, "star");
 			star->SetPosition(objData.position);
 			numStar++;
+			return true;
+		}
+		else if (objData.ForwardMatchName(L"pointlight") == true) {
+			auto pointLight = g_sceneLight->NewPointLight();
+			pointLight->SetPosition(objData.position);
+			pointLight->SetColor(POINTLIGHT_COLOR);
+			pointLight->SetRange(POINTLIGHT_RANGE);
+			pointLight->SetAffectPowParam(POINTLIGHT_ATTEN_POW);
+			m_pointLightList.push_back(pointLight);
 			return true;
 		}
 

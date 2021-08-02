@@ -77,7 +77,7 @@ void Player::Update()
 	
 	// ポイントライト更新
 	m_pointLight->SetPosition( m_position.x, m_position.y + 50.0f, m_position.z );
-	m_pointLight->SetColor(20.0f, 20.0f, 20.0f);
+	m_pointLight->SetColor(7.0f, 7.0f, 7.0f);
 	m_pointLight->SetRange(200.0f);
 	m_pointLight->SetAffectPowParam( 0.5f );
 	// ポイントライト大量設置のテスト

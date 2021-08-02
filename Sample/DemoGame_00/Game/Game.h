@@ -59,21 +59,22 @@ private:
 	/// </summary>
 	void CountTimer();
 private:
-	Player*			m_player = nullptr;			//プレイヤー。
-	Background*		m_background = nullptr;		//背景。
-	GameCamera*		m_gameCamera = nullptr;		//ゲームカメラ。
+	Player*					m_player = nullptr;			//プレイヤー。
+	Background*				m_background = nullptr;		//背景。
+	GameCamera*				m_gameCamera = nullptr;		//ゲームカメラ。
 	std::vector<Enemy*>		m_enemys;			//エネミーのリスト。
-	LevelRender		m_levelRender;				//レベル。
-	SkyCube*		m_skyCube = nullptr;		//スカイキューブ。
-	bool			m_isWaitFadeout = false;
-	Fade*			m_fade = nullptr;			//フェード。
-	int				m_starCount = 0;			//獲得した☆の数。
-	FontRender		m_starCountFont;			//獲得した☆の数を表示するフォント。
-	Vector3			m_starCountFontPosition;
-	float			m_timer = 0.0f;				//タイマー。
-	FontRender		m_timerFont;				//タイマーを表示するフォント。
-	EnGameState		m_gameState = enGameState_DuringGamePlay;		//ゲームステート。
-	SpriteRender	m_pressA;
+	LevelRender				m_levelRender;				//レベル。
+	SkyCube*				m_skyCube = nullptr;		//スカイキューブ。
+	bool					m_isWaitFadeout = false;
+	Fade*					m_fade = nullptr;			//フェード。
+	int						m_starCount = 0;			//獲得した☆の数。
+	FontRender				m_starCountFont;			//獲得した☆の数を表示するフォント。
+	Vector3					m_starCountFontPosition;
+	float					m_timer = 0.0f;				//タイマー。
+	FontRender				m_timerFont;				//タイマーを表示するフォント。
+	EnGameState				m_gameState = enGameState_DuringGamePlay;		//ゲームステート。
+	SpriteRender			m_pressA;
+	std::vector<PointLight*> m_pointLightList;
 
 	SoundSource* m_bgm = nullptr;
 };
