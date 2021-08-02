@@ -1,30 +1,43 @@
 ///////////////////////////////////////
-// PBRƒx[ƒX‚ÌƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO
+// PBRãƒ™ãƒ¼ã‚¹ã®ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°
 ///////////////////////////////////////
 
 ///////////////////////////////////////
-// ’è”
+// å®šæ•°
 ///////////////////////////////////////
-static const int NUM_DIRECTIONAL_LIGHT = 4; // ƒfƒBƒŒƒNƒVƒ‡ƒ“ƒ‰ƒCƒg‚Ì–{”
-static const float PI = 3.1415926f;         // ƒÎ
-static const int NUM_SHADOW_MAP = 3;        // ƒVƒƒƒhƒEƒ}ƒbƒv‚Ì–‡”B
+static const int NUM_DIRECTIONAL_LIGHT = 4; // ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãƒ©ã‚¤ãƒˆã®æœ¬æ•°
+static const int MAX_POINT_LIGHT = 1000;    // ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®æœ€å¤§æ•°
+static const float PI = 3.1415926f;         // Ï€
+static const int NUM_SHADOW_MAP = 3;        // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®æšæ•°ã€‚
+
+#define TILE_WIDTH 16
+#define TILE_HEIGHT 16
+
 ///////////////////////////////////////
-// \‘¢‘ÌB
+// æ§‹é€ ä½“ã€‚
 ///////////////////////////////////////
-// ƒfƒBƒŒƒNƒVƒ‡ƒ“ƒ‰ƒCƒg\‘¢‘ÌB
+// ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãƒ©ã‚¤ãƒˆæ§‹é€ ä½“ã€‚
 struct DirectionalLight
 {
-    float3 direction;   // ƒ‰ƒCƒg‚Ì•ûŒü
-    int castShadow;     // ‰e‚ğƒLƒƒƒXƒg‚·‚éH
-    float4 color;       // ƒ‰ƒCƒg‚ÌF
+    float3 direction;   // ãƒ©ã‚¤ãƒˆã®æ–¹å‘
+    int castShadow;     // å½±ã‚’ã‚­ãƒ£ã‚¹ãƒˆã™ã‚‹ï¼Ÿ
+    float4 color;       // ãƒ©ã‚¤ãƒˆã®è‰²
 };
-//’¸“_ƒVƒF[ƒ_[‚Ö‚Ì“ü—Í\‘¢‘ÌB
+// ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆ
+struct PointLight
+{
+    float3 position;        // åº§æ¨™
+    float3 positionInView;  // ã‚«ãƒ¡ãƒ©ç©ºé–“ã§ã®åº§æ¨™
+    float3 color;           // ã‚«ãƒ©ãƒ¼
+    float3 attn;            // æ¸›è¡°ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€‚
+};
+//é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸ã®å…¥åŠ›æ§‹é€ ä½“ã€‚
 struct VSInput
 {
     float4 pos : POSITION;
     float2 uv  : TEXCOORD0;
 };
-//ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ö‚Ì“ü—Í\‘¢‘ÌB
+//ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸ã®å…¥åŠ›æ§‹é€ ä½“ã€‚
 struct PSInput
 {
     float4 pos : SV_POSITION;
@@ -32,43 +45,49 @@ struct PSInput
 };
 
 ///////////////////////////////////////
-// ’è”ƒoƒbƒtƒ@B
+// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã€‚
 ///////////////////////////////////////
-//‹¤’Ê’è”ƒoƒbƒtƒ@
+//å…±é€šå®šæ•°ãƒãƒƒãƒ•ã‚¡
 cbuffer cb : register(b0)
 {
     float4x4 mvp; 
     float4 mulColor;
+    float4 screenParam;
 };
 
-// ƒ‰ƒCƒg—p‚Ì’è”ƒoƒbƒtƒ@[
+// ãƒ©ã‚¤ãƒˆç”¨ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ¼
 cbuffer LightCb : register(b1)
 {
     DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];
-    float3 eyePos;          // ƒJƒƒ‰‚Ì‹“_
-    float specPow;          // ƒXƒyƒLƒ…ƒ‰‚Ìi‚è
-    float3 ambientLight;    // ŠÂ‹«Œõ
+    PointLight pointLight[MAX_POINT_LIGHT];
+    float4x4 mViewProjInv;  // ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®é€†è¡Œåˆ—
+    float3 eyePos;          // ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹
+    int numPointLight;      // ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®æ•°ã€‚    
+    float3 ambientLight;    // ç’°å¢ƒå…‰
     float4x4 mlvp[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
 };
 
 ///////////////////////////////////////
-// ƒeƒNƒXƒ`ƒƒ
+// ãƒ†ã‚¯ã‚¹ãƒãƒ£
 ///////////////////////////////////////
-Texture2D<float4> albedoTexture : register(t0);     // ƒAƒ‹ƒxƒh
-Texture2D<float4> normalTexture : register(t1);     // –@ü
-Texture2D<float4> worldPosTexture : register(t2);   // ƒ[ƒ‹ƒhÀ•W
-Texture2D<float4> specularTexture : register(t3);   // ƒXƒyƒLƒ…ƒ‰ƒ}ƒbƒvBrgb‚ÉƒXƒyƒLƒ…ƒ‰ƒJƒ‰[Aa‚É‹à‘®“x
-Texture2D<float4> shadowParamTexture : register(t4);   // ƒXƒyƒLƒ…ƒ‰ƒ}ƒbƒvBrgb‚ÉƒXƒyƒLƒ…ƒ‰ƒJƒ‰[Aa‚É‹à‘®“x
-Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t5);  //ƒVƒƒƒhƒEƒ}ƒbƒvB
+Texture2D<float4> albedoTexture : register(t0);     // ã‚¢ãƒ«ãƒ™ãƒ‰
+Texture2D<float4> normalTexture : register(t1);     // æ³•ç·š
+Texture2D<float4> worldPosTexture : register(t2);   // ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™
+Texture2D<float4> specularTexture : register(t3);   // ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒãƒƒãƒ—ã€‚rgbã«ã‚¹ãƒšã‚­ãƒ¥ãƒ©ã‚«ãƒ©ãƒ¼ã€aã«é‡‘å±åº¦
+Texture2D<float4> shadowParamTexture : register(t4);   // ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒãƒƒãƒ—ã€‚rgbã«ã‚¹ãƒšã‚­ãƒ¥ãƒ©ã‚«ãƒ©ãƒ¼ã€aã«é‡‘å±åº¦
+Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t5);  //ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã€‚
+// ã‚¿ã‚¤ãƒ«ã”ã¨ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ãƒªã‚¹ãƒˆ
+StructuredBuffer<uint> pointLightListInTile : register(t20);
+
 ///////////////////////////////////////
-// ƒTƒ“ƒvƒ‰ƒXƒe[ƒgB
+// ã‚µãƒ³ãƒ—ãƒ©ã‚¹ãƒ†ãƒ¼ãƒˆã€‚
 ///////////////////////////////////////
 sampler Sampler : register(s0);
 
 ///////////////////////////////////////
-// ŠÖ”
+// é–¢æ•°
 ///////////////////////////////////////
-// ƒxƒbƒNƒ}ƒ“•ª•z‚ğŒvZ‚·‚é
+// ãƒ™ãƒƒã‚¯ãƒãƒ³åˆ†å¸ƒã‚’è¨ˆç®—ã™ã‚‹
 float Beckmann(float m, float t)
 {
     float t2 = t * t;
@@ -79,7 +98,7 @@ float Beckmann(float m, float t)
     return D;
 }
 
-// ƒtƒŒƒlƒ‹‚ğŒvZBSchlick‹ß—‚ğg—p
+// ãƒ•ãƒ¬ãƒãƒ«ã‚’è¨ˆç®—ã€‚Schlickè¿‘ä¼¼ã‚’ä½¿ç”¨
 float SpcFresnel(float f0, float u)
 {
     // from Schlick
@@ -87,88 +106,88 @@ float SpcFresnel(float f0, float u)
 }
 
 /// <summary>
-/// ƒNƒbƒNƒgƒ‰ƒ“ƒXƒ‚ƒfƒ‹‚Ì‹¾–Ê”½Ë‚ğŒvZ
+/// ã‚¯ãƒƒã‚¯ãƒˆãƒ©ãƒ³ã‚¹ãƒ¢ãƒ‡ãƒ«ã®é¡é¢åå°„ã‚’è¨ˆç®—
 /// </summary>
-/// <param name="L">ŒõŒ¹‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹</param>
-/// <param name="V">‹“_‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹</param>
-/// <param name="N">–@üƒxƒNƒgƒ‹</param>
-/// <param name="smooth">ŠŠ‚ç‚©‚³</param>
+/// <param name="L">å…‰æºã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«</param>
+/// <param name="V">è¦–ç‚¹ã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«</param>
+/// <param name="N">æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«</param>
+/// <param name="smooth">æ»‘ã‚‰ã‹ã•</param>
 float CookTorranceSpecular(float3 L, float3 V, float3 N, float smooth)
 {
     float microfacet = 0.76f;
 
-    // ‹à‘®“x‚ğ‚’¼“üË‚Ì‚ÌƒtƒŒƒlƒ‹”½Ë—¦‚Æ‚µ‚Äˆµ‚¤
-    // ‹à‘®“x‚ª‚‚¢‚Ù‚ÇƒtƒŒƒlƒ‹”½Ë‚Í‘å‚«‚­‚È‚é
+    // é‡‘å±åº¦ã‚’å‚ç›´å…¥å°„ã®æ™‚ã®ãƒ•ãƒ¬ãƒãƒ«åå°„ç‡ã¨ã—ã¦æ‰±ã†
+    // é‡‘å±åº¦ãŒé«˜ã„ã»ã©ãƒ•ãƒ¬ãƒãƒ«åå°„ã¯å¤§ãããªã‚‹
     float f0 = smooth;
 
-    // ƒ‰ƒCƒg‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚Æ‹ü‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚Ìƒn[ƒtƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+    // ãƒ©ã‚¤ãƒˆã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã¨è¦–ç·šã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒãƒ¼ãƒ•ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
     float3 H = normalize(L + V);
 
-    // ŠeíƒxƒNƒgƒ‹‚ª‚Ç‚ê‚­‚ç‚¢—‚Ä‚¢‚é‚©‚ğ“àÏ‚ğ—˜—p‚µ‚Ä‹‚ß‚é
+    // å„ç¨®ãƒ™ã‚¯ãƒˆãƒ«ãŒã©ã‚Œãã‚‰ã„ä¼¼ã¦ã„ã‚‹ã‹ã‚’å†…ç©ã‚’åˆ©ç”¨ã—ã¦æ±‚ã‚ã‚‹
     float NdotH = saturate(dot(N, H));
     float VdotH = saturate(dot(V, H));
     float NdotL = saturate(dot(N, L));
     float NdotV = saturate(dot(N, V));
 
-    // D€‚ğƒxƒbƒNƒ}ƒ“•ª•z‚ğ—p‚¢‚ÄŒvZ‚·‚é
+    // Dé …ã‚’ãƒ™ãƒƒã‚¯ãƒãƒ³åˆ†å¸ƒã‚’ç”¨ã„ã¦è¨ˆç®—ã™ã‚‹
     float D = Beckmann(microfacet, NdotH);
 
-    // F€‚ğSchlick‹ß—‚ğ—p‚¢‚ÄŒvZ‚·‚é
+    // Fé …ã‚’Schlickè¿‘ä¼¼ã‚’ç”¨ã„ã¦è¨ˆç®—ã™ã‚‹
     float F = SpcFresnel(f0, VdotH);
 
-    // G€‚ğ‹‚ß‚é
+    // Gé …ã‚’æ±‚ã‚ã‚‹
     float G = min(1.0f, min(2*NdotH*NdotV/VdotH, 2*NdotH*NdotL/VdotH));
 
-    // m€‚ğ‹‚ß‚é
+    // mé …ã‚’æ±‚ã‚ã‚‹
     float m = PI * NdotV * NdotH;
 
-    // ‚±‚±‚Ü‚Å‹‚ß‚½A’l‚ğ—˜—p‚µ‚ÄAƒNƒbƒNƒgƒ‰ƒ“ƒXƒ‚ƒfƒ‹‚Ì‹¾–Ê”½Ë‚ğ‹‚ß‚é
+    // ã“ã“ã¾ã§æ±‚ã‚ãŸã€å€¤ã‚’åˆ©ç”¨ã—ã¦ã€ã‚¯ãƒƒã‚¯ãƒˆãƒ©ãƒ³ã‚¹ãƒ¢ãƒ‡ãƒ«ã®é¡é¢åå°„ã‚’æ±‚ã‚ã‚‹
     return max(F * D * G / m, 0.0);
 }
 
 /// <summary>
-/// ƒtƒŒƒlƒ‹”½Ë‚ğl—¶‚µ‚½ŠgU”½Ë‚ğŒvZ
+/// ãƒ•ãƒ¬ãƒãƒ«åå°„ã‚’è€ƒæ…®ã—ãŸæ‹¡æ•£åå°„ã‚’è¨ˆç®—
 /// </summary>
 /// <remark>
-/// ‚±‚ÌŠÖ”‚ÍƒtƒŒƒlƒ‹”½Ë‚ğl—¶‚µ‚½ŠgU”½Ë—¦‚ğŒvZ‚µ‚Ü‚·
-/// ƒtƒŒƒlƒ‹”½Ë‚ÍAŒõ‚ª•¨‘Ì‚Ì•\–Ê‚Å”½Ë‚·‚éŒ»Û‚Ì‚Æ‚±‚ÅA‹¾–Ê”½Ë‚Ì‹­‚³‚É‚È‚è‚Ü‚·
-/// ˆê•ûŠgU”½Ë‚ÍAŒõ‚ª•¨‘Ì‚Ì“à•”‚É“ü‚Á‚ÄA“à•”ö—‚ğ‹N‚±‚µ‚ÄAŠgU‚µ‚Ä”½Ë‚µ‚Ä‚«‚½Œõ‚Ì‚±‚Æ‚Å‚·
-/// ‚Â‚Ü‚èƒtƒŒƒlƒ‹”½Ë‚ªã‚¢‚Æ‚«‚É‚ÍAŠgU”½Ë‚ª‘å‚«‚­‚È‚èAƒtƒŒƒlƒ‹”½Ë‚ª‹­‚¢‚Æ‚«‚ÍAŠgU”½Ë‚ª¬‚³‚­‚È‚è‚Ü‚·
+/// ã“ã®é–¢æ•°ã¯ãƒ•ãƒ¬ãƒãƒ«åå°„ã‚’è€ƒæ…®ã—ãŸæ‹¡æ•£åå°„ç‡ã‚’è¨ˆç®—ã—ã¾ã™
+/// ãƒ•ãƒ¬ãƒãƒ«åå°„ã¯ã€å…‰ãŒç‰©ä½“ã®è¡¨é¢ã§åå°„ã™ã‚‹ç¾è±¡ã®ã¨ã“ã§ã€é¡é¢åå°„ã®å¼·ã•ã«ãªã‚Šã¾ã™
+/// ä¸€æ–¹æ‹¡æ•£åå°„ã¯ã€å…‰ãŒç‰©ä½“ã®å†…éƒ¨ã«å…¥ã£ã¦ã€å†…éƒ¨éŒ¯ä¹±ã‚’èµ·ã“ã—ã¦ã€æ‹¡æ•£ã—ã¦åå°„ã—ã¦ããŸå…‰ã®ã“ã¨ã§ã™
+/// ã¤ã¾ã‚Šãƒ•ãƒ¬ãƒãƒ«åå°„ãŒå¼±ã„ã¨ãã«ã¯ã€æ‹¡æ•£åå°„ãŒå¤§ãããªã‚Šã€ãƒ•ãƒ¬ãƒãƒ«åå°„ãŒå¼·ã„ã¨ãã¯ã€æ‹¡æ•£åå°„ãŒå°ã•ããªã‚Šã¾ã™
 ///
 /// </remark>
-/// <param name="N">–@ü</param>
-/// <param name="L">ŒõŒ¹‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹BŒõ‚Ì•ûŒü‚Æ‹tŒü‚«‚ÌƒxƒNƒgƒ‹B</param>
-/// <param name="V">‹ü‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹B</param>
-/// <param name="roughness">‘e‚³B0`1‚Ì”ÍˆÍB</param>
+/// <param name="N">æ³•ç·š</param>
+/// <param name="L">å…‰æºã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã€‚å…‰ã®æ–¹å‘ã¨é€†å‘ãã®ãƒ™ã‚¯ãƒˆãƒ«ã€‚</param>
+/// <param name="V">è¦–ç·šã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã€‚</param>
+/// <param name="roughness">ç²—ã•ã€‚0ï½1ã®ç¯„å›²ã€‚</param>
 float CalcDiffuseFromFresnel(float3 N, float3 L, float3 V)
 {
-    // step-1 ƒfƒBƒYƒj[ƒx[ƒX‚ÌƒtƒŒƒlƒ‹”½Ë‚É‚æ‚éŠgU”½Ë‚ğ^–Ê–Ú‚ÉÀ‘•‚·‚éB
-    // ŒõŒ¹‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚Æ‹ü‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚Ìƒn[ƒtƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+    // step-1 ãƒ‡ã‚£ã‚ºãƒ‹ãƒ¼ãƒ™ãƒ¼ã‚¹ã®ãƒ•ãƒ¬ãƒãƒ«åå°„ã«ã‚ˆã‚‹æ‹¡æ•£åå°„ã‚’çœŸé¢ç›®ã«å®Ÿè£…ã™ã‚‹ã€‚
+    // å…‰æºã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã¨è¦–ç·šã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒãƒ¼ãƒ•ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
     float3 H = normalize(L+V);
     
-    //‘e‚³‚Í0.5‚ÅŒÅ’èB
+    //ç²—ã•ã¯0.5ã§å›ºå®šã€‚
     float roughness = 0.5f;
     
-    //‚±‚ê‚Í
+    //ã“ã‚Œã¯
     float energyBias = lerp(0.0f, 0.5f, roughness);
     float energyFactor = lerp(1.0, 1.0/1.51, roughness);
 
-    // ŒõŒ¹‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚Æƒn[ƒtƒxƒNƒgƒ‹‚ª‚Ç‚ê‚¾‚¯—‚Ä‚¢‚é‚©‚ğ“àÏ‚Å‹‚ß‚é
+    // å…‰æºã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã¨ãƒãƒ¼ãƒ•ãƒ™ã‚¯ãƒˆãƒ«ãŒã©ã‚Œã ã‘ä¼¼ã¦ã„ã‚‹ã‹ã‚’å†…ç©ã§æ±‚ã‚ã‚‹
     float dotLH = saturate(dot(L,H));
-    // ŒõŒ¹‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚Æƒn[ƒtƒxƒNƒgƒ‹AŒõ‚ª•½s‚É“üË‚µ‚½‚Æ‚«‚ÌŠgU”½Ë—Ê‚ğ‹‚ß‚Ä‚¢‚éB
+    // å…‰æºã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã¨ãƒãƒ¼ãƒ•ãƒ™ã‚¯ãƒˆãƒ«ã€å…‰ãŒå¹³è¡Œã«å…¥å°„ã—ãŸã¨ãã®æ‹¡æ•£åå°„é‡ã‚’æ±‚ã‚ã¦ã„ã‚‹ã€‚
     float Fd90 = energyBias + 2.0 * dotLH * dotLH * roughness;
     
-    // –@ü‚ÆŒõŒ¹‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚—‚ğ—˜—p‚µ‚ÄŠgU”½Ë—¦‚ğ‹‚ß‚Ä‚¢‚Ü‚·
+    // æ³•ç·šã¨å…‰æºã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ï½—ã‚’åˆ©ç”¨ã—ã¦æ‹¡æ•£åå°„ç‡ã‚’æ±‚ã‚ã¦ã„ã¾ã™
     float dotNL = saturate(dot(N,L));
     float FL = (1 + (Fd90 - 1) * pow(1 - dotNL, 5));
 
     
-    // –@ü‚Æ‹“_‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚ğ—˜—p‚µ‚ÄŠgU”½Ë—¦‚ğ‹‚ß‚Ä‚¢‚Ü‚·
+    // æ³•ç·šã¨è¦–ç‚¹ã«å‘ã‹ã†ãƒ™ã‚¯ãƒˆãƒ«ã‚’åˆ©ç”¨ã—ã¦æ‹¡æ•£åå°„ç‡ã‚’æ±‚ã‚ã¦ã„ã¾ã™
     float dotNV = saturate(dot(N,V));
     float FV =  (1 + (Fd90 - 1) * pow(1 - dotNV, 5));
 
-    //–@ü‚ÆŒõŒ¹‚Ö‚Ì•ûŒü‚ÉˆË‘¶‚·‚éŠgU”½Ë—¦‚ÆA–@ü‚Æ‹“_ƒxƒNƒgƒ‹‚ÉˆË‘¶‚·‚éŠgU”½Ë—¦‚ğ
-    // æZ‚µ‚ÄÅI“I‚ÈŠgU”½Ë—¦‚ğ‹‚ß‚Ä‚¢‚éBPI‚ÅœZ‚µ‚Ä‚¢‚é‚Ì‚Í³‹K‰»‚ğs‚¤‚½‚ß
+    //æ³•ç·šã¨å…‰æºã¸ã®æ–¹å‘ã«ä¾å­˜ã™ã‚‹æ‹¡æ•£åå°„ç‡ã¨ã€æ³•ç·šã¨è¦–ç‚¹ãƒ™ã‚¯ãƒˆãƒ«ã«ä¾å­˜ã™ã‚‹æ‹¡æ•£åå°„ç‡ã‚’
+    // ä¹—ç®—ã—ã¦æœ€çµ‚çš„ãªæ‹¡æ•£åå°„ç‡ã‚’æ±‚ã‚ã¦ã„ã‚‹ã€‚PIã§é™¤ç®—ã—ã¦ã„ã‚‹ã®ã¯æ­£è¦åŒ–ã‚’è¡Œã†ãŸã‚
     return (FL*FV * energyFactor);
 }
 
@@ -182,14 +201,14 @@ float CalcShadowRate(int ligNo, float3 worldPos)
         float zInLVP = posInLVP.z / posInLVP.w;
         shadowMapUV *= float2(0.5f, -0.5f);
         shadowMapUV += 0.5f;
-        // ƒVƒƒƒhƒEƒ}ƒbƒvUV‚ª”ÍˆÍ“à‚©”»’è
+        // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—UVãŒç¯„å›²å†…ã‹åˆ¤å®š
         if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f
             && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
         {
-            // ƒVƒƒƒhƒEƒ}ƒbƒv‚©‚ç’l‚ğƒTƒ“ƒvƒŠƒ“ƒO
+            // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã‹ã‚‰å€¤ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
             float2 shadowValue = g_shadowMap[ligNo][cascadeIndex].Sample(Sampler, shadowMapUV).xy;
 
-            // ‚Ü‚¸‚±‚ÌƒsƒNƒZƒ‹‚ªÕ•Á‚³‚ê‚Ä‚¢‚é‚©’²‚×‚é
+            // ã¾ãšã“ã®ãƒ”ã‚¯ã‚»ãƒ«ãŒé®è”½ã•ã‚Œã¦ã„ã‚‹ã‹èª¿ã¹ã‚‹
             if(zInLVP >= shadowValue.r + 0.001f)
             {
                 shadow = 1.0f;
@@ -200,7 +219,7 @@ float CalcShadowRate(int ligNo, float3 worldPos)
     return shadow;
 }
 
-//’¸“_ƒVƒF[ƒ_[B
+//é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã€‚
 PSInput VSMain(VSInput In)
 {
     PSInput psIn;
@@ -209,70 +228,136 @@ PSInput VSMain(VSInput In)
     return psIn;
 }
 
+// åå°„å…‰ã‚’è¨ˆç®—ã™ã‚‹ã€‚
+float3 CalcLighting(
+    float3 ligDir, 
+    float3 ligColor, 
+    float3 normal,
+    float3 toEye, 
+    float4 albedoColor,  
+    float metaric, 
+    float smooth, 
+    float3 specColor
+    )
+{
+    // å½±ãŒè½ã¡ã¦ã„ãªã„ã®ã§ãƒ©ã‚¤ãƒˆã®è¨ˆç®—ã‚’è¡Œã†ã€‚
+    // ãƒ‡ã‚£ã‚ºãƒ‹ãƒ¼ãƒ™ãƒ¼ã‚¹ã®æ‹¡æ•£åå°„ã‚’å®Ÿè£…ã™ã‚‹
+    // ãƒ•ãƒ¬ãƒãƒ«åå°„ã‚’è€ƒæ…®ã—ãŸæ‹¡æ•£åå°„ã‚’è¨ˆç®—
+    float diffuseFromFresnel = CalcDiffuseFromFresnel(
+        normal, -ligDir, toEye);
 
+    // æ­£è¦åŒ–Lambertæ‹¡æ•£åå°„ã‚’æ±‚ã‚ã‚‹
+    float NdotL = saturate(dot(normal, -ligDir));
+    float3 lambertDiffuse = ligColor * NdotL / PI;
 
-//ƒsƒNƒZƒ‹ƒVƒF[ƒ_[B
+    // æœ€çµ‚çš„ãªæ‹¡æ•£åå°„å…‰ã‚’è¨ˆç®—ã™ã‚‹
+    float3 diffuse = albedoColor * diffuseFromFresnel * lambertDiffuse;
+
+    // ã‚¯ãƒƒã‚¯ãƒˆãƒ©ãƒ³ã‚¹ãƒ¢ãƒ‡ãƒ«ã‚’åˆ©ç”¨ã—ãŸé¡é¢åå°„ç‡ã‚’è¨ˆç®—ã™ã‚‹
+    // ã‚¯ãƒƒã‚¯ãƒˆãƒ©ãƒ³ã‚¹ãƒ¢ãƒ‡ãƒ«ã®é¡é¢åå°„ç‡ã‚’è¨ˆç®—ã™ã‚‹
+    float3 spec = CookTorranceSpecular(
+        -ligDir, toEye, normal, smooth)
+        * ligColor;
+
+    // é‡‘å±åº¦ãŒé«˜ã‘ã‚Œã°ã€é¡é¢åå°„ã¯ã‚¹ãƒšã‚­ãƒ¥ãƒ©ã‚«ãƒ©ãƒ¼ã€ä½ã‘ã‚Œã°ç™½
+    // ã‚¹ãƒšã‚­ãƒ¥ãƒ©ã‚«ãƒ©ãƒ¼ã®å¼·ã•ã‚’é¡é¢åå°„ç‡ã¨ã—ã¦æ‰±ã†
+
+    spec *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metaric);
+
+    // æ»‘ã‚‰ã‹ã•ã‚’ä½¿ã£ã¦ã€æ‹¡æ•£åå°„å…‰ã¨é¡é¢åå°„å…‰ã‚’åˆæˆã™ã‚‹
+    return diffuse * (1.0f - smooth) + spec * smooth;   
+}
+//ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã€‚
 float4 PSMain(PSInput In) : SV_Target0
 {
-    //G-Buffer‚Ì“à—e‚ğg‚Á‚Äƒ‰ƒCƒeƒBƒ“ƒO
-    //ƒAƒ‹ƒxƒhƒJƒ‰[‚ğƒTƒ“ƒvƒŠƒ“ƒOB
+    //G-Bufferã®å†…å®¹ã‚’ä½¿ã£ã¦ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°
+    //ã‚¢ãƒ«ãƒ™ãƒ‰ã‚«ãƒ©ãƒ¼ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã€‚
     float4 albedoColor = albedoTexture.Sample(Sampler, In.uv);
-    //–@ü‚ğƒTƒ“ƒvƒŠƒ“ƒOB
+    //æ³•ç·šã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã€‚
     float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
-    //ƒ[ƒ‹ƒhÀ•W‚ğƒTƒ“ƒvƒŠƒ“ƒOB
+    //ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã€‚
     float3 worldPos = worldPosTexture.Sample(Sampler, In.uv).xyz;
-    //ƒXƒyƒLƒ…ƒ‰ƒJƒ‰[‚ğƒTƒ“ƒvƒŠƒ“ƒOB
+    //ã‚¹ãƒšã‚­ãƒ¥ãƒ©ã‚«ãƒ©ãƒ¼ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã€‚
     float3 specColor = albedoColor.xyz;
-    //‹à‘®“x‚ğƒTƒ“ƒvƒŠƒ“ƒOB
+    //é‡‘å±åº¦ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã€‚
     float metaric = specularTexture.SampleLevel(Sampler, In.uv, 0).r;
-    //ƒXƒ€[ƒX
+    //ã‚¹ãƒ ãƒ¼ã‚¹
     float smooth = specularTexture.SampleLevel(Sampler, In.uv, 0).a;
 
-    //‰e¶¬—p‚Ìƒpƒ‰ƒ[ƒ^B
+    //å½±ç”Ÿæˆç”¨ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€‚
     float4 shadowParam = shadowParamTexture.Sample(Sampler, In.uv);
-    // ‹ü‚ÉŒü‚©‚Á‚ÄL‚Ñ‚éƒxƒNƒgƒ‹‚ğŒvZ‚·‚é
+    // è¦–ç·šã«å‘ã‹ã£ã¦ä¼¸ã³ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã™ã‚‹
     float3 toEye = normalize(eyePos - worldPos);
 
     float3 lig = 0;
     
     for(int ligNo = 0; ligNo < NUM_DIRECTIONAL_LIGHT; ligNo++)
     {
-        // ‰e‚Ì—‚¿‹ï‡‚ğŒvZ‚·‚éB
+        // å½±ã®è½ã¡å…·åˆã‚’è¨ˆç®—ã™ã‚‹ã€‚
         float shadow = 0.0f;
         if( directionalLight[ligNo].castShadow == 1){
-            //‰e‚ğ¶¬‚·‚é‚È‚çB
+            //å½±ã‚’ç”Ÿæˆã™ã‚‹ãªã‚‰ã€‚
             shadow = CalcShadowRate( ligNo, worldPos ) * shadowParam.r;
         }
         if( shadow < 0.9f){
-            // ‰e‚ª—‚¿‚Ä‚¢‚È‚¢‚Ì‚Åƒ‰ƒCƒg‚ÌŒvZ‚ğs‚¤B
-            // ƒfƒBƒYƒj[ƒx[ƒX‚ÌŠgU”½Ë‚ğÀ‘•‚·‚é
-            // ƒtƒŒƒlƒ‹”½Ë‚ğl—¶‚µ‚½ŠgU”½Ë‚ğŒvZ
-            float diffuseFromFresnel = CalcDiffuseFromFresnel(
-                normal, -directionalLight[ligNo].direction, toEye);
-
-            // ³‹K‰»LambertŠgU”½Ë‚ğ‹‚ß‚é
-            float NdotL = saturate(dot(normal, -directionalLight[ligNo].direction));
-            float3 lambertDiffuse = directionalLight[ligNo].color * NdotL / PI;
-
-            // ÅI“I‚ÈŠgU”½ËŒõ‚ğŒvZ‚·‚é
-            float3 diffuse = albedoColor * diffuseFromFresnel * lambertDiffuse;
-
-            // ƒNƒbƒNƒgƒ‰ƒ“ƒXƒ‚ƒfƒ‹‚ğ—˜—p‚µ‚½‹¾–Ê”½Ë—¦‚ğŒvZ‚·‚é
-            // ƒNƒbƒNƒgƒ‰ƒ“ƒXƒ‚ƒfƒ‹‚Ì‹¾–Ê”½Ë—¦‚ğŒvZ‚·‚é
-            float3 spec = CookTorranceSpecular(
-                -directionalLight[ligNo].direction, toEye, normal, smooth)
-                * directionalLight[ligNo].color;
-
-            // ‹à‘®“x‚ª‚‚¯‚ê‚ÎA‹¾–Ê”½Ë‚ÍƒXƒyƒLƒ…ƒ‰ƒJƒ‰[A’á‚¯‚ê‚Î”’
-            // ƒXƒyƒLƒ…ƒ‰ƒJƒ‰[‚Ì‹­‚³‚ğ‹¾–Ê”½Ë—¦‚Æ‚µ‚Äˆµ‚¤
-        
-            spec *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metaric);
-
-            // ŠŠ‚ç‚©‚³‚ğg‚Á‚ÄAŠgU”½ËŒõ‚Æ‹¾–Ê”½ËŒõ‚ğ‡¬‚·‚é
-            lig += diffuse * (1.0f - smooth) + spec * smooth;   
+            lig += CalcLighting(
+                directionalLight[ligNo].direction,
+                directionalLight[ligNo].color,
+                normal,
+                toEye,
+                albedoColor,
+                metaric,
+                smooth,
+                specColor
+            );
         }
     }
-    // ŠÂ‹«Œõ‚É‚æ‚é’êã‚°
+    // ç¶šã„ã¦ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆ
+    // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®å·¦ä¸Šã‚’(0,0)ã€å³ä¸‹ã‚’(1,1)ã¨ã™ã‚‹åº§æ¨™ç³»ã«å¤‰æ›ã™ã‚‹
+    // ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆåº§æ¨™ç³»ã«å¤‰æ›ã™ã‚‹
+    float2 viewportPos = In.pos.xy;
+
+    // step-16 ã“ã®ãƒ”ã‚¯ã‚»ãƒ«ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã‚¿ã‚¤ãƒ«ã®ç•ªå·ã‚’è¨ˆç®—ã™ã‚‹
+    // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚’ã‚¿ã‚¤ãƒ«ã§åˆ†å‰²ã—ãŸã¨ãã®ã‚»ãƒ«ã®Xåº§æ¨™ã‚’æ±‚ã‚ã‚‹
+    uint numCellX = (screenParam.z + TILE_WIDTH - 1) / TILE_WIDTH;
+
+    // ã‚¿ã‚¤ãƒ«ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¨ˆç®—ã™ã‚‹
+    uint tileIndex = floor(viewportPos.x / TILE_WIDTH) + floor(viewportPos.y / TILE_HEIGHT) * numCellX;
+
+    // step-17 å«ã¾ã‚Œã‚‹ã‚¿ã‚¤ãƒ«ã®å½±éŸ¿ãƒªã‚¹ãƒˆã®é–‹å§‹ä½ç½®ã¨çµ‚äº†ä½ç½®ã‚’è¨ˆç®—ã™ã‚‹
+    uint lightStart = tileIndex * numPointLight;
+    uint lightEnd = lightStart + numPointLight;
+    for (uint lightListIndex = lightStart; lightListIndex < lightEnd; lightListIndex++)
+    {
+        uint ligNo = pointLightListInTile[lightListIndex];
+        if (ligNo == 0xffffffff)
+        {
+            // ã“ã®ã‚¿ã‚¤ãƒ«ã«å«ã¾ã‚Œã‚‹ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã¯ã‚‚ã†ãªã„
+            break;
+        }
+        
+        float3 ligDir = normalize(worldPos - pointLight[ligNo].position);
+        // 2. å…‰æºã‹ã‚‰ã‚µãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ã¾ã§ã®è·é›¢ã‚’è¨ˆç®—
+        float distance = length(worldPos - pointLight[ligNo].position);
+        float3 ligColor = pointLight[ligNo].color;
+        float3 ptLig = CalcLighting(
+            ligDir,
+            ligColor,
+            normal,
+            toEye,
+            albedoColor,
+            metaric,
+            smooth,
+            specColor
+        );
+        // 3. å½±éŸ¿ç‡ã‚’è¨ˆç®—ã™ã‚‹ã€‚å½±éŸ¿ç‡ã¯0.0ï½1.0ã®ç¯„å›²ã§ã€
+        //     æŒ‡å®šã—ãŸè·é›¢ï¼ˆpointsLights[i].rangeï¼‰ã‚’è¶…ãˆãŸã‚‰ã€å½±éŸ¿ç‡ã¯0.0ã«ãªã‚‹
+        float affect = 1.0f - min(1.0f, distance / pointLight[ligNo].attn.x);
+        affect = pow( affect, pointLight[ligNo].attn.y );
+        lig += ptLig * affect;
+       
+    }
+    // ç’°å¢ƒå…‰ã«ã‚ˆã‚‹åº•ä¸Šã’
     lig += ambientLight * albedoColor;
 
     float4 finalColor = 1.0f;

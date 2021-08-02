@@ -57,6 +57,8 @@ Game::~Game()
 
 bool Game::Start()
 {
+	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+
 	//カスケードシャドウの近影エリア率を
 	g_renderingEngine->SetCascadeNearAreaRates(0.01f, 0.05f, 0.3f);
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
