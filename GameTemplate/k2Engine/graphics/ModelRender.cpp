@@ -378,6 +378,7 @@ bool ModelRender::IsViewCulling(const Matrix& mWorld)
 	return true;
 
 }
+
 void ModelRender::Draw(RenderContext& rc)
 {
 	// ビューカリングを行う。

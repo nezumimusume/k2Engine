@@ -16,9 +16,20 @@ LevelRender::~LevelRender()
 }
 void LevelRender::CreateMapChipRender(const LevelObjectData& objData, const char* filePath)
 {
-	//フックされなかったので、マップチップを作成する。
-	auto mapChipRender = std::make_shared<MapChipRender>(objData, filePath);
-	m_mapChipRenderPtrs.push_back(mapChipRender);
+	std::string key = filePath;
+	//マップチップレンダーにまだフックされていなかったら。
+	if (m_mapChipRenderPtrs.count(key) == 0)
+	{
+		//フックされなかったので、マップチップを作成する。
+		auto mapChipRender = std::make_shared<MapChipRender>(objData, filePath);
+		m_mapChipRenderPtrs[key] = mapChipRender;
+	}
+	else
+	{
+		auto& mapChipRender = m_mapChipRenderPtrs[key];
+		//マップチップデータを追加する。
+		mapChipRender->AddMapChipData(objData);
+	}
 }
 
 void LevelRender::Init(
@@ -106,6 +117,12 @@ void LevelRender::Init(
 
 		}
 	}
+
+	for (auto& mapChipRender : m_mapChipRenderPtrs)
+	{
+		//マップチップレンダーを初期化。
+		mapChipRender.second->Init();
+	}
 }
 
 void LevelRender::MatrixTklToLevel()
@@ -161,10 +178,19 @@ void LevelRender::MatrixTklToLevel()
 
 }
 
+void LevelRender::Update()
+{
+	for (auto& mapChipRender : m_mapChipRenderPtrs)
+	{
+		//マップチップレンダーを更新する。
+		mapChipRender.second->Update();
+	}
+}
+
 void LevelRender::Draw(RenderContext& rc)
 {
 	for (auto mapChipRenderPtr : m_mapChipRenderPtrs)
 	{
-		mapChipRenderPtr->Draw(rc);
+		mapChipRenderPtr.second->Draw(rc);
 	}
 }

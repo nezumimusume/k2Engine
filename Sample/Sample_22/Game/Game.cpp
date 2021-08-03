@@ -32,6 +32,7 @@ Game::~Game()
 
 bool Game::Start()
 {
+
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
 
 
@@ -40,7 +41,7 @@ bool Game::Start()
 	//レベルを構築する。
 	m_levelRender.Init("Assets/level/sample.tkl", [&](LevelObjectData& objData) {
 		if (objData.EqualObjectName(L"sample1") == true) {
-
+			
 			auto sphere = NewGO<Sphere>(0);
 			//配置座標、スケール、回転を取得する。
 			sphere->m_position = objData.position;
@@ -65,6 +66,11 @@ bool Game::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
+		else if (objData.EqualObjectName(L"sample3") == true) {
+			//falseにすると、レベルの方でモデルが読み込まれて配置される。
+			//レベルのモデルもインスタンシング描画に対応。
+			return false;
+		}
 		else if (objData.EqualObjectName(L"player") == true) {
 			//Unityちゃん。
 			//プレイヤーのインスタンスを生成する。
@@ -78,7 +84,7 @@ bool Game::Start()
 			//falseにすると、レベルの方でモデルが読み込まれて配置される。
 			return false;
 		}
-		return false;
+		return true;
 		});
 
 	m_sphereRender = NewGO<SphereRender>(0,"sphererender");
@@ -92,7 +98,8 @@ bool Game::Start()
 
 void Game::Update()
 {
-
+	//レベルの更新処理。
+	m_levelRender.Update();
 }
 
 void Game::Render(RenderContext& rc)
