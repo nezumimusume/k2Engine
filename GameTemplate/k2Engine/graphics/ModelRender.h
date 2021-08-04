@@ -288,6 +288,19 @@ private:
 		EnModelUpAxis enModelUpAxis,
 		bool isShadowReciever );
 	/// <summary>
+	/// フォワードレンダリング用のモデルを初期化。
+	/// </summary>
+	/// <param name="renderingEngine"></param>
+	/// <param name="tkmFilePath"></param>
+	/// <param name="enModelUpAxis"></param>
+	/// <param name="isShadowReciever"></param>
+	void InitModelOnForward(
+		RenderingEngine& renderingEngine,
+		const char* tkmFilePath,
+		EnModelUpAxis enModelUpAxis,
+		bool isShadowReciever
+	);
+	/// <summary>
 	/// 各種モデルの頂点シェーダーのエントリーポイントを設定。
 	/// </summary>
 	void SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData);

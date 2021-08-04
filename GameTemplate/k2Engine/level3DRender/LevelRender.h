@@ -61,6 +61,10 @@ public:
 	 */
 	void Init(const char* filePath, std::function<bool(LevelObjectData& objData)> hookFunc);
 	/// <summary>
+	/// 更新処理。
+	/// </summary>
+	void Update();
+	/// <summary>
 	/// モデルを描画。
 	/// </summary>
 	/// <param name="rc">レンダーコンテキスト。</param>
@@ -76,11 +80,9 @@ private:
 	/// </summary>
 	void MatrixTklToLevel();
 private:
-	using BonePtr = std::unique_ptr<Bone>;						//ボーンPtr。
-	std::vector<BonePtr> m_bonelist;							//ボーンのリスト。
-	std::unique_ptr<Matrix[]> m_matrixlist;						//行列のリスト。
-	std::vector<MapChipRenderPtr> m_mapChipRenderPtrs;			//マップチップの可変長配列。
-	TklFile m_tklFile;											//Tklファイル。
-
-
+	using BonePtr = std::unique_ptr<Bone>;								//ボーンPtr。
+	std::vector<BonePtr> m_bonelist;									//ボーンのリスト。
+	std::unique_ptr<Matrix[]> m_matrixlist;								//行列のリスト。
+	std::map<std::string, MapChipRenderPtr> m_mapChipRenderPtrs;		//マップチップの可変長配列。
+	TklFile m_tklFile;													//Tklファイル。
 };
