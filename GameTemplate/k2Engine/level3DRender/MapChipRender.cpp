@@ -26,8 +26,22 @@ void MapChipRender::AddMapChipData(const LevelObjectData& objData)
 
 void MapChipRender::Init()
 {
+	m_mapChipDataNum = static_cast<int>(m_mapChipDataVector.size());
+	if (m_mapChipDataNum == 1)
+	{
+		m_modelRender.Init(*m_filePath.get());
+		auto& mapChipData = m_mapChipDataVector[0];
+		m_modelRender.SetTRS(mapChipData.position, mapChipData.rotation, mapChipData.scale);
+		m_modelRender.Update();
+		auto p = std::make_unique<PhysicsStaticObject>();
+		//静的物理オブジェクトを作成。
+		p->CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+		m_physicsStaticObjectPtrVector.push_back(std::move(p));
+		return;
+	}
+	
 	//インスタンシング描画用にモデルを初期化。
-	m_modelRender.Init(*m_filePath.get(), nullptr, 0, enModelUpAxisZ, true, static_cast<int>(m_mapChipDataVector.size()));
+	m_modelRender.Init(*m_filePath.get(), nullptr, 0, enModelUpAxisZ, true, m_mapChipDataNum);
 
 	for (auto& mapChipData : m_mapChipDataVector)
 	{
@@ -42,10 +56,17 @@ void MapChipRender::Init()
 
 void MapChipRender::Update()
 {
-	for (auto& mapChipData : m_mapChipDataVector)
+	if (m_mapChipDataNum == 1)
 	{
-		//モデルレンダーのインスタンシング用のデータを更新。
-		m_modelRender.UpdateInstancingData(mapChipData.position, mapChipData.rotation, mapChipData.scale);
+		m_modelRender.Update();
+	}
+	else
+	{
+		for (auto& mapChipData : m_mapChipDataVector)
+		{
+			//モデルレンダーのインスタンシング用のデータを更新。
+			m_modelRender.UpdateInstancingData(mapChipData.position, mapChipData.rotation, mapChipData.scale);
+		}
 	}
 }
 

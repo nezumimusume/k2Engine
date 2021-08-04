@@ -8,11 +8,13 @@
 #include "Background.h"
 #include "GameCamera.h"
 #include "Star.h"
+#include "Pyramid.h"
 #include "Enemy.h"
 #include "Title.h"
 
 #include "Fade.h"
 #include "StarRender.h"
+#include "PyramidRender.h"
 
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
@@ -58,6 +60,14 @@ Game::~Game()
 	auto starRender = FindGO<StarRender>("StarRender");
 	DeleteGO(starRender);
 
+	const auto& pyramids = FindGOs<Pyramid>("pyramid");
+	for (auto pyramid : pyramids)
+	{
+		DeleteGO(pyramid);
+	}
+	auto pyramidRender = FindGO<PyramidRender>("PyramidRender");
+	DeleteGO(pyramidRender);
+
 	//ポイントライトを削除。
 	for (auto pt : m_pointLightList) {
 		g_sceneLight->DeletePointLight(pt);
@@ -78,6 +88,7 @@ bool Game::Start()
 	//m_skyCube = NewGO<SkyCube>(0, "skycube");
 
 	int numStar = 0;
+	int numPyramid = 0;
 	//レベルを構築する。
 	m_levelRender.Init("Assets/level3D/stage.tkl", [&](LevelObjectData& objData) {
 		if (objData.EqualObjectName(L"unityChan") == true) {
@@ -112,6 +123,13 @@ bool Game::Start()
 			numStar++;
 			return true;
 		}
+		else if (objData.ForwardMatchName(L"pyramid") == true) {
+			auto pyramid = NewGO<Pyramid>(0, "pyramid");
+			pyramid->SetPosition(objData.position);
+			pyramid->SetScale(objData.scale);
+			numPyramid++;
+			return true;
+		}
 		else if (objData.ForwardMatchName(L"pointlight") == true) {
 			auto pointLight = g_sceneLight->NewPointLight();
 			pointLight->SetPosition(objData.position);
@@ -128,6 +146,9 @@ bool Game::Start()
 	//Starレンダラーを作成。
 	auto starRender = NewGO<StarRender>(0, "StarRender");
 	starRender->SetMaxStar(numStar);
+
+	auto pyramidRender = NewGO<PyramidRender>(0, "PyramidRender");
+	pyramidRender->SetMaxPyramid(numStar);
 
 	m_fade = FindGO<Fade>("fade");
 	m_fade->StartFadeIn();
@@ -210,6 +231,9 @@ void Game::Update()
 
 	UpdateFont();
 	CountTimer();
+
+	//レベルをマップチップをアップデート。
+	m_levelRender.Update();
 }
 
 void Game::UpdateFont()
@@ -251,4 +275,7 @@ void Game::Render(RenderContext& rc)
 	{
 		m_pressA.Draw(rc);
 	}
+
+	//マップチップを描画。
+	m_levelRender.Draw(rc);
 }

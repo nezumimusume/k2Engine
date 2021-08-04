@@ -159,6 +159,8 @@
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="MovedPath.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Pyramid.cpp" />
+    <ClCompile Include="PyramidRender.cpp" />
     <ClCompile Include="Star.cpp" />
     <ClCompile Include="StarRender.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -177,6 +179,8 @@
     <ClInclude Include="Path.h" />
     <ClInclude Include="MovedPath.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Pyramid.h" />
+    <ClInclude Include="PyramidRender.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="StarRender.h" />
     <ClInclude Include="stdafx.h" />
