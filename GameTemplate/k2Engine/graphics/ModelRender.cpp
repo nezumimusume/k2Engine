@@ -28,36 +28,13 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	int maxInstance)
 {
 	//インスタンシング描画用のデータを初期化。
-	InitInstancingDraw(1);
-	InitSkeleton(filePath);
-	InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
-	ModelInitData initData;
-	//tkmファイルのファイルパスを指定する。
-	initData.m_tkmFilePath = filePath;
-	//シェーダーファイルのファイルパスを指定する。
-	initData.m_fxFilePath = "Assets/shader/Model.fx";
-	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
-	initData.m_vsEntryPointFunc = "VSMain";
-
-	if (m_animationClips != nullptr) {
-		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
-		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
-		//スケルトンを指定する。
-		initData.m_skeleton = &m_skeleton;
-	}
-
-	//モデルの上方向を指定する。
-	initData.m_modelUpAxis = enModelUpAxis;
-	
-	initData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	if (m_isEnableInstancingDraw) {
-		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
-		initData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
-	}
-	//作成した初期化データをもとにモデルを初期化する、
-	m_forwardRenderModel.Init(initData);
-	//インスタンシング描画用のデータを初期化。
 	InitInstancingDraw(maxInstance);
+	//スケルトンを初期化。
+	InitSkeleton(filePath);
+	//アニメーションを初期化。
+	InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
+	//フォワードレンダリング用のモデルを初期化。
+	InitModelOnForward(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
 	//ZPrepass描画用のモデルを初期化。
 	InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 	//シャドウマップ描画用のモデルを初期化。
@@ -183,6 +160,41 @@ void ModelRender::InitModelOnRenderGBuffer(
 	m_renderToGBufferModel.Init(modelInitData);
 
 }
+
+void ModelRender::InitModelOnForward(
+	RenderingEngine& renderingEngine,
+	const char* tkmFilePath,
+	EnModelUpAxis enModelUpAxis,
+	bool isShadowReciever
+)
+{
+	ModelInitData modelInitData;
+	modelInitData.m_fxFilePath = "Assets/shader/model.fx";
+
+	// 頂点シェーダーのエントリーポイントをセットアップ。
+	SetupVertexShaderEntryPointFunc(modelInitData);
+
+	if (m_animationClips != nullptr) {
+		//スケルトンを指定する。
+		modelInitData.m_skeleton = &m_skeleton;
+	}
+
+	/*if (isShadowReciever) {
+		modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
+	}
+	*/
+	//モデルの上方向を指定する。
+	modelInitData.m_modelUpAxis = enModelUpAxis;
+
+	modelInitData.m_tkmFilePath = tkmFilePath;
+	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	if (m_isEnableInstancingDraw) {
+		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+	}
+	m_forwardRenderModel.Init(modelInitData);
+}
+
 void ModelRender::InitModelOnShadowMap(
 	RenderingEngine& renderingEngine, 
 	const char* tkmFilePath,

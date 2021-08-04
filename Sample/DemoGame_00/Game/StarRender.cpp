@@ -3,7 +3,7 @@
 
 bool StarRender::Start()
 {
-	m_modelRender.Init(
+	m_modelRender.InitForwardRendering(
 		"Assets/modelData/star.tkm",
 		nullptr,
 		0,
