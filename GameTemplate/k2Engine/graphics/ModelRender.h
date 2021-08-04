@@ -2,6 +2,7 @@
 
 #include "MyRenderer.h"
 #include "geometry/AABB.h"
+#include "geometry/geometryData.h"
 
 class RenderingEngine;
 
@@ -193,11 +194,20 @@ public:
 	{
 		m_animation.AddAnimationEventListener(eventListener);
 	}
+
 	void GetAABB(Vector3& vMax, Vector3& vMin, bool& isGet)
 	{
 		vMax = m_aabbMax;
 		vMin = m_aabbMin;
 		isGet = true;
+	}
+	/// <summary>
+	/// シャドウキャスター？
+	/// </summary>
+	/// <returns></returns>
+	bool IsShadowCaster() const
+	{
+		return m_isShadowCaster;
 	}
 private:
 	/// <summary>
@@ -320,5 +330,6 @@ private:
 	bool						m_isViewCulling = false;			// ビューカリングされた？インスタンシング描画ではこのフラグは無効です。
 	Vector3						m_aabbMax = {-FLT_MAX, -FLT_MAX, -FLT_MAX }; // AABBの最大値
 	Vector3						m_aabbMin = { FLT_MAX, FLT_MAX, FLT_MAX };// AABBの最小値。
+	std::vector< GemometryData > m_geometryDatas;							// ジオメトリ情報。
 };
 

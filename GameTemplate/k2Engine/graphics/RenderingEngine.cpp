@@ -198,13 +198,15 @@ void RenderingEngine::Execute(RenderContext& rc)
     m_isBuildSceneInfo = false;
     for (auto renderer : m_renderObjects)
     {
-        bool isGetAabb;
-        Vector3 vMin, vMax;
-        renderer->GetAABB(vMax, vMin, isGetAabb);
-        m_sceneMaxPosition.Max(vMax);
-        m_sceneMinPosition.Min(vMin);
-        if (isGetAabb) {
-            m_isBuildSceneInfo = true;
+        if (renderer->IsShadowCaster()) {
+            bool isGetAabb;
+            Vector3 vMin, vMax;
+            renderer->GetAABB(vMax, vMin, isGetAabb);
+            m_sceneMaxPosition.Max(vMax);
+            m_sceneMinPosition.Min(vMin);
+            if (isGetAabb) {
+                m_isBuildSceneInfo = true;
+            }
         }
     }
     // シーンライトの更新。

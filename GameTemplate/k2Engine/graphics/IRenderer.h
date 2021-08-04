@@ -60,4 +60,12 @@ public:
 		vMin.Set( FLT_MAX, FLT_MAX, FLT_MAX);
 		isGet = false;
 	}
+	/// <summary>
+	/// シャドウキャスター？
+	/// </summary>
+	/// <returns>trueが帰ってくるとシャドウキャスター</returns>
+	virtual bool IsShadowCaster() const
+	{
+		return false;
+	}
 };

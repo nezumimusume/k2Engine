@@ -1,5 +1,5 @@
 #include "k2EnginePreCompile.h"
-
+#include "geometry/AABB.h"
 
 void AABB::Init(const Vector3& vMax, const Vector3& vMin)
 {
