@@ -34,5 +34,6 @@ public:
 	MuscleRender* m_muscleRender = nullptr;
 	int m_maxSphere = 0;
 	int m_maxMuscle = 0;
+	bool m_isDrawInstancing = true;
 };
 

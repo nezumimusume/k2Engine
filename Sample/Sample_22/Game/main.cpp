@@ -10,6 +10,10 @@
 #include "Game.h"
 
 
+#include <io.h>
+#include <Fcntl.h>
+#include <iostream>
+
 
 void ReportLiveObjects()
 {
@@ -25,6 +29,23 @@ void ReportLiveObjects()
 	pDxgiDebug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_DETAIL);
 }
 
+int hConsole = 0;
+
+void InitStandardIOConsole()
+{
+
+	AllocConsole();
+	FILE* fp;
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&fp, "CONIN$", "r", stdin);
+
+}
+
+void CloseStandardIOConsole()
+{
+	FreeConsole();
+}
+
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -33,6 +54,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
 
+#ifdef _DEBUG
+	InitStandardIOConsole();
+#endif // _DEBUG
 	//////////////////////////////////////
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
@@ -60,9 +84,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//////////////////////////////////////
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
+	Stopwatch sw;
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+		sw.Start();
+
 		//レンダリング開始。
 		g_engine->BeginFrame();
 		
@@ -90,8 +117,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//////////////////////////////////////
 		g_soundEngine->Update();
 		g_engine->EndFrame();
-	
+
+		sw.Stop();
+		printf("fps = %0.2f\n", 1.0f / sw.GetElapsed());
 	}
+
+#ifdef _DEBUG
+	CloseStandardIOConsole();
+#endif // _DEBUG
+
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
 

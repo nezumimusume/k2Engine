@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MuscleRender.h"
+#include "Game.h"
 
 bool MuscleRender::Start()
 {
@@ -11,16 +12,22 @@ bool MuscleRender::Start()
 		&m_animationClip,
 		1,
 		enModelUpAxisZ,
-		false,
+		true,
 		m_maxMuscle
 	);
+	m_game = FindGO<Game>("game");
 	return true;
 }
+
 void MuscleRender::Update()
 {
+	
 }
 
 void MuscleRender::Render(RenderContext& rc)
 {
-	m_modelRender.Draw(rc);
+	if (m_game->m_isDrawInstancing == true)
+	{
+		m_modelRender.Draw(rc);
+	}
 }
