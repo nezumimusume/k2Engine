@@ -1,4 +1,7 @@
 #pragma once
+
+class Game;
+
 class SphereRender : public IGameObject
 {
 public:
@@ -28,5 +31,6 @@ public:
 private:
 	ModelRender	m_modelRender;	// モデルレンダラー。
 	int			m_maxSphere = 0;	// 星の数
+	Game*		m_game = nullptr;
 };
 

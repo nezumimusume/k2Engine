@@ -40,7 +40,7 @@ bool Game::Start()
 
 	//レベルを構築する。
 	m_levelRender.Init("Assets/level/sample.tkl", [&](LevelObjectData& objData) {
-		if (objData.EqualObjectName(L"sample1") == true) {
+		if (objData.ForwardMatchName(L"sample1") == true) {
 			
 			auto sphere = NewGO<Sphere>(0);
 			//配置座標、スケール、回転を取得する。
@@ -53,7 +53,7 @@ bool Game::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
-		else if (objData.EqualObjectName(L"sample2") == true) {
+		else if (objData.ForwardMatchName(L"sample2") == true) {
 
 			auto muscle = NewGO<Muscle>(0);
 			//配置座標、スケール、回転を取得する。
@@ -80,7 +80,7 @@ bool Game::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
-		if (objData.EqualObjectName(L"bg") == true) {
+		if (objData.EqualObjectName(L"background") == true) {
 			//falseにすると、レベルの方でモデルが読み込まれて配置される。
 			return false;
 		}
@@ -100,6 +100,20 @@ void Game::Update()
 {
 	//レベルの更新処理。
 	m_levelRender.Update();
+
+	if (g_pad[0]->IsTrigger(enButtonA))
+	{
+		if (m_isDrawInstancing == true)
+		{
+			m_isDrawInstancing = false;
+		}
+		else
+		{
+			m_isDrawInstancing = true;
+		}
+	}
+
+	
 }
 
 void Game::Render(RenderContext& rc)
