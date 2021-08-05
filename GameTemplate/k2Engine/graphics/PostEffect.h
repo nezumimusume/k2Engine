@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Bloom.h"
-#include "Dof.h"
-#include "Fxaa.h"
-#include "ToneMap.h"
-#include "Ssao.h"
+#include "graphics/Bloom.h"
+#include "graphics/Dof.h"
+#include "graphics/Fxaa.h"
+#include "graphics/ToneMap.h"
+#include "graphics/Ssao.h"
+#include "graphics/Ssr.h"
 
 /// <summary>
 /// ポストエフェクト。
@@ -30,5 +31,6 @@ private:
     Fxaa m_fXaa;        //FXAA。
     ToneMap m_tonemap;  //トーンマップ。
     Ssao m_ssao;        //SSAO(スクリーンスペースアンビエントオクルージョン)。
+    Ssr m_ssr;          //SSR(スクリーンスペースリフレクション)。
 };
 
