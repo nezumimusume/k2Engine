@@ -54,9 +54,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
 
-#ifdef _DEBUG
+
 	InitStandardIOConsole();
-#endif // _DEBUG
+
 	//////////////////////////////////////
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
@@ -122,9 +122,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		printf("fps = %0.2f\n", 1.0f / sw.GetElapsed());
 	}
 
-#ifdef _DEBUG
+
 	CloseStandardIOConsole();
-#endif // _DEBUG
+
 
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
