@@ -85,7 +85,7 @@ bool Game::Start()
 	
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
-	//m_skyCube = NewGO<SkyCube>(0, "skycube");
+	m_skyCube = NewGO<SkyCube>(0, "skycube");
 
 	int numStar = 0;
 	int numPyramid = 0;

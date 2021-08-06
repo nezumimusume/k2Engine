@@ -18,7 +18,14 @@ public:
     /// </summary>
     /// <param name="mainRenderTarget">レンダターゲット。</param>
     /// <param name="zprepassRenderTarget">zプリパスレンダ―ターゲット。</param>
-    void Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRenderTarget);
+    /// <param name="normalRenderTarget">法線が書き込まれているレンダ―ターゲット。</param>
+    void Init(
+        RenderTarget& mainRenderTarget, 
+        RenderTarget& zprepassRenderTarget,
+        RenderTarget& normalRenderTarget,
+        RenderTarget& metallicSmoothRenderTarget,
+        RenderTarget& albedoRenderTarget
+    );
     /// <summary>
     /// 描画。
     /// </summary>

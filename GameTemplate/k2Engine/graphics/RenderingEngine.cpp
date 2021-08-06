@@ -22,7 +22,12 @@ void RenderingEngine::Init(bool isSoftShadow)
         m_diferredLightingSprite.GetExpandConstantBufferGPU(),
         m_pointLightNoListInTileUAV
     );
-    m_postEffect.Init(m_mainRenderTarget, m_zprepassRenderTarget);
+    m_postEffect.Init(
+        m_mainRenderTarget, 
+        m_zprepassRenderTarget, 
+        m_gBuffer[enGBufferNormal],
+        m_gBuffer[enGBufferMetaricSmooth],
+        m_gBuffer[enGBufferAlbedo]);
     // シーンライト
     g_sceneLight = &m_sceneLight;
 }
@@ -35,13 +40,15 @@ void RenderingEngine::InitShadowMapRender()
 }
 void RenderingEngine::InitZPrepassRenderTarget()
 {
+    float clearColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
     m_zprepassRenderTarget.Create(
         g_graphicsEngine->GetFrameBufferWidth(),
         g_graphicsEngine->GetFrameBufferHeight(),
         1,
         1,
         DXGI_FORMAT_R32G32B32A32_FLOAT,
-        DXGI_FORMAT_D32_FLOAT
+        DXGI_FORMAT_D32_FLOAT,
+        clearColor
     );
 }
 void RenderingEngine::InitMainRTSnapshotRenderTarget()

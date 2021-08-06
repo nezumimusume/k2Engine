@@ -2,14 +2,14 @@
 #include "GaussianBlur.h"
 
 
-void GaussianBlur::Init(Texture* originalTexture)
+void GaussianBlur::Init(Texture* originalTexture, bool isBlurAlpha, bool isDownSample)
 {
 	m_originalTexture = originalTexture;
 	
 	//レンダリングターゲットを初期化。
-	InitRenderTargets();
+	InitRenderTargets(isDownSample);
 	//スプライトを初期化。
-	InitSprites();
+	InitSprites(isBlurAlpha);
 }
 
 
@@ -43,12 +43,14 @@ void GaussianBlur::ExecuteOnGPU(RenderContext& rc, float blurPower)
 	rc.WaitUntilFinishDrawingToRenderTarget(m_yBlurRenderTarget);
 }
 
-void GaussianBlur::InitRenderTargets()
+void GaussianBlur::InitRenderTargets(bool isDownSample)
 {
+	float w = m_originalTexture->GetWidth();
+	float h = m_originalTexture->GetHeight();
 	//Xブラー用のレンダリングターゲットを作成する。
 	m_xBlurRenderTarget.Create(
-		m_originalTexture->GetWidth() / 2,
-		m_originalTexture->GetHeight(),
+		isDownSample ? w / 2 : w,
+		h,
 		1,
 		1,
 		m_originalTexture->GetFormat(),
@@ -57,8 +59,8 @@ void GaussianBlur::InitRenderTargets()
 
 	//Yブラー用のレンダリングターゲットを作成する。
 	m_yBlurRenderTarget.Create(
-		m_originalTexture->GetWidth() / 2,
-		m_originalTexture->GetHeight() / 2,
+		isDownSample ? w / 2 : w,
+		isDownSample ? h / 2: h,
 		1,
 		1,
 		m_originalTexture->GetFormat(),
@@ -66,14 +68,21 @@ void GaussianBlur::InitRenderTargets()
 	);
 }
 
-void GaussianBlur::InitSprites()
+void GaussianBlur::InitSprites(bool isBlurAlpha)
 {
+	const char* psEntryFunc = nullptr;
+	if (isBlurAlpha) {
+		psEntryFunc = "PSBlur_Alpha";
+	}
+	else {
+		psEntryFunc = "PSBlur";
+	}
 	//横ブラー用のスプライトを初期化する。
 	{
 		SpriteInitData xBlurSpriteInitData;
 		xBlurSpriteInitData.m_fxFilePath = "Assets/shader/gaussianBlur.fx";
 		xBlurSpriteInitData.m_vsEntryPointFunc = "VSXBlur";
-		xBlurSpriteInitData.m_psEntryPoinFunc = "PSBlur";
+		xBlurSpriteInitData.m_psEntryPoinFunc = psEntryFunc;
 		//スプライトの解像度はm_xBlurRenderTargetと同じ。
 		xBlurSpriteInitData.m_width = m_xBlurRenderTarget.GetWidth();
 		xBlurSpriteInitData.m_height = m_xBlurRenderTarget.GetHeight();
@@ -93,7 +102,7 @@ void GaussianBlur::InitSprites()
 		SpriteInitData yBlurSpriteInitData;
 		yBlurSpriteInitData.m_fxFilePath = "Assets/shader/gaussianBlur.fx";
 		yBlurSpriteInitData.m_vsEntryPointFunc = "VSYBlur";
-		yBlurSpriteInitData.m_psEntryPoinFunc = "PSBlur";
+		yBlurSpriteInitData.m_psEntryPoinFunc = psEntryFunc;
 		//スプライトの解像度はm_yBlurRenderTargetと同じ。
 		yBlurSpriteInitData.m_width = m_yBlurRenderTarget.GetWidth();
 		yBlurSpriteInitData.m_height = m_yBlurRenderTarget.GetHeight();

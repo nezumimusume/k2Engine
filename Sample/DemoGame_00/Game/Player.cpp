@@ -51,7 +51,7 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/gameover.wav");
 	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/gameclear.wav");
 	// ポイントライトの生成
-	m_pointLight = g_sceneLight->NewPointLight();
+	//m_pointLight = g_sceneLight->NewPointLight();
 	return true;
 }
 
@@ -76,15 +76,18 @@ void Player::Update()
 	m_forward.z = mRot.m[2][2];
 	
 	// ポイントライト更新
-	m_pointLight->SetPosition( m_position.x, m_position.y + 50.0f, m_position.z );
+	/*m_pointLight->SetPosition( m_position.x, m_position.y + 50.0f, m_position.z );
 	m_pointLight->SetColor(7.0f, 7.0f, 7.0f);
 	m_pointLight->SetRange(200.0f);
-	m_pointLight->SetAffectPowParam( 0.5f );
+	m_pointLight->SetAffectPowParam( 0.5f );*/
 	// ポイントライト大量設置のテスト
 	if (g_pad[0]->IsTrigger(enButtonB)) {
 		auto newPt = g_sceneLight->NewPointLight();
 		// 現在のプレイヤーのポイントライトをコピー。
-		*newPt = *m_pointLight;
+		newPt->SetPosition(m_position.x, m_position.y + 50.0f, m_position.z);
+		newPt->SetColor(7.0f, 7.0f, 7.0f);
+		newPt->SetRange(200.0f);
+		newPt->SetAffectPowParam(0.5f);
 		m_pointLightList.push_back(newPt);
 	}
 
