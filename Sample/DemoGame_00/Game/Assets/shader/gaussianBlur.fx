@@ -228,106 +228,6 @@ float4 PSBlur(PS_BlurInput In) : SV_Target0
  */
 float4 PSBlur_Alpha(PS_BlurInput In) : SV_Target0
 {
-#if 0
-    // step-15 X,Yブラー用のピクセルシェーダーを実装
-    float4 Color, colorTmp;
-    
-    // 基準テクセルからプラス方向に8テクセル、重み付きでサンプリング
-    float4 baseColor = sceneTexture.Sample(Sampler, In.tex0.xy);
-    Color  = weight[0].x * baseColor;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex1.xy);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[0].y * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex2.xy);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[0].z * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex3.xy);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[0].w * colorTmp ;
-    
-    colorTmp = sceneTexture.Sample(Sampler, In.tex4.xy);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[1].x * colorTmp ;
-    
-    colorTmp = sceneTexture.Sample(Sampler, In.tex5.xy);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[1].y * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex6.xy);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[1].z * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex7.xy);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[1].w * colorTmp ;
-    
-
-    // 基準テクセルにマイナス方向に8テクセル、重み付きでサンプリング
-    colorTmp = sceneTexture.Sample(Sampler, In.tex0.zw);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[0].x * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex1.zw);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[0].y * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex2.zw);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[0].z * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex3.zw);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[0].w * colorTmp ;
-    
-    colorTmp = sceneTexture.Sample(Sampler, In.tex4.zw);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[1].x * colorTmp ;
-    
-    colorTmp = sceneTexture.Sample(Sampler, In.tex5.zw);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[1].y * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex6.zw);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[1].z * colorTmp ;
-
-    colorTmp = sceneTexture.Sample(Sampler, In.tex7.zw);
-    if( colorTmp.a < 0.1f){
-        colorTmp = baseColor;
-    }
-    Color += weight[1].w * colorTmp ;
-#else
     // step-15 X,Yブラー用のピクセルシェーダーを実装
     float4 Color;
 
@@ -351,6 +251,5 @@ float4 PSBlur_Alpha(PS_BlurInput In) : SV_Target0
     Color += weight[1].z * sceneTexture.Sample(Sampler, In.tex6.zw);
     Color += weight[1].w * sceneTexture.Sample(Sampler, In.tex7.zw);
 
-#endif
     return Color;
 }

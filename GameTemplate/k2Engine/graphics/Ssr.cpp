@@ -44,7 +44,7 @@ void Ssr::Init(
 			clearColor
 		);
 	}
-	m_blur.Init(&m_reflectionRt.GetRenderTargetTexture(), true, false);
+	m_blur.Init(&m_reflectionRt.GetRenderTargetTexture(), true);
 	{
 		// 最終合成用のスプライトを初期化する
 		SpriteInitData initData;
