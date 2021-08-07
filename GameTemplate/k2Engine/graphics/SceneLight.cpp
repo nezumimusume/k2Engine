@@ -19,7 +19,7 @@ void SceneLight::Init()
 
     m_light.directionalLight[0].direction.x = 1.0f;
     m_light.directionalLight[0].direction.y = -1.0f;
-    m_light.directionalLight[0].direction.z = -1.0f;
+    m_light.directionalLight[0].direction.z = 1.0f;
     m_light.directionalLight[0].direction.Normalize();
     m_light.directionalLight[0].castShadow = true;
 
