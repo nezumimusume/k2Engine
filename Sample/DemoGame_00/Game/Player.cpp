@@ -19,7 +19,6 @@ Player::Player()
 Player::~Player()
 {
 	// ポイントライトの削除
-	g_sceneLight->DeletePointLight(m_pointLight);
 	for (auto pt : m_pointLightList) {
 		g_sceneLight->DeletePointLight(pt);
 	}

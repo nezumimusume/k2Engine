@@ -211,10 +211,12 @@ public:
     /// <param name="pointLight">削除するポイントライト</param>
     void DeletePointLight( PointLight* pointLight )
     {
-        // フラグを未使用に変更する。
-        pointLight->UnUse();
-        // 未使用リストに追加する。
-        m_unusePointLightQueue.push_back(pointLight);
+        if (pointLight != nullptr) {
+            // フラグを未使用に変更する。
+            pointLight->UnUse();
+            // 未使用リストに追加する。
+            m_unusePointLightQueue.push_back(pointLight);
+        }
     }
     /// <summary>
     /// 更新
