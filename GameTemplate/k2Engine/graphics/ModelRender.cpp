@@ -360,8 +360,9 @@ bool ModelRender::IsViewCulling(const Matrix& mWorld)
 
 	Vector4 vMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX };
 	Vector4 vMin = {  FLT_MAX,  FLT_MAX,  FLT_MAX, FLT_MAX };
-	const auto& viewProjMatrix = g_camera3D->GetViewProjectionMatrix();
-
+	
+	const auto& viewProjMatrix = g_renderingEngine->GetViewProjectionMatrixForViewCulling();
+	
 	for (Vector4 v : worldPos) {
 		// シーンのジオメトリ情報を追加。
 		m_aabbMax.Max({ v.x, v.y, v.z });

@@ -199,6 +199,17 @@ void RenderingEngine::InitDeferredLighting()
     // 初期化データを使ってスプライトを作成
     m_diferredLightingSprite.Init(spriteInitData);
 }
+void RenderingEngine::CalcViewProjectionMatrixForViewCulling()
+{
+    Matrix projMatrix;
+    projMatrix.MakeProjectionMatrix(
+        g_camera3D->GetViewAngle() * 1.5f,
+        g_camera3D->GetAspect(),
+        g_camera3D->GetNear(),
+        g_camera3D->GetFar()
+    );
+    m_viewProjMatrixForViewCulling.Multiply(g_camera3D->GetViewMatrix(), projMatrix);
+}
 void RenderingEngine::Execute(RenderContext& rc)
 {
     // シーンのジオメトリ情報を構築。
@@ -214,6 +225,10 @@ void RenderingEngine::Execute(RenderContext& rc)
             m_isBuildSceneInfo = true;
         }
     }
+
+    // ビューカリング用のビュープロジェクション行列の計算。
+    CalcViewProjectionMatrixForViewCulling();
+
     // シーンライトの更新。
     m_sceneLight.Update();
 
