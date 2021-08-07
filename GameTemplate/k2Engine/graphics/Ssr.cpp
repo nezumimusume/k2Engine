@@ -28,6 +28,8 @@ void Ssr::Init(
 
 		initData.m_alphaBlendMode = AlphaBlendMode_None;
 		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
+		initData.textureAddressMode = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+
 		m_sprite.Init(initData);
 
 		float clearColor[] = {

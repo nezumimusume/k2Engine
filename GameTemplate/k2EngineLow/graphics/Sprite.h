@@ -47,6 +47,7 @@ struct SpriteInitData {
 		DXGI_FORMAT_UNKNOWN,
 		DXGI_FORMAT_UNKNOWN,
 	};	//レンダリングするカラーバッファのフォーマット。
+	D3D12_TEXTURE_ADDRESS_MODE textureAddressMode = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;	// テクスチャアドレッシングモード。
 };
 /// <summary>
 /// スプライトクラス。
