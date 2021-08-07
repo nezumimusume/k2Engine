@@ -11,8 +11,8 @@ void Ssr::Init(
 {
 	m_mt.seed(m_rd());
 	{
-		float w = mainRenderTarget.GetWidth();
-		float h = mainRenderTarget.GetHeight();
+		UINT w = mainRenderTarget.GetWidth();
+		UINT h = mainRenderTarget.GetHeight();
 		SpriteInitData initData;
 		initData.m_width = w;
 		initData.m_height = h;
