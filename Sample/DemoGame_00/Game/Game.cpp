@@ -30,7 +30,7 @@ namespace
 	const float PRESS_A_BUTTON_TEXTURE_SCALE = 0.839f;
 	const Vector3 PRESS_A_BUTTON_TEXTURE_POSITION = Vector3(0.0f, -280.0f, 0.0f);
 
-	const Vector3 POINTLIGHT_COLOR = Vector3(20.0f, 3.0f, 3.0f);
+	const Vector3 POINTLIGHT_COLOR = Vector3(40.0f, 10.0f, 10.0f);
 	const float POINTLIGHT_RANGE = 220.0f;
 	const float POINTLIGHT_ATTEN_POW = 0.65f;
 }
@@ -118,9 +118,9 @@ bool Game::Start()
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"star") == true) {
-			auto star = NewGO<Star>(0, "star");
+			/*auto star = NewGO<Star>(0, "star");
 			star->SetPosition(objData.position);
-			numStar++;
+			numStar++;*/
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"pyramid") == true) {
@@ -148,7 +148,7 @@ bool Game::Start()
 	starRender->SetMaxStar(numStar);
 
 	auto pyramidRender = NewGO<PyramidRender>(0, "PyramidRender");
-	pyramidRender->SetMaxPyramid(numStar);
+	pyramidRender->SetMaxPyramid(numPyramid);
 
 	m_fade = FindGO<Fade>("fade");
 	m_fade->StartFadeIn();

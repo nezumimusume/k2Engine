@@ -1,6 +1,38 @@
 #include "k2EnginePreCompile.h"
 #include "ToneMap.h"
 
+namespace {
+	//-----------------------------------------------------------------------------
+	// Name: GetSampleOffsets_DownScale4x4
+	// Desc: Get the texture coordinate offsets to be used inside the DownScale4x4
+	//       pixel shader.
+	//-----------------------------------------------------------------------------
+	HRESULT GetSampleOffsets_DownScale4x4(DWORD dwWidth, DWORD dwHeight, Vector4 avSampleOffsets[])
+	{
+		if (NULL == avSampleOffsets)
+			return E_INVALIDARG;
+
+		float tU = 1.0f / dwWidth;
+		float tV = 1.0f / dwHeight;
+
+		// Sample from the 16 surrounding points. Since the center point will be in
+		// the exact center of 16 texels, a 0.5f offset is needed to specify a texel
+		// center.
+		int index = 0;
+		for (int y = 0; y < 4; y++)
+		{
+			for (int x = 0; x < 4; x++)
+			{
+				avSampleOffsets[index].x = (x - 1.5f) * tU;
+				avSampleOffsets[index].y = (y - 1.5f) * tV;
+
+				index++;
+			}
+		}
+
+		return S_OK;
+	}
+}
 ToneMap::ToneMap()
 {
 
@@ -13,132 +45,191 @@ ToneMap::~ToneMap()
 
 void ToneMap::Init(RenderTarget& mainRenderTarget)
 {
-	int width = g_graphicsEngine->GetFrameBufferWidth();
-	int height = g_graphicsEngine->GetFrameBufferHeight();
-
-	int number = 0;
-	while (true)
-	{
-		width /= 2;
-		height /= 2;
-	
-		if (width == 0)
-		{
-			width = 1;
-		}
-		if (height == 0)
-		{
-			height = 1;
-		}
-
-		float color[4] =
-		{
-			0.0f,0.0f,0.0f,0.0f
-		};
-
-		//サイズを1/4にしたレンダ―ターゲットを作成。
-		auto renderPtr = std::make_unique<RenderTarget>();
-		renderPtr.get()->Create(width, height,
+	float w = mainRenderTarget.GetWidth();
+	float h = mainRenderTarget.GetHeight();
+	// 平均輝度計算用のレンダリングターゲットを作成。
+	for (int i = 0; i < enNumCalcAvgSprite; i++) {
+		int rtSize = 1 << (2 * (enNumCalcAvgSprite-i-1) );
+		m_calcAvgRt[i].Create(
+			rtSize,
+			rtSize,
 			1,
 			1,
-			DXGI_FORMAT_R32_FLOAT,
-			DXGI_FORMAT_UNKNOWN,
-			color);
-		m_renderTargetVector.push_back(std::move(renderPtr));
-
-		//平均輝度を計算するためのスプライトを初期化する。
-
-		SpriteInitData spriteInitData;
-		if (number == 0)
-		{
-			spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-			spriteInitData.m_psEntryPoinFunc = "ExtractLumaPSMain";
-		}
-		else
-		{
-			spriteInitData.m_textures[0] = &m_renderTargetVector[number - 1].get()->GetRenderTargetTexture();
-			spriteInitData.m_psEntryPoinFunc = "PSMain";
-		}
-		//解像度は4/1したもの。
-		spriteInitData.m_width = width;
-		spriteInitData.m_height = height;
-		// 2D用のシェーダーを使用する
-		spriteInitData.m_fxFilePath = "Assets/shader/tonemap.fx";
-		spriteInitData.m_vsEntryPointFunc = "VSMain";
-	
-		//ここにはレンダーターゲットのフォーマットを入れる。
-		spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
-		spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
-	
-		auto spritePtr = std::make_unique<Sprite>();
-		spritePtr.get()->Init(spriteInitData);
-
-		m_spriteVector.push_back(std::move(spritePtr));
-
-		if (width == 1 && height == 1)
-		{
-			break;
-		}
-
-		number++;
+			mainRenderTarget.GetColorBufferFormat(),
+			DXGI_FORMAT_UNKNOWN
+		);
+	}
+	// 最終的にトーンマップで使用する平均輝度を書きこむレンダリングターゲットを作成。
+	for (auto& rt : m_avgRt) {
+		rt.Create(
+			1,
+			1,
+			1,
+			1,
+			mainRenderTarget.GetColorBufferFormat(),
+			DXGI_FORMAT_UNKNOWN
+		);
 	}
 
-	//平均輝度を利用したtonemap用のスプライトを初期化する。
-	SpriteInitData spriteInitData;
-	spriteInitData.m_textures[0] = &m_renderTargetVector[m_renderTargetVector.size() - 1].get()->GetRenderTargetTexture();
-	spriteInitData.m_textures[1] = &mainRenderTarget.GetRenderTargetTexture();
-	
-	spriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
-	spriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
-	// 2D用のシェーダーを使用する
-	spriteInitData.m_fxFilePath = "Assets/shader/tonemap.fx";
-	spriteInitData.m_vsEntryPointFunc = "VSMain";
-	spriteInitData.m_psEntryPoinFunc = "FinalPSMain";
+	m_finalRt.Create(
+		mainRenderTarget.GetWidth(),
+		mainRenderTarget.GetHeight(),
+		1,
+		1,
+		mainRenderTarget.GetColorBufferFormat(),
+		DXGI_FORMAT_UNKNOWN
+	);
+	m_tonemapParam.midddleGray = 0.28f;
+	m_tonemapParam.deltaTime = 1.0f / 60.0f;
+	// 対数平均をとるスプライトを初期化。
+	int curRtNo = 0;
+	{
+		SpriteInitData initData;
+		initData.m_width = m_calcAvgRt[curRtNo].GetWidth();
+		initData.m_height = m_calcAvgRt[curRtNo].GetHeight();
+		initData.m_colorBufferFormat[0] = m_calcAvgRt[curRtNo].GetColorBufferFormat();
+		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
+		initData.m_psEntryPoinFunc = "PSCalcLuminanceLogAvarage";
+		initData.m_expandConstantBuffer = m_avSampleOffsets;
+		initData.m_expandConstantBufferSize = sizeof(m_avSampleOffsets);
+		initData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
+		m_calcAvgSprites[enCalcAvgLog].Init(initData);
+	}
+	// 平均をとるスプライトを初期化。
+	curRtNo++;
+	int calsAvgSpriteNo = enCalcAvg_Start;
+	while (curRtNo < enCalcAvg_End) {
+		SpriteInitData initData;
+		initData.m_width = m_calcAvgRt[curRtNo].GetWidth();
+		initData.m_height = m_calcAvgRt[curRtNo].GetHeight();
+		initData.m_colorBufferFormat[0] = m_calcAvgRt[curRtNo].GetColorBufferFormat();
+		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
+		initData.m_psEntryPoinFunc = "PSCalcLuminanceAvarage";
+		initData.m_expandConstantBuffer = m_avSampleOffsets;
+		initData.m_expandConstantBufferSize = sizeof(m_avSampleOffsets);
+		initData.m_textures[0] = &m_calcAvgRt[curRtNo-1].GetRenderTargetTexture();
+		m_calcAvgSprites[calsAvgSpriteNo].Init(initData);
+		calsAvgSpriteNo++;
+		curRtNo++;
+	}
+	// exp関数を用いて最終平均を求める。
+	{
+		SpriteInitData initData;
+		initData.m_width = m_calcAvgRt[curRtNo].GetWidth();
+		initData.m_height = m_calcAvgRt[curRtNo].GetHeight();
+		initData.m_colorBufferFormat[0] = m_calcAvgRt[curRtNo].GetColorBufferFormat();
+		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
+		initData.m_psEntryPoinFunc = "PSCalcLuminanceExpAvarage";
+		initData.m_expandConstantBuffer = m_avSampleOffsets;
+		initData.m_expandConstantBufferSize = sizeof(m_avSampleOffsets);
+		initData.m_textures[0] = &m_calcAvgRt[curRtNo-1].GetRenderTargetTexture();
+		m_calcAvgSprites[curRtNo].Init(initData);
+	}
+	// 明暗順応
+	{
+		SpriteInitData initData;
+		initData.m_width = mainRenderTarget.GetWidth();
+		initData.m_height = mainRenderTarget.GetHeight();
+		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
+		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
+		initData.m_psEntryPoinFunc = "PSCalcAdaptedLuminance";
+		initData.m_expandConstantBuffer = &m_tonemapParam;
+		initData.m_expandConstantBufferSize = sizeof(m_tonemapParam);
+		initData.m_textures[0] = &m_calcAvgRt[enCalcAvgExp].GetRenderTargetTexture();
+		initData.m_textures[1] = &m_avgRt[0].GetRenderTargetTexture();
+		initData.m_textures[2] = &m_avgRt[1].GetRenderTargetTexture();
 
-	//ここにはレンダーターゲットのフォーマットを入れる。
-	spriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
-	spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
-
-	spriteInitData.m_expandConstantBuffer = (void*)&m_tonemapBuffer;
-	spriteInitData.m_expandConstantBufferSize = sizeof(TonemapBuffer) +
-		(16 - (sizeof(TonemapBuffer) % 16));
+		m_calcAdapteredLuminanceSprite.Init(initData);
+	}
+	// 最終合成
+	{
+		SpriteInitData initData;
+		initData.m_width = mainRenderTarget.GetWidth();
+		initData.m_height = mainRenderTarget.GetHeight();
+		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
+		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
+		initData.m_psEntryPoinFunc = "PSFinal";
+		initData.m_expandConstantBuffer = &m_tonemapParam;
+		initData.m_expandConstantBufferSize = sizeof(m_tonemapParam);
+		initData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
+		initData.m_textures[1] = &m_avgRt[0].GetRenderTargetTexture();
+		initData.m_textures[2] = &m_avgRt[1].GetRenderTargetTexture();
+		m_finalSprite.Init(initData);
+	}
+	{
+		SpriteInitData initData;
+		initData.m_width = mainRenderTarget.GetWidth();
+		initData.m_height = mainRenderTarget.GetHeight();
+		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
+		initData.m_fxFilePath = "Assets/shader/Sprite.fx";
+		initData.m_textures[0] = &m_finalRt.GetRenderTargetTexture();
+		
+		m_copySprite.Init(initData);
+	}
 	
-	m_finalSprite.Init(spriteInitData);
+
 }
+void ToneMap::CalcLuminanceAvarage(RenderContext& rc)
+{
+	// シーンの輝度の平均を計算していく。
+	for( int spriteNo = 0; spriteNo < enNumCalcAvgSprite; spriteNo++){
+	
+		// レンダリングターゲットとして利用できるまで待つ
+		rc.WaitUntilToPossibleSetRenderTarget(m_calcAvgRt[spriteNo]);
+		// レンダリングターゲットを設定
+		rc.SetRenderTargetAndViewport(m_calcAvgRt[spriteNo]);
+		rc.ClearRenderTargetView(m_calcAvgRt[spriteNo]);
 
+		GetSampleOffsets_DownScale4x4(
+			m_calcAvgSprites[spriteNo].GetTextureWidth(0),
+			m_calcAvgSprites[spriteNo].GetTextureHeight(0),
+			m_avSampleOffsets
+		);
+
+		m_calcAvgSprites[spriteNo].Draw(rc);
+
+		// レンダリングターゲットへの書き込み終了待ち
+		rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRt[spriteNo]);
+
+		
+	}
+}
 void ToneMap::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
-	if (m_numberCalcRenderTarget == -1)
-	{
-		for (int i = 0; i < m_renderTargetVector.size(); i++)
-		{
-			RenderToLuma(rc, i);
-		}
-		m_numberCalcRenderTarget = 0;
-	}
-	else 
-	{
-		for (int i = 0; i < NUM_RENDER_TARGETS_DRAW_ONE_FRAME; i++)
-		{
-			RenderToLuma(rc, m_numberCalcRenderTarget);
-			if (m_numberCalcRenderTarget == m_renderTargetVector.size() - 1)
-			{
-				m_numberCalcRenderTarget = 0;
-				break;
-			}
-			else
-			{
-				m_numberCalcRenderTarget++;
-			}
-		}
-	}
-	//メインレンダーターゲットをPRESENTからRENDERTARGETへ。
+	CalcLuminanceAvarage(rc);
+
+	// 明暗順応
+	m_tonemapParam.currentAvgTexNo = m_currentAvgRt;
+	m_tonemapParam.deltaTime = g_gameTime->GetFrameDeltaTime();
+	rc.WaitUntilToPossibleSetRenderTarget(m_avgRt[m_currentAvgRt]);
+	// レンダリングターゲットを設定
+	rc.SetRenderTargetAndViewport(m_avgRt[m_currentAvgRt]);
+
+	m_calcAdapteredLuminanceSprite.Draw(rc);
+
+	// レンダリングターゲットへの書き込み終了待ち
+	rc.WaitUntilFinishDrawingToRenderTarget(m_avgRt[m_currentAvgRt]);
+
+	
+	// 最終合成。
+	// レンダリングターゲットとして利用できるまで待つ
+	rc.WaitUntilToPossibleSetRenderTarget(m_finalRt);
+	// レンダリングターゲットを設定
+	rc.SetRenderTargetAndViewport(m_finalRt);
+	// 最終合成。
+	m_finalSprite.Draw(rc);
+
+	// レンダリングターゲットへの書き込み終了待ち
+	rc.WaitUntilFinishDrawingToRenderTarget(m_finalRt);
+
+	m_currentAvgRt = 1 ^ m_currentAvgRt;
+	
+	// レンダリングターゲットとして利用できるまで待つ
 	rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
 	// レンダリングターゲットを設定
 	rc.SetRenderTargetAndViewport(mainRenderTarget);
-	//描画。
-	m_finalSprite.Draw(rc);
-	// レンダリングターゲットへの書き込み終了待ち。
-	//TARGETからPRESENTへ。
+	m_copySprite.Draw(rc);
+
+	// レンダリングターゲットへの書き込み終了待ち
 	rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 }

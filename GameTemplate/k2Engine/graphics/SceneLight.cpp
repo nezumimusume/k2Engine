@@ -13,18 +13,18 @@ void PointLight::Update()
 void SceneLight::Init()
 {
     // ‘¾—zŒõ
-    m_light.directionalLight[0].color.x = 2.0f;
-    m_light.directionalLight[0].color.y = 2.0f;
-    m_light.directionalLight[0].color.z = 2.0f;
+    m_light.directionalLight[0].color.x = 4.3f;
+    m_light.directionalLight[0].color.y = 4.3f;
+    m_light.directionalLight[0].color.z = 4.3f;
 
     m_light.directionalLight[0].direction.x = 1.0f;
     m_light.directionalLight[0].direction.y = -1.0f;
-    m_light.directionalLight[0].direction.z = 1.0f;
+    m_light.directionalLight[0].direction.z = -1.0f;
     m_light.directionalLight[0].direction.Normalize();
     m_light.directionalLight[0].castShadow = true;
 
     //
-    m_light.directionalLight[1].color.x = 1.0f;
+  /*  m_light.directionalLight[1].color.x = 1.0f;
     m_light.directionalLight[1].color.y = 1.0f;
     m_light.directionalLight[1].color.z = 1.0f;
 
@@ -42,7 +42,7 @@ void SceneLight::Init()
     m_light.directionalLight[2].direction.x = -1.0f;
     m_light.directionalLight[2].direction.y = 1.0f;
     m_light.directionalLight[2].direction.z = 1.0f;
-    m_light.directionalLight[2].direction.Normalize();
+    m_light.directionalLight[2].direction.Normalize();*/
 
     m_light.ambinetLight.x = 0.4f;
     m_light.ambinetLight.y = 0.4f;

@@ -9,7 +9,6 @@ void Ssr::Init(
 	RenderTarget& albedoRenderTarget
 )
 {
-	m_mt.seed(m_rd());
 	{
 		UINT w = mainRenderTarget.GetWidth();
 		UINT h = mainRenderTarget.GetHeight();
@@ -80,7 +79,6 @@ void Ssr::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	m_ssrCb.cameraPosInWorld = g_camera3D->GetPosition();
 	m_ssrCb.mViewProj = g_camera3D->GetViewProjectionMatrix();
 	m_ssrCb.mViewProjInv.Inverse(m_ssrCb.mViewProj);
-	m_ssrCb.rayMarchStepRate = (float)(m_mt() % 1000000) / 1000000.0f;
 	
 	
 	// •`‰æ
