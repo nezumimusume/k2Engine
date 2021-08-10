@@ -143,8 +143,9 @@ void RenderingEngine::InitCopyMainRenderTargetToFrameBufferSprite()
     spriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
     spriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
 
-    // ボケ画像をそのまま貼り付けるだけなので、通常の2D描画のシェーダーを指定する
+    // ガンマ補正ありの2D描画のシェーダーを指定する
     spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+    spriteInitData.m_psEntryPoinFunc = "PSMainGamma";
     spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
     // 初期化オブジェクトを使って、スプライトを初期化する
@@ -409,8 +410,8 @@ void RenderingEngine::CopyMainRenderTargetToFrameBuffer(RenderContext& rc)
     D3D12_VIEWPORT viewport;
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = 1280;
-    viewport.Height = 720;
+    viewport.Width = g_graphicsEngine->GetFrameBufferWidth();
+    viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
 

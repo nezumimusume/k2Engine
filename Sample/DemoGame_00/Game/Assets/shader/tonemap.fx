@@ -127,7 +127,7 @@ float4 PSCalcLuminanceLogAvarage(PSInput In) : SV_Target0
         vSample = sceneTexture.Sample(Sampler, In.uv+g_avSampleOffsets[iSample].xy);
         float3 hsv = Rgb2Hsv( vSample );
         /*float d = hsv.z+0.0001f;*/
-        fLogLumSum += log(hsv.z);
+        fLogLumSum += log(hsv.z );
     }
     
     // Divide the sum to complete the average
@@ -215,7 +215,7 @@ float4 PSCalcAdaptedLuminanceFirst(PSInput In) : SV_Target0
 }
 
 
-float3 ACESFilm(float3 x)
+float ACESFilm(float x)
 {
     float a = 2.51f;
     float b = 0.03f;
@@ -223,6 +223,11 @@ float3 ACESFilm(float3 x)
     float d = 0.59f;
     float e = 0.14f;
     return saturate((x*(a*x+b))/(x*(c*x+d)+e));
+}
+float Reinhard(float3 x)
+{
+    float Lw2 = 4.0f;
+    return (x / (1.0f + x) )*( 1.0f + ( x / Lw2 ) );
 }
 /*!
  *@brief	平均輝度からトーンマップを行うピクセルシェーダー。
@@ -239,7 +244,8 @@ float4 PSFinal( PSInput In) : SV_Target0
     }else{
         fAvgLum = lastLumAvgTextureArray[1].Sample(Sampler, float2( 0.5f, 0.5f)).r;
     }
-    hsv.z = ( middleGray / fAvgLum ) * hsv.z;
+    hsv.z = ( middleGray / ( max(fAvgLum, 0.001f ))) * hsv.z;
+    hsv.z = ACESFilm(hsv.z);
     // 明るさをトーンマップ
     /*float x = hsv.z;
     float Lw2 = 1.0f;
@@ -251,8 +257,9 @@ float4 PSFinal( PSInput In) : SV_Target0
     float4 color;
     color.xyz = Hsv2Rgb(hsv);
     color.w= 1.0f;
-   
-    color.xyz = ACESFilm(color.xyz);
+    //color.xyz = Reinhard(color.xyz);
+   // color.xyz = ACESFilm(color.xyz);
+   //color.xyz = Reinhard(color.xyz);
     //color = clamp(color, 0.0f, 1.2f);
     
 	return color;
