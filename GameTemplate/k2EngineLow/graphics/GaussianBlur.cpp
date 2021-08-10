@@ -45,8 +45,8 @@ void GaussianBlur::ExecuteOnGPU(RenderContext& rc, float blurPower)
 
 void GaussianBlur::InitRenderTargets(bool isDownSample)
 {
-	float w = m_originalTexture->GetWidth();
-	float h = m_originalTexture->GetHeight();
+	int w = m_originalTexture->GetWidth();
+	int h = m_originalTexture->GetHeight();
 	//Xブラー用のレンダリングターゲットを作成する。
 	m_xBlurRenderTarget.Create(
 		isDownSample ? w / 2 : w,

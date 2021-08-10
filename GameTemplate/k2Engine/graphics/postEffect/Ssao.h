@@ -1,21 +1,46 @@
 #pragma once
+
+#include "graphics/postEffect/PostEffectComponentBase.h"
+
+
 /// <summary>
 /// Ssao(スクリーンスペースアンビエントオクルージョン)。
 /// </summary>
-class Ssao : public Noncopyable
+class Ssao : public PostEffectComponentBase
 {
 public:
     /// <summary>
     /// 初期化。
     /// </summary>
     /// <param name="mainRenderTarget">メインレンダーターゲット。</param>
-    void Init(RenderTarget& mainRenderTarget);
+    void OnInit(
+        RenderTarget& mainRenderTarget,
+        RenderTarget& zprepassRenderTarget,
+        RenderTarget& normalRenderTarget,
+        RenderTarget& metallicSmoothRenderTarget,
+        RenderTarget& albedoRenderTarget) override;
     /// <summary>
     /// 描画。
     /// </summary>
     /// <param name="rc">レンダ―コンテキスト。</param>
     /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
-    void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
+    void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
+    /// <summary>
+    /// ポストの結果の画像をメインレンダリングターゲットにコピーする？
+    /// </summary>
+    /// <returns></returns>
+    bool IsCopyResultTextureToMainRenderTarget() const override
+    {
+        return false;
+    }
+    /// <summary>
+    /// ポストエフェクトを実行した結果となるテクスチャを取得。
+    /// </summary>
+    /// <returns></returns>
+    Texture& GetResultTexture() override
+    {
+        return m_ssaoRenderTarget.GetRenderTargetTexture();
+    }
 private:
     struct SsaoBuffer{
         Matrix view;//ビュー行列。

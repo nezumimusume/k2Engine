@@ -2,7 +2,13 @@
 #include "Ssao.h"
 #include "Graphics/RenderingEngine.h"
 
-void Ssao::Init(RenderTarget& mainRenderTarget)
+void Ssao::OnInit(
+    RenderTarget& mainRenderTarget,
+    RenderTarget& zprepassRenderTarget,
+    RenderTarget& normalRenderTarget,
+    RenderTarget& metallicSmoothRenderTarget,
+    RenderTarget& albedoRenderTarget
+)
 {
     float color[4] =
     {
@@ -53,7 +59,7 @@ void Ssao::Init(RenderTarget& mainRenderTarget)
     m_finalSprite.Init(spriteInitData);
 }
 
-void Ssao::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
+void Ssao::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
     //ssaoレンダ―ターゲットを。
     //PRESENTからRENDERTARGETへ。

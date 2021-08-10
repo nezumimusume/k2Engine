@@ -29,7 +29,7 @@
     <ClCompile Include="graphics\postEffect\Dof.cpp" />
     <ClCompile Include="graphics\postEffect\Fxaa.cpp" />
     <ClCompile Include="graphics\postEffect\PostEffect.cpp" />
-    <ClCompile Include="graphics\postEffect\PostEffectBase.cpp" />
+    <ClCompile Include="graphics\postEffect\PostEffectComponentBase.cpp" />
     <ClCompile Include="graphics\postEffect\Ssao.cpp" />
     <ClCompile Include="graphics\postEffect\Ssr.cpp" />
     <ClCompile Include="graphics\postEffect\ToneMap.cpp" />
@@ -62,7 +62,7 @@
     <ClInclude Include="graphics\postEffect\Dof.h" />
     <ClInclude Include="graphics\postEffect\Fxaa.h" />
     <ClInclude Include="graphics\postEffect\PostEffect.h" />
-    <ClInclude Include="graphics\postEffect\PostEffectBase.h" />
+    <ClInclude Include="graphics\postEffect\PostEffectComponentBase.h" />
     <ClInclude Include="graphics\postEffect\Ssao.h" />
     <ClInclude Include="graphics\postEffect\Ssr.h" />
     <ClInclude Include="graphics\postEffect\ToneMap.h" />

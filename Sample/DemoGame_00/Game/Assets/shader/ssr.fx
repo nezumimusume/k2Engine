@@ -64,6 +64,7 @@ PSInput VSMain(VSInput In)
     psIn.uv = In.uv;
     return psIn;
 }
+// 映り込み画像を作成するピクセルシェーダー。
 float4 PSMain(PSInput In) : SV_Target0
 {
 	//ピクセルのワールド座標を計算する。
@@ -137,17 +138,20 @@ float4 PSMain(PSInput In) : SV_Target0
 Texture2D<float4> reflectTexture : register(t1);	// 反射テクスチャ。
 Texture2D<float4> albedoTexture : register(t2);		// アルベドテクスチャ。
 
-//最終合成。
+// 映り込み映像を合成していく
 float4 PSFinal(PSInput In) : SV_Target0
 {
-	
+	// 映り込むカラーをサンプリング。
 	float4 reflectColor = reflectTexture.Sample(Sampler, In.uv);
+	// シーンカラーをサンプリング。
 	float4 sceneColor = sceneTexture.Sample(Sampler, In.uv);
+	// アルベドカラーをサンプリング
 	float4 albedoColor = albedoTexture.Sample(Sampler, In.uv);
-
+	// 映り込む画像は環境光として捉える。
 	float3 reflectLig = reflectColor.xyz * reflectColor.a;
+	// 映り込む画像のピクセルの拡散反射カラーを乗算して、反射光を求める。
 	reflectLig *= albedoColor.xyz;
-	
+	// 映り込みによる反射光をシーンカラーに加算。
 	sceneColor.xyz += reflectLig;
 	
 	return sceneColor;

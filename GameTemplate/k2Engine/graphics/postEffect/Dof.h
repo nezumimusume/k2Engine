@@ -1,9 +1,11 @@
 #pragma once
 
+#include "graphics/postEffect/PostEffectComponentBase.h"
+
 /// <summary>
 /// ”íÊŠE[“xB
 /// </summary>
-class Dof : public PostEffectBase
+class Dof : public PostEffectComponentBase
 {
 public:
     /// <summary>

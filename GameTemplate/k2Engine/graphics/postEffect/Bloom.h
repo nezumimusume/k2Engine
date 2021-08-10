@@ -1,12 +1,12 @@
 #pragma once
 
-#include "graphics/postEffect/PostEffectBase.h"
+#include "graphics/postEffect/PostEffectComponentBase.h"
 
 
 /// <summary>
 /// ƒuƒ‹[ƒ€B
 /// </summary>
-class Bloom : public PostEffectBase
+class Bloom : public PostEffectComponentBase
 {
 public:
     /// <summary>

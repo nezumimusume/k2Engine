@@ -10,6 +10,7 @@ void Ssr::OnInit(
 )
 {
 	{
+		// 映り込み画像を作成するためのスプライトを作成。
 		UINT w = mainRenderTarget.GetWidth();
 		UINT h = mainRenderTarget.GetHeight();
 		SpriteInitData initData;
@@ -29,12 +30,14 @@ void Ssr::OnInit(
 		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 		initData.textureAddressMode = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
 
-		m_sprite.Init(initData);
+		m_reflectionSprite.Init(initData);
 
+		// αを映り込みの強さとして扱う。0.0なら映り込みなし、1.0が最も強く映り込みします。
+		// αは0.0で初期化します。
 		float clearColor[] = {
 			0.0f, 0.0f, 0.0f, 0.0f
 		};
-		
+		// 映り込み画像を描画するためのレンダリングターゲットを作成。
 		m_reflectionRt.Create(
 			w,
 			h,
@@ -82,6 +85,7 @@ void Ssr::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 	if (!m_isEnable) {
 		return;
 	}
+	// まずは映り込みイメージを作成する。
 	// レンダリングターゲットとして利用できるまで待つ
 	rc.WaitUntilToPossibleSetRenderTarget(m_reflectionRt);
 	// レンダリングターゲットを設定
@@ -94,17 +98,18 @@ void Ssr::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 	
 	
 	// 描画
-	m_sprite.Draw(rc);
+	m_reflectionSprite.Draw(rc);
 	// レンダリングターゲットへの書き込み終了待ち
 	rc.WaitUntilFinishDrawingToRenderTarget(m_reflectionRt);
 	
+	// 映り込み画像をガウシアンブラーでぼかしてデノイズを行う。
 	m_blur.ExecuteOnGPU(rc, 2.0f);
 
 	// レンダリングターゲットとして利用できるまで待つ
 	rc.WaitUntilToPossibleSetRenderTarget(m_finalRt);
 	// レンダリングターゲットを設定
 	rc.SetRenderTargetAndViewport(m_finalRt);
-
+	// 映り込み画像とメインシーンを合成していく。
 	m_finalSprite.Draw(rc);
 	// レンダリングターゲットへの書き込み終了待ち
 	rc.WaitUntilFinishDrawingToRenderTarget(m_finalRt);

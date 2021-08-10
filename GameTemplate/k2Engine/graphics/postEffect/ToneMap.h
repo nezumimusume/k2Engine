@@ -1,8 +1,8 @@
 #pragma once
 
-#include "graphics/postEffect/PostEffectBase.h"
+#include "graphics/postEffect/PostEffectComponentBase.h"
 
-class ToneMap : public PostEffectBase
+class ToneMap : public PostEffectComponentBase
 {
 public:
 	ToneMap();

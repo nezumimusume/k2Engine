@@ -1,11 +1,11 @@
 #pragma once
 
-#include "graphics/postEffect/PostEffectBase.h"
+#include "graphics/postEffect/PostEffectComponentBase.h"
 
 /// <summary>
 /// FXAAÅB
 /// </summary>
-class Fxaa : public PostEffectBase
+class Fxaa : public PostEffectComponentBase
 {
 public:
     /// <summary>

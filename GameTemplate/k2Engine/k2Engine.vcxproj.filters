@@ -94,9 +94,6 @@
     <ClCompile Include="graphics\postEffect\PostEffect.cpp">
       <Filter>graphics\postEffect</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\postEffect\PostEffectBase.cpp">
-      <Filter>graphics\postEffect</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\preRender\ShadowMapRender.cpp">
       <Filter>graphics\preRender</Filter>
     </ClCompile>
@@ -105,6 +102,9 @@
     </ClCompile>
     <ClCompile Include="graphics\preRender\LightCulling.cpp">
       <Filter>graphics\preRender</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\postEffect\PostEffectComponentBase.cpp">
+      <Filter>graphics\postEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,9 +157,6 @@
     <ClInclude Include="graphics\SceneLight.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\postEffect\PostEffectBase.h">
-      <Filter>graphics\postEffect</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\postEffect\Ssao.h">
       <Filter>graphics\postEffect</Filter>
     </ClInclude>
@@ -189,6 +186,9 @@
     </ClInclude>
     <ClInclude Include="graphics\preRender\LightCulling.h">
       <Filter>graphics\preRender</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\postEffect\PostEffectComponentBase.h">
+      <Filter>graphics\postEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

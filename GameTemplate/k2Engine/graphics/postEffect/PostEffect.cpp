@@ -41,7 +41,13 @@ void PostEffect::Init(
         metallicSmoothRenderTarget,
         albedoRenderTarget
     );
-    m_ssao.Init(mainRenderTarget);
+    m_ssao.Init(
+        mainRenderTarget,
+        zprepassRenderTarget,
+        normalRenderTarget,
+        metallicSmoothRenderTarget,
+        albedoRenderTarget
+    );
     m_ssr.Init(
         mainRenderTarget, 
         zprepassRenderTarget, 
