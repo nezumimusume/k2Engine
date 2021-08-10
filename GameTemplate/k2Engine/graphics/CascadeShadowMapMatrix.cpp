@@ -9,7 +9,8 @@ void CascadeShadowMapMatrix::CalcLightViewProjectionCropMatrix(
     const Vector3& sceneMinPosition
 )
 {
-    float maxFar = 10000.0f;
+    // 最大ファーは150m
+    float maxFar = 15000.0f;
     //ビュー行列を計算する。
     Matrix viewMatrix;
     Vector3 lightTarget = ( sceneMaxPosition + sceneMinPosition ) * 0.5f;
@@ -37,7 +38,7 @@ void CascadeShadowMapMatrix::CalcLightViewProjectionCropMatrix(
     float cascadeAreaTbl[NUM_SHADOW_MAP] = {
         maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_NEAR],     // 近影を映す最大深度値
         maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_MIDDLE],   // 中影を映す最大深度値
-        maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_FAR] ,     // 遠影を映す最大深度値。3枚目の最大深度はカメラのFarクリップ
+        maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_FAR] ,     // 遠影を映す最大深度値。
     };
     // カメラの前方向、右方向、上方向を求める
     // 前方向と右方向はすでに計算済みなので、それを引っ張ってくる

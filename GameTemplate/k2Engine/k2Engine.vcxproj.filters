@@ -94,8 +94,8 @@
     <ClCompile Include="graphics\SceneLight.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\GeometryData.cpp">
-      <Filter>geometry</Filter>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\Ssr.cpp">
+      <Filter>graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,8 +175,8 @@
     <ClInclude Include="graphics\SceneLight.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\GeometryData.h">
-      <Filter>geometry</Filter>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\Ssr.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

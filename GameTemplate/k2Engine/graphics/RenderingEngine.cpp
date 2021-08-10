@@ -22,7 +22,12 @@ void RenderingEngine::Init(bool isSoftShadow)
         m_diferredLightingSprite.GetExpandConstantBufferGPU(),
         m_pointLightNoListInTileUAV
     );
-    m_postEffect.Init(m_mainRenderTarget, m_zprepassRenderTarget);
+    m_postEffect.Init(
+        m_mainRenderTarget, 
+        m_zprepassRenderTarget, 
+        m_gBuffer[enGBufferNormal],
+        m_gBuffer[enGBufferMetaricSmooth],
+        m_gBuffer[enGBufferAlbedo]);
     // シーンライト
     g_sceneLight = &m_sceneLight;
 }
@@ -35,13 +40,15 @@ void RenderingEngine::InitShadowMapRender()
 }
 void RenderingEngine::InitZPrepassRenderTarget()
 {
+    float clearColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
     m_zprepassRenderTarget.Create(
         g_graphicsEngine->GetFrameBufferWidth(),
         g_graphicsEngine->GetFrameBufferHeight(),
         1,
         1,
         DXGI_FORMAT_R32G32B32A32_FLOAT,
-        DXGI_FORMAT_D32_FLOAT
+        DXGI_FORMAT_D32_FLOAT,
+        clearColor
     );
 }
 void RenderingEngine::InitMainRTSnapshotRenderTarget()
@@ -192,6 +199,17 @@ void RenderingEngine::InitDeferredLighting()
     // 初期化データを使ってスプライトを作成
     m_diferredLightingSprite.Init(spriteInitData);
 }
+void RenderingEngine::CalcViewProjectionMatrixForViewCulling()
+{
+    Matrix projMatrix;
+    projMatrix.MakeProjectionMatrix(
+        g_camera3D->GetViewAngle() * 1.5f,
+        g_camera3D->GetAspect(),
+        g_camera3D->GetNear(),
+        g_camera3D->GetFar()
+    );
+    m_viewProjMatrixForViewCulling.Multiply(g_camera3D->GetViewMatrix(), projMatrix);
+}
 void RenderingEngine::Execute(RenderContext& rc)
 {
     // シーンのジオメトリ情報を構築。
@@ -209,6 +227,10 @@ void RenderingEngine::Execute(RenderContext& rc)
             }
         }
     }
+
+    // ビューカリング用のビュープロジェクション行列の計算。
+    CalcViewProjectionMatrixForViewCulling();
+
     // シーンライトの更新。
     m_sceneLight.Update();
 

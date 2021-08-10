@@ -14,34 +14,42 @@ public:
 	/// 初期化。
 	/// </summary>
 	void Init(RenderTarget& mainRenderTarget);
-	static const int NUM_RENDER_TARGETS_DRAW_ONE_FRAME = 2;		//1フレームに描画する、平均輝度を求めるためのレンダーターゲットの最大数。
 private:
 	/// <summary>
-	/// 平均輝度を求めるための描画。
+	/// 平均輝度を計算する。
 	/// </summary>
-	/// <param name="rc">レンダーコンテキスト。</param>
-	/// <param name="numberRenderTarget">レンダーターゲットの番号。</param>
-	void RenderToLuma(RenderContext& rc,int numberRenderTarget)
-	{
-		//描画予定のレンダーターゲットはPRESENTからRENDERTARGETへ。
-		rc.WaitUntilToPossibleSetRenderTarget(*m_renderTargetVector[numberRenderTarget].get());
-		//レンダリングターゲットを設定
-		rc.SetRenderTargetAndViewport(*m_renderTargetVector[numberRenderTarget].get());
-		//描画。
-		m_spriteVector[numberRenderTarget].get()->Draw(rc);
-		//次のレンダーターゲット描画の際に。
-		//シェーダーリソースビューとして使用するので、RENDERTARGETからPRESENTへ。
-		rc.WaitUntilFinishDrawingToRenderTarget(*m_renderTargetVector[numberRenderTarget].get());
-	}
-	struct TonemapBuffer {
-		float scaler = 7.0f;
-		float gammaCorrection = 2.0f;
+	/// <param name="">レンダリングコンテキスト</param>
+	void CalcLuminanceAvarage(RenderContext& rc);
+private:
+	static const int MAX_SAMPLES = 16;
+	struct STonemapParam {
+		float deltaTime;
+		float midddleGray;
+		int currentAvgTexNo;
 	};
+	enum CalcAvgSprite {
+		enCalcAvgLog,						// 対数平均を求める。
+		enCalcAvg_Start,
+			enCalcAvg_0 = enCalcAvg_Start,	// 平均輝度を計算。
+			enCalcAvg_1,					// 平均輝度を計算。
+			enCalcAvg_2,					// 平均輝度を計算。	
+			enCalcAvg_3,
+		enCalcAvg_End,
+		enCalcAvgExp = enCalcAvg_End,		// exp()を用いて最終平均を求める。
+		enNumCalcAvgSprite
+	};
+	RenderTarget m_calcAvgRt[enNumCalcAvgSprite];	// 平均輝度計算用のレンダリングターゲット。
+	RenderTarget m_avgRt[2];					// 平均輝度が格納されるレンダリングターゲット。
+	int m_currentAvgRt = 0;						// 
+	Sprite m_calcAvgSprites[enNumCalcAvgSprite];
+	Sprite m_calcAdapteredLuminanceSprite;		// 明暗順応用のスプライト。
+	Sprite m_calsAdapteredLuminanceFisrtSprite;	// 明暗順応用のスプライト。(シーンが切り替わったときに使用される。)
+	Sprite m_finalSprite;						// 最終合成用のスプライト。
+	Sprite m_copySprite;
 
-	std::vector<std::unique_ptr<RenderTarget>> m_renderTargetVector;		//平均輝度を求めるためのレンダ―ターゲット。
-	std::vector<std::unique_ptr<Sprite>> m_spriteVector;
-	Sprite m_finalSprite;
-	TonemapBuffer m_tonemapBuffer;
-	int m_numberCalcRenderTarget = -1;		
+	bool m_isFirstWhenChangeScene = true;			//!<シーンが切り替わって初回の描画かどうかのフラグ。
+	Vector4 m_avSampleOffsets[MAX_SAMPLES];
+	RenderTarget m_finalRt;						// 最終合成レンダリングターゲット。
+	STonemapParam m_tonemapParam;
 }; 
 

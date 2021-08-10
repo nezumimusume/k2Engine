@@ -139,7 +139,14 @@ public:
             renderer.SetCascadeNearAreaRates(nearArea, middleArea, farArea);
         }
     }
-   
+    /// <summary>
+    /// ビューカリングのためのビュープロジェクション行列を取得。
+    /// </summary>
+    /// <returns></returns>
+    const Matrix& GetViewProjectionMatrixForViewCulling() const
+    {
+        return m_viewProjMatrixForViewCulling;
+    }
 private:
     /// <summary>
     /// G-Bufferを初期化
@@ -210,7 +217,10 @@ private:
     /// シャドウマップへの描画処理を初期化
     /// </summary>
     void InitShadowMapRender();
-    
+    /// <summary>
+    /// ビューカリング用のビュープロジェクション行列を計算。
+    /// </summary>
+    void CalcViewProjectionMatrixForViewCulling();
 private:
     // GBufferの定義
     enum EnGBuffer
@@ -247,6 +257,7 @@ private:
     Vector3 m_sceneMaxPosition;                                     // ゲームシーンの最大座標
     Vector3 m_sceneMinPosition;                                     // ゲームシーンの最小座標。
     bool m_isBuildSceneInfo = false;
+    Matrix m_viewProjMatrixForViewCulling;                          // ビューカリング用のビュープロジェクション行列。
 };
 
 extern RenderingEngine* g_renderingEngine;

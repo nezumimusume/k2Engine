@@ -47,6 +47,7 @@ struct SpriteInitData {
 		DXGI_FORMAT_UNKNOWN,
 		DXGI_FORMAT_UNKNOWN,
 	};	//レンダリングするカラーバッファのフォーマット。
+	D3D12_TEXTURE_ADDRESS_MODE textureAddressMode = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;	// テクスチャアドレッシングモード。
 };
 /// <summary>
 /// スプライトクラス。
@@ -102,6 +103,24 @@ public:
 	ConstantBuffer& GetExpandConstantBufferGPU() 
 	{
 		return m_userExpandConstantBufferGPU;
+	}
+	/// <summary>
+	/// テクスチャの幅を取得。
+	/// </summary>
+	/// <param name="texNo"></param>
+	/// <returns></returns>
+	int GetTextureWidth(int texNo) const
+	{
+		return m_textures[texNo].GetWidth();
+	}
+	/// <summary>
+	/// テクスチャの幅を取得。
+	/// </summary>
+	/// <param name="texNo"></param>
+	/// <returns></returns>
+	int GetTextureHeight(int texNo) const
+	{
+		return m_textures[texNo].GetHeight();
 	}
 private:
 	/// <summary>
@@ -159,5 +178,4 @@ private:
 	Shader				m_vs;					//頂点シェーダー。
 	Shader				m_ps;					//ピクセルシェーダー。
 	Vector4				m_mulColor = Vector4::White;	//乗算カラー。
-
 };

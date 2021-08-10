@@ -55,4 +55,5 @@ private:
 	std::vector<MapChipData>							m_mapChipDataVector;			//マップチップデータのリスト。
 	std::unique_ptr<const char*>						m_filePath;						//tkmファイルパス。
 	std::vector<std::unique_ptr<PhysicsStaticObject>>	m_physicsStaticObjectPtrVector;	//PhysicsStaticObjectのスマートポインタの配列。
+	int													m_mapChipDataNum;				//マップチップデータの数。
 };

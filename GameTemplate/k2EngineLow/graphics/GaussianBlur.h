@@ -9,7 +9,7 @@ public:
 	/// 初期化。
 	/// </summary>
 	/// <param name="originalTexture">ガウシアンブラーをかけるオリジナルテクスチャ。</param>
-	void Init( Texture* originalTexture );
+	void Init( Texture* originalTexture, bool isBlurAlpha = false, bool isDownSample = true);
 	/// <summary>
 	/// ガウシアンブラーをGPU上で実行。
 	/// </summary>
@@ -31,11 +31,11 @@ private:
 	/// <summary>
 	/// レンダリングターゲットを初期化。
 	/// </summary>
-	void InitRenderTargets();
+	void InitRenderTargets(bool isDownSample);
 	/// <summary>
 	/// スプライトを初期化。
 	/// </summary>
-	void InitSprites();
+	void InitSprites(bool isBlurAlpha );
 	/// <summary>
 	/// 重みテーブルを更新する。
 	/// </summary>

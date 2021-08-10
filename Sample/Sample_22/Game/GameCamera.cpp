@@ -39,7 +39,7 @@ void GameCamera::Update()
 	//注視点を計算する。
 	Vector3 target = m_player->m_position;
 	//プレイヤの足元からちょっと上を注視点とする。
-	target.y += 80.0f * m_player->m_scale.x * 1.3f;
+	target.y += 250.0f * m_player->m_scale.x * 1.3f;
 	target += g_camera3D->GetForward() * 20.0f * m_player->m_scale.x;
 
 	Vector3 toCameraPosOld = m_toCameraPos;

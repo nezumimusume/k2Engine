@@ -24,6 +24,6 @@ private:
         float bufferH;
     }; 
 
-    Sprite m_finalSprite;					//最終合成用のスプライト
+    Sprite m_finalSprite;				//最終合成用のスプライト
     FaxxBuffer m_cB;                    //解像度をGPUに送るための定数バッファ―。
 };

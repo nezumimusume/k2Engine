@@ -31,6 +31,8 @@
       <Filter>enemy</Filter>
     </ClCompile>
     <ClCompile Include="StarRender.cpp" />
+    <ClCompile Include="Pyramid.cpp" />
+    <ClCompile Include="PyramidRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -54,5 +56,7 @@
       <Filter>enemy</Filter>
     </ClInclude>
     <ClInclude Include="StarRender.h" />
+    <ClInclude Include="Pyramid.h" />
+    <ClInclude Include="PyramidRender.h" />
   </ItemGroup>
 </Project>

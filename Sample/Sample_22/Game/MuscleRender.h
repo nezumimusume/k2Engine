@@ -1,4 +1,7 @@
 #pragma once
+
+class Game;
+
 class MuscleRender : public IGameObject
 {
 public:
@@ -30,5 +33,6 @@ private:
 	int				m_maxMuscle = 0;	// êØÇÃêî
 
 	AnimationClip	m_animationClip;
+	Game*			m_game = nullptr;
 };
 

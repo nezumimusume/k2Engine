@@ -201,9 +201,9 @@
         //ルートシグネチャの初期化。
         m_rootSignature.Init(
             D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
+            initData.textureAddressMode,
+            initData.textureAddressMode,
+            initData.textureAddressMode);
 
         //シェーダーを初期化。
         InitShader(initData);

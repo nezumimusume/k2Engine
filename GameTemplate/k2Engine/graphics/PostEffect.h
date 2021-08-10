@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Bloom.h"
-#include "Dof.h"
-#include "Fxaa.h"
-#include "ToneMap.h"
-#include "Ssao.h"
+#include "graphics/Bloom.h"
+#include "graphics/Dof.h"
+#include "graphics/Fxaa.h"
+#include "graphics/ToneMap.h"
+#include "graphics/Ssao.h"
+#include "graphics/Ssr.h"
 
 /// <summary>
 /// ポストエフェクト。
@@ -17,7 +18,14 @@ public:
     /// </summary>
     /// <param name="mainRenderTarget">レンダターゲット。</param>
     /// <param name="zprepassRenderTarget">zプリパスレンダ―ターゲット。</param>
-    void Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRenderTarget);
+    /// <param name="normalRenderTarget">法線が書き込まれているレンダ―ターゲット。</param>
+    void Init(
+        RenderTarget& mainRenderTarget, 
+        RenderTarget& zprepassRenderTarget,
+        RenderTarget& normalRenderTarget,
+        RenderTarget& metallicSmoothRenderTarget,
+        RenderTarget& albedoRenderTarget
+    );
     /// <summary>
     /// 描画。
     /// </summary>
@@ -30,5 +38,6 @@ private:
     Fxaa m_fXaa;        //FXAA。
     ToneMap m_tonemap;  //トーンマップ。
     Ssao m_ssao;        //SSAO(スクリーンスペースアンビエントオクルージョン)。
+    Ssr m_ssr;          //SSR(スクリーンスペースリフレクション)。
 };
 

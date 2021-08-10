@@ -190,7 +190,6 @@ private
 		
 		if c_node.material != undefined then(
 			numSubMaterial = getNumSubMtls c_node.material
-			
 			if numSubMaterial == 0 then(
 				--サブマテリアルはない。
 				matType = GetMaterialType c_node.material
@@ -213,7 +212,6 @@ private
 					--屈折マップはオミット
 					--refractionMap = c_node.material.refractionMap
 				)
-				
 				if matType == 0 then(
 					messageBox "標準マテリアルとフィジカルマテリアル以外は未対応です。"
 				)
@@ -245,6 +243,7 @@ private
 				matIds = #()
 				for faceNo = 1 to numFace do (
 					matId  = getFaceMatID meshObj faceNo
+					
 					if numSubMaterial > 0 then(
 						regist = 0
 						--登録済みのマテリアルかどうか調べる。
@@ -257,12 +256,8 @@ private
 						if regist == 0 then(
 						
 							--未登録のマテリアルなので、追加する。
-							if c_node.material.count  < matId then(
-								errorMsg = "マテリアル名 : " + c_node.material. name + "\nサーフェイスに指定されている、マテリアルIDが範囲外です。マテリアルIDを確認してください。matID = " + matId as string
-								messageBox(errorMsg)
-							)
 							mat = getSubMtl c_node.material matId
-							
+
 							matType = GetMaterialType mat
 							if matType == 1 then(
 								--標準マテリアル
@@ -283,7 +278,6 @@ private
 								--屈折マップはオミット
 								--refractionMap = c_node.material.refractionMap
 							)
-							
 							if matType == 0 then(
 								messageBox "標準マテリアルとフィジカルマテリアル以外は未対応です。"
 							)
@@ -310,8 +304,6 @@ private
 							)
 							newMat = tkMaterial refractionMap:refractionMapFileName reflectionMap:reflectionMapFileName albedoMap:albedoFileName normalMap:normalMapFileName specMap:specMapFileName id:matId
 							append ms.materials newMat
-							
-							
 						)
 					)
 				)
@@ -359,7 +351,7 @@ private
 		cloneMeshObj = copy c_node 
 		cloneMeshObj = convertToMesh cloneMeshObj
 		numFace = getNumFaces cloneMeshObj
-			
+		
 		--マテリアル情報から構築する。
 		BuildMeshParts_Material c_node cloneMeshObj numFace
 
@@ -374,7 +366,6 @@ private
 
 		delete cloneMeshObj
 		cloneMeshObj=undefined
-	
 	),
 	--テクスチャをDDSファイルにコンバートしていく。
 	fn ConvertTextureToDDS srcTexFilePath =(
@@ -513,31 +504,26 @@ public
 		
 		filePath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
 		if filePath != undefined then(
-			try(
-				--出力先のフォルダを取得。
-				outputFolder = pathConfig.removePathLeaf filePath
-				
-				--スケルトンが取得できる？
-				TrySaveSkeleton nodesTmp filePath
+	
+			--出力先のフォルダを取得。
+			outputFolder = pathConfig.removePathLeaf filePath
+			
+			--スケルトンが取得できる？
+			TrySaveSkeleton nodesTmp filePath
 
-				md = ModelData meshParts:#()
+			md = ModelData meshParts:#()
 
-				for p in nodesTmp do (
-					--編集可能頂点に変換できるか調べる。
-					if canConvertTo p Mesh then(
-						--メッシュパーツをビルド				
-						BUildMeshParts p
-					)
-				) 
-				--保存。
-				InternalSave filePath
-				messageBox "出力成功しました。" beep:false
-			)catch(
-				if cloneMeshObj != undefined then(
-					delete cloneMeshObj
+			for p in nodesTmp do (
+				--編集可能頂点に変換できるか調べる。
+				if canConvertTo p Mesh then(
+					--メッシュパーツをビルド				
+					BUildMeshParts p
 				)
-				--messageBox "出力に失敗しました。" beep:false
-			)
+			) 
+			--保存。
+			InternalSave filePath
+			messageBox "出力成功しました。" beep:false
+	
 		)
 	)
 
