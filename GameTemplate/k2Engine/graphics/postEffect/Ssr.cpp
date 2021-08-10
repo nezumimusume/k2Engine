@@ -1,5 +1,5 @@
 #include "k2EnginePreCompile.h"
-#include "graphics/ssr.h"
+#include "graphics/postEffect/ssr.h"
 
 void Ssr::OnInit(
 	RenderTarget& mainRenderTarget, 

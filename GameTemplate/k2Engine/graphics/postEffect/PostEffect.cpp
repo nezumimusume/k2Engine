@@ -3,7 +3,7 @@
 
 #include "graphics/effect/EffectEngine.h"
 
-#include "RenderingEngine.h"
+#include "Graphics/RenderingEngine.h"
 
 void PostEffect::Init(
     RenderTarget& mainRenderTarget, 

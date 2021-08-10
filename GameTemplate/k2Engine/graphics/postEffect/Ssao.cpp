@@ -1,6 +1,6 @@
 #include "k2EnginePreCompile.h"
 #include "Ssao.h"
-#include "RenderingEngine.h"
+#include "Graphics/RenderingEngine.h"
 
 void Ssao::Init(RenderTarget& mainRenderTarget)
 {

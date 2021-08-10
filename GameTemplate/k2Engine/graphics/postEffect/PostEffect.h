@@ -1,11 +1,11 @@
 #pragma once
 
-#include "graphics/Bloom.h"
-#include "graphics/Dof.h"
-#include "graphics/Fxaa.h"
-#include "graphics/ToneMap.h"
-#include "graphics/Ssao.h"
-#include "graphics/Ssr.h"
+#include "graphics/postEffect/Bloom.h"
+#include "graphics/postEffect/Dof.h"
+#include "graphics/postEffect/Fxaa.h"
+#include "graphics/postEffect/ToneMap.h"
+#include "graphics/postEffect/Ssao.h"
+#include "graphics/postEffect/Ssr.h"
 
 /// <summary>
 /// ポストエフェクト。

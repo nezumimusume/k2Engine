@@ -1,11 +1,12 @@
 #pragma once
 
-#include "graphics/PostEffectBase.h"
+#include "graphics/postEffect/PostEffectBase.h"
+
 
 /// <summary>
-/// FXAA。
+/// ブルーム。
 /// </summary>
-class Fxaa : public PostEffectBase
+class Bloom : public PostEffectBase
 {
 public:
     /// <summary>
@@ -17,7 +18,7 @@ public:
         RenderTarget& zprepassRenderTarget,
         RenderTarget& normalRenderTarget,
         RenderTarget& metallicSmoothRenderTarget,
-        RenderTarget& albedoRenderTarget ) override;
+        RenderTarget& albedoRenderTarget) override;
     /// <summary>
     /// 描画。
     /// </summary>
@@ -30,25 +31,11 @@ public:
     /// <returns></returns>
     Texture& GetResultTexture() override
     {
-        return m_fxaaRt.GetRenderTargetTexture();
-    }
-    /// <summary>
-    /// ポストの結果の画像をメインレンダリングターゲットにコピーする？
-    /// </summary>
-    /// <returns></returns>
-    bool IsCopyResultTextureToMainRenderTarget() const override
-    {
-        return true;
+        return m_luminanceRenderTarget.GetRenderTargetTexture();
     }
 private:
-
-    struct FaxxBuffer
-    {
-        float bufferW;
-        float bufferH;
-    }; 
-    RenderTarget m_fxaaRt;  // FXAAを行うレンダリングターゲット。
-    Sprite m_finalSprite;	// 最終合成用のスプライト
-    Sprite m_copySprite;    //　
-    FaxxBuffer m_cB;        // 解像度をGPUに送るための定数バッファ―。
+    RenderTarget m_luminanceRenderTarget;	//輝度抽出用のレンダリングターゲット
+    Sprite m_luminanceSprite;				//輝度抽出用のスプライト
+    GaussianBlur m_gaussianBlur[4];			//ガウシアンブラー
+    Sprite m_finalSprite;					//最終合成用のスプライト
 };
