@@ -25,6 +25,9 @@
     <Filter Include="graphics\postEffect">
       <UniqueIdentifier>{3639925d-25c5-4b17-ba6c-de9ae59e9e58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics\preRender">
+      <UniqueIdentifier>{143cc97d-283c-4f50-a159-430f487221d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics\ModelRender.cpp">
@@ -38,12 +41,6 @@
       <Filter>graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\RenderingEngine.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\ShadowMapRender.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\CascadeShadowMapMatrix.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
     <ClCompile Include="camera\CameraCollisionSolver.cpp">
@@ -69,9 +66,6 @@
     </ClCompile>
     <ClCompile Include="collision\CollisionObject.cpp">
       <Filter>collision</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\LightCulling.cpp">
-      <Filter>graphics</Filter>
     </ClCompile>
     <ClCompile Include="geometry\AABB.cpp">
       <Filter>geometry</Filter>
@@ -103,6 +97,15 @@
     <ClCompile Include="graphics\postEffect\PostEffectBase.cpp">
       <Filter>graphics\postEffect</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\preRender\ShadowMapRender.cpp">
+      <Filter>graphics\preRender</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\preRender\CascadeShadowMapMatrix.cpp">
+      <Filter>graphics\preRender</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\preRender\LightCulling.cpp">
+      <Filter>graphics\preRender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -119,12 +122,6 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\RenderingEngine.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\ShadowMapRender.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\CascadeShadowMapMatrix.h">
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="camera\CameraCollisionSolver.h">
@@ -153,9 +150,6 @@
     </ClInclude>
     <ClInclude Include="collision\CollisionObject.h">
       <Filter>collision</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\LightCulling.h">
-      <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="geometry\AABB.h">
       <Filter>geometry</Filter>
@@ -186,6 +180,15 @@
     </ClInclude>
     <ClInclude Include="graphics\postEffect\PostEffect.h">
       <Filter>graphics\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\preRender\ShadowMapRender.h">
+      <Filter>graphics\preRender</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\preRender\CascadeShadowMapMatrix.h">
+      <Filter>graphics\preRender</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\preRender\LightCulling.h">
+      <Filter>graphics\preRender</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

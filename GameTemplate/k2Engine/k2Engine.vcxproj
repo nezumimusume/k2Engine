@@ -23,9 +23,7 @@
     <ClCompile Include="camera\SpringCamera.cpp" />
     <ClCompile Include="collision\CollisionObject.cpp" />
     <ClCompile Include="geometry\AABB.cpp" />
-    <ClCompile Include="graphics\CascadeShadowMapMatrix.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
-    <ClCompile Include="graphics\LightCulling.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\postEffect\Bloom.cpp" />
     <ClCompile Include="graphics\postEffect\Dof.cpp" />
@@ -35,9 +33,11 @@
     <ClCompile Include="graphics\postEffect\Ssao.cpp" />
     <ClCompile Include="graphics\postEffect\Ssr.cpp" />
     <ClCompile Include="graphics\postEffect\ToneMap.cpp" />
+    <ClCompile Include="graphics\preRender\CascadeShadowMapMatrix.cpp" />
+    <ClCompile Include="graphics\preRender\LightCulling.cpp" />
+    <ClCompile Include="graphics\preRender\ShadowMapRender.cpp" />
     <ClCompile Include="graphics\RenderingEngine.cpp" />
     <ClCompile Include="graphics\SceneLight.cpp" />
-    <ClCompile Include="graphics\ShadowMapRender.cpp" />
     <ClCompile Include="graphics\SpriteRender.cpp" />
     <ClCompile Include="k2EnginePreCompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -54,10 +54,8 @@
     <ClInclude Include="camera\SpringCamera.h" />
     <ClInclude Include="collision\CollisionObject.h" />
     <ClInclude Include="geometry\AABB.h" />
-    <ClInclude Include="graphics\CascadeShadowMapMatrix.h" />
     <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\IRenderer.h" />
-    <ClInclude Include="graphics\LightCulling.h" />
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\MyRenderer.h" />
     <ClInclude Include="graphics\postEffect\Bloom.h" />
@@ -68,9 +66,11 @@
     <ClInclude Include="graphics\postEffect\Ssao.h" />
     <ClInclude Include="graphics\postEffect\Ssr.h" />
     <ClInclude Include="graphics\postEffect\ToneMap.h" />
+    <ClInclude Include="graphics\preRender\CascadeShadowMapMatrix.h" />
+    <ClInclude Include="graphics\preRender\LightCulling.h" />
+    <ClInclude Include="graphics\preRender\ShadowMapRender.h" />
     <ClInclude Include="graphics\RenderingEngine.h" />
     <ClInclude Include="graphics\SceneLight.h" />
-    <ClInclude Include="graphics\ShadowMapRender.h" />
     <ClInclude Include="graphics\SpriteRender.h" />
     <ClInclude Include="k2EnginePreCompile.h" />
     <ClInclude Include="level2DRender\Level2DRender.h" />

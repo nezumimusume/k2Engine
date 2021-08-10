@@ -1,10 +1,10 @@
 #pragma once
 
 #include "MyRenderer.h"
-#include "ShadowMapRender.h"
+#include "graphics/preRender/ShadowMapRender.h"
 #include "graphics/postEffect/PostEffect.h"
 #include "SceneLight.h"
-#include "LightCulling.h"
+#include "graphics/preRender/LightCulling.h"
 
 class IRenderer;
 
