@@ -220,7 +220,6 @@ float4 PSBlur(PS_BlurInput In) : SV_Target0
     Color += weight[1].y * sceneTexture.Sample(Sampler, In.tex5.zw);
     Color += weight[1].z * sceneTexture.Sample(Sampler, In.tex6.zw);
     Color += weight[1].w * sceneTexture.Sample(Sampler, In.tex7.zw);
-
     return float4(Color.xyz, 1.0f);
 }
 /*!

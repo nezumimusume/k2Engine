@@ -67,6 +67,11 @@ float3 Rgb2Hsv(float3 rgb)
 
     return hsv;
 }
+// RGBからHSVのV(輝度)を求める
+float Rgb2V( float3 rgb)
+{
+    return max(rgb.r, max(rgb.g, rgb.b));
+}
 float3 Hsv2Rgb(float3 hsv)
 {
     float3 ret;
@@ -123,14 +128,12 @@ float4 PSCalcLuminanceLogAvarage(PSInput In) : SV_Target0
 
     for(int iSample = 0; iSample < 9; iSample++)
     {
-        // Compute the sum of log(luminance) throughout the sample points
-        vSample = sceneTexture.Sample(Sampler, In.uv+g_avSampleOffsets[iSample].xy);
-        float3 hsv = Rgb2Hsv( vSample );
-        /*float d = hsv.z+0.0001f;*/
-        fLogLumSum += log(hsv.z );
+
+        vSample = max( sceneTexture.Sample(Sampler, In.uv+g_avSampleOffsets[iSample].xy), 0.001f );
+        float v = Rgb2V( vSample );
+        fLogLumSum += log(v);
     }
     
-    // Divide the sum to complete the average
     fLogLumSum /= 9;
 
     return float4(fLogLumSum, fLogLumSum, fLogLumSum, 1.0f);
@@ -224,11 +227,7 @@ float ACESFilm(float x)
     float e = 0.14f;
     return saturate((x*(a*x+b))/(x*(c*x+d)+e));
 }
-float Reinhard(float3 x)
-{
-    float Lw2 = 4.0f;
-    return (x / (1.0f + x) )*( 1.0f + ( x / Lw2 ) );
-}
+
 /*!
  *@brief	平均輝度からトーンマップを行うピクセルシェーダー。
  */
@@ -244,23 +243,14 @@ float4 PSFinal( PSInput In) : SV_Target0
     }else{
         fAvgLum = lastLumAvgTextureArray[1].Sample(Sampler, float2( 0.5f, 0.5f)).r;
     }
+    // 明るさをトーンマップする。
     hsv.z = ( middleGray / ( max(fAvgLum, 0.001f ))) * hsv.z;
     hsv.z = ACESFilm(hsv.z);
-    // 明るさをトーンマップ
-    /*float x = hsv.z;
-    float Lw2 = 1.0f;
-    hsv.z = ( x / (1.0f + x) ) * ( (1.0f + x) / Lw2 );*/
-	//YCbCr.x /= (1.0f+YCbCr.x);
 
-// RGB系にして出力
-    
+    // HSVをRGBに変換して出力
     float4 color;
     color.xyz = Hsv2Rgb(hsv);
     color.w= 1.0f;
-    //color.xyz = Reinhard(color.xyz);
-   // color.xyz = ACESFilm(color.xyz);
-   //color.xyz = Reinhard(color.xyz);
-    //color = clamp(color, 0.0f, 1.2f);
     
 	return color;
 }

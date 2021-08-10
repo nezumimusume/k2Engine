@@ -18,7 +18,13 @@ void Dof::InitCombimeBokeImageToSprite(Sprite& combineBokeImageSprite, Texture& 
 
     combineBokeImageSprite.Init(combineBokeImageSpriteInitData);
 }
-void Dof::Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRenderTarget)
+void Dof::OnInit(
+    RenderTarget& mainRenderTarget,
+    RenderTarget& zprepassRenderTarget,
+    RenderTarget& normalRenderTarget,
+    RenderTarget& metallicSmoothRenderTarget,
+    RenderTarget& albedoRenderTarget
+)
 {
         m_rtVerticalBlur.Create(
             mainRenderTarget.GetWidth(), 
@@ -80,7 +86,7 @@ void Dof::Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRenderTarge
         );
 
     }
-void Dof::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
+void Dof::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
     if (m_isEnable == false) {
         return;

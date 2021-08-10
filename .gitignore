@@ -328,7 +328,8 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-/Sample/DemoGame_00
+/Sample/DemoGame_00/k2Engine
+/Sample/DemoGame_00/k2EngineLow
 /Sample/DemoGame_01/k2Engine
 /Sample/DemoGame_01/k2EngineLow
 /Sample/Sample_06/k2Engine

@@ -1,21 +1,45 @@
 #pragma once
+
+#include "graphics/PostEffectBase.h"
+
 /// <summary>
 /// FXAA。
 /// </summary>
-class Fxaa : public Noncopyable
+class Fxaa : public PostEffectBase
 {
 public:
     /// <summary>
     /// 初期化。
     /// </summary>
     /// <param name="mainRenderTarget">メインレンダーターゲット。</param>
-    void Init(RenderTarget& mainRenderTarget);
+    void OnInit(
+        RenderTarget& mainRenderTarget,
+        RenderTarget& zprepassRenderTarget,
+        RenderTarget& normalRenderTarget,
+        RenderTarget& metallicSmoothRenderTarget,
+        RenderTarget& albedoRenderTarget ) override;
     /// <summary>
     /// 描画。
     /// </summary>
     /// <param name="rc">レンダ―コンテキスト。</param>
     /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
-    void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
+    void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
+    /// <summary>
+    /// ポストエフェクトを実行した結果となるテクスチャを取得。
+    /// </summary>
+    /// <returns></returns>
+    Texture& GetResultTexture() override
+    {
+        return m_fxaaRt.GetRenderTargetTexture();
+    }
+    /// <summary>
+    /// ポストの結果の画像をメインレンダリングターゲットにコピーする？
+    /// </summary>
+    /// <returns></returns>
+    bool IsCopyResultTextureToMainRenderTarget() const override
+    {
+        return true;
+    }
 private:
 
     struct FaxxBuffer
@@ -23,7 +47,8 @@ private:
         float bufferW;
         float bufferH;
     }; 
-
-    Sprite m_finalSprite;				//最終合成用のスプライト
-    FaxxBuffer m_cB;                    //解像度をGPUに送るための定数バッファ―。
+    RenderTarget m_fxaaRt;  // FXAAを行うレンダリングターゲット。
+    Sprite m_finalSprite;	// 最終合成用のスプライト
+    Sprite m_copySprite;    //　
+    FaxxBuffer m_cB;        // 解像度をGPUに送るための定数バッファ―。
 };

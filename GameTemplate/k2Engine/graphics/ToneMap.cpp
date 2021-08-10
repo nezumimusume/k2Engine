@@ -43,8 +43,13 @@ ToneMap::~ToneMap()
 
 }
 
-void ToneMap::Init(RenderTarget& mainRenderTarget)
-{
+void ToneMap::OnInit(
+	RenderTarget& mainRenderTarget,
+	RenderTarget& zprepassRenderTarget,
+	RenderTarget& normalRenderTarget,
+	RenderTarget& metallicSmoothRenderTarget,
+	RenderTarget& albedoRenderTarget
+){
 	float w = mainRenderTarget.GetWidth();
 	float h = mainRenderTarget.GetHeight();
 	// 平均輝度計算用のレンダリングターゲットを作成。
@@ -55,7 +60,7 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 			rtSize,
 			1,
 			1,
-			mainRenderTarget.GetColorBufferFormat(),
+			DXGI_FORMAT_R32_FLOAT,
 			DXGI_FORMAT_UNKNOWN
 		);
 	}
@@ -66,7 +71,7 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 			1,
 			1,
 			1,
-			mainRenderTarget.GetColorBufferFormat(),
+			DXGI_FORMAT_R32_FLOAT,
 			DXGI_FORMAT_UNKNOWN
 		);
 	}
@@ -141,6 +146,19 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 
 		m_calcAdapteredLuminanceSprite.Init(initData);
 	}
+	{
+		SpriteInitData initData;
+		initData.m_width = mainRenderTarget.GetWidth();
+		initData.m_height = mainRenderTarget.GetHeight();
+		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
+		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
+		initData.m_psEntryPoinFunc = "PSCalcAdaptedLuminanceFirst";
+		initData.m_expandConstantBuffer = &m_tonemapParam;
+		initData.m_expandConstantBufferSize = sizeof(m_tonemapParam);
+		initData.m_textures[0] = &m_calcAvgRt[enCalcAvgExp].GetRenderTargetTexture();
+
+		m_calcAdapteredLuminanceFisrtSprite.Init(initData);
+	}
 	// 最終合成
 	{
 		SpriteInitData initData;
@@ -156,18 +174,6 @@ void ToneMap::Init(RenderTarget& mainRenderTarget)
 		initData.m_textures[2] = &m_avgRt[1].GetRenderTargetTexture();
 		m_finalSprite.Init(initData);
 	}
-	{
-		SpriteInitData initData;
-		initData.m_width = mainRenderTarget.GetWidth();
-		initData.m_height = mainRenderTarget.GetHeight();
-		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
-		initData.m_fxFilePath = "Assets/shader/Sprite.fx";
-		initData.m_textures[0] = &m_finalRt.GetRenderTargetTexture();
-		
-		m_copySprite.Init(initData);
-	}
-	
-
 }
 void ToneMap::CalcLuminanceAvarage(RenderContext& rc)
 {
@@ -194,8 +200,11 @@ void ToneMap::CalcLuminanceAvarage(RenderContext& rc)
 		
 	}
 }
-void ToneMap::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
+void ToneMap::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
+	if (!m_isEnable) {
+		return;
+	}
 	CalcLuminanceAvarage(rc);
 
 	// 明暗順応
@@ -205,7 +214,17 @@ void ToneMap::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	// レンダリングターゲットを設定
 	rc.SetRenderTargetAndViewport(m_avgRt[m_currentAvgRt]);
 
-	m_calcAdapteredLuminanceSprite.Draw(rc);
+	if (m_isFirstWhenChangeScene) {
+		m_changeSceneTimer -= g_gameTime->GetFrameDeltaTime();
+		if (m_changeSceneTimer > 0.0f) {
+			// シーン切り替え終了。
+			m_isFirstWhenChangeScene = false;
+		}
+		m_calcAdapteredLuminanceFisrtSprite.Draw(rc);
+	}
+	else {
+		m_calcAdapteredLuminanceSprite.Draw(rc);
+	}
 
 	// レンダリングターゲットへの書き込み終了待ち
 	rc.WaitUntilFinishDrawingToRenderTarget(m_avgRt[m_currentAvgRt]);
@@ -224,12 +243,4 @@ void ToneMap::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 
 	m_currentAvgRt = 1 ^ m_currentAvgRt;
 	
-	// レンダリングターゲットとして利用できるまで待つ
-	rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-	// レンダリングターゲットを設定
-	rc.SetRenderTargetAndViewport(mainRenderTarget);
-	m_copySprite.Draw(rc);
-
-	// レンダリングターゲットへの書き込み終了待ち
-	rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 }

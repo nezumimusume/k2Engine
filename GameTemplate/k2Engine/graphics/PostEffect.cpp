@@ -13,37 +13,63 @@ void PostEffect::Init(
     RenderTarget& albedoRenderTarget
 )
 {
-    m_bloom.Init(mainRenderTarget);
-    m_dof.Init(mainRenderTarget, zprepassRenderTarget);
-    m_fXaa.Init(mainRenderTarget);
-    m_tonemap.Init(mainRenderTarget);
+    m_bloom.Init(
+        mainRenderTarget,
+        zprepassRenderTarget,
+        normalRenderTarget,
+        metallicSmoothRenderTarget,
+        albedoRenderTarget
+    );
+    m_dof.Init(
+        mainRenderTarget,
+        zprepassRenderTarget,
+        normalRenderTarget,
+        metallicSmoothRenderTarget,
+        albedoRenderTarget
+    );
+    m_fXaa.Init(
+        mainRenderTarget, 
+        zprepassRenderTarget, 
+        normalRenderTarget,
+        metallicSmoothRenderTarget,
+        albedoRenderTarget
+    );
+    m_tonemap.Init(
+        mainRenderTarget,
+        zprepassRenderTarget,
+        normalRenderTarget,
+        metallicSmoothRenderTarget,
+        albedoRenderTarget
+    );
     m_ssao.Init(mainRenderTarget);
     m_ssr.Init(
         mainRenderTarget, 
         zprepassRenderTarget, 
         normalRenderTarget,
         metallicSmoothRenderTarget,
-        albedoRenderTarget);
+        albedoRenderTarget
+    );
 }
 void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 {   
     //m_ssao.Render(rc, mainRenderTarget);
-
+    // SSR
     m_ssr.Render(rc, mainRenderTarget);
+    // トーンマップ
     m_tonemap.Render(rc, mainRenderTarget);
 
     g_renderingEngine->SetMainRenderTargetAndDepthStencilBuffer(rc);
 
     //メインレンダーターゲットをPRESENTからRENDERTARGETへ。
     rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-    //ここでエフェクトドローするよ。
+    //ここでエフェクトドロー。
     EffectEngine::GetInstance()->Draw();
     //メインレンダーターゲットをTARGETからPRESENTへ。
     rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
-
-    
+    // ブルーム
     m_bloom.Render(rc, mainRenderTarget);
+    // DOF
     m_dof.Render(rc, mainRenderTarget);
-    
+    // FXAA
     m_fXaa.Render(rc, mainRenderTarget);
 }

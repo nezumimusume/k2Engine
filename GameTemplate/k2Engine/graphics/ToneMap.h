@@ -1,5 +1,8 @@
 #pragma once
-class ToneMap : public Noncopyable
+
+#include "graphics/PostEffectBase.h"
+
+class ToneMap : public PostEffectBase
 {
 public:
 	ToneMap();
@@ -9,11 +12,55 @@ public:
 	/// </summary>
 	/// <param name="rc">レンダ―コンテキスト。</param>
 	/// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
-	void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
+	void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
 	/// <summary>
 	/// 初期化。
 	/// </summary>
-	void Init(RenderTarget& mainRenderTarget);
+	void OnInit(
+		RenderTarget& mainRenderTarget,
+		RenderTarget& zprepassRenderTarget,
+		RenderTarget& normalRenderTarget,
+		RenderTarget& metallicSmoothRenderTarget,
+		RenderTarget& albedoRenderTarget) override;
+	/// <summary>
+    /// ポストエフェクトを実行した結果となるテクスチャを取得。
+    /// </summary>
+    /// <returns></returns>
+	Texture& GetResultTexture() override
+	{
+		return m_finalRt.GetRenderTargetTexture();
+	}
+	/// <summary>
+	/// ポストの結果の画像をメインレンダリングターゲットにコピーする？
+	/// </summary>
+	/// <returns></returns>
+	bool IsCopyResultTextureToMainRenderTarget() const override
+	{
+		return true;
+	}
+	/// <summary>
+	/// シーンが切り替わったことを通知。
+	/// </summary>
+	/// <param name="timer"></param>
+	void NotifyChangeScene(float timer)
+	{
+		m_isFirstWhenChangeScene = timer;
+		m_changeSceneTimer = timer;
+	}
+	/// <summary>
+	/// トーンマップを有効にする。
+	/// </summary>
+	void Enable()
+	{
+		m_isEnable = true;
+	}
+	/// <summary>
+	/// トーンマップを無効にする。
+	/// </summary>
+	void Disable()
+	{
+		m_isEnable = false;
+	}
 private:
 	/// <summary>
 	/// 平均輝度を計算する。
@@ -43,13 +90,14 @@ private:
 	int m_currentAvgRt = 0;						// 
 	Sprite m_calcAvgSprites[enNumCalcAvgSprite];
 	Sprite m_calcAdapteredLuminanceSprite;		// 明暗順応用のスプライト。
-	Sprite m_calsAdapteredLuminanceFisrtSprite;	// 明暗順応用のスプライト。(シーンが切り替わったときに使用される。)
+	Sprite m_calcAdapteredLuminanceFisrtSprite;	// 明暗順応用のスプライト。(シーンが切り替わったときに使用される。)
 	Sprite m_finalSprite;						// 最終合成用のスプライト。
-	Sprite m_copySprite;
 
 	bool m_isFirstWhenChangeScene = true;			//!<シーンが切り替わって初回の描画かどうかのフラグ。
 	Vector4 m_avSampleOffsets[MAX_SAMPLES];
 	RenderTarget m_finalRt;						// 最終合成レンダリングターゲット。
 	STonemapParam m_tonemapParam;
+	bool m_isEnable = true;					// トーンマップが有効？
+	float m_changeSceneTimer = 0.5f;		// シーン切り替えタイマー。
 }; 
 

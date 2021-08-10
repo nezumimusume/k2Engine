@@ -3,21 +3,33 @@
 /// <summary>
 /// 被写界深度。
 /// </summary>
-class Dof : public Noncopyable
+class Dof : public PostEffectBase
 {
 public:
     /// <summary>
-    /// 初期化
+    /// 初期化。
     /// </summary>
-    /// <param name="mainRenderTarget">メインレンダリングターゲット</param>
-    /// <param name="zprepassRenderTarget">ZPrepass</param>
-    void Init(RenderTarget& mainRenderTarget, RenderTarget& zprepassRenderTarget);
+    /// <param name="mainRenderTarget">メインレンダーターゲット。</param>
+    void OnInit(
+        RenderTarget& mainRenderTarget,
+        RenderTarget& zprepassRenderTarget,
+        RenderTarget& normalRenderTarget,
+        RenderTarget& metallicSmoothRenderTarget,
+        RenderTarget& albedoRenderTarget) override;
     /// <summary>
-    /// 描画
+    /// 描画。
     /// </summary>
-    /// <param name="rc">レンダリングコンテキスト</param>
-    /// <param name="mainRenderTarget">メインレンダリングターゲット</param>
-    void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
+    /// <param name="rc">レンダ―コンテキスト。</param>
+    /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
+    void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
+    /// <summary>
+    /// ポストエフェクトを実行した結果となるテクスチャを取得。
+    /// </summary>
+    /// <returns></returns>
+    Texture& GetResultTexture() override
+    {
+        return m_rtPhomboidBlur.GetRenderTargetTexture();
+    }
     /// <summary>
     /// 被写界深度を有効にする。
     /// </summary>

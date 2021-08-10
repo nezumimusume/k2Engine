@@ -1,22 +1,38 @@
 #pragma once
 
+#include "graphics/PostEffectBase.h"
+
+
 /// <summary>
 /// ブルーム。
 /// </summary>
-class Bloom : public Noncopyable
+class Bloom : public PostEffectBase
 {
 public:
     /// <summary>
     /// 初期化。
     /// </summary>
     /// <param name="mainRenderTarget">メインレンダーターゲット。</param>
-    void Init(RenderTarget& mainRenderTarget);
+    void OnInit(
+        RenderTarget& mainRenderTarget,
+        RenderTarget& zprepassRenderTarget,
+        RenderTarget& normalRenderTarget,
+        RenderTarget& metallicSmoothRenderTarget,
+        RenderTarget& albedoRenderTarget) override;
     /// <summary>
     /// 描画。
     /// </summary>
     /// <param name="rc">レンダ―コンテキスト。</param>
     /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
-    void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
+    void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
+    /// <summary>
+    /// ポストエフェクトを実行した結果となるテクスチャを取得。
+    /// </summary>
+    /// <returns></returns>
+    Texture& GetResultTexture() override
+    {
+        return m_luminanceRenderTarget.GetRenderTargetTexture();
+    }
 private:
     RenderTarget m_luminanceRenderTarget;	//輝度抽出用のレンダリングターゲット
     Sprite m_luminanceSprite;				//輝度抽出用のスプライト

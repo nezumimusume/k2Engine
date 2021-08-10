@@ -145,7 +145,7 @@ void RenderingEngine::InitCopyMainRenderTargetToFrameBufferSprite()
 
     // ガンマ補正ありの2D描画のシェーダーを指定する
     spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
-    spriteInitData.m_psEntryPoinFunc = "PSMainGamma";
+    spriteInitData.m_psEntryPoinFunc = "PSMain";
     spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
     // 初期化オブジェクトを使って、スプライトを初期化する

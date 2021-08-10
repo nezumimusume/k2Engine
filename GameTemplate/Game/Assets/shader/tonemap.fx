@@ -3,7 +3,7 @@
  */
 
 struct VSInput{
-	float4 pos : SV_Position;
+	float4 pos : POSITION;
 	float2 uv  : TEXCOORD0;
 };
 struct PSInput{
@@ -11,10 +11,17 @@ struct PSInput{
 	float2 uv  : TEXCOORD0;
 };
 
+cbuffer cb : register(b0)
+{
+    float4x4 mvp;       // MVP行列
+    float4 mulColor;    // 乗算カラー
+};
+
 //トーンマップの共通定数バッファ。
 cbuffer cbTonemapCommon : register(b1){
 	float deltaTime;
 	float middleGray;
+    int currentAvgTexNo;
 }
 
 /*!
@@ -23,11 +30,78 @@ cbuffer cbTonemapCommon : register(b1){
 PSInput VSMain(VSInput In) 
 {
 	PSInput psIn;
-	psIn.pos = In.pos;
-	psIn.uv = In.uv;
-	return psIn;
+    psIn.pos = mul(mvp, In.pos);
+    psIn.uv = In.uv;
+    return psIn;
 }
 
+float3 Rgb2Hsv(float3 rgb)
+{
+    float3 hsv;
+    
+    // RGB 2 HSV
+    float fMax = max(rgb.r, max(rgb.g, rgb.b));
+    float fMin = min(rgb.r, min(rgb.g, rgb.b));
+    float delta = fMax - fMin;
+
+	hsv.z = fMax; // v
+	if (fMax != 0.0){
+	    hsv.y = delta / fMax;//s
+	}else{
+	    hsv.y = 0.0;//s
+    }
+	
+//	if (hsv.y == 0.0) {
+//		hsv.x = NO_HUE; // h
+//	} else {
+      if ( rgb.r == fMax ){
+          hsv.x =     (rgb.g - rgb.b) / delta;// h
+      }else if (rgb.g == fMax){
+          hsv.x = 2 + (rgb.b - rgb.r) / delta;// h
+      }else{
+          hsv.x = 4 + (rgb.r - rgb.g) / delta;// h
+      }
+      hsv.x /= 6.0;
+      if (hsv.x < 0) hsv.x += 1.0;
+//  }
+
+    return hsv;
+}
+// RGBからHSVのV(輝度)を求める
+float Rgb2V( float3 rgb)
+{
+    return max(rgb.r, max(rgb.g, rgb.b));
+}
+float3 Hsv2Rgb(float3 hsv)
+{
+    float3 ret;
+    // HSV 2 RGB
+    if ( hsv.y == 0 ){ /* Grayscale */
+        ret.r = ret.g = ret.b = hsv.z;// v
+    } else {
+        if (1.0 <= hsv.x) hsv.x -= 1.0;
+        hsv.x *= 6.0;
+        float i = floor (hsv.x);
+        float f = hsv.x - i;
+        float aa = hsv.z * (1 - hsv.y);
+        float bb = hsv.z * (1 - (hsv.y * f));
+        float cc = hsv.z * (1 - (hsv.y * (1 - f)));
+        if( i < 1 ){
+	        ret.r = hsv.z; ret.g = cc;    ret.b = aa;
+        }else if( i < 2 ){
+	    	ret.r = bb;    ret.g = hsv.z; ret.b = aa;
+        }else if( i < 3 ){
+    		ret.r = aa;    ret.g = hsv.z; ret.b = cc;
+        }else if( i < 4 ){
+    		ret.r = aa;    ret.g = bb;    ret.b = hsv.z;
+        }else if( i < 5 ){
+    		ret.r = cc;    ret.g = aa;    ret.b = hsv.z;
+        }else{
+    		ret.r = hsv.z; ret.g = aa;    ret.b = bb;
+        }
+    }
+	return ret;
+}
 ////////////////////////////////////////////////////////
 // 輝度の対数平均を求める。
 ////////////////////////////////////////////////////////
@@ -54,13 +128,12 @@ float4 PSCalcLuminanceLogAvarage(PSInput In) : SV_Target0
 
     for(int iSample = 0; iSample < 9; iSample++)
     {
-        // Compute the sum of log(luminance) throughout the sample points
-        vSample = sceneTexture.Sample(Sampler, In.uv+g_avSampleOffsets[iSample].xy);
-        float d = dot(vSample, LUMINANCE_VECTOR)+0.0001f;
-        fLogLumSum += log(d);
+
+        vSample = max( sceneTexture.Sample(Sampler, In.uv+g_avSampleOffsets[iSample].xy), 0.001f );
+        float v = Rgb2V( vSample );
+        fLogLumSum += log(v);
     }
     
-    // Divide the sum to complete the average
     fLogLumSum /= 9;
 
     return float4(fLogLumSum, fLogLumSum, fLogLumSum, 1.0f);
@@ -114,15 +187,21 @@ float4 PSCalcLuminanceExpAvarage( PSInput In ) : SV_Target0
 // 明暗順応
 /////////////////////////////////////////////////////////
 
-Texture2D<float4> lumAvgTexture : register(t1);		//平均輝度
-Texture2D<float4> lastLumAvgTexture : register(t2);	//一フレーム前の平均輝度
+Texture2D<float4> lumAvgTexture : register(t0);		        //平均輝度
+Texture2D<float4> lastLumAvgTextureArray[2] : register(t1);	//１フレーム前の平均輝度の配列
 
 /*!
  *@brief	明暗順応のための平均輝度の適合させるピクセルシェーダー。
  */
 float4 PSCalcAdaptedLuminance( PSInput In ) : SV_Target0
 {
-	float fAdaptedLum = lastLumAvgTexture.Sample(Sampler, float2(0.5f, 0.5f));
+	float fAdaptedLum;
+    
+    if( currentAvgTexNo == 0){
+        fAdaptedLum = lastLumAvgTextureArray[1].Sample(Sampler, float2( 0.5f, 0.5f));
+    }else{
+        fAdaptedLum = lastLumAvgTextureArray[0].Sample(Sampler, float2( 0.5f, 0.5f));
+    } 
     float fCurrentLum = lumAvgTexture.Sample(Sampler, float2(0.5f, 0.5f));
     
     // The user's adapted luminance level is simulated by closing the gap between
@@ -138,15 +217,40 @@ float4 PSCalcAdaptedLuminanceFirst(PSInput In) : SV_Target0
 	return float4(fAvgLum, fAvgLum, fAvgLum, 1.0f);
 }
 
+
+float ACESFilm(float x)
+{
+    float a = 2.51f;
+    float b = 0.03f;
+    float c = 2.43f;
+    float d = 0.59f;
+    float e = 0.14f;
+    return saturate((x*(a*x+b))/(x*(c*x+d)+e));
+}
+
 /*!
  *@brief	平均輝度からトーンマップを行うピクセルシェーダー。
  */
 float4 PSFinal( PSInput In) : SV_Target0
 {
+    
 	float4 vSample = sceneTexture.Sample(Sampler, In.uv );
-	float fAvgLum = lumAvgTexture.Sample(Sampler, float2( 0.5f, 0.5f));
-	
-	vSample.rgb *= middleGray/max( 0.0001f, fAvgLum );
-//	vSample.rgb /= (1.0f+vSample);
-	return vSample;
+    float3 hsv = Rgb2Hsv(vSample.xyz);
+
+	float fAvgLum = 0.0f;
+    if( currentAvgTexNo == 0){
+        fAvgLum = lastLumAvgTextureArray[0].Sample(Sampler, float2( 0.5f, 0.5f)).r;
+    }else{
+        fAvgLum = lastLumAvgTextureArray[1].Sample(Sampler, float2( 0.5f, 0.5f)).r;
+    }
+    // 明るさをトーンマップする。
+    hsv.z = ( middleGray / ( max(fAvgLum, 0.001f ))) * hsv.z;
+    hsv.z = ACESFilm(hsv.z);
+
+    // HSVをRGBに変換して出力
+    float4 color;
+    color.xyz = Hsv2Rgb(hsv);
+    color.w= 1.0f;
+    
+	return color;
 }

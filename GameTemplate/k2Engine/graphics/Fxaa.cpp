@@ -1,8 +1,13 @@
 #include "k2EnginePreCompile.h"
 #include "Fxaa.h"
 
-void Fxaa::Init(RenderTarget& mainRenderTarget)
-{
+void Fxaa::OnInit(
+    RenderTarget& mainRenderTarget,
+    RenderTarget& zprepassRenderTarget,
+    RenderTarget& normalRenderTarget,
+    RenderTarget& metallicSmoothRenderTarget,
+    RenderTarget& albedoRenderTarget
+){
     // 最終合成用のスプライトを初期化する
     SpriteInitData spriteInitData;
     spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
@@ -22,19 +27,30 @@ void Fxaa::Init(RenderTarget& mainRenderTarget)
     spriteInitData.m_expandConstantBufferSize = sizeof(FaxxBuffer) + 
         (16 - (sizeof(FaxxBuffer) % 16));
     m_finalSprite.Init(spriteInitData);
+
+    m_fxaaRt.Create(
+        mainRenderTarget.GetWidth(),
+        mainRenderTarget.GetHeight(),
+        1,
+        1,
+        mainRenderTarget.GetColorBufferFormat(),
+        DXGI_FORMAT_UNKNOWN
+    );
+    
+
 }
 
-void Fxaa::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
+void Fxaa::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
     // レンダリングターゲットとして利用できるまで待つ
-    rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
+    rc.WaitUntilToPossibleSetRenderTarget(/*mainRenderTarget*/m_fxaaRt);
     // レンダリングターゲットを設定
-    rc.SetRenderTargetAndViewport(mainRenderTarget);
+    rc.SetRenderTargetAndViewport(/*mainRenderTarget*/m_fxaaRt);
     m_cB.bufferW = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
     m_cB.bufferH = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
     //描画。
     m_finalSprite.Draw(rc);
     // レンダリングターゲットへの書き込み終了待ち
     //メインレンダ―ターゲットをRENDERTARGETからPRESENTへ。
-    rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+    rc.WaitUntilFinishDrawingToRenderTarget(/*mainRenderTarget*/m_fxaaRt);
 }

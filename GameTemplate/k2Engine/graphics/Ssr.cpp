@@ -1,7 +1,7 @@
 #include "k2EnginePreCompile.h"
 #include "graphics/ssr.h"
 
-void Ssr::Init(
+void Ssr::OnInit(
 	RenderTarget& mainRenderTarget, 
 	RenderTarget& depthRenderTarget,
 	RenderTarget& normalRenderTarget,
@@ -65,11 +65,23 @@ void Ssr::Init(
 		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 		
 		m_finalSprite.Init(initData);
+
+		m_finalRt.Create(
+			mainRenderTarget.GetWidth(),
+			mainRenderTarget.GetHeight(),
+			1,
+			1,
+			mainRenderTarget.GetColorBufferFormat(),
+			DXGI_FORMAT_UNKNOWN
+		);
 	}
 
 }
-void Ssr::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
+void Ssr::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
+	if (!m_isEnable) {
+		return;
+	}
 	// レンダリングターゲットとして利用できるまで待つ
 	rc.WaitUntilToPossibleSetRenderTarget(m_reflectionRt);
 	// レンダリングターゲットを設定
@@ -89,11 +101,11 @@ void Ssr::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	m_blur.ExecuteOnGPU(rc, 2.0f);
 
 	// レンダリングターゲットとして利用できるまで待つ
-	rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
+	rc.WaitUntilToPossibleSetRenderTarget(m_finalRt);
 	// レンダリングターゲットを設定
-	rc.SetRenderTargetAndViewport(mainRenderTarget);
+	rc.SetRenderTargetAndViewport(m_finalRt);
 
 	m_finalSprite.Draw(rc);
 	// レンダリングターゲットへの書き込み終了待ち
-	rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+	rc.WaitUntilFinishDrawingToRenderTarget(m_finalRt);
 }

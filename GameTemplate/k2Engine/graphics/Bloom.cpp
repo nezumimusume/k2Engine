@@ -1,7 +1,13 @@
 #include "k2EnginePreCompile.h"
 #include "Bloom.h"
 
-void Bloom::Init(RenderTarget& mainRenderTarget)
+void Bloom::OnInit(
+        RenderTarget& mainRenderTarget,
+        RenderTarget& zprepassRenderTarget,
+        RenderTarget& normalRenderTarget,
+        RenderTarget& metallicSmoothRenderTarget,
+        RenderTarget& albedoRenderTarget
+)
 {
         m_luminanceRenderTarget.Create(
             mainRenderTarget.GetWidth(),   // 解像度はメインレンダリングターゲットと同じ
@@ -63,7 +69,7 @@ void Bloom::Init(RenderTarget& mainRenderTarget)
             m_finalSprite.Init(spriteInitData);
         }
     }
-void Bloom::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
+void Bloom::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
     // 輝度抽出
     // 輝度抽出用のレンダリングターゲットに変更

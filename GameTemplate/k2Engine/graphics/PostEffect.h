@@ -32,6 +32,19 @@ public:
     /// <param name="rc">レンダ―コンテキスト。</param>
     /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
     void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
+    /// <summary>
+    /// シーンが切り替わったことを通知する。
+    /// </summary>
+    /// <remark>
+    /// シーンの連続性を利用したグラフィック処理のための関数です。
+    /// 明暗順応、TAA等の処理は、シーンが切り替わったときにこの関数を呼び出さないと
+    /// 数フレームの間、表現が多少おかしくなります。
+    /// </remark>
+    /// <param name="changeSceneTime">シーン切り替えにかかる時間。</param>
+    void NotifyChangeScene(float changeSceneTime)
+    {
+        m_tonemap.NotifyChangeScene(changeSceneTime);
+    }
 private:
     Bloom m_bloom;	    //ブルーム
     Dof m_dof;		    //被写界深度

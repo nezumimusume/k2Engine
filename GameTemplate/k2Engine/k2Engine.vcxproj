@@ -32,6 +32,7 @@
     <ClCompile Include="graphics\LightCulling.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\PostEffect.cpp" />
+    <ClCompile Include="graphics\PostEffectBase.cpp" />
     <ClCompile Include="graphics\RenderingEngine.cpp" />
     <ClCompile Include="graphics\SceneLight.cpp" />
     <ClCompile Include="graphics\ShadowMapRender.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\MyRenderer.h" />
     <ClInclude Include="graphics\PostEffect.h" />
+    <ClInclude Include="graphics\PostEffectBase.h" />
     <ClInclude Include="graphics\RenderingEngine.h" />
     <ClInclude Include="graphics\SceneLight.h" />
     <ClInclude Include="graphics\ShadowMapRender.h" />
