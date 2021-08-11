@@ -135,7 +135,7 @@ void ToneMap::OnInit(
 		SpriteInitData initData;
 		initData.m_width = mainRenderTarget.GetWidth();
 		initData.m_height = mainRenderTarget.GetHeight();
-		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
+		initData.m_colorBufferFormat[0] = m_calcAvgRt[enCalcAvgExp].GetColorBufferFormat();
 		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
 		initData.m_psEntryPoinFunc = "PSCalcAdaptedLuminance";
 		initData.m_expandConstantBuffer = &m_tonemapParam;
@@ -150,7 +150,7 @@ void ToneMap::OnInit(
 		SpriteInitData initData;
 		initData.m_width = mainRenderTarget.GetWidth();
 		initData.m_height = mainRenderTarget.GetHeight();
-		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
+		initData.m_colorBufferFormat[0] = m_calcAvgRt[enCalcAvgExp].GetColorBufferFormat();
 		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
 		initData.m_psEntryPoinFunc = "PSCalcAdaptedLuminanceFirst";
 		initData.m_expandConstantBuffer = &m_tonemapParam;

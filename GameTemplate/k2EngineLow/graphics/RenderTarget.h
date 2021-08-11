@@ -65,6 +65,7 @@ public:
 	{
 		return m_depthStencilTexture;
 	}
+	
 	/// <summary>
 	/// レンダリングターゲットの幅を取得。
 	/// </summary>

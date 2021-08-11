@@ -20,7 +20,6 @@ void Fxaa::OnInit(
     spriteInitData.m_psEntryPoinFunc = "PSMain";
 
     spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
-    spriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 
     //解像度をGPUに送るための定数バッファを設定する。
     spriteInitData.m_expandConstantBuffer = (void*)&m_cB;
@@ -33,7 +32,7 @@ void Fxaa::OnInit(
         mainRenderTarget.GetHeight(),
         1,
         1,
-        mainRenderTarget.GetColorBufferFormat(),
+        DXGI_FORMAT_R8G8B8A8_UNORM, // HDR系のエフェクトは終了しているので、8bit整数バッファでＯＫ。
         DXGI_FORMAT_UNKNOWN
     );
     
@@ -43,14 +42,14 @@ void Fxaa::OnInit(
 void Fxaa::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 {
     // レンダリングターゲットとして利用できるまで待つ
-    rc.WaitUntilToPossibleSetRenderTarget(/*mainRenderTarget*/m_fxaaRt);
+    rc.WaitUntilToPossibleSetRenderTarget(m_fxaaRt);
     // レンダリングターゲットを設定
-    rc.SetRenderTargetAndViewport(/*mainRenderTarget*/m_fxaaRt);
+    rc.SetRenderTargetAndViewport(m_fxaaRt);
     m_cB.bufferW = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
     m_cB.bufferH = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
     //描画。
     m_finalSprite.Draw(rc);
     // レンダリングターゲットへの書き込み終了待ち
     //メインレンダ―ターゲットをRENDERTARGETからPRESENTへ。
-    rc.WaitUntilFinishDrawingToRenderTarget(/*mainRenderTarget*/m_fxaaRt);
+    rc.WaitUntilFinishDrawingToRenderTarget(m_fxaaRt);
 }

@@ -83,6 +83,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		
 		
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
+		
 		//レンダリングエンジンを実行。
 		//ここでエフェクトをドロー。
 		g_renderingEngine->Execute(renderContext);
