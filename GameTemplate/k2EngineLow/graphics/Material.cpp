@@ -157,7 +157,8 @@ void Material::InitFromTkmMaterila(
 	int numSrv,
 	int numCbv,
 	UINT offsetInDescriptorsFromTableStartCB,
-	UINT offsetInDescriptorsFromTableStartSRV
+	UINT offsetInDescriptorsFromTableStartSRV,
+	AlphaBlendMode alphaBlendMode
 )
 {
 	//テクスチャをロード。
@@ -207,11 +208,13 @@ void Material::InitFromTkmMaterila(
 		//シェーダーを初期化。
 		InitShaders(fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
 		//パイプラインステートを初期化。
-		InitPipelineState(colorBufferFormat);
+		InitPipelineState(colorBufferFormat, alphaBlendMode);
 	}
 }
-void Material::InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat)
-{
+void Material::InitPipelineState(
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
+	AlphaBlendMode alphaBlendMode
+){
 	// 頂点レイアウトを定義する。
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
 	{
@@ -233,6 +236,33 @@ void Material::InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TAR
 	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+	if (alphaBlendMode == AlphaBlendMode_Trans) {
+		//半透明合成のブレンドステートを作成する。
+		psoDesc.BlendState.RenderTarget[0].BlendEnable = true;
+		psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	}
+	else if (alphaBlendMode == AlphaBlendMode_Add) {
+		//加算合成。
+		psoDesc.BlendState.RenderTarget[0].BlendEnable = true;
+		psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
+		psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+		psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	}
+	else if (alphaBlendMode == AlphaBlendMode_Multiply) {
+		//乗算合成。
+		psoDesc.BlendState.RenderTarget[0].BlendEnable = true;
+		psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
+		psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
+		psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	}
+	else if (alphaBlendMode == AlphaBlendMode_None) {
+		//αブレンディングなし。
+		psoDesc.BlendState.RenderTarget[0].BlendEnable = false;
+	}
+
 	psoDesc.DepthStencilState.DepthEnable = TRUE;
 	psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;

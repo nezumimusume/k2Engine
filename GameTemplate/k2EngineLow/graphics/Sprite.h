@@ -13,15 +13,7 @@ const int EXPAND_SRV_REG__START_NO = 20;
 
 class IShaderResource;
 
-/// <summary>
-/// アルファブレンディングモード
-/// </summary>
-enum AlphaBlendMode {
-	AlphaBlendMode_None,	//アルファブレンディングなし(上書き)。
-	AlphaBlendMode_Trans,	//半透明合成
-	AlphaBlendMode_Add,		//加算合成
-	AlphaBlendMode_Multiply	//乗算合成
-};
+
 /// <summary>
 /// スプライトの初期化データ。
 /// </summary>

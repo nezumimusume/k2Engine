@@ -17,16 +17,17 @@ enum EnModelUpAxis {
 /// </summary>
 struct ModelInitData {
 	
-	const char* m_tkmFilePath = nullptr;							//tkmファイルパス。
-	const char* m_vsEntryPointFunc = "VSMain";						//頂点シェーダーのエントリーポイント。
-	const char* m_vsSkinEntryPointFunc = "VSMain";					//スキンありマテリアル用の頂点シェーダーのエントリーポイント。
-	const char* m_psEntryPointFunc = "PSMain";						//ピクセルシェーダーのエントリーポイント。
-	const char* m_fxFilePath = nullptr;								//.fxファイルのファイルパス。
-	void* m_expandConstantBuffer = nullptr;							//ユーザー拡張の定数バッファ。
-	int m_expandConstantBufferSize = 0;								//ユーザー拡張の定数バッファのサイズ。
-	std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };			//ユーザー拡張のシェーダーリソース。
-	Skeleton* m_skeleton = nullptr;									//スケルトン。
-	EnModelUpAxis m_modelUpAxis = enModelUpAxisZ;					//モデルの上方向。
+	const char* m_tkmFilePath = nullptr;							// tkmファイルパス。
+	const char* m_vsEntryPointFunc = "VSMain";						// 頂点シェーダーのエントリーポイント。
+	const char* m_vsSkinEntryPointFunc = "VSMain";					// スキンありマテリアル用の頂点シェーダーのエントリーポイント。
+	const char* m_psEntryPointFunc = "PSMain";						// ピクセルシェーダーのエントリーポイント。
+	const char* m_fxFilePath = nullptr;								// .fxファイルのファイルパス。
+	void* m_expandConstantBuffer = nullptr;							// ユーザー拡張の定数バッファ。
+	int m_expandConstantBufferSize = 0;								// ユーザー拡張の定数バッファのサイズ。
+	std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };			// ユーザー拡張のシェーダーリソース。
+	Skeleton* m_skeleton = nullptr;									// スケルトン。
+	EnModelUpAxis m_modelUpAxis = enModelUpAxisZ;					// モデルの上方向。
+	AlphaBlendMode m_alphaBlendMode = AlphaBlendMode_Trans;			// アルファブレンディングモード。
 	std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = { 
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		DXGI_FORMAT_UNKNOWN,

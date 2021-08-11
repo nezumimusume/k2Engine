@@ -20,7 +20,8 @@ public:
 		int numSrv,
 		int numCbv,
 		UINT offsetInDescriptorsFromTableStartCB,
-		UINT offsetInDescriptorsFromTableStartSRV
+		UINT offsetInDescriptorsFromTableStartSRV,
+		AlphaBlendMode alphaBlendMode
 	);
 	/// <summary>
 	/// レンダリングを開始するときに呼び出す関数。
@@ -81,7 +82,10 @@ private:
 	/// <summary>
 	/// パイプラインステートの初期化。
 	/// </summary>
-	void InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat);
+	void InitPipelineState(
+		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
+		AlphaBlendMode alphaBlendMode
+	);
 	/// <summary>
 	/// シェーダーの初期化。
 	/// </summary>

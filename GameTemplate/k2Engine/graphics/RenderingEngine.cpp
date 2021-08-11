@@ -96,7 +96,7 @@ void RenderingEngine::InitGBuffer()
         frameBuffer_h,
         1,
         1,
-        DXGI_FORMAT_R16G16B16A16_FLOAT,
+        DXGI_FORMAT_R8G8B8A8_SNORM,
         DXGI_FORMAT_UNKNOWN
     );
 

@@ -15,6 +15,16 @@
 #include "font/FontEngine.h"
 
 /// <summary>
+/// アルファブレンディングモード
+/// </summary>
+enum AlphaBlendMode {
+	AlphaBlendMode_None,	//アルファブレンディングなし(上書き)。
+	AlphaBlendMode_Trans,	//半透明合成
+	AlphaBlendMode_Add,		//加算合成
+	AlphaBlendMode_Multiply	//乗算合成
+};
+
+/// <summary>
 /// DirectX12に依存するグラフィックスエンジン
 /// </summary>
 class GraphicsEngine : public Noncopyable{
