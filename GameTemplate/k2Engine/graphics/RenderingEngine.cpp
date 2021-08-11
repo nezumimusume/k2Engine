@@ -91,8 +91,17 @@ void RenderingEngine::InitGBuffer()
     );
 
     // 法線出力用のレンダリングターゲットを初期化する
-    // todo DXGI_FORMAT_R32G32B32A32_FLOATもの精度は不要なので、後で、DXGI_FORMAT_R8G8B8A8_UNORMに変更する
     m_gBuffer[enGBufferNormal].Create(
+        frameBuffer_w,
+        frameBuffer_h,
+        1,
+        1,
+        DXGI_FORMAT_R16G16B16A16_FLOAT,
+        DXGI_FORMAT_UNKNOWN
+    );
+
+    // ワールド座標出力用のレンダリングターゲットを初期化する
+    m_gBuffer[enGBufferWorldPos].Create(
         frameBuffer_w,
         frameBuffer_h,
         1,
@@ -102,27 +111,17 @@ void RenderingEngine::InitGBuffer()
     );
 
     // メタリック、スムース出力用のレンダリングターゲットを初期化する
-    // todo DXGI_FORMAT_R32G32B32A32_FLOATもの精度は不要なので、後で、DXGI_FORMAT_R8G8B8A8_UNORMに変更する
+    
     m_gBuffer[enGBufferMetaricSmooth].Create(
         frameBuffer_w,
         frameBuffer_h,
         1,
         1,
-        DXGI_FORMAT_R32G32B32A32_FLOAT,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
         DXGI_FORMAT_UNKNOWN
     );
 
-    // ワールド座標出力用のレンダリングターゲットを初期化する
-    // todo DXGI_FORMAT_R32G32B32A32_FLOATもの精度は不要なので、
-    // あとで、DXGI_FORMAT_R8G8B8A8_UNORMに変更する
-    m_gBuffer[enGBufferWorldPos].Create(
-        frameBuffer_w,
-        frameBuffer_h,
-        1,
-        1,
-        DXGI_FORMAT_R32G32B32A32_FLOAT,
-        DXGI_FORMAT_UNKNOWN
-    );
+   
     m_gBuffer[enGBUfferShadowParam].Create(
         frameBuffer_w,
         frameBuffer_h,

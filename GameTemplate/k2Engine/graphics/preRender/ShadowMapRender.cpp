@@ -9,7 +9,7 @@ void ShadowMapRender::Init(bool isSoftShadow)
 
     DXGI_FORMAT colorFormat;
     if (isSoftShadow) {
-        colorFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+        colorFormat = DXGI_FORMAT_R32G32_FLOAT;
     }
     else {
         colorFormat = DXGI_FORMAT_R32_FLOAT;

@@ -23,8 +23,7 @@ void GaussianBlur::ExecuteOnGPU(RenderContext& rc, float blurPower)
 	rc.WaitUntilToPossibleSetRenderTarget(m_xBlurRenderTarget);
 	//レンダリングターゲットを設定。
 	rc.SetRenderTargetAndViewport(m_xBlurRenderTarget);
-	//レンダリングターゲットをクリア。
-	rc.ClearRenderTargetView(m_xBlurRenderTarget);
+	
 	//ドロー。
 	m_xBlurSprite.Draw(rc);
 	//レンダリングターゲットへの書き込み終了待ち。
@@ -35,8 +34,7 @@ void GaussianBlur::ExecuteOnGPU(RenderContext& rc, float blurPower)
 	rc.WaitUntilToPossibleSetRenderTarget(m_yBlurRenderTarget);
 	//レンダリングターゲットを設定。
 	rc.SetRenderTargetAndViewport(m_yBlurRenderTarget);
-	//レンダリングターゲットをクリア。
-	rc.ClearRenderTargetView(m_yBlurRenderTarget);
+	
 	//ドロー。
 	m_yBlurSprite.Draw(rc);
 	//レンダリングターゲットへの書き込み終了待ち。
@@ -54,7 +52,7 @@ void GaussianBlur::InitRenderTargets(bool isDownSample)
 		1,
 		1,
 		m_originalTexture->GetFormat(),
-		DXGI_FORMAT_D32_FLOAT
+		DXGI_FORMAT_UNKNOWN
 	);
 
 	//Yブラー用のレンダリングターゲットを作成する。
@@ -64,7 +62,7 @@ void GaussianBlur::InitRenderTargets(bool isDownSample)
 		1,
 		1,
 		m_originalTexture->GetFormat(),
-		DXGI_FORMAT_D32_FLOAT
+		DXGI_FORMAT_UNKNOWN
 	);
 }
 

@@ -15,7 +15,7 @@ void Bloom::OnInit(
             1,
             1,
             mainRenderTarget.GetColorBufferFormat(),
-            DXGI_FORMAT_D32_FLOAT
+            DXGI_FORMAT_UNKNOWN
         );
         {
             // 輝度抽出用のスプライトを初期化

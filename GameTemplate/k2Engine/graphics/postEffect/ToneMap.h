@@ -80,7 +80,7 @@ private:
 			enCalcAvg_0 = enCalcAvg_Start,	// 平均輝度を計算。
 			enCalcAvg_1,					// 平均輝度を計算。
 			enCalcAvg_2,					// 平均輝度を計算。	
-			enCalcAvg_3,
+			enCalcAvg_3,					// 平均輝度を計算する。
 		enCalcAvg_End,
 		enCalcAvgExp = enCalcAvg_End,		// exp()を用いて最終平均を求める。
 		enNumCalcAvgSprite

@@ -149,9 +149,9 @@ void ModelRender::InitModelOnRenderGBuffer(
 
 	modelInitData.m_tkmFilePath = tkmFilePath;
 	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	modelInitData.m_colorBufferFormat[1] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	modelInitData.m_colorBufferFormat[1] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	modelInitData.m_colorBufferFormat[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	modelInitData.m_colorBufferFormat[3] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	modelInitData.m_colorBufferFormat[4] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	if (m_isEnableInstancingDraw) {
 		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
@@ -215,7 +215,7 @@ void ModelRender::InitModelOnShadowMap(
 
 	modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
 	if (g_renderingEngine->IsSoftShadow()) {
-		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32_FLOAT;
 	}
 	else {
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
