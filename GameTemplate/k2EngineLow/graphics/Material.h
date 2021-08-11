@@ -21,7 +21,9 @@ public:
 		int numCbv,
 		UINT offsetInDescriptorsFromTableStartCB,
 		UINT offsetInDescriptorsFromTableStartSRV,
-		AlphaBlendMode alphaBlendMode
+		AlphaBlendMode alphaBlendMode,
+		bool isDepthWrite,
+		bool isDepthTest
 	);
 	/// <summary>
 	/// レンダリングを開始するときに呼び出す関数。
@@ -84,7 +86,9 @@ private:
 	/// </summary>
 	void InitPipelineState(
 		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
-		AlphaBlendMode alphaBlendMode
+		AlphaBlendMode alphaBlendMode,
+		bool isDepthWrite,
+		bool isDepthTest
 	);
 	/// <summary>
 	/// シェーダーの初期化。

@@ -64,7 +64,7 @@ public:
     /// <returns></returns>
     Texture& GetGBufferAlbedoTexture()
     {
-        return m_gBuffer[enGBufferAlbedo].GetRenderTargetTexture();
+        return m_gBuffer[enGBufferAlbedoDepth].GetRenderTargetTexture();
     }
     /// <summary>
     /// GBufferの法線テクスチャを取得。
@@ -73,14 +73,6 @@ public:
     Texture& GetGBufferNormalTexture()
     {
         return m_gBuffer[enGBufferNormal].GetRenderTargetTexture();
-    }
-    /// <summary>
-    /// GBufferのワールド座標テクスチャを取得。
-    /// </summary>
-    /// <returns></returns>
-    Texture& GetGBufferWorldTexture()
-    {
-        return m_gBuffer[enGBufferWorldPos].GetRenderTargetTexture();
     }
     /// <summary>
     /// 不透明オブジェクトの描画完了時のメインレンダリングターゲットの
@@ -108,7 +100,7 @@ public:
     }
     void SetMainRenderTargetAndDepthStencilBuffer(RenderContext& rc)
     {
-        rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_gBuffer[enGBufferAlbedo].GetDSVCpuDescriptorHandle());
+        rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_zprepassRenderTarget.GetDSVCpuDescriptorHandle());
     }
     /// <summary>
     /// ソフトシャドウを行うか判定。
@@ -238,9 +230,8 @@ private:
     // GBufferの定義
     enum EnGBuffer
     {
-        enGBufferAlbedo,        // アルベド
+        enGBufferAlbedoDepth,   // アルベドと深度値。αに深度値が記憶されています。
         enGBufferNormal,        // 法線
-        enGBufferWorldPos,      // ワールド座標
         enGBufferMetaricSmooth, // メタリックとスムース。メタリックがr、スムースがa。gbは未使用。
         enGBUfferShadowParam,   // 影パラメータ
         enGBufferNum,           // G-Bufferの数

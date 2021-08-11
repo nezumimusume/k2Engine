@@ -16,7 +16,6 @@ struct SPSIn
     float3 tangent  : TANGENT;      //接ベクトル。
     float3 biNormal : BINORMAL;     //従ベクトル。
     float2 uv : TEXCOORD0;          //UV座標。
-    float3 worldPos : TEXCOORD1;    // ワールド座標
 };
 
 // ピクセルシェーダーからの出力
@@ -24,9 +23,8 @@ struct SPSOut
 {
     float4 albedo : SV_Target0;         // アルベド
     float4 normal : SV_Target1;         // 法線
-    float4 worldPos : SV_Target2;       // ワールド座標
-    float4 metaricSmooth : SV_Target3;  // メタリックとスムース。rにメタリック、aにスムース。
-    float4 shadowParam : SV_Target4;    //影生成用パラメータ。
+    float4 metaricSmooth : SV_Target2;  // メタリックとスムース。rにメタリック、aにスムース。
+    float4 shadowParam : SV_Target3;    //影生成用パラメータ。
 };
 
 ///////////////////////////////////////
@@ -64,9 +62,6 @@ SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal)
     SPSIn psIn;
     
     psIn.pos = mul(mWorldLocal, vsIn.pos); // モデルの頂点をワールド座標系に変換
-    // 頂点シェーダーからワールド座標を出力
-    psIn.worldPos = psIn.pos;
-
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
     psIn.normal = normalize(mul(mWorldLocal, vsIn.normal));
@@ -98,16 +93,15 @@ SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
 {
     // G-Bufferに出力
     SPSOut psOut;
-    // アルベドカラーを出力
+    // アルベドカラーと深度値を出力
     psOut.albedo = g_albedo.Sample(g_sampler, psIn.uv);
+    psOut.albedo.w = psIn.pos.z;
     // 法線を出力
     psOut.normal.xyz = GetNormalFromNormalMap( 
         psIn.normal, psIn.tangent, psIn.biNormal, psIn.uv ) ;
     psOut.normal.w = 1.0f;
     // メタリックスムースを出力。
     psOut.metaricSmooth = g_spacular.Sample(g_sampler, psIn.uv);
-    // ワールド座標を出力。
-    psOut.worldPos = float4( psIn.worldPos, 1.0f);
     // 影パラメータ。
     psOut.shadowParam = 255.0f * isShadowReciever;
     return psOut;

@@ -54,7 +54,9 @@ public:
 		int expandDataSize,
 		const std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV>& expandShaderResourceView, 
 		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
-		AlphaBlendMode alphaBlendMode
+		AlphaBlendMode alphaBlendMode,
+		bool isDepthWrite,
+		bool isDepthTest
 	);
 	/// <summary>
 	/// ï`âÊÅB
@@ -115,7 +117,9 @@ private:
 		const char* vsSkinEntryPointFunc,
 		const char* psEntryPointFunc,
 		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
-		AlphaBlendMode alphaBlendMode
+		AlphaBlendMode alphaBlendMode,
+		bool isDepthWrite,
+		bool isDepthTest
 	);
 
 	

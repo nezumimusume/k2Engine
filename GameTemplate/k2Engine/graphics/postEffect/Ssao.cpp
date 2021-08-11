@@ -29,7 +29,8 @@ void Ssao::OnInit(
     SpriteInitData spriteInitData;
     spriteInitData.m_textures[0] = &g_renderingEngine->GetZPrepassDepthTexture();
     spriteInitData.m_textures[1] = &g_renderingEngine->GetGBufferNormalTexture();
-    spriteInitData.m_textures[2] = &g_renderingEngine->GetGBufferWorldTexture();
+    //todo ワールド座標のGBufferは廃止。アルベド深度テクスチャの深度値を利用して、ワールド座標を復元するように。
+    //spriteInitData.m_textures[2] = &g_renderingEngine->GetGBufferWorldTexture();
     // 解像度はmainRenderTargetの幅と高さ
     spriteInitData.m_width = mainRenderTarget.GetWidth();
     spriteInitData.m_height = mainRenderTarget.GetHeight();

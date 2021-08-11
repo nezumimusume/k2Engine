@@ -41,7 +41,9 @@ void Model::Init(const ModelInitData& initData)
 		initData.m_expandConstantBufferSize,
 		initData.m_expandShaderResoruceView,
 		initData.m_colorBufferFormat,
-		initData.m_alphaBlendMode
+		initData.m_alphaBlendMode,
+		initData.m_isDepthWrite,
+		initData.m_isDepthTest
 	);
 
 	UpdateWorldMatrix(g_vec3Zero, g_quatIdentity, g_vec3One);

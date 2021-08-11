@@ -69,7 +69,16 @@ inline void RenderContext::SetRenderTargets(UINT numRT, RenderTarget* renderTarg
 		//深度バッファがない。
 		m_commandList->OMSetRenderTargets(numRT, rtDSHandleTbl, FALSE, nullptr);
 	}
-
+}
+inline void RenderContext::SetRenderTargets(UINT numRT, RenderTarget* renderTargets[], D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE rtDSHandleTbl[32];
+	int rtNo = 0;
+	for (UINT rtNo = 0; rtNo < numRT; rtNo++) {
+		rtDSHandleTbl[rtNo] = renderTargets[rtNo]->GetRTVCpuDescriptorHandle();
+	}
+	//深度バッファを設定。
+	m_commandList->OMSetRenderTargets(numRT, rtDSHandleTbl, FALSE, &dsvHandle);
 }
 inline void RenderContext::SetRenderTargetAndViewport(RenderTarget& renderTarget)
 {

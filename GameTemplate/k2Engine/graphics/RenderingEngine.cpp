@@ -27,7 +27,7 @@ void RenderingEngine::Init(bool isSoftShadow)
         m_zprepassRenderTarget, 
         m_gBuffer[enGBufferNormal],
         m_gBuffer[enGBufferMetaricSmooth],
-        m_gBuffer[enGBufferAlbedo]);
+        m_gBuffer[enGBufferAlbedoDepth]);
     // シーンライト
     g_sceneLight = &m_sceneLight;
 }
@@ -81,13 +81,13 @@ void RenderingEngine::InitGBuffer()
     int frameBuffer_h = g_graphicsEngine->GetFrameBufferHeight();
 
     // アルベドカラーを出力用のレンダリングターゲットを初期化する
-    m_gBuffer[enGBufferAlbedo].Create(
+    m_gBuffer[enGBufferAlbedoDepth].Create(
         frameBuffer_w,
         frameBuffer_h,
         1,
         1,
         DXGI_FORMAT_R32G32B32A32_FLOAT,
-        DXGI_FORMAT_D32_FLOAT
+        DXGI_FORMAT_UNKNOWN
     );
 
     // 法線出力用のレンダリングターゲットを初期化する
@@ -100,18 +100,8 @@ void RenderingEngine::InitGBuffer()
         DXGI_FORMAT_UNKNOWN
     );
 
-    // ワールド座標出力用のレンダリングターゲットを初期化する
-    m_gBuffer[enGBufferWorldPos].Create(
-        frameBuffer_w,
-        frameBuffer_h,
-        1,
-        1,
-        DXGI_FORMAT_R32G32B32A32_FLOAT,
-        DXGI_FORMAT_UNKNOWN
-    );
 
-    // メタリック、スムース出力用のレンダリングターゲットを初期化する
-    
+    // メタリック、スムース出力用のレンダリングターゲットを初期化する    
     m_gBuffer[enGBufferMetaricSmooth].Create(
         frameBuffer_w,
         frameBuffer_h,
@@ -327,7 +317,7 @@ void RenderingEngine::ForwardRendering(RenderContext& rc)
     rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
     rc.SetRenderTarget(
         m_mainRenderTarget.GetRTVCpuDescriptorHandle(),
-        m_gBuffer[enGBufferAlbedo].GetDSVCpuDescriptorHandle()
+        m_zprepassRenderTarget.GetDSVCpuDescriptorHandle()
     );
     for (auto& renderObj : m_renderObjects) {
         renderObj->OnForwardRender(rc);
@@ -340,18 +330,17 @@ void RenderingEngine::RenderToGBuffer(RenderContext& rc)
 {
     // レンダリングターゲットをG-Bufferに変更
     RenderTarget* rts[enGBufferNum] = {
-        &m_gBuffer[enGBufferAlbedo],        // 0番目のレンダリングターゲット
+        &m_gBuffer[enGBufferAlbedoDepth],   // 0番目のレンダリングターゲット
         &m_gBuffer[enGBufferNormal],        // 1番目のレンダリングターゲット
-        &m_gBuffer[enGBufferWorldPos],      // 2番目のレンダリングターゲット
-        &m_gBuffer[enGBufferMetaricSmooth], // 3番目のレンダリングターゲット
-        &m_gBuffer[enGBUfferShadowParam],   // 4番目のレンダリングターゲット
+        &m_gBuffer[enGBufferMetaricSmooth], // 2番目のレンダリングターゲット
+        &m_gBuffer[enGBUfferShadowParam],   // 3番目のレンダリングターゲット
     };
 
     // まず、レンダリングターゲットとして設定できるようになるまで待つ
     rc.WaitUntilToPossibleSetRenderTargets(ARRAYSIZE(rts), rts);
 
     // レンダリングターゲットを設定
-    rc.SetRenderTargets(ARRAYSIZE(rts), rts);
+    rc.SetRenderTargets(ARRAYSIZE(rts), rts, m_zprepassRenderTarget.GetDSVCpuDescriptorHandle());
 
     // レンダリングターゲットをクリア
     rc.ClearRenderTargetViews(ARRAYSIZE(rts), rts);
@@ -384,6 +373,7 @@ void RenderingEngine::DeferredLighting(RenderContext& rc)
             m_deferredLightingCB.mlvp[i][areaNo] = m_shadowMapRenders[i].GetLVPMatrix(areaNo);
         }
     }
+    m_deferredLightingCB.m_light.mViewProjInv.Inverse(g_camera3D->GetViewProjectionMatrix());
 
     // レンダリング先をメインレンダリングターゲットにする
     // メインレンダリングターゲットを設定

@@ -188,7 +188,8 @@ public:
 	/// </remarks>
 	/// <param name="numRT">レンダリングターゲットの数</param>
 	/// <param name="renderTarget">レンダリングターゲットの配列。</param>
-	void SetRenderTargets(UINT numRT, RenderTarget* renderTargets[]);
+	void SetRenderTargets(UINT numRT, RenderTarget* renderTargets[] );
+	void SetRenderTargets(UINT numRT, RenderTarget* renderTargets[], D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
 	/// <summary>
 	/// レンダリングターゲットを設定する。
 	/// </summary>

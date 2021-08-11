@@ -158,7 +158,9 @@ void Material::InitFromTkmMaterila(
 	int numCbv,
 	UINT offsetInDescriptorsFromTableStartCB,
 	UINT offsetInDescriptorsFromTableStartSRV,
-	AlphaBlendMode alphaBlendMode
+	AlphaBlendMode alphaBlendMode,
+	bool isDepthWrite,
+	bool isDepthTest
 )
 {
 	//テクスチャをロード。
@@ -208,12 +210,14 @@ void Material::InitFromTkmMaterila(
 		//シェーダーを初期化。
 		InitShaders(fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
 		//パイプラインステートを初期化。
-		InitPipelineState(colorBufferFormat, alphaBlendMode);
+		InitPipelineState(colorBufferFormat, alphaBlendMode, isDepthWrite, isDepthTest);
 	}
 }
 void Material::InitPipelineState(
 	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
-	AlphaBlendMode alphaBlendMode
+	AlphaBlendMode alphaBlendMode,
+	bool isDepthWrite,
+	bool isDepthTest
 ){
 	// 頂点レイアウトを定義する。
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -262,9 +266,9 @@ void Material::InitPipelineState(
 		//αブレンディングなし。
 		psoDesc.BlendState.RenderTarget[0].BlendEnable = false;
 	}
-
-	psoDesc.DepthStencilState.DepthEnable = TRUE;
-	psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	
+	psoDesc.DepthStencilState.DepthEnable = isDepthTest;
+	psoDesc.DepthStencilState.DepthWriteMask = isDepthWrite ? D3D12_DEPTH_WRITE_MASK_ALL : D3D12_DEPTH_WRITE_MASK_ZERO  ;
 	psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	psoDesc.DepthStencilState.StencilEnable = FALSE;
 	psoDesc.SampleMask = UINT_MAX;

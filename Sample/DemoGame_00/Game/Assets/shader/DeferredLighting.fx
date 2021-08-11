@@ -72,10 +72,9 @@ cbuffer LightCb : register(b1)
 ///////////////////////////////////////
 Texture2D<float4> albedoTexture : register(t0);     // アルベド
 Texture2D<float4> normalTexture : register(t1);     // 法線
-Texture2D<float4> worldPosTexture : register(t2);   // ワールド座標
-Texture2D<float4> specularTexture : register(t3);   // スペキュラマップ。rgbにスペキュラカラー、aに金属度
-Texture2D<float4> shadowParamTexture : register(t4);   // スペキュラマップ。rgbにスペキュラカラー、aに金属度
-Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t5);  //シャドウマップ。
+Texture2D<float4> specularTexture : register(t2);   // スペキュラマップ。rgbにスペキュラカラー、aに金属度
+Texture2D<float4> shadowParamTexture : register(t3);   // スペキュラマップ。rgbにスペキュラカラー、aに金属度
+Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t4);  //シャドウマップ。
 // タイルごとのポイントライトのインデックスのリスト
 StructuredBuffer<uint> pointLightListInTile : register(t20);
 
@@ -283,6 +282,22 @@ float3 CalcLighting(
     // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
     return diffuse * (1.0f - smooth) + spec * smooth;   
 }
+/*!
+ * @brief	UV座標と深度値からワールド座標を計算する。
+ *@param[in]	uv				uv座標
+ *@param[in]	zInScreen		スクリーン座標系の深度値
+ *@param[in]	mViewProjInv	ビュープロジェクション行列の逆行列。
+ */
+float3 CalcWorldPosFromUVZ( float2 uv, float zInScreen, float4x4 mViewProjInv )
+{
+	float3 screenPos;
+	screenPos.xy = (uv * float2(2.0f, -2.0f)) + float2( -1.0f, 1.0f);
+	screenPos.z = zInScreen;//depthMap.Sample(Sampler, uv).r;
+	
+	float4 worldPos = mul(mViewProjInv, float4(screenPos, 1.0f));
+	worldPos.xyz /= worldPos.w;
+	return worldPos.xyz;
+}
 //ピクセルシェーダーのコア。
 float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
 {
@@ -292,7 +307,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
     //法線をサンプリング。
     float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
     //ワールド座標をサンプリング。
-    float3 worldPos = worldPosTexture.Sample(Sampler, In.uv).xyz;
+    float3 worldPos = CalcWorldPosFromUVZ(In.uv, albedoColor.w, mViewProjInv);
     //スペキュラカラーをサンプリング。
     float3 specColor = albedoColor.xyz;
     //金属度をサンプリング。

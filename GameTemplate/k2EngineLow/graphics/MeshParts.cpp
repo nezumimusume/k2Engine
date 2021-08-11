@@ -29,7 +29,9 @@ void MeshParts::InitFromTkmFile(
 	int expandDataSize,
 	const std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV>& expandShaderResourceView,
 	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
-	AlphaBlendMode alphaBlendMode
+	AlphaBlendMode alphaBlendMode,
+	bool isDepthWrite,
+	bool isDepthTest
 )
 {
 	m_meshs.resize(tkmFile.GetNumMesh());
@@ -46,7 +48,9 @@ void MeshParts::InitFromTkmFile(
 			vsSkinEntryPointFunc, 
 			psEntryPointFunc, 
 			colorBufferFormat,
-			alphaBlendMode
+			alphaBlendMode,
+			isDepthWrite,
+			isDepthTest
 		);
 		meshNo++;
 	});
@@ -102,7 +106,9 @@ void MeshParts::CreateMeshFromTkmMesh(
 	const char* vsSkinEntryPointFunc,
 	const char* psEntryPointFunc,
 	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
-	AlphaBlendMode alphaBlendMode
+	AlphaBlendMode alphaBlendMode,
+	bool isDepthWrite,
+	bool isDepthTest
 ){
 	//1. 頂点バッファを作成。
 	int numVertex = (int)tkmMesh.vertexBuffer.size();
@@ -166,7 +172,9 @@ void MeshParts::CreateMeshFromTkmMesh(
 			NUM_CBV_ONE_MATERIAL,
 			NUM_CBV_ONE_MATERIAL * materialNum,
 			NUM_SRV_ONE_MATERIAL * materialNum,
-			alphaBlendMode
+			alphaBlendMode,
+			isDepthWrite,
+			isDepthTest
 		);
 		//作成したマテリアル数をカウントする。
 		materialNum++;

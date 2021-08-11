@@ -153,6 +153,7 @@ void ModelRender::InitModelOnRenderGBuffer(
 	modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	modelInitData.m_colorBufferFormat[3] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	modelInitData.m_colorBufferFormat[4] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	modelInitData.m_isDepthWrite = false;	// ZPrepassで事前に作成された深度バッファを使うので、深度値書き込みはしなくてよい。
 	if (m_isEnableInstancingDraw) {
 		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
