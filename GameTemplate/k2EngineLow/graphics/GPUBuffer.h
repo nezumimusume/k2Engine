@@ -12,12 +12,8 @@ public:
 	/// <summary>
 	/// デストラクタ。
 	/// </summary>
-	~GPUBuffer()
-	{
-		if (m_buffer != nullptr) {
-			m_buffer->Release();
-		}
-	}
+	~GPUBuffer();
+	
 	/// <summary>
 	/// 初期化。
 	/// </summary>

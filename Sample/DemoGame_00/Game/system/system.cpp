@@ -17,7 +17,6 @@ LRESULT CALLBACK MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		//スエンジンの破棄。
-		delete g_engine;
 		PostQuitMessage(0);
 		break;	
 	default:

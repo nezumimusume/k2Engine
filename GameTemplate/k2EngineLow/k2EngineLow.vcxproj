@@ -179,6 +179,7 @@
     <ClCompile Include="graphics\effect\EffectEngine.cpp" />
     <ClCompile Include="graphics\font\Font.cpp" />
     <ClCompile Include="graphics\font\FontEngine.cpp" />
+    <ClCompile Include="graphics\FrameBuffer.cpp" />
     <ClCompile Include="graphics\GaussianBlur.cpp" />
     <ClCompile Include="graphics\GPUBuffer.cpp" />
     <ClCompile Include="graphics\GraphicsEngine.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="graphics\effect\EffectEngine.h" />
     <ClInclude Include="graphics\font\Font.h" />
     <ClInclude Include="graphics\font\FontEngine.h" />
+    <ClInclude Include="graphics\FrameBuffer.h" />
     <ClInclude Include="graphics\GaussianBlur.h" />
     <ClInclude Include="graphics\GPUBuffer.h" />
     <ClInclude Include="graphics\GraphicsEngine.h" />

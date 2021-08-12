@@ -19,10 +19,7 @@ DescriptorHeap::DescriptorHeap()
 }
 DescriptorHeap::~DescriptorHeap()
 {
-	if (m_descriptorHeap) {
-		m_descriptorHeap->Release();
-	}
-	
+	g_graphicsEngine->ReleaseD3D12Object(m_descriptorHeap);
 }
 void DescriptorHeap::CommitSamperHeap()
 {

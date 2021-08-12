@@ -9,12 +9,8 @@ public:
 	/// <summary>
 	/// デストラクタ。
 	/// </summary>
-	~PipelineState()
-	{
-		if (m_pipelineState) {
-			m_pipelineState->Release();
-		}
-	}
+	~PipelineState();
+	
 	/// <summary>
 	/// 初期化。
 	/// </summary>

@@ -198,6 +198,7 @@
     <ClCompile Include="physics\PhysicsGhostObject.cpp">
       <Filter>physics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\FrameBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -439,6 +440,7 @@
     <ClInclude Include="physics\PhysicsGhostObject.h">
       <Filter>physics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\FrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

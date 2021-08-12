@@ -110,6 +110,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	EffectEngine::DeleteInstance();
 	delete g_renderingEngine;
 
+	delete g_engine;
+
 #ifdef _DEBUG
 	ReportLiveObjects();
 #endif // _DEBUG

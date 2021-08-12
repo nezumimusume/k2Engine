@@ -6,9 +6,7 @@
 
 IndexBuffer::~IndexBuffer()
 {
-	if (m_indexBuffer) {
-		m_indexBuffer->Release();
-	}
+	g_graphicsEngine->ReleaseD3D12Object(m_indexBuffer);
 }
 void IndexBuffer::Init(int size, int stride)
 {

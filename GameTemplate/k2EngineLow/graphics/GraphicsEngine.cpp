@@ -8,22 +8,20 @@ Camera* g_camera3D = nullptr;				//3Dカメラ。
 GraphicsEngine::~GraphicsEngine()
 {
 	WaitDraw();
+
+	for (auto& req : m_reqDelayRelease3d12ObjectList) {
+		if (req.d3dObject) {
+			req.d3dObject->Release();
+		}
+	}
 	//後始末。
 	if (m_commandQueue) {
 		m_commandQueue->Release();
 	}
-	if (m_createResourceCommandQueue) {
-		m_createResourceCommandQueue->Release();
-	}
-	if (m_swapChain) {
-		m_swapChain->Release();
-	}
-	if (m_rtvHeap) {
-		m_rtvHeap->Release();
-	}
-	if (m_dsvHeap) {
-		m_dsvHeap->Release();
-	}
+	
+	
+	m_frameBuffer.Release();
+
 	for (auto& commandAllocator : m_commandAllocator) {
 		if (commandAllocator) {
 			commandAllocator->Release();
@@ -37,14 +35,7 @@ GraphicsEngine::~GraphicsEngine()
 	if (m_pipelineState) {
 		m_pipelineState->Release();
 	}
-	for (auto& rt : m_renderTargets) {
-		if (rt) {
-			rt->Release();
-		}
-	}
-	if (m_depthStencilBuffer) {
-		m_depthStencilBuffer->Release();
-	}
+	
 	if (m_fence) {
 		m_fence->Release();
 	}
@@ -93,29 +84,10 @@ bool GraphicsEngine::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeig
 		MessageBox(hwnd, TEXT("コマンドキューの作成に失敗しました。"), TEXT("エラー"), MB_OK);
 		return false;
 	}
-	//スワップチェインを作成。
-	if (!CreateSwapChain(hwnd, frameBufferWidth, frameBufferHeight, dxgiFactory)) {
-		//スワップチェインの作成に失敗。
-		MessageBox(hwnd, TEXT("スワップチェインの作成に失敗しました。"), TEXT("エラー"), MB_OK);
-		return false;
-	}
 	
-	//フレームバッファ用のディスクリプタヒープを作成する。
-	if (!CreateDescriptorHeapForFrameBuffer()) {
-		MessageBox(hwnd, TEXT("フレームバッファ用のディスクリプタヒープの作成に失敗しました。"), TEXT("エラー"), MB_OK);
-		return false;
-	}
-
-	//フレームバッファ用のRTVを作成する。
-	if (!CreateRTVForFameBuffer()) {
-		MessageBox(hwnd, TEXT("フレームバッファ用のRTVの作成に失敗しました。"), TEXT("エラー"), MB_OK);
-		return false;
-
-	}
-
-	//フレームバッファ用のDSVを作成する。
-	if (!CreateDSVForFrameBuffer(frameBufferWidth, frameBufferHeight)) {
-		MessageBox(hwnd, TEXT("フレームバッファ用のDSVの作成に失敗しました。"), TEXT("エラー"), MB_OK);
+	//フレームバッファを初期化
+	if (!m_frameBuffer.Init(hwnd, m_d3dDevice, m_commandQueue, dxgiFactory, frameBufferWidth, frameBufferHeight)) {
+		MessageBox(hwnd, TEXT("フレームバッファの作成に失敗しました。"), TEXT("エラー"), MB_OK);
 		return false;
 	}
 
@@ -146,20 +118,7 @@ bool GraphicsEngine::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeig
 	//レンダリングコンテキストの作成。
 	m_renderContext.Init(m_commandList[m_frameIndex]);
 
-	//ビューポートを初期化。
-	m_viewport.TopLeftX = 0;
-	m_viewport.TopLeftY = 0;
-	m_viewport.Width = static_cast<FLOAT>(frameBufferWidth);
-	m_viewport.Height = static_cast<FLOAT>(frameBufferHeight);
-	m_viewport.MinDepth = D3D12_MIN_DEPTH;
-	m_viewport.MaxDepth = D3D12_MAX_DEPTH;
-
-	//シザリング矩形を初期化。
-	m_scissorRect.left = 0;
-	m_scissorRect.top = 0;
-	m_scissorRect.right = frameBufferWidth;
-	m_scissorRect.bottom = frameBufferHeight;
-
+	
 	//CBR_SVRのディスクリプタのサイズを取得。
 	m_cbrSrvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	//Samplerのディスクリプタのサイズを取得。
@@ -307,128 +266,9 @@ bool GraphicsEngine::CreateCommandQueue()
 		return false;
 	}
 
-	hr = m_d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_createResourceCommandQueue));
-	if (FAILED(hr)) {
-		//コマンドキューの作成に失敗した。
-		return false;
-	}
 	return true;
 }
-bool GraphicsEngine::CreateSwapChain(
-	HWND hwnd,
-	UINT frameBufferWidth,
-	UINT frameBufferHeight,
-	IDXGIFactory4* dxgiFactory
-)
-{
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-	swapChainDesc.BufferCount = FRAME_BUFFER_COUNT;
-	swapChainDesc.Width = frameBufferWidth;
-	swapChainDesc.Height = frameBufferHeight;
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	swapChainDesc.SampleDesc.Count = 1;
 
-	IDXGISwapChain1* swapChain;
-	dxgiFactory->CreateSwapChainForHwnd(
-		m_commandQueue,
-		hwnd,
-		&swapChainDesc,
-		nullptr,
-		nullptr,
-		&swapChain
-	);
-	//IDXGISwapChain3のインターフェースを取得。
-	swapChain->QueryInterface(IID_PPV_ARGS(&m_swapChain));
-	swapChain->Release();
-	//IDXGISwapChain3のインターフェースを取得。
-	m_currentBackBufferIndex = m_swapChain->GetCurrentBackBufferIndex();
-	return true;
-}
-bool GraphicsEngine::CreateDescriptorHeapForFrameBuffer()
-{
-	//RTV用のディスクリプタヒープを作成する。
-	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-	desc.NumDescriptors = FRAME_BUFFER_COUNT;
-	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	auto hr = m_d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_rtvHeap));
-	if (FAILED(hr)) {
-		//RTV用のディスクリプタヒープの作成に失敗した。
-		return false;
-	}
-	//ディスクリプタのサイズを取得。
-	m_rtvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	//DSV用のディスクリプタヒープを作成する。
-	desc.NumDescriptors = 1;
-	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	hr = m_d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_dsvHeap));
-	if (FAILED(hr)) {
-		//DSV用のディスクリプタヒープの作成に失敗した。
-		return false;
-	}
-	//ディスクリプタのサイズを取得。
-	m_dsvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	return true;
-}
-bool GraphicsEngine::CreateRTVForFameBuffer()
-{
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-
-	//フロントバッファをバックバッファ用のRTVを作成。
-	for (UINT n = 0; n < FRAME_BUFFER_COUNT; n++) {
-		m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n]));
-		m_d3dDevice->CreateRenderTargetView(
-			m_renderTargets[n], nullptr, rtvHandle
-		);
-		rtvHandle.ptr += m_rtvDescriptorSize;
-	}
-	return true;
-}
-bool GraphicsEngine::CreateDSVForFrameBuffer( UINT frameBufferWidth, UINT frameBufferHeight )
-{
-	D3D12_CLEAR_VALUE dsvClearValue;
-	dsvClearValue.Format = DXGI_FORMAT_D32_FLOAT;
-	dsvClearValue.DepthStencil.Depth = 1.0f;
-	dsvClearValue.DepthStencil.Stencil = 0;
-
-	CD3DX12_RESOURCE_DESC desc(
-		D3D12_RESOURCE_DIMENSION_TEXTURE2D,
-		0,
-		frameBufferWidth,
-		frameBufferHeight,
-		1,
-		1,
-		DXGI_FORMAT_D32_FLOAT,
-		1,
-		0,
-		D3D12_TEXTURE_LAYOUT_UNKNOWN,
-		D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE);
-
-	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	auto hr = m_d3dDevice->CreateCommittedResource(
-		&heapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&desc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,
-		&dsvClearValue,
-		IID_PPV_ARGS(&m_depthStencilBuffer)
-	);
-	if (FAILED(hr)) {
-		//深度ステンシルバッファの作成に失敗。
-		return false;
-	}
-	//ディスクリプタを作成
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
-
-	m_d3dDevice->CreateDepthStencilView(
-		m_depthStencilBuffer, nullptr, dsvHandle
-	);
-
-	return true;
-}
 bool GraphicsEngine::CreateCommandList()
 {
 	int listNo = 0;
@@ -465,6 +305,8 @@ bool GraphicsEngine::CreateSynchronizationWithGPUObject()
 }
 void GraphicsEngine::BeginRender()
 {
+	m_frameIndex = m_frameBuffer.GetCurrentBackBufferIndex();
+	
 	//カメラを更新する。
 	m_camera2D.Update();
 	m_camera3D.Update();
@@ -475,54 +317,74 @@ void GraphicsEngine::BeginRender()
 	m_renderContext.SetCommandList(m_commandList[m_frameIndex]);
 	//レンダリングコンテキストもリセット。
 	m_renderContext.Reset(m_commandAllocator[m_frameIndex], m_pipelineState);	
-	//ビューポートを設定。
-	//ビューポートを設定。
-	m_renderContext.SetViewportAndScissor(m_viewport);
 
-	m_currentFrameBufferRTVHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	m_currentFrameBufferRTVHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
-	//深度ステンシルバッファのディスクリプタヒープの開始アドレスを取得。
-	m_currentFrameBufferDSVHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
-	//バックバッファがレンダリングターゲットとして設定可能になるまで待つ。
-	m_renderContext.WaitUntilToPossibleSetRenderTarget(m_renderTargets[m_frameIndex]);
+	
+	//フレームバッファをレンダリングターゲットとして設定可能になるまで待つ。
+	m_renderContext.WaitUntilToPossibleSetRenderTarget(m_frameBuffer.GetCurrentRenderTarget());
 
-	//レンダリングターゲットを設定。
-	m_renderContext.SetRenderTarget(m_currentFrameBufferRTVHandle, m_currentFrameBufferDSVHandle);
-
+	//フレームバッファをレンダリングターゲットを設定。
+	m_renderContext.SetRenderTarget(
+		m_frameBuffer.GetCurrentRenderTargetViewDescriptorHandle(), 
+		m_frameBuffer.GetCurrentDepthStencilViewDescriptorHandle()
+	);
+	m_renderContext.SetViewportAndScissor(m_frameBuffer.GetViewport());
+	//フレームバッファをクリア。
 	const float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	m_renderContext.ClearRenderTargetView(m_currentFrameBufferRTVHandle, clearColor);
-	m_renderContext.ClearDepthStencilView(m_currentFrameBufferDSVHandle, 1.0f);
+	m_renderContext.ClearRenderTargetView(m_frameBuffer.GetCurrentRenderTargetViewDescriptorHandle(), clearColor);
+	m_renderContext.ClearDepthStencilView(m_frameBuffer.GetCurrentDepthStencilViewDescriptorHandle(), 1.0f);
 	
 }
 void GraphicsEngine::ChangeRenderTargetToFrameBuffer(RenderContext& rc)
 {
-	rc.SetRenderTarget(m_currentFrameBufferRTVHandle, m_currentFrameBufferDSVHandle);
+	rc.SetRenderTarget(
+		m_frameBuffer.GetCurrentRenderTargetViewDescriptorHandle(),
+		m_frameBuffer.GetCurrentDepthStencilViewDescriptorHandle()
+	);
+}
+void GraphicsEngine::ExecuteRequestReleaseD3D12Object()
+{
+	auto releaseReqIt = m_reqDelayRelease3d12ObjectList.begin();
+	while (releaseReqIt != m_reqDelayRelease3d12ObjectList.end()) {
+		if (releaseReqIt->delayTime == 0) {
+			// 開放
+			if (releaseReqIt->d3dObject) {
+				releaseReqIt->d3dObject->Release();
+			}
+			releaseReqIt = m_reqDelayRelease3d12ObjectList.erase(releaseReqIt);
+		}
+		else {
+			releaseReqIt->delayTime--;
+			releaseReqIt++;
+		}
+	}
 }
 void GraphicsEngine::EndRender()
 {
 	// レンダリングターゲットへの描き込み完了待ち
-	m_renderContext.WaitUntilFinishDrawingToRenderTarget(m_renderTargets[m_frameIndex]);
+	m_renderContext.WaitUntilFinishDrawingToRenderTarget(m_frameBuffer.GetCurrentRenderTarget());
 	
 	if (m_isExecuteCommandList)
-	{
-		// Present the frame.
-		m_swapChain->Present(0, 0);
+	{	
+		m_frameBuffer.Present(0);
 		// 描画完了待ち。
 		WaitDraw();
 	}
-
+	
 	m_directXTKGfxMemroy->Commit(m_commandQueue);
 	//レンダリングコンテキストを閉じる。
 	m_renderContext.Close();
-
-	//コマンドを実行。
+	//このフレームに作成した描画コマンドを実行する。
 	ID3D12CommandList* ppCommandLists[] = { m_commandList[m_frameIndex] };
 	m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-
-	m_directXTKGfxMemroy->GarbageCollect();	
-	// バックバッファの番号を入れ替える。
-	m_frameIndex = 1 ^ m_swapChain->GetCurrentBackBufferIndex();
 	// コマンドリストをGPUに流した印。
 	m_isExecuteCommandList = true;
+	m_directXTKGfxMemroy->GarbageCollect();	
+	
+	// バックバッファを入れ替える。
+	m_frameBuffer.SwapBackBuffer();
+	
+	// D3D12オブジェクトの解放リクエストを処理する。
+	ExecuteRequestReleaseD3D12Object();
+	
 }
 

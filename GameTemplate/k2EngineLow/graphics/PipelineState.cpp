@@ -1,6 +1,10 @@
 #include "k2EngineLowPreCompile.h"
 #include "PipelineState.h"
 
+PipelineState::~PipelineState()
+{
+	g_graphicsEngine->ReleaseD3D12Object(m_pipelineState);
+}
 void PipelineState::Init(D3D12_GRAPHICS_PIPELINE_STATE_DESC desc)
 {
 	auto d3dDevice = g_graphicsEngine->GetD3DDevice();

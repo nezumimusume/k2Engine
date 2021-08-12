@@ -3,12 +3,8 @@
 class Shader;
 class RootSignature : public Noncopyable{
 public:
-	~RootSignature()
-	{
-		if (m_rootSignature) {
-			m_rootSignature->Release();
-		}
-	}
+	~RootSignature();
+	
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>

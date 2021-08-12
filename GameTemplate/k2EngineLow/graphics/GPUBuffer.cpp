@@ -1,6 +1,10 @@
 #include "k2EngineLowPreCompile.h"
 #include "GPUBuffer.h"
 
+GPUBuffer::~GPUBuffer()
+{
+	g_graphicsEngine->ReleaseD3D12Object(m_buffer);
+}
 void GPUBuffer::Init(D3D12_RESOURCE_DESC desc)
 {
 	m_desc = desc;

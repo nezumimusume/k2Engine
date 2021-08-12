@@ -7,9 +7,7 @@ Texture::Texture(const wchar_t* filePath)
 }
 Texture::~Texture()
 {
-	if (m_texture) {
-		m_texture->Release();
-	}
+	g_graphicsEngine->ReleaseD3D12Object(m_texture);
 }
 void Texture::InitFromDDSFile(const wchar_t* filePath)
 {
@@ -49,7 +47,7 @@ void Texture::LoadTextureFromMemory(const char* memory, unsigned int size
 		0,
 		&texture
 	);
-	re.End(g_graphicsEngine->GetCreateResourceCommandQueue());
+	re.End(g_graphicsEngine->GetCommandQueue());
 
 	if (FAILED(hr)) {
 		//テクスチャの作成に失敗しました。
@@ -76,7 +74,7 @@ void Texture::LoadTextureFromDDSFile(const wchar_t* filePath)
 		nullptr,
 		&m_isCubemap
 	);
-	re.End(g_graphicsEngine->GetCreateResourceCommandQueue());
+	re.End(g_graphicsEngine->GetCommandQueue());
 
 	if (FAILED(hr)) {
 		//テクスチャの作成に失敗しました。

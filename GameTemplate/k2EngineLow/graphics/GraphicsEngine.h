@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "NullTextureMaps.h"
 #include "font/FontEngine.h"
+#include "FrameBuffer.h"
 
 /// <summary>
 /// アルファブレンディングモード
@@ -83,14 +84,6 @@ public:
 		return m_commandQueue;
 	}
 	/// <summary>
-	/// リソース作成用のコマンドキューを取得。
-	/// </summary>
-	/// <returns></returns>
-	ID3D12CommandQueue* GetCreateResourceCommandQueue() const
-	{
-		return m_createResourceCommandQueue;
-	}
-	/// <summary>
 	/// コマンドリストを取得。
 	/// </summary>
 	/// <returns></returns>
@@ -149,7 +142,7 @@ public:
 	/// <returns></returns>
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentFrameBuffuerRTV() const
 	{
-		return m_currentFrameBufferRTVHandle;
+		return m_frameBuffer.GetCurrentRenderTargetViewDescriptorHandle();
 	}
 	/// <summary>
 	/// フレームバッファへの描画時に使用されているデプスステンシルビューを取得。
@@ -157,7 +150,7 @@ public:
 	/// <returns></returns>
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentFrameBuffuerDSV() const
 	{
-		return m_currentFrameBufferDSVHandle;
+		return m_frameBuffer.GetCurrentDepthStencilViewDescriptorHandle();
 	}
 	/// <summary>
 	/// 3DModelをレイトレワールドに登録。
@@ -189,14 +182,14 @@ public:
 	void CopyToFrameBuffer(RenderContext& rc, ID3D12Resource* pSrc)
 	{
 		D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-			m_renderTargets[m_frameIndex],
+			m_frameBuffer.GetCurrentRenderTarget(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET,
 			D3D12_RESOURCE_STATE_COPY_DEST);
 		rc.ResourceBarrier(barrier);
-		rc.CopyResource(m_renderTargets[m_frameIndex], pSrc);
+		rc.CopyResource(m_frameBuffer.GetCurrentRenderTarget(), pSrc);
 
 		D3D12_RESOURCE_BARRIER barrier2 = CD3DX12_RESOURCE_BARRIER::Transition(
-			m_renderTargets[m_frameIndex],
+			m_frameBuffer.GetCurrentRenderTarget(),
 			D3D12_RESOURCE_STATE_COPY_DEST,
 			D3D12_RESOURCE_STATE_RENDER_TARGET);
 		rc.ResourceBarrier(barrier2);
@@ -223,7 +216,19 @@ public:
 	/// <returns></returns>
 	D3D12_VIEWPORT& GetFrameBufferViewport()
 	{
-		return m_viewport;
+		return m_frameBuffer.GetViewport();
+	}
+	/// <summary>
+	/// ID3D12Objectの解放。
+	/// </summary>
+	/// <param name="res"></param>
+	void ReleaseD3D12Object(ID3D12Object* res)
+	{
+		// D3Dオブジェクトは解放までに1フレームの時間をかける
+		// なぜ？
+		// 描画コマンドは１フレーム遅れて実行されるように実装されているため、即座に開放すると描画中に
+		// リソースが解放されてしまう。そのため、１フレーム遅延して開放する必要がある。
+		m_reqDelayRelease3d12ObjectList.push_back({ res, 1 });
 	}
 private:
 	/// <summary>
@@ -236,20 +241,6 @@ private:
 	/// </summary>
 	/// <returns>trueが返ってきたら作成に成功。</returns>
 	bool CreateCommandQueue();
-	/// <summary>
-	/// スワップチェインの作成
-	/// </summary>
-	/// <param name="hwnd">Windowハンドル</param>
-	/// <param name="frameBufferWidth">フレームバッファの幅</param>
-	/// <param name="frameBufferHeight">フレームバッファの高さ</param>
-	/// <param name="dxgiFactory">DirectX グラフィックス インフラストラクチャー</param>
-	/// <returns>trueが返ってきたら作成に成功。</returns>
-	bool CreateSwapChain(
-		HWND hwnd,
-		UINT frameBufferWidth,
-		UINT frameBufferHeight,
-		IDXGIFactory4* dxgiFactory
-	);
 	/// <summary>
 	/// DirectX グラフィックス インフラストラクチャーの作成。
 	/// </summary>
@@ -290,8 +281,10 @@ private:
 	/// 描画の完了待ち。
 	/// </summary>
 	void WaitDraw();
-public:
-	enum { FRAME_BUFFER_COUNT = 2 };						//フレームバッファの数。
+	/// <summary>
+	/// ID3D12Objectの解放リクエストを処理する。
+	/// </summary>
+	void ExecuteRequestReleaseD3D12Object();
 private:
 	//GPUベンダー定義。
 	enum GPU_Vender {
@@ -300,28 +293,24 @@ private:
 		GPU_VenderIntel,	//AMD
 		Num_GPUVender,
 	};
-	
-	ID3D12Device5* m_d3dDevice = nullptr;						//D3Dデバイス。
-	ID3D12CommandQueue* m_commandQueue = nullptr;				// コマンドキュー。
-	ID3D12CommandQueue* m_createResourceCommandQueue = nullptr;	// リソース構築のためのコマンドキュー。
-	IDXGISwapChain3* m_swapChain = nullptr;						//スワップチェイン。
-	ID3D12DescriptorHeap* m_rtvHeap = nullptr;					//レンダリングターゲットビューのディスクリプタヒープ。
-	ID3D12DescriptorHeap* m_dsvHeap = nullptr;					//深度ステンシルビューのディスクリプタヒープ。
+	/// <summary>
+	/// D3D12オブジェクトの遅延リリースリクエスト
+	/// </summary>
+	struct RequestDelayReleaseD3D12Object
+	{
+		ID3D12Object* d3dObject;	// リリースするD3Dオブジェクト
+		int delayTime;				// 遅延フレーム。この値は毎フレームデクリメントされ、0になると解放されます。
+	};
+	ID3D12Device5* m_d3dDevice = nullptr;							//D3Dデバイス。
+	ID3D12CommandQueue* m_commandQueue = nullptr;					// コマンドキュー。
 	ID3D12CommandAllocator* m_commandAllocator[2] = { nullptr };	//コマンドアロケータ。
-	ID3D12GraphicsCommandList4* m_commandList[2] = { nullptr };	//コマンドリスト。
-	ID3D12PipelineState* m_pipelineState = nullptr;			//パイプラインステート。
-	int m_currentBackBufferIndex = 0;						//現在のバックバッファの番号。
-	UINT m_rtvDescriptorSize = 0;							//フレームバッファのディスクリプタのサイズ。
-	UINT m_dsvDescriptorSize = 0;							//深度ステンシルバッファのディスクリプタのサイズ。
-	UINT m_cbrSrvDescriptorSize = 0;						//CBR_SRVのディスクリプタのサイズ。
-	UINT m_samplerDescriptorSize = 0;					//サンプラのディスクリプタのサイズ。			
-	ID3D12Resource* m_renderTargets[FRAME_BUFFER_COUNT] = { nullptr };	//フレームバッファ用のレンダリングターゲット。
-	ID3D12Resource* m_depthStencilBuffer = nullptr;	//深度ステンシルバッファ。
-	D3D12_VIEWPORT m_viewport;			//ビューポート。
-	D3D12_RECT m_scissorRect;			//シザリング矩形。
-	RenderContext m_renderContext;		//レンダリングコンテキスト。
-	D3D12_CPU_DESCRIPTOR_HANDLE m_currentFrameBufferRTVHandle;		//現在書き込み中のフレームバッファのレンダリングターゲットビューのハンドル。
-	D3D12_CPU_DESCRIPTOR_HANDLE m_currentFrameBufferDSVHandle;		//現在書き込み中のフレームバッファの深度ステンシルビューの
+	ID3D12GraphicsCommandList4* m_commandList[2] = { nullptr };		//コマンドリスト。
+	ID3D12PipelineState* m_pipelineState = nullptr;					//パイプラインステート。
+	UINT m_cbrSrvDescriptorSize = 0;								//CBR_SRVのディスクリプタのサイズ。
+	UINT m_samplerDescriptorSize = 0;								//サンプラのディスクリプタのサイズ。			
+	RenderContext m_renderContext;									//レンダリングコンテキスト。
+	FrameBuffer m_frameBuffer;										//フレームバッファ
+
 	// GPUとの同期で使用する変数。
 	UINT m_frameIndex = 0;
 	HANDLE m_fenceEvent = nullptr;
@@ -334,8 +323,9 @@ private:
 	raytracing::Engine m_raytracingEngine;		//レイトレエンジン。
 	NullTextureMaps m_nullTextureMaps;			//ヌルテクスチャマップ。
 	FontEngine m_fontEngine;					//フォントエンジン。
-	std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;	//DirectXTKのグラフィックメモリシステム。
-	bool m_isExecuteCommandList = false;		//コマンドリストをGPUに流した？
+	std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;					//DirectXTKのグラフィックメモリシステム。
+	bool m_isExecuteCommandList = false;											//コマンドリストをGPUに流した？
+	std::list< RequestDelayReleaseD3D12Object > m_reqDelayRelease3d12ObjectList;	// D3D12オブジェクトの遅延解放リクエストのリスト。
 };
 extern GraphicsEngine* g_graphicsEngine;	//グラフィックスエンジン
 extern Camera* g_camera2D;					//2Dカメラ。

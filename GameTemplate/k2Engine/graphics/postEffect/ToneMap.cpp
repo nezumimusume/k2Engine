@@ -50,8 +50,6 @@ void ToneMap::OnInit(
 	RenderTarget& metallicSmoothRenderTarget,
 	RenderTarget& albedoRenderTarget
 ){
-	float w = mainRenderTarget.GetWidth();
-	float h = mainRenderTarget.GetHeight();
 	// 平均輝度計算用のレンダリングターゲットを作成。
 	for (int i = 0; i < enNumCalcAvgSprite; i++) {
 		int rtSize = 1 << (2 * (enNumCalcAvgSprite-i-1) );
