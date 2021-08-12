@@ -49,7 +49,7 @@ void Texture::LoadTextureFromMemory(const char* memory, unsigned int size
 		0,
 		&texture
 	);
-	re.End(g_graphicsEngine->GetCommandQueue());
+	re.End(g_graphicsEngine->GetCreateResourceCommandQueue());
 
 	if (FAILED(hr)) {
 		//テクスチャの作成に失敗しました。
@@ -76,7 +76,7 @@ void Texture::LoadTextureFromDDSFile(const wchar_t* filePath)
 		nullptr,
 		&m_isCubemap
 	);
-	re.End(g_graphicsEngine->GetCommandQueue());
+	re.End(g_graphicsEngine->GetCreateResourceCommandQueue());
 
 	if (FAILED(hr)) {
 		//テクスチャの作成に失敗しました。

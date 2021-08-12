@@ -83,12 +83,20 @@ public:
 		return m_commandQueue;
 	}
 	/// <summary>
+	/// リソース作成用のコマンドキューを取得。
+	/// </summary>
+	/// <returns></returns>
+	ID3D12CommandQueue* GetCreateResourceCommandQueue() const
+	{
+		return m_createResourceCommandQueue;
+	}
+	/// <summary>
 	/// コマンドリストを取得。
 	/// </summary>
 	/// <returns></returns>
 	ID3D12GraphicsCommandList4* GetCommandList() const
 	{
-		return m_commandList;
+		return m_commandList[m_frameIndex];
 	}
 	/// <summary>
 	/// CBR_SRVのディスクリプタのサイズを取得。
@@ -293,13 +301,14 @@ private:
 		Num_GPUVender,
 	};
 	
-	ID3D12Device5* m_d3dDevice = nullptr;					//D3Dデバイス。
-	ID3D12CommandQueue* m_commandQueue = nullptr;			//コマンドキュー。
-	IDXGISwapChain3* m_swapChain = nullptr;					//スワップチェイン。
-	ID3D12DescriptorHeap* m_rtvHeap = nullptr;				//レンダリングターゲットビューのディスクリプタヒープ。
-	ID3D12DescriptorHeap* m_dsvHeap = nullptr;				//深度ステンシルビューのディスクリプタヒープ。
-	ID3D12CommandAllocator* m_commandAllocator = nullptr;	//コマンドアロケータ。
-	ID3D12GraphicsCommandList4* m_commandList = nullptr;		//コマンドリスト。
+	ID3D12Device5* m_d3dDevice = nullptr;						//D3Dデバイス。
+	ID3D12CommandQueue* m_commandQueue = nullptr;				// コマンドキュー。
+	ID3D12CommandQueue* m_createResourceCommandQueue = nullptr;	// リソース構築のためのコマンドキュー。
+	IDXGISwapChain3* m_swapChain = nullptr;						//スワップチェイン。
+	ID3D12DescriptorHeap* m_rtvHeap = nullptr;					//レンダリングターゲットビューのディスクリプタヒープ。
+	ID3D12DescriptorHeap* m_dsvHeap = nullptr;					//深度ステンシルビューのディスクリプタヒープ。
+	ID3D12CommandAllocator* m_commandAllocator[2] = { nullptr };	//コマンドアロケータ。
+	ID3D12GraphicsCommandList4* m_commandList[2] = { nullptr };	//コマンドリスト。
 	ID3D12PipelineState* m_pipelineState = nullptr;			//パイプラインステート。
 	int m_currentBackBufferIndex = 0;						//現在のバックバッファの番号。
 	UINT m_rtvDescriptorSize = 0;							//フレームバッファのディスクリプタのサイズ。
@@ -326,6 +335,7 @@ private:
 	NullTextureMaps m_nullTextureMaps;			//ヌルテクスチャマップ。
 	FontEngine m_fontEngine;					//フォントエンジン。
 	std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;	//DirectXTKのグラフィックメモリシステム。
+	bool m_isExecuteCommandList = false;		//コマンドリストをGPUに流した？
 };
 extern GraphicsEngine* g_graphicsEngine;	//グラフィックスエンジン
 extern Camera* g_camera2D;					//2Dカメラ。

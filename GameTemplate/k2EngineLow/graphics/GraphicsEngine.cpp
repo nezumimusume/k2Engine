@@ -12,6 +12,9 @@ GraphicsEngine::~GraphicsEngine()
 	if (m_commandQueue) {
 		m_commandQueue->Release();
 	}
+	if (m_createResourceCommandQueue) {
+		m_createResourceCommandQueue->Release();
+	}
 	if (m_swapChain) {
 		m_swapChain->Release();
 	}
@@ -21,11 +24,15 @@ GraphicsEngine::~GraphicsEngine()
 	if (m_dsvHeap) {
 		m_dsvHeap->Release();
 	}
-	if (m_commandAllocator) {
-		m_commandAllocator->Release();
+	for (auto& commandAllocator : m_commandAllocator) {
+		if (commandAllocator) {
+			commandAllocator->Release();
+		}
 	}
-	if (m_commandList) {
-		m_commandList->Release();
+	for (auto& commandList : m_commandList) {
+		if (commandList) {
+			commandList->Release();
+		}
 	}
 	if (m_pipelineState) {
 		m_pipelineState->Release();
@@ -49,6 +56,7 @@ GraphicsEngine::~GraphicsEngine()
 }
 void GraphicsEngine::WaitDraw()
 {
+
 	//描画終了待ち
 	// Signal and increment the fence value.
 	const UINT64 fence = m_fenceValue;
@@ -112,13 +120,15 @@ bool GraphicsEngine::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeig
 	}
 
 	//コマンドアロケータの作成。
-	m_d3dDevice->CreateCommandAllocator(
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(&m_commandAllocator));
+	for (auto& commandAllocator : m_commandAllocator) {
+		m_d3dDevice->CreateCommandAllocator(
+			D3D12_COMMAND_LIST_TYPE_DIRECT,
+			IID_PPV_ARGS(&commandAllocator));
 
-	if (!m_commandAllocator) {
-		MessageBox(hwnd, TEXT("コマンドアロケータの作成に失敗しました。"), TEXT("エラー"), MB_OK);
-		return false;
+		if (!commandAllocator) {
+			MessageBox(hwnd, TEXT("コマンドアロケータの作成に失敗しました。"), TEXT("エラー"), MB_OK);
+			return false;
+		}
 	}
 
 	//コマンドリストの作成。
@@ -134,7 +144,7 @@ bool GraphicsEngine::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeig
 	}
 	
 	//レンダリングコンテキストの作成。
-	m_renderContext.Init(m_commandList);
+	m_renderContext.Init(m_commandList[m_frameIndex]);
 
 	//ビューポートを初期化。
 	m_viewport.TopLeftX = 0;
@@ -296,6 +306,12 @@ bool GraphicsEngine::CreateCommandQueue()
 		//コマンドキューの作成に失敗した。
 		return false;
 	}
+
+	hr = m_d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_createResourceCommandQueue));
+	if (FAILED(hr)) {
+		//コマンドキューの作成に失敗した。
+		return false;
+	}
 	return true;
 }
 bool GraphicsEngine::CreateSwapChain(
@@ -415,16 +431,21 @@ bool GraphicsEngine::CreateDSVForFrameBuffer( UINT frameBufferWidth, UINT frameB
 }
 bool GraphicsEngine::CreateCommandList()
 {
-	//コマンドリストの作成。
-	m_d3dDevice->CreateCommandList(
-		0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator, nullptr, IID_PPV_ARGS(&m_commandList)
-	);
-	if (!m_commandList) {
-		return false;
+	int listNo = 0;
+	for (auto& commandList : m_commandList) {
+		//コマンドリストの作成。
+		m_d3dDevice->CreateCommandList(
+			0, D3D12_COMMAND_LIST_TYPE_DIRECT, 
+			m_commandAllocator[listNo],
+			nullptr, IID_PPV_ARGS(&commandList)
+		);
+		if (!commandList) {
+			return false;
+		}
+		//コマンドリストは開かれている状態で作成されるので、いったん閉じる。
+		commandList->Close();
+		listNo++;
 	}
-	//コマンドリストは開かれている状態で作成されるので、いったん閉じる。
-	m_commandList->Close();
-
 	return true;
 }
 bool GraphicsEngine::CreateSynchronizationWithGPUObject()
@@ -444,15 +465,16 @@ bool GraphicsEngine::CreateSynchronizationWithGPUObject()
 }
 void GraphicsEngine::BeginRender()
 {
-	
 	//カメラを更新する。
 	m_camera2D.Update();
 	m_camera3D.Update();
 
 	//コマンドアロケータををリセット。
-	m_commandAllocator->Reset();
+	m_commandAllocator[m_frameIndex]->Reset();
+	
+	m_renderContext.SetCommandList(m_commandList[m_frameIndex]);
 	//レンダリングコンテキストもリセット。
-	m_renderContext.Reset(m_commandAllocator, m_pipelineState);
+	m_renderContext.Reset(m_commandAllocator[m_frameIndex], m_pipelineState);	
 	//ビューポートを設定。
 	//ビューポートを設定。
 	m_renderContext.SetViewportAndScissor(m_viewport);
@@ -480,27 +502,27 @@ void GraphicsEngine::EndRender()
 {
 	// レンダリングターゲットへの描き込み完了待ち
 	m_renderContext.WaitUntilFinishDrawingToRenderTarget(m_renderTargets[m_frameIndex]);
-
+	
+	if (m_isExecuteCommandList)
+	{
+		// Present the frame.
+		m_swapChain->Present(0, 0);
+		// 描画完了待ち。
+		WaitDraw();
+	}
 
 	m_directXTKGfxMemroy->Commit(m_commandQueue);
-
 	//レンダリングコンテキストを閉じる。
 	m_renderContext.Close();
 
 	//コマンドを実行。
-	ID3D12CommandList* ppCommandLists[] = { m_commandList };
+	ID3D12CommandList* ppCommandLists[] = { m_commandList[m_frameIndex] };
 	m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
-	// Present the frame.
-	m_swapChain->Present(0, 0);
-
-	m_directXTKGfxMemroy->GarbageCollect();
-	//描画完了待ち。
-	WaitDraw();
+	m_directXTKGfxMemroy->GarbageCollect();	
 	// バックバッファの番号を入れ替える。
-	m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
-	
-
-
+	m_frameIndex = 1 ^ m_swapChain->GetCurrentBackBufferIndex();
+	// コマンドリストをGPUに流した印。
+	m_isExecuteCommandList = true;
 }
 

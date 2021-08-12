@@ -55,7 +55,7 @@ void FontEngine::Init()
 		cpuHandle, 
 		gpuHandle);
 
-	re.End(g_graphicsEngine->GetCommandQueue());
+	re.End(g_graphicsEngine->GetCreateResourceCommandQueue());
 }
 
 void FontEngine::BeginDraw(RenderContext& rc)

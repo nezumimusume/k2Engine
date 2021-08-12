@@ -439,6 +439,6 @@ private:
 	ID3D12DescriptorHeap* m_descriptorHeaps[MAX_DESCRIPTOR_HEAP];			//ディスクリプタヒープの配列。
 	ConstantBuffer* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };	//定数バッファの配列。
 	Texture* m_shaderResources[MAX_SHADER_RESOURCE] = { nullptr };			//シェーダーリソースの配列。
-	std::vector< ComPtr<ID3D12Resource> > m_scratchResourceList;				//スクラッチリソースのリスト。
+	std::vector< ComPtr<ID3D12Resource> > m_scratchResourceList;			//スクラッチリソースのリスト。
 };
 
