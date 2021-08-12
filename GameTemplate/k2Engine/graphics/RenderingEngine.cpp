@@ -71,7 +71,7 @@ void RenderingEngine::InitMainRenderTarget()
         g_graphicsEngine->GetFrameBufferHeight(),
         1,
         1,
-        DXGI_FORMAT_R32G32B32A32_FLOAT,
+        DXGI_FORMAT_R16G16B16A16_FLOAT,
         DXGI_FORMAT_UNKNOWN
     );
 }
@@ -185,7 +185,7 @@ void RenderingEngine::InitDeferredLighting()
                 = &m_shadowMapRenders[i].GetShadowMap(areaNo);
         }
     }
-    spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
     // 初期化データを使ってスプライトを作成
     m_diferredLightingSprite.Init(spriteInitData);
 }

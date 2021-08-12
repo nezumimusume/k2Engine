@@ -10,7 +10,8 @@ bool StarRender::Start()
 		0,
 		enModelUpAxisZ,
 		false,
-		m_maxStar
+		m_maxStar,
+		AlphaBlendMode_Trans
 	);
 	return true;
 }

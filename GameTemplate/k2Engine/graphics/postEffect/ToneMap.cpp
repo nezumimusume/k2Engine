@@ -60,7 +60,7 @@ void ToneMap::OnInit(
 			rtSize,
 			1,
 			1,
-			DXGI_FORMAT_R32_FLOAT,
+			DXGI_FORMAT_R16_FLOAT,
 			DXGI_FORMAT_UNKNOWN
 		);
 	}
@@ -71,7 +71,7 @@ void ToneMap::OnInit(
 			1,
 			1,
 			1,
-			DXGI_FORMAT_R32_FLOAT,
+			DXGI_FORMAT_R16_FLOAT,
 			DXGI_FORMAT_UNKNOWN
 		);
 	}

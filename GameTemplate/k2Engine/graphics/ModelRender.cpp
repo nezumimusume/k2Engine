@@ -25,7 +25,8 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	int numAnimationClips,
 	EnModelUpAxis enModelUpAxis,
 	bool isShadowReciever,
-	int maxInstance)
+	int maxInstance,
+	AlphaBlendMode alphaBlendMode)
 {
 	//インスタンシング描画用のデータを初期化。
 	InitInstancingDraw(maxInstance);
@@ -34,7 +35,7 @@ void ModelRender::InitForwardRendering(const char* filePath,
 	//アニメーションを初期化。
 	InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
 	//フォワードレンダリング用のモデルを初期化。
-	InitModelOnForward(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
+	InitModelOnForward(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever, alphaBlendMode);
 	//ZPrepass描画用のモデルを初期化。
 	InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 	//シャドウマップ描画用のモデルを初期化。
@@ -49,7 +50,7 @@ void ModelRender::InitForwardRendering(ModelInitData& initData)
 	InitInstancingDraw(1);
 	InitSkeleton(initData.m_tkmFilePath);
 
-	initData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	//作成した初期化データをもとにモデルを初期化する。
 	m_forwardRenderModel.Init(initData);
 
@@ -150,9 +151,8 @@ void ModelRender::InitModelOnRenderGBuffer(
 	modelInitData.m_tkmFilePath = tkmFilePath;
 	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	modelInitData.m_colorBufferFormat[1] = DXGI_FORMAT_R8G8B8A8_SNORM;
-	modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	modelInitData.m_colorBufferFormat[3] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	modelInitData.m_colorBufferFormat[4] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	modelInitData.m_isDepthWrite = false;	// ZPrepassで事前に作成された深度バッファを使うので、深度値書き込みはしなくてよい。
 	if (m_isEnableInstancingDraw) {
 		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
@@ -166,7 +166,8 @@ void ModelRender::InitModelOnForward(
 	RenderingEngine& renderingEngine,
 	const char* tkmFilePath,
 	EnModelUpAxis enModelUpAxis,
-	bool isShadowReciever
+	bool isShadowReciever,
+	AlphaBlendMode alphaBlendMode
 )
 {
 	ModelInitData modelInitData;
@@ -188,7 +189,8 @@ void ModelRender::InitModelOnForward(
 	modelInitData.m_modelUpAxis = enModelUpAxis;
 
 	modelInitData.m_tkmFilePath = tkmFilePath;
-	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	modelInitData.m_alphaBlendMode = alphaBlendMode;
 	if (m_isEnableInstancingDraw) {
 		// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 		modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;

@@ -11,7 +11,7 @@ void Ssr::OnInit(
 {
 	{
 		// 映り込み画像を作成するためのスプライトを作成。
-		UINT w = mainRenderTarget.GetWidth();
+		UINT w = mainRenderTarget.GetWidth() ;
 		UINT h = mainRenderTarget.GetHeight();
 		SpriteInitData initData;
 		initData.m_width = w;

@@ -492,7 +492,7 @@ void GraphicsEngine::EndRender()
 	m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
 	// Present the frame.
-	m_swapChain->Present(0, 0);
+	m_swapChain->Present(1, 0);
 
 	m_directXTKGfxMemroy->GarbageCollect();
 	//•`‰æŠ®—¹‘Ò‚¿B

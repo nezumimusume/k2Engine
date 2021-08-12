@@ -11,7 +11,7 @@ void Dof::InitCombimeBokeImageToSprite(Sprite& combineBokeImageSprite, Texture& 
     combineBokeImageSpriteInitData.m_width = 1280;
     combineBokeImageSpriteInitData.m_height = 720;
     combineBokeImageSpriteInitData.m_fxFilePath = "Assets/shader/dof.fx";
-    combineBokeImageSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    combineBokeImageSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
     // 距離を利用してボケ画像をアルファブレンディングするので、半透明合成モードにする
     combineBokeImageSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
     // 初期化オブジェクトを利用してスプライトを初期化する

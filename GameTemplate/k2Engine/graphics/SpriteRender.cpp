@@ -13,7 +13,7 @@ void SpriteRender::Init(const char* filePath, const float w, const float h, Alph
 	initData.m_width = static_cast<UINT>(w);
 	initData.m_height = static_cast<UINT>(h);
 	initData.m_alphaBlendMode = alphaBlendMode;
-	initData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	//Sprite初期化オブジェクトを使用して、Spriteを初期化する。
 	m_sprite.Init(initData);
 }

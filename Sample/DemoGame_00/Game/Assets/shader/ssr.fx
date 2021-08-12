@@ -67,6 +67,11 @@ PSInput VSMain(VSInput In)
 // 映り込み画像を作成するピクセルシェーダー。
 float4 PSMain(PSInput In) : SV_Target0
 {
+	//金属度とスムースを取得。
+	float4 metallicSmooth = metallicSmoothTexture.Sample(Sampler, In.uv);
+	// スムースがほぼ0なら映り込みはないので、早期クリップする。
+	clip( metallicSmooth.a - 0.01f);
+
 	//ピクセルのワールド座標を計算する。
 	float3 worldPos = CalcWorldPosFromUVZ(
 		In.uv,
@@ -75,11 +80,9 @@ float4 PSMain(PSInput In) : SV_Target0
 	);
 
 	float4 sceneColor = sceneTexture.Sample(Sampler, In.uv);
-	
 	//ピクセルの法線を取得。
 	float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
-	//金属度とスムースを取得。
-	float4 metallicSmooth = metallicSmoothTexture.Sample(Sampler, In.uv);
+	
 	//カメラの視点からピクセルに向かうベクトルを計算する。
 	float3 toPixelDir = normalize( worldPos - cameraPosInWorld.xyz );
 	//反射ベクトルを求める。

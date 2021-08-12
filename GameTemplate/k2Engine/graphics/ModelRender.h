@@ -7,6 +7,7 @@
 class RenderingEngine;
 
 
+
 /// <summary>
 /// スキンモデルレンダー。
 /// </summary>
@@ -56,7 +57,8 @@ public:
 		int numAnimationClips = 0,
 		EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 		bool isShadowReciever = true,
-		int maxInstance = 1);
+		int maxInstance = 1,
+		AlphaBlendMode alphaBlendMode = AlphaBlendMode_None);
 	/// <summary>
 	/// Sky用。
 	/// </summary>
@@ -298,7 +300,8 @@ private:
 		RenderingEngine& renderingEngine,
 		const char* tkmFilePath,
 		EnModelUpAxis enModelUpAxis,
-		bool isShadowReciever
+		bool isShadowReciever,
+		AlphaBlendMode alphaBlendMode
 	);
 	/// <summary>
 	/// 各種モデルの頂点シェーダーのエントリーポイントを設定。
@@ -344,5 +347,6 @@ private:
 	Vector3						m_aabbMax = {-FLT_MAX, -FLT_MAX, -FLT_MAX }; // AABBの最大値
 	Vector3						m_aabbMin = { FLT_MAX, FLT_MAX, FLT_MAX };// AABBの最小値。
 	std::vector< GemometryData > m_geometryDatas;							// ジオメトリ情報。
+	
 };
 
