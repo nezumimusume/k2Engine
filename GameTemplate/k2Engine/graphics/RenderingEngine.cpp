@@ -87,7 +87,7 @@ void RenderingEngine::InitGBuffer()
         1,
         1,
         DXGI_FORMAT_R32G32B32A32_FLOAT,
-        DXGI_FORMAT_UNKNOWN
+        DXGI_FORMAT_D32_FLOAT
     );
 
     // 法線出力用のレンダリングターゲットを初期化する
@@ -317,7 +317,7 @@ void RenderingEngine::ForwardRendering(RenderContext& rc)
     rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
     rc.SetRenderTarget(
         m_mainRenderTarget.GetRTVCpuDescriptorHandle(),
-        m_zprepassRenderTarget.GetDSVCpuDescriptorHandle()
+        m_gBuffer[enGBufferAlbedoDepth].GetDSVCpuDescriptorHandle()
     );
     for (auto& renderObj : m_renderObjects) {
         renderObj->OnForwardRender(rc);
@@ -340,7 +340,7 @@ void RenderingEngine::RenderToGBuffer(RenderContext& rc)
     rc.WaitUntilToPossibleSetRenderTargets(ARRAYSIZE(rts), rts);
 
     // レンダリングターゲットを設定
-    rc.SetRenderTargets(ARRAYSIZE(rts), rts, m_zprepassRenderTarget.GetDSVCpuDescriptorHandle());
+    rc.SetRenderTargets(ARRAYSIZE(rts), rts);
 
     // レンダリングターゲットをクリア
     rc.ClearRenderTargetViews(ARRAYSIZE(rts), rts);
