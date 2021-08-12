@@ -26,7 +26,7 @@ void RenderingEngine::Init(bool isSoftShadow)
         m_mainRenderTarget, 
         m_zprepassRenderTarget, 
         m_gBuffer[enGBufferNormal],
-        m_gBuffer[enGBufferMetaricSmooth],
+        m_gBuffer[enGBufferMetaricShadowSmooth],
         m_gBuffer[enGBufferAlbedoDepth]);
     // シーンライト
     g_sceneLight = &m_sceneLight;
@@ -101,8 +101,8 @@ void RenderingEngine::InitGBuffer()
     );
 
 
-    // メタリック、スムース出力用のレンダリングターゲットを初期化する    
-    m_gBuffer[enGBufferMetaricSmooth].Create(
+    // メタリック、影パラメータ、スムース出力用のレンダリングターゲットを初期化する    
+    m_gBuffer[enGBufferMetaricShadowSmooth].Create(
         frameBuffer_w,
         frameBuffer_h,
         1,
@@ -111,15 +111,6 @@ void RenderingEngine::InitGBuffer()
         DXGI_FORMAT_UNKNOWN
     );
 
-   
-    m_gBuffer[enGBUfferShadowParam].Create(
-        frameBuffer_w,
-        frameBuffer_h,
-        1,
-        1,
-        DXGI_FORMAT_R8G8B8A8_UNORM,
-        DXGI_FORMAT_UNKNOWN
-    );
 }
 void RenderingEngine::InitCopyMainRenderTargetToFrameBufferSprite()
 {
@@ -330,10 +321,9 @@ void RenderingEngine::RenderToGBuffer(RenderContext& rc)
 {
     // レンダリングターゲットをG-Bufferに変更
     RenderTarget* rts[enGBufferNum] = {
-        &m_gBuffer[enGBufferAlbedoDepth],   // 0番目のレンダリングターゲット
-        &m_gBuffer[enGBufferNormal],        // 1番目のレンダリングターゲット
-        &m_gBuffer[enGBufferMetaricSmooth], // 2番目のレンダリングターゲット
-        &m_gBuffer[enGBUfferShadowParam],   // 3番目のレンダリングターゲット
+        &m_gBuffer[enGBufferAlbedoDepth],         // 0番目のレンダリングターゲット
+        &m_gBuffer[enGBufferNormal],              // 1番目のレンダリングターゲット
+        &m_gBuffer[enGBufferMetaricShadowSmooth], // 2番目のレンダリングターゲット
     };
 
     // まず、レンダリングターゲットとして設定できるようになるまで待つ
@@ -399,8 +389,8 @@ void RenderingEngine::CopyMainRenderTargetToFrameBuffer(RenderContext& rc)
     D3D12_VIEWPORT viewport;
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = g_graphicsEngine->GetFrameBufferWidth();
-    viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+    viewport.Width = static_cast<FLOAT>(g_graphicsEngine->GetFrameBufferWidth());
+    viewport.Height = static_cast<FLOAT>(g_graphicsEngine->GetFrameBufferHeight());
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
 

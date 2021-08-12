@@ -230,11 +230,11 @@ private:
     // GBufferの定義
     enum EnGBuffer
     {
-        enGBufferAlbedoDepth,   // アルベドと深度値。αに深度値が記憶されています。
-        enGBufferNormal,        // 法線
-        enGBufferMetaricSmooth, // メタリックとスムース。メタリックがr、スムースがa。gbは未使用。
-        enGBUfferShadowParam,   // 影パラメータ
-        enGBufferNum,           // G-Bufferの数
+        enGBufferAlbedoDepth,           // アルベドと深度値。αに深度値が記憶されています。
+        enGBufferNormal,                // 法線
+        enGBufferMetaricShadowSmooth,   // メタリック、影パラメータ、スムース。
+                                        // メタリックがr、影パラメータがg、スムースがa。gは未使用。
+        enGBufferNum,                   // G-Bufferの数
     };
 
     // ディファードライティング用の定数バッファ

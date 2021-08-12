@@ -72,9 +72,8 @@ cbuffer LightCb : register(b1)
 ///////////////////////////////////////
 Texture2D<float4> albedoTexture : register(t0);     // アルベド
 Texture2D<float4> normalTexture : register(t1);     // 法線
-Texture2D<float4> specularTexture : register(t2);   // スペキュラマップ。rgbにスペキュラカラー、aに金属度
-Texture2D<float4> shadowParamTexture : register(t3);   // スペキュラマップ。rgbにスペキュラカラー、aに金属度
-Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t4);  //シャドウマップ。
+Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
+Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t3);  //シャドウマップ。
 // タイルごとのポイントライトのインデックスのリスト
 StructuredBuffer<uint> pointLightListInTile : register(t20);
 
@@ -311,12 +310,12 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
     //スペキュラカラーをサンプリング。
     float3 specColor = albedoColor.xyz;
     //金属度をサンプリング。
-    float metaric = specularTexture.SampleLevel(Sampler, In.uv, 0).r;
+    float metaric = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).r;
     //スムース
-    float smooth = specularTexture.SampleLevel(Sampler, In.uv, 0).a;
+    float smooth = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).a;
 
     //影生成用のパラメータ。
-    float4 shadowParam = shadowParamTexture.Sample(Sampler, In.uv);
+    float shadowParam = metallicShadowSmoothTexture.Sample(Sampler, In.uv).g;
     // 視線に向かって伸びるベクトルを計算する
     float3 toEye = normalize(eyePos - worldPos);
 
@@ -328,7 +327,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
         float shadow = 0.0f;
         if( directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
-            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam.r;
+            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam;
         }
         
         lig += CalcLighting(
