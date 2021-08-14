@@ -72,8 +72,10 @@ cbuffer LightCb : register(b1)
 ///////////////////////////////////////
 Texture2D<float4> albedoTexture : register(t0);     // アルベド
 Texture2D<float4> normalTexture : register(t1);     // 法線
-Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
-Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t3);  //シャドウマップ。
+Texture2D<float4> worldPosTexture : register(t2);   // ワールド座標
+Texture2D<float4> specularTexture : register(t3);   // スペキュラマップ。rgbにスペキュラカラー、aに金属度
+Texture2D<float4> shadowParamTexture : register(t4);   // スペキュラマップ。rgbにスペキュラカラー、aに金属度
+Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t5);  //シャドウマップ。
 // タイルごとのポイントライトのインデックスのリスト
 StructuredBuffer<uint> pointLightListInTile : register(t20);
 
@@ -281,22 +283,6 @@ float3 CalcLighting(
     // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
     return diffuse * (1.0f - smooth) + spec * smooth;   
 }
-/*!
- * @brief	UV座標と深度値からワールド座標を計算する。
- *@param[in]	uv				uv座標
- *@param[in]	zInScreen		スクリーン座標系の深度値
- *@param[in]	mViewProjInv	ビュープロジェクション行列の逆行列。
- */
-float3 CalcWorldPosFromUVZ( float2 uv, float zInScreen, float4x4 mViewProjInv )
-{
-	float3 screenPos;
-	screenPos.xy = (uv * float2(2.0f, -2.0f)) + float2( -1.0f, 1.0f);
-	screenPos.z = zInScreen;//depthMap.Sample(Sampler, uv).r;
-	
-	float4 worldPos = mul(mViewProjInv, float4(screenPos, 1.0f));
-	worldPos.xyz /= worldPos.w;
-	return worldPos.xyz;
-}
 //ピクセルシェーダーのコア。
 float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
 {
@@ -306,16 +292,16 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
     //法線をサンプリング。
     float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
     //ワールド座標をサンプリング。
-    float3 worldPos = CalcWorldPosFromUVZ(In.uv, albedoColor.w, mViewProjInv);
+    float3 worldPos = worldPosTexture.Sample(Sampler, In.uv).xyz;
     //スペキュラカラーをサンプリング。
     float3 specColor = albedoColor.xyz;
     //金属度をサンプリング。
-    float metaric = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).r;
+    float metaric = specularTexture.SampleLevel(Sampler, In.uv, 0).r;
     //スムース
-    float smooth = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).a;
+    float smooth = specularTexture.SampleLevel(Sampler, In.uv, 0).a;
 
     //影生成用のパラメータ。
-    float shadowParam = metallicShadowSmoothTexture.Sample(Sampler, In.uv).g;
+    float4 shadowParam = shadowParamTexture.Sample(Sampler, In.uv);
     // 視線に向かって伸びるベクトルを計算する
     float3 toEye = normalize(eyePos - worldPos);
 
@@ -327,7 +313,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
         float shadow = 0.0f;
         if( directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
-            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam;
+            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam.r;
         }
         
         lig += CalcLighting(

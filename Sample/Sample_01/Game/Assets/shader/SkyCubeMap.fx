@@ -90,8 +90,6 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	float4 albedoColor;
 	float3 normal = normalize(psIn.normal);
 	//albedoColor = g_skyCubeMap.Sample(g_sampler, psIn.normal);
-	albedoColor = g_skyCubeMap.Sample(g_sampler, normal);
-	//albedoColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
-
+	albedoColor = g_skyCubeMap.Sample(g_sampler, normal) * 3.8f;
 	return albedoColor;
 }

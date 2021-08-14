@@ -520,7 +520,7 @@ class Application(tk.Frame):
     def motion(self,event):
         #マウス座標を取得する
         x,y=self.convert_canvas_position_to_tk_position(event.x,event.y)
-        self.label['text'] = 'x : {}, y : {}'.format(x,y)
+        self.label['text'] = 'x : {:.2f}, y : {:.2f}'.format(x,y)
         #self.label['text'] = 'x : {}, y : {}'.format(event.x,event.y)
 
     #画像を複製する

@@ -1,6 +1,6 @@
 
 #キャンバスを少し小さくする
-CANVAS_SMALLER = 0.8
+CANVAS_SMALLER = 0.52
 
 #マウスカーソル
 DEFAULT_MOUSE_CURSOR = 'arrow'
@@ -26,8 +26,8 @@ MYIMAGE_MiN_SIZE = 0.1
 
 #mainwindow関係
 #キャンバスの大きさ
-CANVAS_WIDTH = 1280
-CANVAS_HEIGHT = 720
+CANVAS_WIDTH = 1920
+CANVAS_HEIGHT = 1080
 #枠のサイズを画像より少し大きくする
 ADD_FRAME_SIZE = 2.0
 #キャンバスを少し大きくする

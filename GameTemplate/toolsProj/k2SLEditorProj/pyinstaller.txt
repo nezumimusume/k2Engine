@@ -1,1 +1,3 @@
-AppData\Local\Programs\Python\Python38\Scripts\pyinstaller.exe C:\Users\akuro\Desktop\k2SLEditor\mainwindow.py --noconsole
+C:\Users\akuro\AppData\Local\Programs\Python\Python39\Scripts\pyinstaller.exe C:\Users\akuro\Desktop\tm\k2Engine\GameTemplate\toolsProj\k2SLEditorProj\mainwindow.py --noconsole -n k2SLEditor --icon=favicon.ico
+
+C:\Users\akuro\AppData\Roaming\Python\Python39\Scriptsになぜかpyinstller.exeがあった

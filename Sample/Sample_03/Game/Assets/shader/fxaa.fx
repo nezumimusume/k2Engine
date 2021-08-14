@@ -120,6 +120,8 @@ float4 FxaaPixelShader(
 		//まだ輝度の差が大きいので、再度ブレンド。
 		rgbyB.xyz = rgbyA.xyz * 0.5;
 	}
+ 
+
     return rgbyB;
     
 }
@@ -130,7 +132,8 @@ float4 PSMain( PSInput In ) : SV_Target0
 	float level;
 	sceneTexture.GetDimensions( 0, texSize.x, texSize.y, level );
 	float4 rcpFrame = float4(0.0f, 0.0f, 1.0f/texSize.x, 1.0f/texSize.y);
-	return FxaaPixelShader( 
+
+    float4 color =   FxaaPixelShader( 
 		In.uv,
         rcpFrame,							// float4 fxaaConsoleRcpFrameOpt,
         rcpFrame,							// float4 fxaaConsoleRcpFrameOpt2,
@@ -141,4 +144,6 @@ float4 PSMain( PSInput In ) : SV_Target0
         0.0833f,								// FxaaFloat fxaaConsoleEdgeThresholdMin,
         texSize
 	);
+    color.xyz =  pow(max( color.xyz, 0.0001f ), 1.0f/2.2f);
+    return color;
 }
