@@ -21,9 +21,9 @@ Title::~Title()
 bool Title::Start()
 {
 	//‰æ‘œ‚ð“Ç‚Ýž‚ÞB
-	m_spriteRender.Init("Assets/sprite/title.dds", 1457,728);
-	m_pressButton.Init("Assets/sprite/button.dds", 931, 465);
-	m_pressButton.SetPosition(Vector3(0.0f, -130.0f, 0.0f));
+	m_spriteRender.Init("Assets/sprite/title.dds", 2211,1105);
+	m_pressButton.Init("Assets/sprite/button.dds", 1293, 646);
+	m_pressButton.SetPosition(Vector3(0.0f, -220.0f, 0.0f));
 
 	//‰¹‚ð“Ç‚Ýž‚ÞB
 	g_soundEngine->ResistWaveFileBank(8, "Assets/sound/titlebgm.wav");

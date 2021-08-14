@@ -9,9 +9,9 @@
 
 namespace
 {
-	const float TITLE_TEXTURE_SCALE = 1.435f;
-	const float PRESS_A_BUTTON_TEXTURE_SCALE = 0.839f;
-	const Vector3 PRESS_A_BUTTON_TEXTURE_POSITION = Vector3(0.0f, -280.0f, 0.0f);
+	const float TITLE_TEXTURE_SCALE = 2.11f;
+	const float PRESS_A_BUTTON_TEXTURE_SCALE = 1.0f;
+	const Vector3 PRESS_A_BUTTON_TEXTURE_POSITION = Vector3(0.0f, -400.0f, 0.0f);
 }
 
 Title::Title()

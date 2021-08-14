@@ -3,8 +3,8 @@
 
 namespace
 {
-	const Vector3	SCALE = Vector3(1.456f, 1.456f, 1.0f);
-	const Vector3	POSITIOIN = Vector3(-100.0f, 3.75, 0.0f);
+	const Vector3	SCALE = Vector3(2.16f, 2.16f, 1.0f);
+	const Vector3	POSITIOIN = Vector3(-128.0f, 0.0f, 0.0f);
 }
 
 Fade::Fade()

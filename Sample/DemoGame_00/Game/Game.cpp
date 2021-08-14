@@ -22,13 +22,13 @@
 
 namespace
 {
-	const float TIME_LIMIT = 90.0f;
-	const Vector3	STAR_COUNT_FONT_POSITION = Vector3(-640.0f, 250.0f, 0.0f);
-	const float STAR_COUNT_FONT_CENTER_POSITION_X = -170.0f;
-	const float STAR_COUNT_FONT_POSITION_MOVE_SPEED = 350.0f;
+	const float TIME_LIMIT = 10.0f;
+	const Vector3	STAR_COUNT_FONT_POSITION = Vector3(-960.0f, 400.0f, 0.0f);
+	const float STAR_COUNT_FONT_CENTER_POSITION_X = 50.0f;
+	const float STAR_COUNT_FONT_POSITION_MOVE_SPEED = 430.0f;
 
-	const float PRESS_A_BUTTON_TEXTURE_SCALE = 0.839f;
-	const Vector3 PRESS_A_BUTTON_TEXTURE_POSITION = Vector3(0.0f, -280.0f, 0.0f);
+	const float PRESS_A_BUTTON_TEXTURE_SCALE = 1.0f;
+	const Vector3 PRESS_A_BUTTON_TEXTURE_POSITION = Vector3(0.0f, -400.0f, 0.0f);
 
 	const Vector3 POINTLIGHT_COLOR = Vector3(4.0f, 1.0f, 1.0f);
 	const float POINTLIGHT_RANGE = 220.0f;
@@ -254,7 +254,7 @@ void Game::UpdateFont()
 	//表示するテキストを設定。
 	m_starCountFont.SetText(wcsbuf);
 	m_starCountFont.SetPosition(m_starCountFontPosition);
-	m_starCountFont.SetScale(1.5f);
+	m_starCountFont.SetScale(2.3f);
 	m_starCountFont.SetColor(Vector4(1.0f, 1.0f, 0.0f, 1.0f));
 
 	wchar_t text[256];
@@ -262,8 +262,8 @@ void Game::UpdateFont()
 	int sec = (int)m_timer % 60;
 	swprintf_s(text, 256, L"%02d:%02d", minute, sec);
 	m_timerFont.SetText(text);
-	m_timerFont.SetPosition(Vector3(-640.0f, 350.0f, 0.0f));
-	m_timerFont.SetScale(1.5f);
+	m_timerFont.SetPosition(Vector3(-960.0f, 530.0f, 0.0f));
+	m_timerFont.SetScale(2.3f);
 	m_timerFont.SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
