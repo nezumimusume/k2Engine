@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\SceneGeometryData.cpp" />
     <ClCompile Include="camera\CameraCollisionSolver.cpp" />
     <ClCompile Include="camera\SpringCamera.cpp" />
     <ClCompile Include="collision\CollisionObject.cpp" />
     <ClCompile Include="geometry\AABB.cpp" />
+    <ClCompile Include="geometry\GeometryData.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\postEffect\Bloom.cpp" />
@@ -50,10 +52,12 @@
     <ClCompile Include="nature\SkyCube.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\SceneGeometryData.h" />
     <ClInclude Include="camera\CameraCollisionSolver.h" />
     <ClInclude Include="camera\SpringCamera.h" />
     <ClInclude Include="collision\CollisionObject.h" />
     <ClInclude Include="geometry\AABB.h" />
+    <ClInclude Include="geometry\GeometryData.h" />
     <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\IRenderer.h" />
     <ClInclude Include="graphics\ModelRender.h" />

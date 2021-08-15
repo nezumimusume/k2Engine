@@ -1,7 +1,6 @@
 #pragma once
 
 class Fade;
-class SoundSource;
 
 class Title : public IGameObject
 {

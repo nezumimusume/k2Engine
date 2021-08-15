@@ -20,5 +20,5 @@ void SpriteRender::Init(const char* filePath, const float w, const float h, Alph
 
 void SpriteRender::Draw(RenderContext& rc)
 {
-	g_renderingEngine->AddRenderObject(this);
+	RenderingEngine::GetInstance()->AddRenderObject(this);
 }

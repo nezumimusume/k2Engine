@@ -5,16 +5,54 @@
 #include "graphics/postEffect/PostEffect.h"
 #include "SceneLight.h"
 #include "graphics/preRender/LightCulling.h"
+#include "geometry/SceneGeometryData.h"
 
 class IRenderer;
 
 /// <summary>
 /// レンダリングエンジン。
 /// </summary>
+/// <remark>
+/// このクラスはシングルトンパターンで設計されています。
+/// インスタンスの生成はCreateInstance()、
+/// インスタンスの破棄はDeleteInstance()、
+/// インスタンスの取得はCreateInstance()を呼び出してください。
+/// シングルトンパターンは下記の二つの機能を提供するパターンです。
+/// 1.　グローバルなアクセスポイント
+///		->グローバル変数の機能
+/// 2　インスタンスの数を一つに制限する機能。
+/// </reramk>
+
 class RenderingEngine : public Noncopyable
 {
+private:
+    RenderingEngine() {}
+    ~RenderingEngine() {}
 public:
-    
+    /// <summary>
+    /// インスタンスの作成。
+    /// </summary>
+    static void CreateInstance(bool isSoftShadow)
+    {
+        m_instance = new RenderingEngine;
+        m_instance->Init(true);
+    }
+    /// <summary>
+    /// インスタンスの破棄。
+    /// </summary>
+    static void DeleteInstance()
+    {
+        delete m_instance;
+    }
+    /// <summary>
+    /// インスタンスを取得。
+    /// </summary>
+    /// <returns></returns>
+    static RenderingEngine* GetInstance()
+    {
+        return m_instance;
+    }
+
     //メインレンダリングターゲットのスナップショット
     enum class EnMainRTSnapshot
     {
@@ -41,7 +79,7 @@ public:
     /// ハードシャドウにしたい場合は、falseを指定してください。
     /// </param>
     void Init(bool isSoftShadow);
-    
+
     /// <summary>
     /// 描画オブジェクトを追加。
     /// </summary>
@@ -152,6 +190,26 @@ public:
     {
         m_postEffect.NotifyChangeScene(changeSceneTime);
     }
+    /// <summary>
+    /// 幾何学データを登録
+    /// </summary>
+    /// <param name="geomData">幾何学データ</param>
+    void RegisterGeometryData(GemometryData* geomData)
+    {
+        m_sceneGeometryData.RegisterGeometryData(geomData);
+    }
+    /// <summary>
+    /// 幾何学データの登録解除。
+    /// </summary>
+    /// <param name="geomData"></param>
+    void UnregisterGeometryData(GemometryData* geomData)
+    {
+        m_sceneGeometryData.UnregisterGeometryData(geomData);
+    }
+    /// <summary>
+    /// 更新。
+    /// </summary>
+    void Update();
 private:
     /// <summary>
     /// G-Bufferを初期化
@@ -234,7 +292,7 @@ private:
         enGBufferNormal,                // 法線
         enGBufferMetaricShadowSmooth,   // メタリック、影パラメータ、スムース。
                                         // メタリックがr、影パラメータがg、スムースがa。gは未使用。
-        enGBufferNum,                   // G-Bufferの数
+                                        enGBufferNum,                   // G-Bufferの数
     };
 
     // ディファードライティング用の定数バッファ
@@ -258,11 +316,9 @@ private:
     std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。
     SceneLight m_sceneLight;                                        // シーンライト。
     bool m_isSoftShadow = false;                                    // ソフトシャドウフラグ。
-    Vector3 m_sceneMaxPosition;                                     // ゲームシーンの最大座標
-    Vector3 m_sceneMinPosition;                                     // ゲームシーンの最小座標。
-    bool m_isBuildSceneInfo = false;
     Matrix m_viewProjMatrixForViewCulling;                          // ビューカリング用のビュープロジェクション行列。
+    SceneGeometryData m_sceneGeometryData;                          // シーンのジオメトリ情報。
+    static RenderingEngine* m_instance;		                        //唯一のインスタンスのアドレスを記録する変数。
 };
 
-extern RenderingEngine* g_renderingEngine;
 extern SceneLight* g_sceneLight;

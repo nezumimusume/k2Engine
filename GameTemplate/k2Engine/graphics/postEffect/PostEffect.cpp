@@ -64,7 +64,7 @@ void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
     // トーンマップ
     m_tonemap.Render(rc, mainRenderTarget);
 
-    g_renderingEngine->SetMainRenderTargetAndDepthStencilBuffer(rc);
+    RenderingEngine::GetInstance()->SetMainRenderTargetAndDepthStencilBuffer(rc);
 
     //メインレンダーターゲットをPRESENTからRENDERTARGETへ。
     rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);

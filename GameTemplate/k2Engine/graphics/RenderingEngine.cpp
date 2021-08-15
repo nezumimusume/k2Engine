@@ -2,14 +2,13 @@
 #include "RenderingEngine.h"
 
 
-RenderingEngine* g_renderingEngine = nullptr;
+RenderingEngine* RenderingEngine::m_instance = nullptr;	//唯一のインスタンスのアドレスを記録する変数。
 SceneLight* g_sceneLight = nullptr;
+
 void RenderingEngine::Init(bool isSoftShadow)
 {
     m_isSoftShadow = isSoftShadow;
 
-    m_sceneMaxPosition = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
-    m_sceneMinPosition = { FLT_MAX,  FLT_MAX,  FLT_MAX };
     InitZPrepassRenderTarget();
     InitMainRenderTarget();
     InitGBuffer();
@@ -191,30 +190,17 @@ void RenderingEngine::CalcViewProjectionMatrixForViewCulling()
     );
     m_viewProjMatrixForViewCulling.Multiply(g_camera3D->GetViewMatrix(), projMatrix);
 }
-void RenderingEngine::Execute(RenderContext& rc)
+void RenderingEngine::Update()
 {
-    // シーンのジオメトリ情報を構築。
-    m_isBuildSceneInfo = false;
-    for (auto renderer : m_renderObjects)
-    {
-        if (renderer->IsShadowCaster()) {
-            bool isGetAabb;
-            Vector3 vMin, vMax;
-            renderer->GetAABB(vMax, vMin, isGetAabb);
-            m_sceneMaxPosition.Max(vMax);
-            m_sceneMinPosition.Min(vMin);
-            if (isGetAabb) {
-                m_isBuildSceneInfo = true;
-            }
-        }
-    }
-
     // ビューカリング用のビュープロジェクション行列の計算。
     CalcViewProjectionMatrixForViewCulling();
-
+    // シーンのジオメトリ情報の更新。
+    m_sceneGeometryData.Update();
     // シーンライトの更新。
     m_sceneLight.Update();
-
+}
+void RenderingEngine::Execute(RenderContext& rc)
+{    
     // シーンライトのデータをコピー。
     m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
 
@@ -254,7 +240,7 @@ void RenderingEngine::Execute(RenderContext& rc)
 
 void RenderingEngine::RenderToShadowMap(RenderContext& rc)
 {
-    if (m_isBuildSceneInfo == false) {
+    if (m_sceneGeometryData.IsBuildshadowCasterGeometryData() == false) {
         return;
     }
     int ligNo = 0;
@@ -266,8 +252,8 @@ void RenderingEngine::RenderToShadowMap(RenderContext& rc)
                 ligNo,
                 m_deferredLightingCB.m_light.directionalLight[ligNo].direction,
                 m_renderObjects,
-                m_sceneMaxPosition,
-                m_sceneMinPosition
+                m_sceneGeometryData.GetShadowCasterMaxPositionInViewFrustum(),
+                m_sceneGeometryData.GetShadowCasterMinPositionInViewFrustum()
             );
         }
         ligNo++;

@@ -6,7 +6,7 @@
 #include "WaveFile.h"
 #include "WaveFileBank.h"
 
-
+namespace nsK2EngineLow {
 	WaveFileBank::WaveFileBank()
 	{
 	}
@@ -38,3 +38,4 @@
 		waveFile->Read(waveFile->GetReadBuffer(), waveFile->GetSize(), &dummy);
 		waveFile->ResetFile();
 	}
+}

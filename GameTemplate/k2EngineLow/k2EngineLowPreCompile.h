@@ -101,3 +101,4 @@ static const int MAX_BONE = 512;	//!<ƒ{[ƒ“‚ÌÅ‘å”B
 #include "EffekseerRendererDX12.h"
 
 #include "graphics/effect/EffectEngine.h"
+#include "sound/SoundSource.h"

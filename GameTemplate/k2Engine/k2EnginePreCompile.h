@@ -2,6 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "k2EngineLowPreCompile.h"
+using namespace nsK2EngineLow;
 
 #include "geometry/AABB.h"
 #include "graphics/IRenderer.h"

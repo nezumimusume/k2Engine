@@ -8,7 +8,6 @@ class GameCamera;
 class SkyCube;
 class Fade;
 class Enemy;
-class SoundSource;
 
 class Game : public IGameObject
 {

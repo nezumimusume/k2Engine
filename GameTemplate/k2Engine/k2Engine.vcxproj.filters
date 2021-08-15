@@ -106,6 +106,12 @@
     <ClCompile Include="graphics\postEffect\PostEffectComponentBase.cpp">
       <Filter>graphics\postEffect</Filter>
     </ClCompile>
+    <ClCompile Include="geometry\GeometryData.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\SceneGeometryData.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -189,6 +195,12 @@
     </ClInclude>
     <ClInclude Include="graphics\postEffect\PostEffectComponentBase.h">
       <Filter>graphics\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\GeometryData.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\SceneGeometryData.h">
+      <Filter>geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

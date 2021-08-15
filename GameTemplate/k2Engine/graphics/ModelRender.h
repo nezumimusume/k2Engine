@@ -15,6 +15,7 @@ class ModelRender : public IRenderer
 {
 public:
 	ModelRender() {}
+	~ModelRender();
 	/// <summary>
 	/// 初期化。通常はこの関数で初期化してください。
 	/// ディファードレンダリング。
@@ -197,12 +198,6 @@ public:
 		m_animation.AddAnimationEventListener(eventListener);
 	}
 
-	void GetAABB(Vector3& vMax, Vector3& vMin, bool& isGet)
-	{
-		vMax = m_aabbMax;
-		vMin = m_aabbMin;
-		isGet = true;
-	}
 	/// <summary>
 	/// シャドウキャスター？
 	/// </summary>
@@ -210,6 +205,37 @@ public:
 	bool IsShadowCaster() const
 	{
 		return m_isShadowCaster;
+	}
+	/// <summary>
+	/// インスタン数を取得。
+	/// </summary>
+	/// <returns></returns>
+	int GetNumInstance() const
+	{
+		return m_numInstance;
+	}
+	/// <summary>
+	/// インスタンシング描画を行う？
+	/// </summary>
+	/// <returns></returns>
+	bool IsInstancingDraw() const
+	{
+		return m_isEnableInstancingDraw;
+	}
+	/// <summary>
+	/// ワールド行列を取得。
+	/// </summary>
+	/// <param name="instanceId">
+	/// インスタンスID。
+	/// この引数はインスタンシング描画が向こうの場合は無視されます。
+	/// </param>
+	/// <returns></returns>
+	const Matrix& GetWorldMatrix(int instanceId) const
+	{
+		if (IsInstancingDraw()) {
+			return m_worldMatrixArray[instanceId];
+		}
+		return m_zprepassModel.GetWorldMatrix();
 	}
 private:
 	/// <summary>
@@ -251,6 +277,7 @@ private:
 	/// フォワードレンダーパスから呼ばれる処理。
 	/// </summary>
 	void OnForwardRender(RenderContext& rc) override;
+	
 private:
 
 	/// <summary>
@@ -315,12 +342,12 @@ private:
 	/// </remark>
 	void InitBoundingVolume();
 	/// <summary>
-	/// ビューカリングを行う。
+	/// 幾何学情報を初期化
 	/// </summary>
-	/// <returns>trueが返ってくるとカリングされている。</returns>
-	bool IsViewCulling(const Matrix& mWorld);
+	/// <param name="maxInstance">インスタンス数</param>
+	void InitGeometryDatas(int maxInstance);
 private:
-		AnimationClip*				m_animationClips = nullptr;			// アニメーションクリップ。
+	AnimationClip*				m_animationClips = nullptr;			// アニメーションクリップ。
 	int							m_numAnimationClips = 0;			// アニメーションクリップの数。
 	Vector3 					m_position = Vector3::Zero;			// 座標。
 	Quaternion	 				m_rotation = Quaternion::Identity;	// 回転。
@@ -342,10 +369,6 @@ private:
 	bool						m_isEnableInstancingDraw = false;	// インスタンシング描画が有効？
 	std::unique_ptr<Matrix[]>	m_worldMatrixArray;					// ワールド行列の配列。
 	StructuredBuffer			m_worldMatrixArraySB;				// ワールド行列の配列のストラクチャードバッファ。
-	AABB						m_aabb;								// モデルを内包するAABB
-	bool						m_isViewCulling = false;			// ビューカリングされた？インスタンシング描画ではこのフラグは無効です。
-	Vector3						m_aabbMax = {-FLT_MAX, -FLT_MAX, -FLT_MAX }; // AABBの最大値
-	Vector3						m_aabbMin = { FLT_MAX, FLT_MAX, FLT_MAX };// AABBの最小値。
 	std::vector< GemometryData > m_geometryDatas;							// ジオメトリ情報。
 	
 };

@@ -8,5 +8,5 @@ void FontRender::Draw(RenderContext& rc)
 	{
 		return;
 	}
-	g_renderingEngine->AddRenderObject(this);
+	RenderingEngine::GetInstance()->AddRenderObject(this);
 }

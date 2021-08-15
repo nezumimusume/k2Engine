@@ -1,12 +1,7 @@
 #include "stdafx.h"
 #include "system/system.h"
-
 #include<InitGUID.h>
 #include<dxgidebug.h>
-
-#include "graphics/RenderingEngine.h"
-#include "sound/SoundEngine.h"
-
 #include "Title.h"
 #include "Game.h"
 
@@ -29,6 +24,7 @@ void ReportLiveObjects()
 	pDxgiDebug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_DETAIL);
 }
 
+
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -36,23 +32,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 {
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
+	// k2Engineの初期化
+	InitK2Engine(true);
 
 	//////////////////////////////////////
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
-
-	//各種エンジンなどの初期化。
-	//ゲームオブジェクトマネージャーのインスタンスを作成する。
-	GameObjectManager::CreateInstance();
-	PhysicsWorld::CreateInstance();
-	g_soundEngine = new SoundEngine();
-	//レンダリングエンジンを初期化
-	g_renderingEngine = new RenderingEngine();
-	g_renderingEngine->Init(true);
-	//エフェクトエンジンの初期化。
-	EffectEngine::CreateInstance();
-
-
+	
 	//Titleクラスのオブジェクトを作成。
 	NewGO<Title>(0, "title");
 	//NewGO<Game>(0, "game");
@@ -62,55 +48,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
-	auto& renderContext = g_graphicsEngine->GetRenderContext();
+	
 	Stopwatch sw;
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
 		sw.Start();
-		//レンダリング開始。
-		g_engine->BeginFrame();
-		
 
-		//////////////////////////////////////
-		//ここから絵を描くコードを記述する。
-		//////////////////////////////////////
-		
-		GameObjectManager::GetInstance()->ExecuteUpdate();
+		// k2Engineの処理を実行。
+		ExecuteK2Engine();
 
-		//エフェクトエンジンの更新。
-		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-		
-		
-		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-		
-		//レンダリングエンジンを実行。
-		//ここでエフェクトをドロー。
-		g_renderingEngine->Execute(renderContext);
-	
-		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
-	
-	
-		//////////////////////////////////////
-		//絵を描くコードを書くのはここまで！！！
-		//////////////////////////////////////
-		g_soundEngine->Update();
-		g_engine->EndFrame();
 		sw.Stop();
 		char text[256];
 		sprintf(text, "time = %f\n", sw.GetElapsedMillisecond());
 		OutputDebugStringA(text);
-	
 	}
-	//ゲームオブジェクトマネージャーを削除。
-	GameObjectManager::DeleteInstance();
-
-	PhysicsWorld::DeleteInstance();
-	delete g_soundEngine;
-	EffectEngine::DeleteInstance();
-	delete g_renderingEngine;
-
-	delete g_engine;
+	
+	FinalK2Engine();
 
 #ifdef _DEBUG
 	ReportLiveObjects();

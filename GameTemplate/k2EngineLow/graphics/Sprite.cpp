@@ -3,6 +3,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
+namespace nsK2EngineLow {
     namespace {
         struct SSimpleVertex {
             Vector4 pos;
@@ -48,7 +49,7 @@
             MessageBoxA(nullptr, "fxファイルが指定されていません。", "エラー", MB_OK);
             std::abort();
         }
-       
+
         //シェーダーをロードする。
         m_vs.LoadVS(initData.m_fxFilePath, initData.m_vsEntryPointFunc);
         m_ps.LoadPS(initData.m_fxFilePath, initData.m_psEntryPoinFunc);
@@ -167,10 +168,10 @@
             psoDesc.RTVFormats[psoDesc.NumRenderTargets] = format;
             psoDesc.NumRenderTargets++;
         }
-        
+
         psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
         psoDesc.SampleDesc.Count = 1;
-    
+
         m_pipelineState.Init(psoDesc);
     }
     void Sprite::InitConstantBuffer(const SpriteInitData& initData)
@@ -178,10 +179,10 @@
         //定数バッファの初期化。
         m_constantBufferGPU.Init(sizeof(m_constantBufferCPU), nullptr);
         //ユーザー拡張の定数バッファが指定されている。
-        if (initData.m_expandConstantBuffer != nullptr){
+        if (initData.m_expandConstantBuffer != nullptr) {
             m_userExpandConstantBufferCPU = initData.m_expandConstantBuffer;
             m_userExpandConstantBufferGPU.Init(
-                initData.m_expandConstantBufferSize, 
+                initData.m_expandConstantBufferSize,
                 initData.m_expandConstantBuffer
             );
         }
@@ -197,7 +198,7 @@
         InitVertexBufferAndIndexBuffer(initData);
         //定数バッファを初期化。
         InitConstantBuffer(initData);
-        
+
         //ルートシグネチャの初期化。
         m_rootSignature.Init(
             D3D12_FILTER_MIN_MAG_MIP_LINEAR,
@@ -276,4 +277,4 @@
         //描画
         renderContext.DrawIndexed(m_indexBuffer.GetCount());
     }
-
+}

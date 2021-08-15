@@ -22,7 +22,7 @@
 
 namespace
 {
-	const float TIME_LIMIT = 10.0f;
+	const float TIME_LIMIT = 90.0f;
 	const Vector3	STAR_COUNT_FONT_POSITION = Vector3(-960.0f, 400.0f, 0.0f);
 	const float STAR_COUNT_FONT_CENTER_POSITION_X = 50.0f;
 	const float STAR_COUNT_FONT_POSITION_MOVE_SPEED = 430.0f;
@@ -78,9 +78,9 @@ bool Game::Start()
 {
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
-	g_renderingEngine->NotifyChangeScene(0.5f);
+	RenderingEngine::GetInstance()->NotifyChangeScene(0.5f);
 	//カスケードシャドウの近影エリア率を
-	g_renderingEngine->SetCascadeNearAreaRates(0.1f, 0.2f, 0.3f);
+	RenderingEngine::GetInstance()->SetCascadeNearAreaRates(0.1f, 0.2f, 0.3f);
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
 	g_camera3D->SetFar(40000.0f);
 	
@@ -125,10 +125,10 @@ bool Game::Start()
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"pyramid") == true) {
-			auto pyramid = NewGO<Pyramid>(0, "pyramid");
+			/*auto pyramid = NewGO<Pyramid>(0, "pyramid");
 			pyramid->SetPosition(objData.position);
 			pyramid->SetScale(objData.scale);
-			numPyramid++;
+			numPyramid++;*/
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"pointlight") == true) {
@@ -148,8 +148,8 @@ bool Game::Start()
 	auto starRender = NewGO<StarRender>(0, "StarRender");
 	starRender->SetMaxStar(numStar);
 
-	auto pyramidRender = NewGO<PyramidRender>(0, "PyramidRender");
-	pyramidRender->SetMaxPyramid(numPyramid);
+	/*auto pyramidRender = NewGO<PyramidRender>(0, "PyramidRender");
+	pyramidRender->SetMaxPyramid(numPyramid);*/
 
 	m_fade = FindGO<Fade>("fade");
 	m_fade->StartFadeIn();
