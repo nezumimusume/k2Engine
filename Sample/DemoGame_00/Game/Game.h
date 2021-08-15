@@ -5,7 +5,6 @@
 class Player;
 class Background;
 class GameCamera;
-class SkyCube;
 class Fade;
 class Enemy;
 

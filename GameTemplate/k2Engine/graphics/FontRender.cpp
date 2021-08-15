@@ -2,11 +2,13 @@
 #include "FontRender.h"
 #include "RenderingEngine.h"
 
-void FontRender::Draw(RenderContext& rc)
-{
-	if (m_text == nullptr)
+namespace nsK2Engine {
+	void FontRender::Draw(RenderContext& rc)
 	{
-		return;
+		if (m_text == nullptr)
+		{
+			return;
+		}
+		RenderingEngine::GetInstance()->AddRenderObject(this);
 	}
-	RenderingEngine::GetInstance()->AddRenderObject(this);
 }

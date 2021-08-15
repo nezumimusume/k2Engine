@@ -11,3 +11,4 @@ using namespace nsK2EngineLow;
 #include "graphics/FontRender.h"
 #include "graphics/SceneLight.h"
 #include "graphics/RenderingEngine.h"
+#include "nature/SkyCube.h"

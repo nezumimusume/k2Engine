@@ -1,37 +1,37 @@
 #include "k2EnginePreCompile.h"
 #include "Dof.h"
 
+namespace nsK2Engine {
+    void Dof::InitCombimeBokeImageToSprite(Sprite& combineBokeImageSprite, Texture& bokeTexture, Texture& depthTexture)
+    {
+        SpriteInitData combineBokeImageSpriteInitData;
+        //使用するテクスチャは２枚
+        combineBokeImageSpriteInitData.m_textures[0] = &bokeTexture;
+        combineBokeImageSpriteInitData.m_textures[1] = &depthTexture;
+        combineBokeImageSpriteInitData.m_width = 1280;
+        combineBokeImageSpriteInitData.m_height = 720;
+        combineBokeImageSpriteInitData.m_fxFilePath = "Assets/shader/dof.fx";
+        combineBokeImageSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        // 距離を利用してボケ画像をアルファブレンディングするので、半透明合成モードにする
+        combineBokeImageSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
+        // 初期化オブジェクトを利用してスプライトを初期化する
 
-void Dof::InitCombimeBokeImageToSprite(Sprite& combineBokeImageSprite, Texture& bokeTexture, Texture& depthTexture)
-{
-    SpriteInitData combineBokeImageSpriteInitData;
-    //使用するテクスチャは２枚
-    combineBokeImageSpriteInitData.m_textures[0] = &bokeTexture;
-    combineBokeImageSpriteInitData.m_textures[1] = &depthTexture;
-    combineBokeImageSpriteInitData.m_width = 1280;
-    combineBokeImageSpriteInitData.m_height = 720;
-    combineBokeImageSpriteInitData.m_fxFilePath = "Assets/shader/dof.fx";
-    combineBokeImageSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-    // 距離を利用してボケ画像をアルファブレンディングするので、半透明合成モードにする
-    combineBokeImageSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
-    // 初期化オブジェクトを利用してスプライトを初期化する
-
-    combineBokeImageSprite.Init(combineBokeImageSpriteInitData);
-}
-void Dof::OnInit(
-    RenderTarget& mainRenderTarget,
-    RenderTarget& zprepassRenderTarget,
-    RenderTarget& normalRenderTarget,
-    RenderTarget& metallicSmoothRenderTarget,
-    RenderTarget& albedoRenderTarget
-)
-{
+        combineBokeImageSprite.Init(combineBokeImageSpriteInitData);
+    }
+    void Dof::OnInit(
+        RenderTarget& mainRenderTarget,
+        RenderTarget& zprepassRenderTarget,
+        RenderTarget& normalRenderTarget,
+        RenderTarget& metallicSmoothRenderTarget,
+        RenderTarget& albedoRenderTarget
+    )
+    {
         m_rtVerticalBlur.Create(
-            mainRenderTarget.GetWidth(), 
-            mainRenderTarget.GetHeight(), 
-            1, 
-            1, 
-            mainRenderTarget.GetColorBufferFormat(), 
+            mainRenderTarget.GetWidth(),
+            mainRenderTarget.GetHeight(),
+            1,
+            1,
+            mainRenderTarget.GetColorBufferFormat(),
             DXGI_FORMAT_UNKNOWN
         );
         m_rtDiagonalBlur.Create(
@@ -62,7 +62,7 @@ void Dof::OnInit(
         vertDiagonalBlurSpriteInitData.m_psEntryPoinFunc = "PSVerticalDiagonalBlur";
         vertDiagonalBlurSpriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
         vertDiagonalBlurSpriteInitData.m_colorBufferFormat[1] = mainRenderTarget.GetColorBufferFormat();
-        
+
         m_vertDIagonalBlurSprite.Init(vertDiagonalBlurSpriteInitData);
 
         // step-3 六角形ブラーをかけるためのスプライトを初期化
@@ -86,45 +86,46 @@ void Dof::OnInit(
         );
 
     }
-void Dof::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
-{
-    if (m_isEnable == false) {
-        return;
-    }
-    //step-4 垂直、対角線ブラーをかける
-    RenderTarget* blurRts[] = {
-        &m_rtVerticalBlur,
-        &m_rtDiagonalBlur
+    void Dof::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
+    {
+        if (m_isEnable == false) {
+            return;
+        }
+        //step-4 垂直、対角線ブラーをかける
+        RenderTarget* blurRts[] = {
+            &m_rtVerticalBlur,
+            &m_rtDiagonalBlur
+        };
+
+        //レンダリングターゲットとして利用できるまで待つ
+        rc.WaitUntilToPossibleSetRenderTargets(2, blurRts);
+        //レンダリングターゲットを設定
+        rc.SetRenderTargetsAndViewport(2, blurRts);
+        // レンダリングターゲットをクリア
+        rc.ClearRenderTargetViews(2, blurRts);
+        //
+        m_vertDIagonalBlurSprite.Draw(rc);
+        // レンダリングターゲットへの書き込み終了待ち
+        rc.WaitUntilFinishDrawingToRenderTargets(2, blurRts);
+
+        //step-5 六角形ブラーをかける
+        rc.WaitUntilToPossibleSetRenderTarget(m_rtPhomboidBlur);
+        rc.SetRenderTargetAndViewport(m_rtPhomboidBlur);
+
+        m_phomboidBlurSprite.Draw(rc);
+
+        // レンダリングターゲットへの書き込み終了待ち
+        rc.WaitUntilFinishDrawingToRenderTarget(m_rtPhomboidBlur);
+
+        // ボケ画像と深度テクスチャを利用して、ボケ画像を描きこんでいく
+        // メインレンダリングターゲットを設定
+        rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
+        rc.SetRenderTargetAndViewport(mainRenderTarget);
+
+        // スプライトを描画&
+        m_combineBokeImageSprite.Draw(rc);
+
+        // レンダリングターゲットへの書き込み終了待ち
+        rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
     };
-
-    //レンダリングターゲットとして利用できるまで待つ
-    rc.WaitUntilToPossibleSetRenderTargets(2, blurRts);
-    //レンダリングターゲットを設定
-    rc.SetRenderTargetsAndViewport(2, blurRts);
-    // レンダリングターゲットをクリア
-    rc.ClearRenderTargetViews(2, blurRts);
-    //
-    m_vertDIagonalBlurSprite.Draw(rc);
-    // レンダリングターゲットへの書き込み終了待ち
-    rc.WaitUntilFinishDrawingToRenderTargets(2, blurRts);
-
-    //step-5 六角形ブラーをかける
-    rc.WaitUntilToPossibleSetRenderTarget(m_rtPhomboidBlur);
-    rc.SetRenderTargetAndViewport(m_rtPhomboidBlur);
-
-    m_phomboidBlurSprite.Draw(rc);
-
-    // レンダリングターゲットへの書き込み終了待ち
-    rc.WaitUntilFinishDrawingToRenderTarget(m_rtPhomboidBlur);
-
-    // ボケ画像と深度テクスチャを利用して、ボケ画像を描きこんでいく
-    // メインレンダリングターゲットを設定
-    rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-    rc.SetRenderTargetAndViewport(mainRenderTarget);
-
-    // スプライトを描画&
-    m_combineBokeImageSprite.Draw(rc);
-
-    // レンダリングターゲットへの書き込み終了待ち
-    rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
-};
+}

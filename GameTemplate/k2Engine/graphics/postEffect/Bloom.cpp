@@ -1,14 +1,15 @@
 #include "k2EnginePreCompile.h"
 #include "Bloom.h"
 
-void Bloom::OnInit(
+namespace nsK2Engine {
+    void Bloom::OnInit(
         RenderTarget& mainRenderTarget,
         RenderTarget& zprepassRenderTarget,
         RenderTarget& normalRenderTarget,
         RenderTarget& metallicSmoothRenderTarget,
         RenderTarget& albedoRenderTarget
-)
-{
+    )
+    {
         m_luminanceRenderTarget.Create(
             mainRenderTarget.GetWidth(),   // 解像度はメインレンダリングターゲットと同じ
             mainRenderTarget.GetHeight(),  // 解像度はメインレンダリングターゲットと同じ
@@ -69,33 +70,34 @@ void Bloom::OnInit(
             m_finalSprite.Init(spriteInitData);
         }
     }
-void Bloom::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
-{
-    // 輝度抽出
-    // 輝度抽出用のレンダリングターゲットに変更
-    rc.WaitUntilToPossibleSetRenderTarget(m_luminanceRenderTarget);
-    // レンダリングターゲットを設定
-    rc.SetRenderTargetAndViewport(m_luminanceRenderTarget);
-    // レンダリングターゲットをクリア
-    rc.ClearRenderTargetView(m_luminanceRenderTarget);
-    // 輝度抽出を行う
-    m_luminanceSprite.Draw(rc);
-    // レンダリングターゲットへの書き込み終了待ち
-    rc.WaitUntilFinishDrawingToRenderTarget(m_luminanceRenderTarget);
+    void Bloom::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
+    {
+        // 輝度抽出
+        // 輝度抽出用のレンダリングターゲットに変更
+        rc.WaitUntilToPossibleSetRenderTarget(m_luminanceRenderTarget);
+        // レンダリングターゲットを設定
+        rc.SetRenderTargetAndViewport(m_luminanceRenderTarget);
+        // レンダリングターゲットをクリア
+        rc.ClearRenderTargetView(m_luminanceRenderTarget);
+        // 輝度抽出を行う
+        m_luminanceSprite.Draw(rc);
+        // レンダリングターゲットへの書き込み終了待ち
+        rc.WaitUntilFinishDrawingToRenderTarget(m_luminanceRenderTarget);
 
-    // ガウシアンブラーを4回実行する
-    m_gaussianBlur[0].ExecuteOnGPU(rc, 10);
-    m_gaussianBlur[1].ExecuteOnGPU(rc, 10);
-    m_gaussianBlur[2].ExecuteOnGPU(rc, 10);
-    m_gaussianBlur[3].ExecuteOnGPU(rc, 10);
+        // ガウシアンブラーを4回実行する
+        m_gaussianBlur[0].ExecuteOnGPU(rc, 10);
+        m_gaussianBlur[1].ExecuteOnGPU(rc, 10);
+        m_gaussianBlur[2].ExecuteOnGPU(rc, 10);
+        m_gaussianBlur[3].ExecuteOnGPU(rc, 10);
 
-    // 4枚のボケ画像を合成してメインレンダリングターゲットに加算合成
-    // レンダリングターゲットとして利用できるまで待つ
-    rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-    // レンダリングターゲットを設定
-    rc.SetRenderTargetAndViewport(mainRenderTarget);
-    // 最終合成
-    m_finalSprite.Draw(rc);
-    // レンダリングターゲットへの書き込み終了待ち
-    rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+        // 4枚のボケ画像を合成してメインレンダリングターゲットに加算合成
+        // レンダリングターゲットとして利用できるまで待つ
+        rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
+        // レンダリングターゲットを設定
+        rc.SetRenderTargetAndViewport(mainRenderTarget);
+        // 最終合成
+        m_finalSprite.Draw(rc);
+        // レンダリングターゲットへの書き込み終了待ち
+        rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+    }
 }

@@ -2,53 +2,55 @@
 
 #include "graphics/postEffect/PostEffectComponentBase.h"
 
-/// <summary>
-/// FXAA。
-/// </summary>
-class Fxaa : public PostEffectComponentBase
-{
-public:
+namespace nsK2Engine {
     /// <summary>
-    /// 初期化。
+    /// FXAA。
     /// </summary>
-    /// <param name="mainRenderTarget">メインレンダーターゲット。</param>
-    void OnInit(
-        RenderTarget& mainRenderTarget,
-        RenderTarget& zprepassRenderTarget,
-        RenderTarget& normalRenderTarget,
-        RenderTarget& metallicSmoothRenderTarget,
-        RenderTarget& albedoRenderTarget ) override;
-    /// <summary>
-    /// 描画。
-    /// </summary>
-    /// <param name="rc">レンダ―コンテキスト。</param>
-    /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
-    void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
-    /// <summary>
-    /// ポストエフェクトを実行した結果となるテクスチャを取得。
-    /// </summary>
-    /// <returns></returns>
-    Texture& GetResultTexture() override
+    class Fxaa : public PostEffectComponentBase
     {
-        return m_fxaaRt.GetRenderTargetTexture();
-    }
-    /// <summary>
-    /// ポストの結果の画像をメインレンダリングターゲットにコピーする？
-    /// </summary>
-    /// <returns></returns>
-    bool IsCopyResultTextureToMainRenderTarget() const override
-    {
-        return true;
-    }
-private:
+    public:
+        /// <summary>
+        /// 初期化。
+        /// </summary>
+        /// <param name="mainRenderTarget">メインレンダーターゲット。</param>
+        void OnInit(
+            RenderTarget& mainRenderTarget,
+            RenderTarget& zprepassRenderTarget,
+            RenderTarget& normalRenderTarget,
+            RenderTarget& metallicSmoothRenderTarget,
+            RenderTarget& albedoRenderTarget) override;
+        /// <summary>
+        /// 描画。
+        /// </summary>
+        /// <param name="rc">レンダ―コンテキスト。</param>
+        /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
+        void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
+        /// <summary>
+        /// ポストエフェクトを実行した結果となるテクスチャを取得。
+        /// </summary>
+        /// <returns></returns>
+        Texture& GetResultTexture() override
+        {
+            return m_fxaaRt.GetRenderTargetTexture();
+        }
+        /// <summary>
+        /// ポストの結果の画像をメインレンダリングターゲットにコピーする？
+        /// </summary>
+        /// <returns></returns>
+        bool IsCopyResultTextureToMainRenderTarget() const override
+        {
+            return true;
+        }
+    private:
 
-    struct FaxxBuffer
-    {
-        float bufferW;
-        float bufferH;
-    }; 
-    RenderTarget m_fxaaRt;  // FXAAを行うレンダリングターゲット。
-    Sprite m_finalSprite;	// 最終合成用のスプライト
-    Sprite m_copySprite;    //　
-    FaxxBuffer m_cB;        // 解像度をGPUに送るための定数バッファ―。
-};
+        struct FaxxBuffer
+        {
+            float bufferW;
+            float bufferH;
+        };
+        RenderTarget m_fxaaRt;  // FXAAを行うレンダリングターゲット。
+        Sprite m_finalSprite;	// 最終合成用のスプライト
+        Sprite m_copySprite;    //　
+        FaxxBuffer m_cB;        // 解像度をGPUに送るための定数バッファ―。
+    };
+}
