@@ -19,7 +19,7 @@ namespace nsK2EngineLow {
 	}
 	DescriptorHeap::~DescriptorHeap()
 	{
-		g_graphicsEngine->ReleaseD3D12Object(m_descriptorHeap);
+		ReleaseD3D12Object(m_descriptorHeap);
 	}
 	void DescriptorHeap::CommitSamperHeap()
 	{

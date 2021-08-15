@@ -4,7 +4,7 @@
 namespace nsK2EngineLow {
 	GPUBuffer::~GPUBuffer()
 	{
-		g_graphicsEngine->ReleaseD3D12Object(m_buffer);
+		ReleaseD3D12Object(m_buffer);
 	}
 	void GPUBuffer::Init(D3D12_RESOURCE_DESC desc)
 	{

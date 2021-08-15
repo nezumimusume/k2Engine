@@ -109,7 +109,8 @@
     <ClCompile Include="geometry\GeometryData.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\geometry\SceneGeometryData.cpp">
+    <ClCompile Include="k2Engine.cpp" />
+    <ClCompile Include="geometry\SceneGeometryData.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
   </ItemGroup>
@@ -199,7 +200,8 @@
     <ClInclude Include="geometry\GeometryData.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\geometry\SceneGeometryData.h">
+    <ClInclude Include="k2Engine.h" />
+    <ClInclude Include="geometry\SceneGeometryData.h">
       <Filter>geometry</Filter>
     </ClInclude>
   </ItemGroup>

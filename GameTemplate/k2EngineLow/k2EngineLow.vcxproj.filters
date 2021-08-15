@@ -191,7 +191,6 @@
     <ClCompile Include="tkFile\TkmFile.cpp">
       <Filter>tkFile</Filter>
     </ClCompile>
-    <ClCompile Include="k2Engine.cpp" />
     <ClCompile Include="sound\WaveFile.cpp">
       <Filter>sound</Filter>
     </ClCompile>
@@ -199,6 +198,7 @@
       <Filter>physics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\FrameBuffer.cpp" />
+    <ClCompile Include="k2EngineLow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -436,11 +436,11 @@
     <ClInclude Include="util\TResourceBank.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="k2Engine.h" />
     <ClInclude Include="physics\PhysicsGhostObject.h">
       <Filter>physics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\FrameBuffer.h" />
+    <ClInclude Include="k2EngineLow.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

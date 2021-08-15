@@ -11,9 +11,6 @@
 #include "Fade.h"
 #include "Title.h"
 
-#include "nature/SkyCube.h"
-#include "sound/SoundEngine.h"
-#include "sound/SoundSource.h"
 
 Game::Game()
 {

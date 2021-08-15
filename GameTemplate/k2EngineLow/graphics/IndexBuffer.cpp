@@ -6,7 +6,7 @@ namespace nsK2EngineLow {
 
 	IndexBuffer::~IndexBuffer()
 	{
-		g_graphicsEngine->ReleaseD3D12Object(m_indexBuffer);
+		ReleaseD3D12Object(m_indexBuffer);
 	}
 	void IndexBuffer::Init(int size, int stride)
 	{

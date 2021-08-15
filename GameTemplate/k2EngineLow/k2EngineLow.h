@@ -17,6 +17,15 @@ namespace nsK2EngineLow {
 		/// </summary>
 		~K2EngineLow();
 		/// <summary>
+		/// 更新処理を実行。
+		/// </summary>
+		void ExecuteUpdate();
+		/// <summary>
+		/// 描画処理を実行。
+		/// </summary>
+		void ExecuteRender();
+		
+		/// <summary>
 		/// フレームの開始時に呼ばれる処理。
 		/// </summary>
 		void BeginFrame();
@@ -24,6 +33,7 @@ namespace nsK2EngineLow {
 		/// フレームの終了時に呼ばれる処理。
 		/// </summary>
 		void EndFrame();
+
 		/// <summary>
 		/// ゲームエンジンの初期化。
 		/// </summary>
@@ -86,6 +96,8 @@ namespace nsK2EngineLow {
 			programName += entryPointFuncName;
 			m_shaderBank.Regist(programName.c_str(), shader);
 		}
+	
+		
 	private:
 		GraphicsEngine* m_graphicsEngine = nullptr;		//グラフィックエンジン。
 		TResourceBank<TkmFile> m_tkmFileBank;			//tkmファイルバンク。

@@ -1,8 +1,5 @@
 #pragma once
 
-//クラス宣言。
-class EffectEmitter;
-class CollisionObject;
 
 /// <summary>
 /// ファイヤーボール。

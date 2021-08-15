@@ -81,10 +81,12 @@ void InitGame(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, in
 	//ウィンドウを初期化。
 	InitWindow(hInstance, hPrevInstance, lpCmdLine, nCmdShow, appName);
 	//k2エンジンの初期化。
-	g_engine = new K2EngineLow;
-	g_engine->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
-	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
-	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
+	K2Engine::InitData initData;
+	initData.isSoftShadow = true;
+	initData.frameBufferWidth = FRAME_BUFFER_W;
+	initData.frameBufferHeight = FRAME_BUFFER_H;
+	initData.hwnd = g_hWnd;
+	K2Engine::CreateInstance(initData);
 }
 //ウィンドウメッセージをディスパッチ。falseが返ってきたら、ゲーム終了。
 bool DispatchWindowMessage()
@@ -103,60 +105,4 @@ bool DispatchWindowMessage()
 		}
 	}
 	return msg.message != WM_QUIT;
-}
-
-void InitK2Engine(bool isSoftShadow)
-{
-	//各種エンジンなどの初期化。
-	//ゲームオブジェクトマネージャーのインスタンスを作成する。
-	GameObjectManager::CreateInstance();
-	PhysicsWorld::CreateInstance();
-	g_soundEngine = new SoundEngine();
-	//レンダリングエンジンを初期化
-	RenderingEngine::CreateInstance(isSoftShadow);
-	//エフェクトエンジンの初期化。
-	EffectEngine::CreateInstance();
-}
-void ExecuteK2Engine()
-{
-	auto& renderContext = g_graphicsEngine->GetRenderContext();
-
-	//レンダリング開始。
-	g_engine->BeginFrame();
-	g_soundEngine->Update();
-
-	//////////////////////////////////////
-	//ここから絵を描くコードを記述する。
-	//////////////////////////////////////
-
-	GameObjectManager::GetInstance()->ExecuteUpdate();
-
-	// エフェクトエンジンの更新。
-	EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-	// レンダリングエンジンの更新。
-	RenderingEngine::GetInstance()->Update();
-
-
-	// ゲームオブジェクトマネージャーの描画処理を実行。
-	GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-	//レンダリングエンジンを実行。		
-	RenderingEngine::GetInstance()->Execute(renderContext);
-
-	PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
-
-	//////////////////////////////////////
-	//絵を描くコードを書くのはここまで！！！
-	//////////////////////////////////////
-	g_engine->EndFrame();
-}
-void FinalK2Engine()
-{
-	//ゲームオブジェクトマネージャーを削除。
-	GameObjectManager::DeleteInstance();
-	PhysicsWorld::DeleteInstance();
-	EffectEngine::DeleteInstance();
-	RenderingEngine::DeleteInstance();
-
-	delete g_soundEngine;
-	delete g_engine;
 }

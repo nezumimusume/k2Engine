@@ -5,18 +5,10 @@
 namespace nsK2EngineLow {
 	RenderTarget::~RenderTarget()
 	{
-		if (m_renderTargetTextureDx12) {
-			m_renderTargetTextureDx12->Release();
-		}
-		if (m_depthStencilTexture) {
-			m_depthStencilTexture->Release();
-		}
-		if (m_rtvHeap) {
-			m_rtvHeap->Release();
-		}
-		if (m_dsvHeap) {
-			m_dsvHeap->Release();
-		}
+		ReleaseD3D12Object(m_renderTargetTextureDx12);
+		ReleaseD3D12Object(m_depthStencilTexture);
+		ReleaseD3D12Object(m_rtvHeap);
+		ReleaseD3D12Object(m_dsvHeap);
 	}
 	bool RenderTarget::Create(
 		int w,

@@ -225,6 +225,9 @@ namespace nsK2EngineLow {
 		/// <param name="res"></param>
 		void ReleaseD3D12Object(ID3D12Object* res)
 		{
+			if(res == nullptr){
+				return;
+			}
 			// D3Dオブジェクトは解放までに1フレームの時間をかける
 			// なぜ？
 			// 描画コマンドは１フレーム遅れて実行されるように実装されているため、即座に開放すると描画中に
@@ -331,4 +334,22 @@ namespace nsK2EngineLow {
 	extern GraphicsEngine* g_graphicsEngine;	//グラフィックスエンジン
 	extern Camera* g_camera2D;					//2Dカメラ。
 	extern Camera* g_camera3D;					//3Dカメラ。
+
+	/// <summary>
+	/// D3D12オブジェクトを解放。
+	/// </summary>
+	/// <param name="obj">開放したいオブジェクト</param>
+	static inline void ReleaseD3D12Object(ID3D12Object* obj)
+	{
+		if (obj == nullptr) {
+			return;
+		}
+		if (g_graphicsEngine) {
+			g_graphicsEngine->ReleaseD3D12Object(obj);
+		}
+		else {
+			obj->Release();
+		}
+	}
 }
+

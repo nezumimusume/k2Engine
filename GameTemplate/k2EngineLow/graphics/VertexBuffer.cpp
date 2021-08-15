@@ -5,7 +5,7 @@ namespace nsK2EngineLow {
 
 	VertexBuffer::~VertexBuffer()
 	{
-		g_graphicsEngine->ReleaseD3D12Object(m_vertexBuffer);
+		ReleaseD3D12Object(m_vertexBuffer);
 	}
 	void VertexBuffer::Init(int size, int stride)
 	{

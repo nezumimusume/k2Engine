@@ -6,10 +6,6 @@
 #include "FireBall.h"
 #include "Player.h"
 
-#include "collision/CollisionObject.h"
-#include "graphics/effect/EffectEmitter.h"
-#include "sound/SoundEngine.h"
-#include "sound/SoundSource.h"
 
 #include <time.h>
 #include <stdlib.h>

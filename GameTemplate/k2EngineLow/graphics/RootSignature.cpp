@@ -11,7 +11,7 @@ namespace nsK2EngineLow {
 
 	RootSignature::~RootSignature()
 	{
-		g_graphicsEngine->ReleaseD3D12Object(m_rootSignature);
+		ReleaseD3D12Object(m_rootSignature);
 	}
 	bool RootSignature::Init(
 		D3D12_STATIC_SAMPLER_DESC* samplerDescArray,

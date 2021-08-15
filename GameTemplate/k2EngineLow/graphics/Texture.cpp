@@ -8,7 +8,7 @@ namespace nsK2EngineLow {
 	}
 	Texture::~Texture()
 	{
-		g_graphicsEngine->ReleaseD3D12Object(m_texture);
+		ReleaseD3D12Object(m_texture);
 	}
 	void Texture::InitFromDDSFile(const wchar_t* filePath)
 	{

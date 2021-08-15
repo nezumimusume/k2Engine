@@ -1,16 +1,14 @@
 #pragma once
 
-//レベルを使用するためにはファイルをインクルードする必要がある。
-#include "level3DRender/LevelRender.h"
+
+
 
 //クラス宣言。
 class Player;
 class GameCamera;
-class SkyCube;
 class Background;
 class Lever;
 class Door;
-class SoundSource;
 class Fade;
 
 /// <summary>

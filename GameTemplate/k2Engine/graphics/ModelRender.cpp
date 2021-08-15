@@ -7,7 +7,9 @@ namespace nsK2Engine {
 	{
 		for (auto& geomData : m_geometryDatas) {
 			// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒGƒ“ƒWƒ“‚©‚ç“o˜^‰ðœ
-			RenderingEngine::GetInstance()->UnregisterGeometryData(&geomData);
+			if (RenderingEngine::GetInstance() != nullptr) {
+				RenderingEngine::GetInstance()->UnregisterGeometryData(&geomData);
+			}
 		}
 	}
 	void ModelRender::SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData)

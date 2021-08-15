@@ -32,9 +32,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 {
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
-	// k2Engineの初期化
-	InitK2Engine(true);
-
+	
 	//////////////////////////////////////
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
@@ -55,8 +53,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	{
 		sw.Start();
 
-		// k2Engineの処理を実行。
-		ExecuteK2Engine();
+		K2Engine::GetInstance()->Execute();
 
 		sw.Stop();
 		char text[256];
@@ -64,7 +61,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		OutputDebugStringA(text);
 	}
 	
-	FinalK2Engine();
+	// k2Engineの終了処理。
+	K2Engine::DeleteInstance();
 
 #ifdef _DEBUG
 	ReportLiveObjects();

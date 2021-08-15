@@ -10,7 +10,7 @@ namespace nsK2EngineLow {
 		for (auto& buffer : m_buffersOnGPU) {
 			if (buffer) {
 				buffer->Unmap(0, &readRange);
-				g_graphicsEngine->ReleaseD3D12Object(buffer);
+				ReleaseD3D12Object(buffer);
 			}
 		}
 	}

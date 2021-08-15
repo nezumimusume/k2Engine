@@ -11,7 +11,9 @@ namespace nsK2Engine {
 
 	CollisionObject::~CollisionObject()
 	{
-		g_collisionObjectManager->RemoveCollisionObject(this);
+		if (g_collisionObjectManager) {
+			g_collisionObjectManager->RemoveCollisionObject(this);
+		}
 	}
 
 	bool CollisionObject::Start()

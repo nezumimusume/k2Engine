@@ -45,6 +45,7 @@ namespace nsK2Engine {
         static void DeleteInstance()
         {
             delete m_instance;
+            m_instance = nullptr;
         }
         /// <summary>
         /// インスタンスを取得。

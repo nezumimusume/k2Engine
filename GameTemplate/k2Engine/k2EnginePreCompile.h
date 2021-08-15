@@ -3,7 +3,7 @@
 
 #include "k2EngineLowPreCompile.h"
 using namespace nsK2EngineLow;
-
+#include "k2Engine.h"
 #include "geometry/AABB.h"
 #include "graphics/IRenderer.h"
 #include "graphics/ModelRender.h"
@@ -12,3 +12,5 @@ using namespace nsK2EngineLow;
 #include "graphics/SceneLight.h"
 #include "graphics/RenderingEngine.h"
 #include "nature/SkyCube.h"
+#include "Level3DRender/LevelRender.h"
+#include "collision/CollisionObject.h"

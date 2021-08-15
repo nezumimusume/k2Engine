@@ -2,7 +2,6 @@
 
 //クラス宣言。
 class Fade;
-class SoundSource;
 
 /// <summary>
 /// タイトル。
