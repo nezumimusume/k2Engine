@@ -14,7 +14,7 @@ namespace nsK2Engine {
 		Vector4 vMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX };
 		Vector4 vMin = { FLT_MAX,  FLT_MAX,  FLT_MAX, FLT_MAX };
 
-		const auto& viewProjMatrix = RenderingEngine::GetInstance()->GetViewProjectionMatrixForViewCulling();
+		const auto& viewProjMatrix = g_renderingEngine->GetViewProjectionMatrixForViewCulling();
 
 		m_aabbMax = { -FLT_MIN, -FLT_MIN, -FLT_MIN };
 		m_aabbMin = { FLT_MAX,  FLT_MAX,  FLT_MAX };

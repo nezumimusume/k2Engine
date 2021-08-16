@@ -7,8 +7,8 @@ namespace nsK2Engine {
 	{
 		for (auto& geomData : m_geometryDatas) {
 			// レンダリングエンジンから登録解除
-			if (RenderingEngine::GetInstance() != nullptr) {
-				RenderingEngine::GetInstance()->UnregisterGeometryData(&geomData);
+			if (g_renderingEngine != nullptr) {
+				g_renderingEngine->UnregisterGeometryData(&geomData);
 			}
 		}
 	}
@@ -45,11 +45,11 @@ namespace nsK2Engine {
 		//アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
 		//フォワードレンダリング用のモデルを初期化。
-		InitModelOnForward(*RenderingEngine::GetInstance(), filePath, enModelUpAxis, isShadowReciever, alphaBlendMode);
+		InitModelOnForward(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever, alphaBlendMode);
 		//ZPrepass描画用のモデルを初期化。
-		InitModelOnZprepass(*RenderingEngine::GetInstance(), filePath, enModelUpAxis);
+		InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 		//シャドウマップ描画用のモデルを初期化。
-		InitModelOnShadowMap(*RenderingEngine::GetInstance(), filePath, enModelUpAxis);
+		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
 	}
@@ -64,9 +64,9 @@ namespace nsK2Engine {
 		//作成した初期化データをもとにモデルを初期化する。
 		m_forwardRenderModel.Init(initData);
 		//ZPrepass描画用のモデルを初期化。
-		InitModelOnZprepass(*RenderingEngine::GetInstance(), initData.m_tkmFilePath, initData.m_modelUpAxis);
+		InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 		//シャドウマップ描画用のモデルを初期化。
-		InitModelOnShadowMap(*RenderingEngine::GetInstance(), initData.m_tkmFilePath, initData.m_modelUpAxis);
+		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(1);
 	}
@@ -85,11 +85,11 @@ namespace nsK2Engine {
 		// アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
 		// GBuffer描画用のモデルを初期化。
-		InitModelOnRenderGBuffer(*RenderingEngine::GetInstance(), filePath, enModelUpAxis, isShadowReciever);
+		InitModelOnRenderGBuffer(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
 		// ZPrepass描画用のモデルを初期化。
-		InitModelOnZprepass(*RenderingEngine::GetInstance(), filePath, enModelUpAxis);
+		InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 		// シャドウマップ描画用のモデルを初期化。
-		InitModelOnShadowMap(*RenderingEngine::GetInstance(), filePath, enModelUpAxis);
+		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
 
@@ -102,7 +102,7 @@ namespace nsK2Engine {
 		for (auto& geomData : m_geometryDatas) {
 			geomData.Init(this, instanceId);
 			// レンダリングエンジンに登録。
-			RenderingEngine::GetInstance()->RegisterGeometryData(&geomData);
+			g_renderingEngine->RegisterGeometryData(&geomData);
 			instanceId++;
 		}
 	}
@@ -236,7 +236,7 @@ namespace nsK2Engine {
 		}
 
 		modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
-		if (RenderingEngine::GetInstance()->IsSoftShadow()) {
+		if (g_renderingEngine->IsSoftShadow()) {
 			modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32_FLOAT;
 		}
 		else {
@@ -360,7 +360,7 @@ namespace nsK2Engine {
 				}
 			}
 			if (m_fixNumInstanceOnFrame != 0) {
-				RenderingEngine::GetInstance()->AddRenderObject(this);
+				g_renderingEngine->AddRenderObject(this);
 				m_worldMatrixArraySB.Update(m_worldMatrixArray.get());
 			}
 			m_numInstance = 0;
@@ -369,7 +369,7 @@ namespace nsK2Engine {
 			// 通常描画
 			if (m_geometryDatas[0].IsInViewFrustum()) {
 				// ビューフラスタムに含まれている。
-				RenderingEngine::GetInstance()->AddRenderObject(this);
+				g_renderingEngine->AddRenderObject(this);
 				m_fixNumInstanceOnFrame = 1;
 			}
 		}

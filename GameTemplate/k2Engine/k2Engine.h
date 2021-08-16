@@ -71,6 +71,14 @@ namespace nsK2Engine {
 		/// </summary>
 		void Execute();
 	private:
+		K2EngineLow m_k2EngineLow;							// 
+		CollisionObjectManager m_collisionObjectManager;	// 
+		RenderingEngine m_renderingEngine;					// レンダリングエンジン。
 		static K2Engine* m_instance;
 	};
+
+	// グローバルなアクセスポイント。
+	extern RenderingEngine* g_renderingEngine;
+	extern SceneLight* g_sceneLight;
+	extern CollisionObjectManager* g_collisionObjectManager;
 }

@@ -63,7 +63,7 @@ namespace nsK2Engine {
         // トーンマップ
         m_tonemap.Render(rc, mainRenderTarget);
 
-        RenderingEngine::GetInstance()->SetMainRenderTargetAndDepthStencilBuffer(rc);
+        g_renderingEngine->SetMainRenderTargetAndDepthStencilBuffer(rc);
 
         //メインレンダーターゲットをPRESENTからRENDERTARGETへ。
         rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);

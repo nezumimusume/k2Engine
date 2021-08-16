@@ -14,9 +14,9 @@ namespace nsK2Engine {
     void SceneLight::Init()
     {
         // ‘¾—zŒõ
-        m_light.directionalLight[0].color.x = 1.2f;
-        m_light.directionalLight[0].color.y = 1.2f;
-        m_light.directionalLight[0].color.z = 1.2f;
+        m_light.directionalLight[0].color.x = 0.2f;
+        m_light.directionalLight[0].color.y = 0.2f;
+        m_light.directionalLight[0].color.z = 0.2f;
 
         m_light.directionalLight[0].direction.x = 1.0f;
         m_light.directionalLight[0].direction.y = -1.0f;
@@ -45,9 +45,9 @@ namespace nsK2Engine {
         m_light.directionalLight[2].direction.z = 1.0f;
         m_light.directionalLight[2].direction.Normalize();*/
 
-        m_light.ambinetLight.x = 0.1f;
-        m_light.ambinetLight.y = 0.1f;
-        m_light.ambinetLight.z = 0.1f;
+        m_light.ambinetLight.x = 0.01f;
+        m_light.ambinetLight.y = 0.01f;
+        m_light.ambinetLight.z = 0.01f;
         m_light.eyePos = g_camera3D->GetPosition();
         m_light.numPointLight = 0;
 

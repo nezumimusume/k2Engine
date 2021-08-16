@@ -1,6 +1,7 @@
 #pragma once
 #include "physics/PhysicsGhostObject.h"
 
+
 namespace nsK2Engine {
 	/// <summary>
 	/// 他のコリジョンと当たり判定を行うクラス。
@@ -332,5 +333,5 @@ namespace nsK2Engine {
 		std::vector<CollisionObject*>		m_findsCollisionObjectVector;
 		std::vector<CollisionObject*>		m_findMatchForwardNameCollisionObjectVector;
 	};
-	extern CollisionObjectManager* g_collisionObjectManager;
+	
 }

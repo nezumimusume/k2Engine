@@ -2,8 +2,6 @@
 #include "RenderingEngine.h"
 
 namespace nsK2Engine {
-    RenderingEngine* RenderingEngine::m_instance = nullptr;	//唯一のインスタンスのアドレスを記録する変数。
-    SceneLight* g_sceneLight = nullptr;
 
     void RenderingEngine::Init(bool isSoftShadow)
     {

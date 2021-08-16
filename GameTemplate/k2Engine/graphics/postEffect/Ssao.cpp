@@ -28,8 +28,8 @@ namespace nsK2Engine {
 
         // 最終合成用のスプライトを初期化する
         SpriteInitData spriteInitData;
-        spriteInitData.m_textures[0] = &RenderingEngine::GetInstance()->GetZPrepassDepthTexture();
-        spriteInitData.m_textures[1] = &RenderingEngine::GetInstance()->GetGBufferNormalTexture();
+        spriteInitData.m_textures[0] = &g_renderingEngine->GetZPrepassDepthTexture();
+        spriteInitData.m_textures[1] = &g_renderingEngine->GetGBufferNormalTexture();
         //todo ワールド座標のGBufferは廃止。アルベド深度テクスチャの深度値を利用して、ワールド座標を復元するように。
         //spriteInitData.m_textures[2] = &g_renderingEngine->GetGBufferWorldTexture();
         // 解像度はmainRenderTargetの幅と高さ

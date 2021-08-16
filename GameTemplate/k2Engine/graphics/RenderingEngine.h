@@ -27,34 +27,9 @@ namespace nsK2Engine {
 
     class RenderingEngine : public Noncopyable
     {
-    private:
-        RenderingEngine() {}
-        ~RenderingEngine() {}
+    
     public:
-        /// <summary>
-        /// インスタンスの作成。
-        /// </summary>
-        static void CreateInstance(bool isSoftShadow)
-        {
-            m_instance = new RenderingEngine;
-            m_instance->Init(true);
-        }
-        /// <summary>
-        /// インスタンスの破棄。
-        /// </summary>
-        static void DeleteInstance()
-        {
-            delete m_instance;
-            m_instance = nullptr;
-        }
-        /// <summary>
-        /// インスタンスを取得。
-        /// </summary>
-        /// <returns></returns>
-        static RenderingEngine* GetInstance()
-        {
-            return m_instance;
-        }
+        
 
         //メインレンダリングターゲットのスナップショット
         enum class EnMainRTSnapshot
@@ -323,6 +298,5 @@ namespace nsK2Engine {
         SceneGeometryData m_sceneGeometryData;                          // シーンのジオメトリ情報。
         static RenderingEngine* m_instance;		                        //唯一のインスタンスのアドレスを記録する変数。
     };
-
-    extern SceneLight* g_sceneLight;
+    
 }

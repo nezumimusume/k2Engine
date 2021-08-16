@@ -9,6 +9,6 @@ namespace nsK2Engine {
 		{
 			return;
 		}
-		RenderingEngine::GetInstance()->AddRenderObject(this);
+		g_renderingEngine->AddRenderObject(this);
 	}
 }

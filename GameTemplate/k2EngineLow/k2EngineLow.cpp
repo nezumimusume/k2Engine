@@ -8,10 +8,12 @@ namespace nsK2EngineLow {
 
 	K2EngineLow::~K2EngineLow()
 	{
-		if (m_graphicsEngine) {
-			g_graphicsEngine = nullptr;
-			delete m_graphicsEngine;
-		}
+		// グローバルなアクセスポイントにnullptrを代入。
+		g_graphicsEngine = nullptr;
+		g_gameTime = nullptr;
+		
+		delete m_graphicsEngine;
+		
 		//ゲームオブジェクトマネージャーを削除。
 		GameObjectManager::DeleteInstance();
 		PhysicsWorld::DeleteInstance();

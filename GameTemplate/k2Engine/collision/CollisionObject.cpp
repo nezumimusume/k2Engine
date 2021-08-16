@@ -2,8 +2,6 @@
 #include "CollisionObject.h"
 
 namespace nsK2Engine {
-	CollisionObjectManager* g_collisionObjectManager = nullptr;
-
 	CollisionObject::CollisionObject()
 	{
 
