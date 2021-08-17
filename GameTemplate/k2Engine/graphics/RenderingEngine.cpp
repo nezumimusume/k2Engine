@@ -14,6 +14,7 @@ namespace nsK2Engine {
         InitCopyMainRenderTargetToFrameBufferSprite();
         InitShadowMapRender();
         InitDeferredLighting();
+        Init2DRenderTarget();
         m_lightCulling.Init(
             m_zprepassRenderTarget.GetRenderTargetTexture(),
             m_diferredLightingSprite.GetExpandConstantBufferGPU(),
@@ -177,6 +178,49 @@ namespace nsK2Engine {
         // 初期化データを使ってスプライトを作成
         m_diferredLightingSprite.Init(spriteInitData);
     }
+    void RenderingEngine::Init2DRenderTarget()
+    {
+        float clearColor[4] = { 0.0f,0.0f,0.0f,0.0f };
+
+        m_2DRenderTarget.Create(
+            1920,
+            1080,
+            1,
+            1,
+            DXGI_FORMAT_R16G16B16A16_FLOAT,
+            DXGI_FORMAT_UNKNOWN,
+            clearColor
+        );
+
+        // 最終合成用のスプライトを初期化する
+        SpriteInitData spriteInitData;
+        //テクスチャは2Dレンダ―ターゲット。
+        spriteInitData.m_textures[0] = &m_2DRenderTarget.GetRenderTargetTexture();
+        // 解像度はmainRenderTargetの幅と高さ
+        spriteInitData.m_width = m_mainRenderTarget.GetWidth();
+        spriteInitData.m_height = m_mainRenderTarget.GetHeight();
+        // 2D用のシェーダーを使用する
+        spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+        spriteInitData.m_vsEntryPointFunc = "VSMain";
+        spriteInitData.m_psEntryPoinFunc = "PSMain";
+        //上書き。
+        spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
+        //レンダリングターゲットのフォーマット。
+        spriteInitData.m_colorBufferFormat[0] = m_mainRenderTarget.GetColorBufferFormat();
+
+        m_2DSprite.Init(spriteInitData);
+
+        //テクスチャはメインレンダ―ターゲット。
+        spriteInitData.m_textures[0] = &m_mainRenderTarget.GetRenderTargetTexture();
+
+        //解像度は2Dレンダ―ターゲットの幅と高さ
+        spriteInitData.m_width = m_2DRenderTarget.GetWidth();
+        spriteInitData.m_height = m_2DRenderTarget.GetHeight();
+        //レンダリングターゲットのフォーマット。
+        spriteInitData.m_colorBufferFormat[0] = m_2DRenderTarget.GetColorBufferFormat();
+       
+        m_mainSprite.Init(spriteInitData);
+    }
     void RenderingEngine::CalcViewProjectionMatrixForViewCulling()
     {
         Matrix projMatrix;
@@ -279,13 +323,32 @@ namespace nsK2Engine {
     {
         // レンダリングターゲットとして利用できるまで待つ。
         //PRESENTからRENDERTARGETへ。
-        rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+        rc.WaitUntilToPossibleSetRenderTarget(m_2DRenderTarget);
+    
+        // レンダリングターゲットを設定
+        rc.SetRenderTargetAndViewport(m_2DRenderTarget);
+
+        // レンダリングターゲットをクリア
+        rc.ClearRenderTargetView(m_2DRenderTarget);
+
+        m_mainSprite.Draw(rc);
+
         for (auto& renderObj : m_renderObjects) {
             renderObj->OnRender2D(rc);
         }
+
+        //RENDERTARGETからPRESENTへ。
+        rc.WaitUntilFinishDrawingToRenderTarget(m_2DRenderTarget);
+        //PRESENTからRENDERTARGETへ。
+        rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+
+        // レンダリングターゲットを設定
+        rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+
+        m_2DSprite.Draw(rc);
+
         //RENDERTARGETからPRESENTへ。
         rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
-
     }
     void RenderingEngine::ForwardRendering(RenderContext& rc)
     {

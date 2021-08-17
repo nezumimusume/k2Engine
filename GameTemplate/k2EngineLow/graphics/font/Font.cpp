@@ -31,8 +31,8 @@ namespace nsK2EngineLow {
 		DirectX::XMFLOAT2 tkFloat2Zero(0, 0);
 		//座標系をスプライトと合わせる。
 		Vector2 pos = position;
-		float frameBufferHalfWidth = g_graphicsEngine->GetFrameBufferWidth() * 0.5f;
-		float frameBufferHalfHeight = g_graphicsEngine->GetFrameBufferHeight() * 0.5f;
+		float frameBufferHalfWidth = 1920 * 0.5f;
+		float frameBufferHalfHeight = 1080 * 0.5f;
 		pos.x += frameBufferHalfWidth;
 		pos.y = -pos.y + frameBufferHalfHeight;
 
@@ -73,7 +73,7 @@ namespace nsK2EngineLow {
 			pos,
 			color,
 			rotation,
-			scale,
+			scale * (static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()) / 1920),
 			pivot
 		);
 	}
