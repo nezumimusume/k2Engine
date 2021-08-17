@@ -88,6 +88,37 @@ bool Game::Start()
 
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 
+	EnSkyCubeType skyCubeType = enSkyCubeType_Wild;
+	
+	if (skyCubeType == enSkyCubeType_Night) {
+		m_skyCube->SetType(enSkyCubeType_Night);
+		m_skyCube->SetLuminance(0.1f);
+		Vector3 ligColor, ligDir;
+		ligColor.x = 0.6f;
+		ligColor.y = 0.6f;
+		ligColor.z = 0.6f;
+		ligDir.x = 1.0f;
+		ligDir.y = -1.0f;
+		ligDir.z = -1.0f;
+		ligDir.Normalize();
+		g_sceneLight->SetDirectionLight(0, ligDir, ligColor);
+	}
+	else if(skyCubeType == enSkyCubeType_Snow){
+		m_skyCube->SetType(enSkyCubeType_Snow);
+		m_skyCube->SetLuminance(1.0f);
+	}
+	else if(skyCubeType == enSkyCubeType_Wild){
+		m_skyCube->SetType(enSkyCubeType_Wild);
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (skyCubeType == enSkyCubeType_Grass) {
+		m_skyCube->SetType(enSkyCubeType_Grass);
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (skyCubeType == enSkyCubeType_Euro) {
+		m_skyCube->SetType(enSkyCubeType_Euro);
+		m_skyCube->SetLuminance(0.5f);
+	}
 	int numStar = 0;
 	int numPyramid = 0;
 	//ƒŒƒxƒ‹‚ğ\’z‚·‚éB

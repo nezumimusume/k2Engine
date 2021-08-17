@@ -1,6 +1,15 @@
 #pragma once
 
 namespace nsK2Engine {
+	enum EnSkyCubeType {
+		enSkyCubeType_Day,		// 昼間
+		enSkyCubeType_Night,	// 夜間
+		enSkyCubeType_Snow,		// 雪山
+		enSkyCubeType_Wild,		// 荒野
+		enSkyCubeType_Grass,	// 芝生
+		enSkyCubeType_Euro,		// 欧州
+		enSkyCubeType_Num,
+	};
 	/// <summary>
 	/// ?
 	/// </summary>
@@ -30,13 +39,30 @@ namespace nsK2Engine {
 			m_scale.Scale(scale);
 			m_isDirty = true;
 		}
+		/// <summary>
+		/// スカイキューブのタイプを設定。
+		/// </summary>
+		/// <param name="type"></param>
+		void SetType(EnSkyCubeType type) 
+		{
+			m_type = type;
+		}
+		/// <summary>
+		/// 明るさを設定。
+		/// </summary>
+		/// <param name="lum"></param>
+		void SetLuminance(float lum)
+		{
+			m_luminance = lum;
+		}
 	private:
 		ModelRender m_modelRender;
-		Texture m_texture;
+		Texture m_texture[enSkyCubeType_Num];
 		Vector3 m_position = g_vec3Zero;
 		Vector3 m_scale = g_vec3One * 1000.0f;
-		Vector4 m_selfLuminous = { 0.0f,0.0f,0.0f,1.0f };
+		float m_luminance = 3.8f;
 		bool m_isDirty = false;
+		EnSkyCubeType m_type = enSkyCubeType_Day;
 	};
 }
 
