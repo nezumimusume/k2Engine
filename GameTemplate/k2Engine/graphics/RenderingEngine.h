@@ -262,6 +262,10 @@ namespace nsK2Engine {
         /// ビューカリング用のビュープロジェクション行列を計算。
         /// </summary>
         void CalcViewProjectionMatrixForViewCulling();
+        /// <summary>
+        /// 2D描画用のレンダ―ターゲットを初期化
+        /// </summary>
+        void Init2DRenderTarget();
     private:
         // GBufferの定義
         enum EnGBuffer
@@ -297,6 +301,9 @@ namespace nsK2Engine {
         Matrix m_viewProjMatrixForViewCulling;                          // ビューカリング用のビュープロジェクション行列。
         SceneGeometryData m_sceneGeometryData;                          // シーンのジオメトリ情報。
         static RenderingEngine* m_instance;		                        //唯一のインスタンスのアドレスを記録する変数。
+        RenderTarget    m_2DRenderTarget;                               //2D描画用のレンダ―ターゲット。
+        Sprite          m_2DSprite;                                     //2D合成用のスプライト。
+        Sprite          m_mainSprite;
     };
     
 }
