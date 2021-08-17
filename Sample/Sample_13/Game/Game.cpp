@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Game.h"
 
-//SoundSourceを使用するにはファイルをインクルードする必要がある。
-#include "sound/SoundSource.h"
 
 Game::Game()
 {

@@ -88,8 +88,8 @@ SPSIn VSMainSkin(SVSIn vsIn)
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
 	float4 albedoColor;
-	float3 normal = normalize(psIn.normal) * -1.0f;
+	float3 normal = normalize(psIn.normal);
 	//albedoColor = g_skyCubeMap.Sample(g_sampler, psIn.normal);
-	albedoColor = g_skyCubeMap.Sample(g_sampler, normal) * 0.1f;
+	albedoColor = g_skyCubeMap.Sample(g_sampler, normal) * 3.8f;
 	return albedoColor;
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-//ƒNƒ‰ƒXéŒ¾B
-class SoundSource;
 
 class Game : public IGameObject
 {
