@@ -83,7 +83,7 @@ namespace nsK2Engine {
 			mainRenderTarget.GetColorBufferFormat(),
 			DXGI_FORMAT_UNKNOWN
 		);
-		m_tonemapParam.midddleGray = 0.2f;
+		m_tonemapParam.midddleGray = 0.4f;
 		m_tonemapParam.deltaTime = 1.0f / 60.0f;
 		// 対数平均をとるスプライトを初期化。
 		int curRtNo = 0;
