@@ -88,10 +88,13 @@ bool Game::Start()
 
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 
-	EnSkyCubeType skyCubeType = enSkyCubeType_Wild;
+	EnSkyCubeType skyCubeType = enSkyCubeType_Day;
 	
-	if (skyCubeType == enSkyCubeType_Night) {
-		m_skyCube->SetType(enSkyCubeType_Night);
+	if (skyCubeType == enSkyCubeType_Night
+		|| skyCubeType == enSkyCubeType_Wild_Night
+	) {
+
+		m_skyCube->SetType(skyCubeType);
 		m_skyCube->SetLuminance(0.1f);
 		Vector3 ligColor, ligDir;
 		ligColor.x = 0.6f;
@@ -107,8 +110,16 @@ bool Game::Start()
 		m_skyCube->SetType(enSkyCubeType_Snow);
 		m_skyCube->SetLuminance(1.0f);
 	}
+	else if (skyCubeType == enSkyCubeType_Snow_2) {
+		m_skyCube->SetType(enSkyCubeType_Snow_2);
+		m_skyCube->SetLuminance(1.0f);
+	}
 	else if(skyCubeType == enSkyCubeType_Wild){
 		m_skyCube->SetType(enSkyCubeType_Wild);
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (skyCubeType == enSkyCubeType_Wild_2) {
+		m_skyCube->SetType(enSkyCubeType_Wild_2);
 		m_skyCube->SetLuminance(0.5f);
 	}
 	else if (skyCubeType == enSkyCubeType_Grass) {

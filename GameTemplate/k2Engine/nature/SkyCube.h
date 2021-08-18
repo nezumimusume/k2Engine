@@ -5,7 +5,10 @@ namespace nsK2Engine {
 		enSkyCubeType_Day,		// ’‹ŠÔ
 		enSkyCubeType_Night,	// –éŠÔ
 		enSkyCubeType_Snow,		// áR
+		enSkyCubeType_Snow_2,	// áR_2
 		enSkyCubeType_Wild,		// r–ì
+		enSkyCubeType_Wild_2,	// r–ì‚Q
+		enSkyCubeType_Wild_Night,	// r–ì(–éŠÔ)
 		enSkyCubeType_Grass,	// Å¶
 		enSkyCubeType_Euro,		// ‰¢B
 		enSkyCubeType_Num,

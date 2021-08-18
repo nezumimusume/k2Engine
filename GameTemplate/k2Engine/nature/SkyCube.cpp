@@ -25,7 +25,10 @@ namespace nsK2Engine {
 		m_texture[enSkyCubeType_Day].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMap.dds");
 		m_texture[enSkyCubeType_Night].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMapNight.dds");
 		m_texture[enSkyCubeType_Snow].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMapSnow.dds");
+		m_texture[enSkyCubeType_Snow_2].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMapSnow_2.dds");
 		m_texture[enSkyCubeType_Wild].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMapWild.dds");
+		m_texture[enSkyCubeType_Wild_Night].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMapWild_Night.dds");
+		m_texture[enSkyCubeType_Wild_2].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMapWild_2.dds");
 		m_texture[enSkyCubeType_Grass].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMapGrass.dds");
 		m_texture[enSkyCubeType_Euro].InitFromDDSFile(L"Assets/modelData/preset/skyCubeMapEuro.dds");
 
