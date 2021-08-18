@@ -18,6 +18,10 @@ struct SPSIn
 	float2 uv : TEXCOORD0;          //UV座標。
 	float3 worldPos : TEXCOORD1;    // ワールド座標
 };
+cbuffer SkyCubeCb : register(b1)
+{
+    float luminance;	// 明るさ。
+};
 
 ///////////////////////////////////////
 // シェーダーリソース
@@ -90,6 +94,6 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	float4 albedoColor;
 	float3 normal = normalize(psIn.normal);
 	//albedoColor = g_skyCubeMap.Sample(g_sampler, psIn.normal);
-	albedoColor = g_skyCubeMap.Sample(g_sampler, normal) * 3.8f;
+	albedoColor = g_skyCubeMap.Sample(g_sampler, normal * -1.0f) * luminance;
 	return albedoColor;
 }
