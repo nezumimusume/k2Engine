@@ -50,6 +50,11 @@ namespace nsK2EngineLow {
 			return m_rootSignature;
 		}
 	private:
+		/// <summary>
+		/// 解放。
+		/// </summary>
+		void Release();
+	private:
 		ID3D12RootSignature* m_rootSignature = nullptr;	//ルートシグネチャ。
 	};
 }

@@ -67,9 +67,14 @@ namespace nsK2Engine {
 		{
 			m_luminance = lum;
 		}
+		const wchar_t* GetTextureFilePath()
+		{
+			return m_textureFilePaths[m_type];
+		}
 	private:
 		ModelRender m_modelRender;
 		Texture m_texture[enSkyCubeType_Num];
+		const wchar_t* m_textureFilePaths[enSkyCubeType_Num];
 		Vector3 m_position = g_vec3Zero;
 		Vector3 m_scale = g_vec3One * 1000.0f;
 		float m_luminance = 3.8f;

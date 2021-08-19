@@ -38,6 +38,11 @@ namespace nsK2EngineLow {
 			return m_buffer;
 		}
 	private:
+		/// <summary>
+		/// ‰ğ•úB
+		/// </summary>
+		void Release();
+	private:
 		ID3D12Resource* m_buffer = nullptr;
 		D3D12_RESOURCE_DESC m_desc;
 	};

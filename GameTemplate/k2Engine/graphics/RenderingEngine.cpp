@@ -7,6 +7,7 @@ namespace nsK2Engine {
     {
         m_isSoftShadow = isSoftShadow;
 
+        InitIBLData(L"Assets/modelData/preset/skyCubeMapNight_Toon_02.dds", 0.1f);
         InitZPrepassRenderTarget();
         InitMainRenderTarget();
         InitGBuffer();
@@ -28,6 +29,60 @@ namespace nsK2Engine {
             m_gBuffer[enGBufferAlbedoDepth]);
         // シーンライト
         g_sceneLight = &m_sceneLight;
+    }
+    void RenderingEngine::InitDefferedLighting_Sprite()
+    {
+        // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
+        SpriteInitData spriteInitData;
+
+        // 画面全体にレンダリングするので幅と高さはフレームバッファーの幅と高さと同じ
+        spriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
+        spriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
+
+        // ディファードライティングで使用するテクスチャを設定
+        int texNo = 0;
+        for (auto& gBuffer : m_gBuffer)
+        {
+            spriteInitData.m_textures[texNo++] = &gBuffer.GetRenderTargetTexture();
+        }
+        // IBL用のテクスチャをセット。
+
+        spriteInitData.m_fxFilePath = "Assets/shader/DeferredLighting.fx";
+        if (m_isSoftShadow) {
+            spriteInitData.m_psEntryPoinFunc = "PSMainSoftShadow";
+        }
+        else {
+            spriteInitData.m_psEntryPoinFunc = "PSMainHardShadow";
+        }
+        spriteInitData.m_expandConstantBuffer = &m_deferredLightingCB;
+        spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
+        spriteInitData.m_expandShaderResoruceView = &m_pointLightNoListInTileUAV;
+
+        for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
+        {
+            for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
+            {
+                spriteInitData.m_textures[texNo++] = &m_shadowMapRenders[i].GetShadowMap(areaNo);
+            }
+        }
+        if (m_iblData.m_texture.IsValid()) {
+            spriteInitData.m_textures[texNo++] = &m_iblData.m_texture;
+            m_deferredLightingCB.m_isIBL = 1;
+            m_deferredLightingCB.m_iblLuminance = m_iblData.m_luminance;
+        }
+
+        spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        // 初期化データを使ってスプライトを作成
+        m_diferredLightingSprite.Init(spriteInitData);
+    }
+    void RenderingEngine::ReInitIBL(const wchar_t* iblTexFilePath, float luminance)
+    {
+        // IBLデータを初期化。
+        InitIBLData(iblTexFilePath, luminance);
+        // ディファードライティングで利用するIBLテクスチャが変更されたので、
+        // スプライトを再初期化。
+        InitDefferedLighting_Sprite();
+        
     }
     void RenderingEngine::InitShadowMapRender()
     {
@@ -130,6 +185,11 @@ namespace nsK2Engine {
         m_copyMainRtToFrameBufferSprite.Init(spriteInitData);
 
     }
+    void RenderingEngine::InitIBLData(const wchar_t* iblTexFilePath, float luminance)
+    {
+        m_iblData.m_texture.InitFromDDSFile(iblTexFilePath);
+        m_iblData.m_luminance = luminance;
+    }
     void RenderingEngine::InitDeferredLighting()
     {
         // シーンライトを初期化する。
@@ -142,41 +202,7 @@ namespace nsK2Engine {
             nullptr);
 
         // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
-        SpriteInitData spriteInitData;
-
-        // 画面全体にレンダリングするので幅と高さはフレームバッファーの幅と高さと同じ
-        spriteInitData.m_width = g_graphicsEngine->GetFrameBufferWidth();
-        spriteInitData.m_height = g_graphicsEngine->GetFrameBufferHeight();
-
-        // ディファードライティングで使用するテクスチャを設定
-        int texNo = 0;
-        for (auto& gBuffer : m_gBuffer)
-        {
-            spriteInitData.m_textures[texNo++] = &gBuffer.GetRenderTargetTexture();
-        }
-
-        spriteInitData.m_fxFilePath = "Assets/shader/DeferredLighting.fx";
-        if (m_isSoftShadow) {
-            spriteInitData.m_psEntryPoinFunc = "PSMainSoftShadow";
-        }
-        else {
-            spriteInitData.m_psEntryPoinFunc = "PSMainHardShadow";
-        }
-        spriteInitData.m_expandConstantBuffer = &m_deferredLightingCB;
-        spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
-        spriteInitData.m_expandShaderResoruceView = &m_pointLightNoListInTileUAV;
-
-        for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
-        {
-            for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
-            {
-                spriteInitData.m_textures[texNo++]
-                    = &m_shadowMapRenders[i].GetShadowMap(areaNo);
-            }
-        }
-        spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-        // 初期化データを使ってスプライトを作成
-        m_diferredLightingSprite.Init(spriteInitData);
+        InitDefferedLighting_Sprite();
     }
     void RenderingEngine::Init2DRenderTarget()
     {

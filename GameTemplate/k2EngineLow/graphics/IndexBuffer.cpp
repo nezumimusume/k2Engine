@@ -6,10 +6,15 @@ namespace nsK2EngineLow {
 
 	IndexBuffer::~IndexBuffer()
 	{
+		Release();
+	}
+	void IndexBuffer::Release()
+	{
 		ReleaseD3D12Object(m_indexBuffer);
 	}
 	void IndexBuffer::Init(int size, int stride)
 	{
+		Release();
 		if (stride == 2) {
 			m_sizeInBytes = size * 2;
 		}

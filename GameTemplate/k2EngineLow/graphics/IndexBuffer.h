@@ -72,6 +72,11 @@ namespace nsK2EngineLow {
 			return m_indexBuffer;
 		}
 	private:
+
+		/// <summary>
+		/// 解放
+		/// </summary>
+		void Release();
 	private:
 		ID3D12Resource* m_indexBuffer = nullptr;	//インデックスバッファ。
 		D3D12_INDEX_BUFFER_VIEW m_indexBufferView;	//インデックスバッファビュー。

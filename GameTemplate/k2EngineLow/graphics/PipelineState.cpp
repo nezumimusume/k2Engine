@@ -4,6 +4,10 @@
 namespace nsK2EngineLow {
 	PipelineState::~PipelineState()
 	{
+		Release();
+	}
+	void PipelineState::Release()
+	{
 		ReleaseD3D12Object(m_pipelineState);
 	}
 	void PipelineState::Init(D3D12_GRAPHICS_PIPELINE_STATE_DESC desc)

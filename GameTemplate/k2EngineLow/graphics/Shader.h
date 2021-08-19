@@ -45,17 +45,9 @@ namespace nsK2EngineLow {
 		{
 			return m_isInited;
 		}
-		~Shader()
-		{
-			if (m_blob)
-			{
-				m_blob->Release();
-			}
-			if (m_dxcBlob)
-			{
-				m_dxcBlob->Release();
-			}
-		}
+
+		~Shader();
+		
 	private:
 		/// <summary>
 		/// シェーダーをロード。
@@ -64,6 +56,10 @@ namespace nsK2EngineLow {
 		/// <param name="entryFuncName">エントリーポイントの関数名。</param>
 		/// <param name="shaderModel">シェーダーモデル</param>
 		void Load(const char* filePath, const char* entryFuncName, const char* shaderModel);
+		/// <summary>
+		/// 解放
+		/// </summary>
+		void Release();
 	private:
 		ID3DBlob* m_blob = nullptr;	//コンパイル済みのシェーダーデータ。
 		IDxcBlob* m_dxcBlob = nullptr;	//DXCコンパイラを使用したときのシェーダーデータ。

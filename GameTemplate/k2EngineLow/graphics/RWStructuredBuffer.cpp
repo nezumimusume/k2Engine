@@ -5,6 +5,10 @@
 namespace nsK2EngineLow {
 	RWStructuredBuffer::~RWStructuredBuffer()
 	{
+		Release();
+	}
+	void RWStructuredBuffer::Release()
+	{
 		//アンマーップ
 		CD3DX12_RANGE readRange(0, 0);
 		for (auto& buffer : m_buffersOnGPU) {
@@ -16,6 +20,7 @@ namespace nsK2EngineLow {
 	}
 	void RWStructuredBuffer::Init(int sizeOfElement, int numElement, void* initData)
 	{
+		Release();
 		m_sizeOfElement = sizeOfElement;
 		m_numElement = numElement;
 		auto device = g_graphicsEngine->GetD3DDevice();

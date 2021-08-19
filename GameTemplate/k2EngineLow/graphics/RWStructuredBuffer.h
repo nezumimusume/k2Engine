@@ -69,6 +69,11 @@ namespace nsK2EngineLow {
 
 		ID3D12Resource* GetD3DResoruce();
 	private:
+		/// <summary>
+		/// 解放。
+		/// </summary>
+		void Release();
+	private:
 		ID3D12Resource* m_buffersOnGPU[2] = { nullptr };
 		void* m_buffersOnCPU[2] = { nullptr };		//CPU側からアクセスできるするストラクチャバッファのアドレス。
 		int m_numElement = 0;				//要素数。

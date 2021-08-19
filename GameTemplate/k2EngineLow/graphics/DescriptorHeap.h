@@ -183,6 +183,10 @@ namespace nsK2EngineLow {
 		}
 	private:
 		/// <summary>
+		/// 解放
+		/// </summary>
+		void Release();
+		/// <summary>
 		/// リソースをディスクリプタヒープに登録。
 		/// </summary>
 		/// <param name="registerNo">登録番号</param>

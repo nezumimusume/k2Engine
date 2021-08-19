@@ -4,10 +4,15 @@
 namespace nsK2EngineLow {
 	GPUBuffer::~GPUBuffer()
 	{
+		Release();
+	}
+	void GPUBuffer::Release()
+	{
 		ReleaseD3D12Object(m_buffer);
 	}
 	void GPUBuffer::Init(D3D12_RESOURCE_DESC desc)
 	{
+		Release();
 		m_desc = desc;
 		//todo Ç‹Ç∆ÇﬂÇΩï˚Ç™Ç¶Ç¶Ç»ÅB
 		const D3D12_HEAP_PROPERTIES kDefaultHeapProps =

@@ -140,7 +140,7 @@ namespace nsK2Engine {
         Matrix mViewProjInv;    // ビュープロジェクション行列の逆行列
         Vector3 eyePos;         // カメラの位置
         int numPointLight;      // ポイントライトの数。
-        Vector3 ambinetLight;   // 環境光
+        Vector3 ambinetLight;   // 環境光。
     };
 
     /// <summary>
@@ -218,6 +218,31 @@ namespace nsK2Engine {
                 // 未使用リストに追加する。
                 m_unusePointLightQueue.push_back(pointLight);
             }
+        }
+        /// <summary>
+        /// 環境光の計算のためのIBLテクスチャを設定。
+        /// </summary>
+        /// <remark>
+        /// この関数を利用して、IBLテクスチャをセットすると、
+        /// 環境光をIBLテクスチャからサンプリングして、それを利用した
+        /// ライティングが行われます。
+        /// IBLテクスチャを利用した環境光の計算をオフにしたい場合は、DisableIBLForAmbinet()を呼び出して、
+        /// IBLを無効にしてください。
+        /// </remark>
+        /// <param name="textureFilePath">
+        /// IBLテクスチャのファイルパス。
+        /// キューブマップである必要があります。
+        /// </param>
+        /// <param name="luminance">
+        /// IBLテクスチャの明るさ。
+        /// <param>
+        void SetIBLTextureForAmbient(const wchar_t* textureFilePath, float luminance);
+        /// <summary>
+        /// IBL環境光を無効にする。
+        /// </summary>
+        void DisableIBLTextureForAmbient()
+        {
+            // todo 未対応。
         }
         /// <summary>
         /// 更新

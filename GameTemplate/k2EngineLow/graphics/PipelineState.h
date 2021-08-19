@@ -22,6 +22,11 @@ namespace nsK2EngineLow {
 			return m_pipelineState;
 		}
 	private:
+		/// <summary>
+		/// 解放。
+		/// </summary>
+		void Release();
+	private:
 		ID3D12PipelineState* m_pipelineState = nullptr;	//パイプラインステート。
 	};
 }

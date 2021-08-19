@@ -149,6 +149,10 @@ namespace nsK2EngineLow {
 		/// <param name="d3dDevice">D3Dデバイス</param>
 		/// <returns>trueが返ってｋチアら成功。</returns>
 		void CreateDescriptor(ID3D12Device5*& d3dDevice);
+		/// <summary>
+		/// 解放
+		/// </summary>
+		void Release();
 	private:
 		Texture m_renderTargetTexture;
 		ID3D12Resource* m_renderTargetTextureDx12 = nullptr;//レンダリングターゲットとなるテクスチャ。

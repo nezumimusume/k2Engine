@@ -30,7 +30,8 @@ namespace nsK2Engine {
 			}
 		}
 	}
-	void ModelRender::InitForwardRendering(const char* filePath,
+	void ModelRender::InitForwardRendering(
+		const char* filePath,
 		AnimationClip* animationClips,
 		int numAnimationClips,
 		EnModelUpAxis enModelUpAxis,

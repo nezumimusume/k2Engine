@@ -4,6 +4,10 @@
 namespace nsK2EngineLow {
 	StructuredBuffer::~StructuredBuffer()
 	{
+		Release();
+	}
+	void StructuredBuffer::Release()
+	{
 		//アンマーップ
 		CD3DX12_RANGE readRange(0, 0);
 		for (auto& buffer : m_buffersOnGPU) {
@@ -15,6 +19,7 @@ namespace nsK2EngineLow {
 	}
 	void StructuredBuffer::Init(int sizeOfElement, int numElement, void* initData)
 	{
+		Release();
 		m_sizeOfElement = sizeOfElement;
 		m_numElement = numElement;
 		auto device = g_graphicsEngine->GetD3DDevice();

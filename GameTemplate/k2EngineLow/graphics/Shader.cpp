@@ -12,8 +12,18 @@ namespace nsK2EngineLow {
 		const char* g_psShaderModelName = "ps_5_0";	//ピクセルシェーダーのシェーダモデル名。
 		const char* g_csShaderModelName = "cs_5_0";	//コンピュートシェーダーのシェーダーモデル名。
 	}
+	Shader::~Shader()
+	{
+		Release();
+	}
+	void Shader::Release()
+	{
+		ReleaseD3D12Object(m_blob);
+		ReleaseD3D12Object(m_dxcBlob);
+	}
 	void Shader::Load(const char* filePath, const char* entryFuncName, const char* shaderModel)
 	{
+		Release();
 		ID3DBlob* errorBlob;
 #ifdef _DEBUG
 		// Enable better shader debugging with the graphics debugging tools.

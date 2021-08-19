@@ -188,7 +188,19 @@ namespace nsK2Engine {
         /// 更新。
         /// </summary>
         void Update();
+        /// <summary>
+        /// IBLを再初期化。
+        /// </summary>
+        void ReInitIBL(const wchar_t* iblTexFilePath, float luminance);
+       
+
     private:
+        /// <summary>
+        /// イメージベースドライティング(IBL)のためのデータを初期化する。
+        /// </summary>
+        /// <param name="iblTexFilePath">IBLテクスチャのファイルパス。</param>
+        /// <param name="luminance">IBLテクスチャの明るさ。</param>
+        void InitIBLData(const wchar_t* iblTexFilePath, float luminance);
         /// <summary>
         /// G-Bufferを初期化
         /// </summary>
@@ -197,6 +209,10 @@ namespace nsK2Engine {
         /// ディファードライティングの初期化
         /// </summary>
         void InitDeferredLighting();
+        /// <summary>
+        /// ディファードライティングで使用するスプライトを初期化。
+        /// </summary>
+        void InitDefferedLighting_Sprite();
         /// <summary>
         /// シャドウマップに描画
         /// </summary>
@@ -281,8 +297,16 @@ namespace nsK2Engine {
         struct SDeferredLightingCB
         {
             Light m_light;      // ライト
-            float pad;          // パディング
+            int m_isIBL;        // IBLを行う。
             Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
+            float m_iblLuminance;   // IBLの明るさ。
+        };
+        /// <summary>
+        /// IBLデータ
+        /// </summary>
+        struct SIBLData {
+            Texture m_texture;          // IBLテクスチャ
+            float m_luminance = 1.0f;   // 明るさ。
         };
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
@@ -300,10 +324,10 @@ namespace nsK2Engine {
         bool m_isSoftShadow = false;                                    // ソフトシャドウフラグ。
         Matrix m_viewProjMatrixForViewCulling;                          // ビューカリング用のビュープロジェクション行列。
         SceneGeometryData m_sceneGeometryData;                          // シーンのジオメトリ情報。
-        static RenderingEngine* m_instance;		                        //唯一のインスタンスのアドレスを記録する変数。
-        RenderTarget    m_2DRenderTarget;                               //2D描画用のレンダ―ターゲット。
-        Sprite          m_2DSprite;                                     //2D合成用のスプライト。
-        Sprite          m_mainSprite;
-    };
-    
+        static RenderingEngine* m_instance;		                        // 唯一のインスタンスのアドレスを記録する変数。
+        RenderTarget m_2DRenderTarget;                                  // 2D描画用のレンダ―ターゲット。
+        Sprite m_2DSprite;                                              // 2D合成用のスプライト。
+        Sprite m_mainSprite;
+        SIBLData m_iblData;                                             // IBLデータ。
+    };    
 }

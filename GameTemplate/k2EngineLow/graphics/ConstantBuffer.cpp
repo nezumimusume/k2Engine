@@ -4,12 +4,15 @@
 namespace nsK2EngineLow {
 	ConstantBuffer::~ConstantBuffer()
 	{
-		//アンマーップ
+		Release();
+	}
+	void ConstantBuffer::Release()
+	{
 		CD3DX12_RANGE readRange(0, 0);
 		for (auto& cb : m_constantBuffer) {
 			if (cb != nullptr) {
 				cb->Unmap(0, &readRange);
-				cb->Release();
+				ReleaseD3D12Object(cb);
 			}
 		}
 	}

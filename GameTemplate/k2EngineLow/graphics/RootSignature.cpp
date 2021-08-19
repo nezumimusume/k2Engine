@@ -11,6 +11,10 @@ namespace nsK2EngineLow {
 
 	RootSignature::~RootSignature()
 	{
+		Release();
+	}
+	void RootSignature::Release()
+	{
 		ReleaseD3D12Object(m_rootSignature);
 	}
 	bool RootSignature::Init(
@@ -24,6 +28,7 @@ namespace nsK2EngineLow {
 		UINT offsetInDescriptorsFromTableStartUAV
 	)
 	{
+		Release();
 		auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 
 		CD3DX12_DESCRIPTOR_RANGE1 ranges[enNumDescriptorHeap];

@@ -65,7 +65,11 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <returns></returns>
 		D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress();
-
+	private:
+		/// <summary>
+		/// 解放。
+		/// </summary>
+		void Release();
 	private:
 		ID3D12Resource* m_constantBuffer[2] = { nullptr };//定数バッファ。
 		void* m_constBufferCPU[2] = { nullptr };		//CPU側からアクセスできるする定数バッファのアドレス。

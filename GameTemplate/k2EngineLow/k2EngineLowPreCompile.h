@@ -73,8 +73,8 @@ using namespace Microsoft::WRL;
 
 #include "graphics/GaussianBlur.h"
 
-const UINT FRAME_BUFFER_W = 1600;	//フレームバッファの幅。
-const UINT FRAME_BUFFER_H = 900;	//フレームバッファの高さ。
+const UINT FRAME_BUFFER_W = 1280;	//フレームバッファの幅。
+const UINT FRAME_BUFFER_H = 720;	//フレームバッファの高さ。
 static const int MAX_BONE = 512;	//!<ボーンの最大数。
 
 #include "btBulletDynamicsCommon.h"

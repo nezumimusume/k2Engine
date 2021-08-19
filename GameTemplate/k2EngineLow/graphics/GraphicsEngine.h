@@ -223,7 +223,7 @@ namespace nsK2EngineLow {
 		/// ID3D12Objectの解放。
 		/// </summary>
 		/// <param name="res"></param>
-		void ReleaseD3D12Object(ID3D12Object* res)
+		void ReleaseD3D12Object(IUnknown* res)
 		{
 			if(res == nullptr){
 				return;
@@ -302,7 +302,7 @@ namespace nsK2EngineLow {
 		/// </summary>
 		struct RequestDelayReleaseD3D12Object
 		{
-			ID3D12Object* d3dObject;	// リリースするD3Dオブジェクト
+			IUnknown* d3dObject;	// リリースするD3Dオブジェクト
 			int delayTime;				// 遅延フレーム。この値は毎フレームデクリメントされ、0になると解放されます。
 		};
 		ID3D12Device5* m_d3dDevice = nullptr;							//D3Dデバイス。
@@ -339,7 +339,7 @@ namespace nsK2EngineLow {
 	/// D3D12オブジェクトを解放。
 	/// </summary>
 	/// <param name="obj">開放したいオブジェクト</param>
-	static inline void ReleaseD3D12Object(ID3D12Object* obj)
+	static inline void ReleaseD3D12Object(IUnknown* obj)
 	{
 		if (obj == nullptr) {
 			return;

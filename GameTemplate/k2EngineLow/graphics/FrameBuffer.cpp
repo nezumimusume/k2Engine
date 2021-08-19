@@ -11,6 +11,7 @@ namespace nsK2EngineLow {
 		UINT frameBufferHeight
 	)
 	{
+		Release();
 		//スワップチェインを作成。
 		if (!CreateSwapChain(hwnd, frameBufferWidth, frameBufferHeight, dxgiFactory, commandQueue)) {
 			//スワップチェインの作成に失敗。

@@ -8,25 +8,29 @@ namespace nsK2EngineLow {
 	}
 	Texture::~Texture()
 	{
+		Release();
+	}
+	void Texture::Release()
+	{
 		ReleaseD3D12Object(m_texture);
 	}
 	void Texture::InitFromDDSFile(const wchar_t* filePath)
 	{
+		Release();
 		//DDSファイルからテクスチャをロード。
 		LoadTextureFromDDSFile(filePath);
 
 	}
 	void Texture::InitFromD3DResource(ID3D12Resource* texture)
 	{
-		if (m_texture) {
-			m_texture->Release();
-		}
+		Release();
 		m_texture = texture;
 		m_texture->AddRef();
 		m_textureDesc = m_texture->GetDesc();
 	}
 	void Texture::InitFromMemory(const char* memory, unsigned int size)
 	{
+		Release();
 		//DDSファイルからテクスチャをロード。
 		LoadTextureFromMemory(memory, size);
 

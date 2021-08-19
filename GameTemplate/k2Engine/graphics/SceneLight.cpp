@@ -58,6 +58,10 @@ namespace nsK2Engine {
             m_unusePointLightQueue.push_back(&pt);
         }
     }
+    void SceneLight::SetIBLTextureForAmbient(const wchar_t* textureFilePath, float luminance)
+    {
+        g_renderingEngine->ReInitIBL(textureFilePath, luminance);
+    }
     void SceneLight::Update()
     {
         for (auto& pt : m_light.pointLights) {

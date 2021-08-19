@@ -142,6 +142,8 @@ void Game::InitSky()
 	}
 
 	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
+	// 環境光の計算のためのIBLテクスチャをセットする。
+	g_sceneLight->SetIBLTextureForAmbient(m_skyCube->GetTextureFilePath(), 0.1f);
 }
 bool Game::Start()
 {
@@ -178,35 +180,35 @@ bool Game::Start()
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"enemy") == true) {
-			/*auto enemy = NewGO<Enemy>(0, "enemy");
+			auto enemy = NewGO<Enemy>(0, "enemy");
 			enemy->SetPosition(objData.position);
 			enemy->SetScale(objData.scale);
 			int number = _wtoi(&objData.name[5]);
 			//エネミーの番号によって、パスデータを読み込む。
 			enemy->LoadPath(number);
-			m_enemys.push_back(enemy);*/
+			m_enemys.push_back(enemy);
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"star") == true) {
-			/*auto star = NewGO<Star>(0, "star");
+			auto star = NewGO<Star>(0, "star");
 			star->SetPosition(objData.position);
-			numStar++;*/
+			numStar++;
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"pyramid") == true) {
-			/*auto pyramid = NewGO<Pyramid>(0, "pyramid");
+			auto pyramid = NewGO<Pyramid>(0, "pyramid");
 			pyramid->SetPosition(objData.position);
 			pyramid->SetScale(objData.scale);
-			numPyramid++;*/
+			numPyramid++;
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"pointlight") == true) {
-			/*auto pointLight = g_sceneLight->NewPointLight();
+			auto pointLight = g_sceneLight->NewPointLight();
 			pointLight->SetPosition(objData.position);
 			pointLight->SetColor(POINTLIGHT_COLOR);
 			pointLight->SetRange(POINTLIGHT_RANGE);
 			pointLight->SetAffectPowParam(POINTLIGHT_ATTEN_POW);
-			m_pointLightList.push_back(pointLight);*/
+			m_pointLightList.push_back(pointLight);
 			return true;
 		}
 
@@ -214,11 +216,11 @@ bool Game::Start()
 	});
 
 	//Starレンダラーを作成。
-	/*auto starRender = NewGO<StarRender>(0, "StarRender");
+	auto starRender = NewGO<StarRender>(0, "StarRender");
 	starRender->SetMaxStar(numStar);
 
-	/*auto pyramidRender = NewGO<PyramidRender>(0, "PyramidRender");
-	pyramidRender->SetMaxPyramid(numPyramid);*/
+	auto pyramidRender = NewGO<PyramidRender>(0, "PyramidRender");
+	pyramidRender->SetMaxPyramid(numPyramid);
 
 	m_fade = FindGO<Fade>("fade");
 	m_fade->StartFadeIn();

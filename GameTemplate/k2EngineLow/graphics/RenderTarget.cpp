@@ -5,6 +5,10 @@
 namespace nsK2EngineLow {
 	RenderTarget::~RenderTarget()
 	{
+		Release();
+	}
+	void RenderTarget::Release()
+	{
 		ReleaseD3D12Object(m_renderTargetTextureDx12);
 		ReleaseD3D12Object(m_depthStencilTexture);
 		ReleaseD3D12Object(m_rtvHeap);
@@ -20,6 +24,7 @@ namespace nsK2EngineLow {
 		float clearColor[4]
 	)
 	{
+		Release();
 		auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 		m_width = w;
 		m_height = h;
