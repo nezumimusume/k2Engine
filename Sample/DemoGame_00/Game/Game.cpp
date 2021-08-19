@@ -22,7 +22,7 @@
 
 namespace
 {
-	const float TIME_LIMIT = 90.0f;
+	const float TIME_LIMIT = 1000.0f;
 	const Vector3	STAR_COUNT_FONT_POSITION = Vector3(-960.0f, 400.0f, 0.0f);
 	const float STAR_COUNT_FONT_CENTER_POSITION_X = 50.0f;
 	const float STAR_COUNT_FONT_POSITION_MOVE_SPEED = 430.0f;
@@ -73,7 +73,76 @@ Game::~Game()
 		g_sceneLight->DeletePointLight(pt);
 	}
 }
+void Game::InitSky()
+{
+	// 現在の空を破棄。
+	DeleteGO(m_skyCube);
+	m_skyCube = NewGO<SkyCube>(0, "skycube");
 
+	if (m_skyCubeType == enSkyCubeType_Night
+		|| m_skyCubeType == enSkyCubeType_Wild_Night
+		|| m_skyCubeType == enSkyCubeType_NightToon
+		|| m_skyCubeType == enSkyCubeType_NightToon_2
+		) {
+
+
+		m_skyCube->SetLuminance(0.1f);
+		Vector3 ligColor, ligDir;
+		ligColor.x = 0.6f;
+		ligColor.y = 0.6f;
+		ligColor.z = 0.6f;
+		ligDir.x = 1.0f;
+		ligDir.y = -1.0f;
+		ligDir.z = -1.0f;
+		ligDir.Normalize();
+		g_sceneLight->SetDirectionLight(0, ligDir, ligColor);
+	}
+	else if (m_skyCubeType == enSkyCubeType_Snow) {
+
+		m_skyCube->SetLuminance(1.0f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_Snow_2) {
+
+		m_skyCube->SetLuminance(1.0f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_Wild) {
+
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_Wild_2) {
+
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_Grass) {
+
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_Euro) {
+
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_DayToon) {
+		m_skyCube->SetLuminance(2.0f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_DayToon_2) {
+		m_skyCube->SetLuminance(0.2f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_DayToon_3) {
+		m_skyCube->SetLuminance(0.8f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_DayToon_4) {
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_SunriseToon) {
+		m_skyCube->SetLuminance(0.5f);
+	}
+	else if (m_skyCubeType == enSkyCubeType_SpaceToon
+		|| m_skyCubeType == enSkyCubeType_SpaceToon_2) {
+		m_skyCube->SetLuminance(0.2f);
+	}
+
+	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
+}
 bool Game::Start()
 {
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
@@ -86,50 +155,8 @@ bool Game::Start()
 	
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
-	m_skyCube = NewGO<SkyCube>(0, "skycube");
-
-	EnSkyCubeType skyCubeType = enSkyCubeType_Day;
+	InitSky();
 	
-	if (skyCubeType == enSkyCubeType_Night
-		|| skyCubeType == enSkyCubeType_Wild_Night
-	) {
-
-		m_skyCube->SetType(skyCubeType);
-		m_skyCube->SetLuminance(0.1f);
-		Vector3 ligColor, ligDir;
-		ligColor.x = 0.6f;
-		ligColor.y = 0.6f;
-		ligColor.z = 0.6f;
-		ligDir.x = 1.0f;
-		ligDir.y = -1.0f;
-		ligDir.z = -1.0f;
-		ligDir.Normalize();
-		g_sceneLight->SetDirectionLight(0, ligDir, ligColor);
-	}
-	else if(skyCubeType == enSkyCubeType_Snow){
-		m_skyCube->SetType(enSkyCubeType_Snow);
-		m_skyCube->SetLuminance(1.0f);
-	}
-	else if (skyCubeType == enSkyCubeType_Snow_2) {
-		m_skyCube->SetType(enSkyCubeType_Snow_2);
-		m_skyCube->SetLuminance(1.0f);
-	}
-	else if(skyCubeType == enSkyCubeType_Wild){
-		m_skyCube->SetType(enSkyCubeType_Wild);
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (skyCubeType == enSkyCubeType_Wild_2) {
-		m_skyCube->SetType(enSkyCubeType_Wild_2);
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (skyCubeType == enSkyCubeType_Grass) {
-		m_skyCube->SetType(enSkyCubeType_Grass);
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (skyCubeType == enSkyCubeType_Euro) {
-		m_skyCube->SetType(enSkyCubeType_Euro);
-		m_skyCube->SetLuminance(0.5f);
-	}
 	int numStar = 0;
 	int numPyramid = 0;
 	//レベルを構築する。
@@ -151,19 +178,19 @@ bool Game::Start()
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"enemy") == true) {
-			auto enemy = NewGO<Enemy>(0, "enemy");
+			/*auto enemy = NewGO<Enemy>(0, "enemy");
 			enemy->SetPosition(objData.position);
 			enemy->SetScale(objData.scale);
 			int number = _wtoi(&objData.name[5]);
 			//エネミーの番号によって、パスデータを読み込む。
 			enemy->LoadPath(number);
-			m_enemys.push_back(enemy);
+			m_enemys.push_back(enemy);*/
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"star") == true) {
-			auto star = NewGO<Star>(0, "star");
+			/*auto star = NewGO<Star>(0, "star");
 			star->SetPosition(objData.position);
-			numStar++;
+			numStar++;*/
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"pyramid") == true) {
@@ -174,12 +201,12 @@ bool Game::Start()
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"pointlight") == true) {
-			auto pointLight = g_sceneLight->NewPointLight();
+			/*auto pointLight = g_sceneLight->NewPointLight();
 			pointLight->SetPosition(objData.position);
 			pointLight->SetColor(POINTLIGHT_COLOR);
 			pointLight->SetRange(POINTLIGHT_RANGE);
 			pointLight->SetAffectPowParam(POINTLIGHT_ATTEN_POW);
-			m_pointLightList.push_back(pointLight);
+			m_pointLightList.push_back(pointLight);*/
 			return true;
 		}
 
@@ -187,7 +214,7 @@ bool Game::Start()
 	});
 
 	//Starレンダラーを作成。
-	auto starRender = NewGO<StarRender>(0, "StarRender");
+	/*auto starRender = NewGO<StarRender>(0, "StarRender");
 	starRender->SetMaxStar(numStar);
 
 	/*auto pyramidRender = NewGO<PyramidRender>(0, "PyramidRender");
@@ -275,6 +302,18 @@ void Game::Update()
 	UpdateFont();
 	CountTimer();
 
+	if (g_pad[0]->IsTrigger(enButtonRight)) {
+		m_skyCubeType++;
+		m_skyCubeType = m_skyCubeType % enSkyCubeType_Num;
+		InitSky();
+	}
+	if (g_pad[0]->IsTrigger(enButtonLeft)) {
+		m_skyCubeType--;
+		if (m_skyCubeType < 0) {
+			m_skyCubeType = enSkyCubeType_Num - 1;
+		}
+		InitSky();
+	}
 	//レベルをマップチップをアップデート。
 	m_levelRender.Update();
 }

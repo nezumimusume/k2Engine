@@ -56,6 +56,10 @@ private:
 	/// タイマーを加算する。
 	/// </summary>
 	void CountTimer();
+	/// <summary>
+	/// 空を初期化。
+	/// </summary>
+	void InitSky();
 private:
 	Player*					m_player = nullptr;			//プレイヤー。
 	Background*				m_background = nullptr;		//背景。
@@ -73,7 +77,7 @@ private:
 	EnGameState				m_gameState = enGameState_DuringGamePlay;		//ゲームステート。
 	SpriteRender			m_pressA;
 	std::vector<PointLight*> m_pointLightList;
-
+	int m_skyCubeType = enSkyCubeType_Day;
 	SoundSource* m_bgm = nullptr;
 };
 

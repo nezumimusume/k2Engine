@@ -11,6 +11,15 @@ namespace nsK2Engine {
 		enSkyCubeType_Wild_Night,	// 荒野(夜間)
 		enSkyCubeType_Grass,	// 芝生
 		enSkyCubeType_Euro,		// 欧州
+		enSkyCubeType_DayToon,	// 昼間(トゥーン調)
+		enSkyCubeType_DayToon_2,// 昼間(トゥーン調)２
+		enSkyCubeType_DayToon_3,// 昼間(トゥーン調)３
+		enSkyCubeType_DayToon_4,// 昼間(トゥーン調)４
+		enSkyCubeType_NightToon, // 夜間(トゥーン調)
+		enSkyCubeType_NightToon_2, // 夜間(トゥーン調)２
+		enSkyCubeType_SunriseToon,	// 明け方(トゥーン調)
+		enSkyCubeType_SpaceToon,	// 大気圏(トゥーン調)
+		enSkyCubeType_SpaceToon_2,	// 大気圏(トゥーン調)２
 		enSkyCubeType_Num,
 	};
 	/// <summary>
