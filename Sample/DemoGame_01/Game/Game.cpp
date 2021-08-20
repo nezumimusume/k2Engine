@@ -50,7 +50,7 @@ bool Game::Start()
 	m_gameCamera = NewGO<GameCamera>(0, "gamecamera");
 	//空のオブジェクトを作成する。
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
-
+	g_sceneLight->SetIBLTextureForAmbient(m_skyCube->GetTextureFilePath(), 0.1f);
 
 	//レベルを構築する。
 	m_levelRender.Init("Assets/level3D/level.tkl", [&](LevelObjectData& objData) {

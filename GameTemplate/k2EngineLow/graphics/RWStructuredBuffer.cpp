@@ -59,6 +59,7 @@ namespace nsK2EngineLow {
 	}
 	void RWStructuredBuffer::Init(const VertexBuffer& vb, bool isUpdateByCPU)
 	{
+		Release();
 		m_sizeOfElement = vb.GetStrideInBytes();
 		m_numElement = vb.GetSizeInBytes() / m_sizeOfElement;
 		if (isUpdateByCPU) {

@@ -126,10 +126,10 @@ float CookTorranceSpecular(float3 L, float3 V, float3 N, float smooth)
     float3 H = normalize(L + V);
 
     // 各種ベクトルがどれくらい似ているかを内積を利用して求める
-    float NdotH = saturate(dot(N, H));
-    float VdotH = saturate(dot(V, H));
-    float NdotL = saturate(dot(N, L));
-    float NdotV = saturate(dot(N, V));
+    float NdotH = max( saturate(dot(N, H)), 0.001f );
+    float VdotH = max( saturate(dot(V, H)), 0.001f );
+    float NdotL = max( saturate(dot(N, L)), 0.001f );
+    float NdotV = max( saturate(dot(N, V)), 0.001f );
 
     // D項をベックマン分布を用いて計算する
     float D = Beckmann(microfacet, NdotH);

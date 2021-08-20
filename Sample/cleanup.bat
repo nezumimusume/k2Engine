@@ -16,6 +16,10 @@ pushd %~1
 @rmdir /s /q k2EngineLow
 @del k2Engine
 @del k2EngineLow
+@rmdir /s /q Game\\Assets\\shader
+@rmdir /s /q Game\\Assets\\modelData\\preset
+@del /s /q Game\\Assets\\shader
+@del /s /q Game\\Assets\\modelData\\preset
 
 @popd
 

@@ -79,9 +79,14 @@ namespace nsK2Engine {
     {
         // IBLデータを初期化。
         InitIBLData(iblTexFilePath, luminance);
-        // ディファードライティングで利用するIBLテクスチャが変更されたので、
-        // スプライトを再初期化。
+        
         InitDefferedLighting_Sprite();
+
+        m_lightCulling.Init(
+            m_zprepassRenderTarget.GetRenderTargetTexture(),
+            m_diferredLightingSprite.GetExpandConstantBufferGPU(),
+            m_pointLightNoListInTileUAV
+        );
         
     }
     void RenderingEngine::InitShadowMapRender()
