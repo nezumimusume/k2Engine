@@ -22,7 +22,7 @@ bool Player::Start()
 	
 	//ユニティちゃんのモデルを読み込む。
 	m_modelRender.Init("Assets/modelData/unityChan.tkm");
-	m_modelRender.SetPosition(m_position);
+	m_modelRender.SetPosition({-80.0f, 0.0f, 0.0f});
 	return true;
 }
 

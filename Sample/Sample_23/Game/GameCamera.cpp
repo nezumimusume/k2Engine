@@ -15,74 +15,47 @@ GameCamera::~GameCamera()
 
 bool GameCamera::Start()
 {
-	//注視点から視点までのベクトルを設定。
-	m_toCameraPos.Set(0.0f, 200.0f, 400.0f);
-
-	//プレイヤーのインスタンスを探す。
-	m_player = FindGO<Player>("player");
-
-	//ばねカメラの初期化。
-	m_springCamera.Init(
-		*g_camera3D,		//ばねカメラの処理を行うカメラを指定する。
-		1000.0f,			//カメラの移動速度の最大値。
-		true,				//カメラと地形とのあたり判定を取るかどうかのフラグ。trueだとあたり判定を行う。
-		5.0f				//カメラに設定される球体コリジョンの半径。第３引数がtrueの時に有効になる。
-	);
+	g_camera3D->SetPosition({ 0.0f, 100.0f, 400.0f });
+	g_camera3D->SetFar(40000.0f);
 	return true;
 }
 
-void GameCamera::UpdatePositionAndTarget()
+
+void GameCamera::Update()
 {
 	//カメラを更新。
 	//注視点を計算する。
-	Vector3 target = m_player->GetPosition();
-	//プレイヤの足元からちょっと上を注視点とする。
-	target.y += 80.0f;
-	target += g_camera3D->GetForward() * 20.0f;
 
-	Vector3 toCameraPosOld = m_toCameraPos;
+	//プレイヤの足元からちょっと上を注視点とする。
+	Vector3 cameraPos = g_camera3D->GetPosition();
+	Vector3 cameraPosOld = cameraPos;
 	//パッドの入力を使ってカメラを回す。
 	float x = g_pad[0]->GetRStickXF();
 	float y = g_pad[0]->GetRStickYF();
 	//Y軸周りの回転
 	Quaternion qRot;
-	qRot.SetRotationDeg(Vector3::AxisY, 2.0f * x);
-	qRot.Apply(m_toCameraPos);
+	qRot.SetRotationDeg(Vector3::AxisY, 0.5f * x);
+	qRot.Apply(cameraPos);
 	//X軸周りの回転。
 	Vector3 axisX;
-	axisX.Cross(Vector3::AxisY, m_toCameraPos);
+	axisX.Cross(Vector3::AxisY, cameraPos);
 	axisX.Normalize();
-	qRot.SetRotationDeg(axisX, 2.0f * y);
-	qRot.Apply(m_toCameraPos);
+	qRot.SetRotationDeg(axisX, 0.5f * y);
+	qRot.Apply(cameraPos);
 	//カメラの回転の上限をチェックする。
 	//注視点から視点までのベクトルを正規化する。
 	//正規化すると、ベクトルの大きさが１になる。
 	//大きさが１になるということは、ベクトルから強さがなくなり、方向のみの情報となるということ。
-	Vector3 toPosDir = m_toCameraPos;
+	Vector3 toPosDir = cameraPos;
 	toPosDir.Normalize();
 	if (toPosDir.y < -0.5f) {
 		//カメラが上向きすぎ。
-		m_toCameraPos = toCameraPosOld;
+		cameraPos = cameraPosOld;
 	}
 	else if (toPosDir.y > 0.8f) {
 		//カメラが下向きすぎ。
-		m_toCameraPos = toCameraPosOld;
+		cameraPos = cameraPosOld;
 	}
 
-
-	//視点を計算する。
-	Vector3 pos = target + m_toCameraPos;
-
-	//バネカメラに注視点と視点を設定する。
-	m_springCamera.SetPosition(pos);
-	m_springCamera.SetTarget(target);
-}
-
-void GameCamera::Update()
-{
-	//視点と注視点を更新する。
-	UpdatePositionAndTarget();
-
-	//カメラの更新。
-	m_springCamera.Update();
+	g_camera3D->SetPosition(cameraPos);
 }
