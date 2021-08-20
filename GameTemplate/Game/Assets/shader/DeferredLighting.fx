@@ -283,7 +283,7 @@ float3 CalcLighting(
     spec *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metaric);
 
     // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
-    return diffuse * (1.0f - smooth) + spec * smooth;   
+    return max( float3( 0.0f, 0.0f, 0.0f ), diffuse * (1.0f - smooth) + spec * smooth );   
 }
 /*!
  * @brief	UV座標と深度値からワールド座標を計算する。
