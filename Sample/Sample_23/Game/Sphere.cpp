@@ -4,7 +4,7 @@
 bool Sphere::Start()
 {
 	m_modelRender.Init("Assets/modelData/sphere/sphere.tkm");
-	m_modelRender.SetPosition(Vector3(200.0f, 200.0f, 0.0f));
+	m_modelRender.SetPosition(Vector3(100.0f, 200.0f, 0.0f));
 	return true;
 }
 

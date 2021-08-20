@@ -5,26 +5,10 @@
 #include "nature/SkyCube.h"
 
 #include "Player.h"
-#include "BackGround.h"
 #include "GameCamera.h"
 #include "Sphere.h"
 
 #include "graphics/RenderingEngine.h"
-
-namespace
-{
-	const float TIME_LIMIT = 1000.0f;
-	const Vector3	STAR_COUNT_FONT_POSITION = Vector3(-960.0f, 400.0f, 0.0f);
-	const float STAR_COUNT_FONT_CENTER_POSITION_X = 50.0f;
-	const float STAR_COUNT_FONT_POSITION_MOVE_SPEED = 430.0f;
-
-	const float PRESS_A_BUTTON_TEXTURE_SCALE = 1.0f;
-	const Vector3 PRESS_A_BUTTON_TEXTURE_POSITION = Vector3(0.0f, -400.0f, 0.0f);
-
-	const Vector3 POINTLIGHT_COLOR = Vector3(4.0f, 1.0f, 1.0f);
-	const float POINTLIGHT_RANGE = 220.0f;
-	const float POINTLIGHT_ATTEN_POW = 0.65f;
-}
 
 Game::Game()
 {
@@ -38,7 +22,6 @@ Game::~Game()
 	DeleteGO(m_gameCamera);
 	DeleteGO(m_skyCube);
 	DeleteGO(m_sphere);
-	DeleteGO(m_backGround);
 }
 void Game::InitSky()
 {
@@ -114,21 +97,13 @@ void Game::InitSky()
 }
 bool Game::Start()
 {
-	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
-
-	g_renderingEngine->NotifyChangeScene(0.5f);
-	//カスケードシャドウの近影エリア率を
-	g_renderingEngine->SetCascadeNearAreaRates(0.1f, 0.2f, 0.3f);
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
 	g_camera3D->SetFar(40000.0f);
 	
-	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
-
 	InitSky();
 	
+	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 	m_player = NewGO<Player>(0, "player");
-
-	m_backGround = NewGO<BackGround>(0, "background");
 	m_sphere = NewGO<Sphere>(0, "sphere");
 
 	return true;
@@ -137,8 +112,7 @@ bool Game::Start()
 
 void Game::Update()
 {
-	
-
+	//お空を変更してる。
 	if (g_pad[0]->IsTrigger(enButtonRight)) {
 		m_skyCubeType++;
 		m_skyCubeType = m_skyCubeType % enSkyCubeType_Num;

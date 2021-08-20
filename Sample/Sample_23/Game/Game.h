@@ -4,7 +4,6 @@
 //クラス宣言。
 class Player;
 class GameCamera;
-class BackGround;
 class Sphere;
 
 class Game : public IGameObject
@@ -29,7 +28,6 @@ private:
 	GameCamera*				m_gameCamera = nullptr;		//ゲームカメラ。
 	SkyCube*				m_skyCube = nullptr;		//スカイキューブ。
 	int						m_skyCubeType = enSkyCubeType_Day;
-	BackGround*				m_backGround = nullptr;
 	Sphere*					m_sphere = nullptr;
 };
 
