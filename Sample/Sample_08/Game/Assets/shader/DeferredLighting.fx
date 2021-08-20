@@ -64,7 +64,9 @@ cbuffer LightCb : register(b1)
     float3 eyePos;          // カメラの視点
     int numPointLight;      // ポイントライトの数。    
     float3 ambientLight;    // 環境光
+    int isIBL;              // IBLを行う。
     float4x4 mlvp[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
+    float iblLuminance;     // IBLの明るさ。
 };
 
 ///////////////////////////////////////
@@ -74,6 +76,8 @@ Texture2D<float4> albedoTexture : register(t0);     // アルベド
 Texture2D<float4> normalTexture : register(t1);     // 法線
 Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
 Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t3);  //シャドウマップ。
+TextureCube<float4> g_skyCubeMap : register(t15);
+
 // タイルごとのポイントライトのインデックスのリスト
 StructuredBuffer<uint> pointLightListInTile : register(t20);
 
@@ -279,7 +283,7 @@ float3 CalcLighting(
     spec *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metaric);
 
     // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
-    return diffuse * (1.0f - smooth) + spec * smooth;   
+    return max( float3( 0.0f, 0.0f, 0.0f ), diffuse * (1.0f - smooth) + spec * smooth );   
 }
 /*!
  * @brief	UV座標と深度値からワールド座標を計算する。
@@ -386,9 +390,16 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
         lig += ptLig * affect;
        
     }
-    // 環境光による底上げ
-    lig += ambientLight * albedoColor;
-
+    if (isIBL == 1) {
+        // 視線からの反射ベクトルを求める。
+        float3 v = reflect(toEye * -1.0f, normal);
+        int level = lerp(0, 12, 1 - smooth);
+        lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
+    }
+    else {
+        // 環境光による底上げ
+        lig += ambientLight * albedoColor;
+    }
     float4 finalColor = 1.0f;
     finalColor.xyz = lig;
     return finalColor;
