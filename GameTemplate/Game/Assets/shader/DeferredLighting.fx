@@ -2,8 +2,12 @@
 // PBRベースのディファードライティング
 ///////////////////////////////////////
 
-#include "PBRLighting.h"
 
+///////////////////////////////////////
+// 定数
+///////////////////////////////////////
+static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
+static const int NUM_SHADOW_MAP = 3;        // シャドウマップの枚数。
 
 ///////////////////////////////////////
 // 構造体。
@@ -39,10 +43,12 @@ cbuffer cb : register(b0)
 Texture2D<float4> albedoTexture : register(t0);     // アルベド
 Texture2D<float4> normalTexture : register(t1);     // 法線
 Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
-
+Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t3);  //シャドウマップ。
 TextureCube<float4> g_skyCubeMap : register(t15);
 // タイルごとのポイントライトのインデックスのリスト
 StructuredBuffer<uint> pointLightListInTile : register(t20);
+
+#include "PBRLighting.h"
 
 ///////////////////////////////////////
 // 関数
@@ -75,7 +81,7 @@ float3 CalcWorldPosFromUVZ( float2 uv, float zInScreen, float4x4 mViewProjInv )
 	return worldPos.xyz;
 }
 //ピクセルシェーダーのコア。
-float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
+float4 PSMainCore(PSInput In, uniform int isSoftShadow) 
 {
     //G-Bufferの内容を使ってライティング
     //アルベドカラーをサンプリング。

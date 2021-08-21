@@ -2,7 +2,12 @@
  * @brief	シンプルなモデルシェーダー。
  */
 #include "ModelVSCommon.h"
-#include "PBRLighting.h"
+
+///////////////////////////////////////
+// 定数
+///////////////////////////////////////
+static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
+static const int NUM_SHADOW_MAP = 3;        // シャドウマップの枚数。
 
 ////////////////////////////////////////////////
 // 構造体
@@ -29,6 +34,9 @@ Texture2D<float4> albedoTexture : register(t0);     // アルベド
 Texture2D<float4> normalTexture : register(t1);     // 法線
 Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
 TextureCube<float4> g_skyCubeMap : register(t11);
+Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t12);  //シャドウマップ。
+
+#include "PBRLighting.h"
 
 ////////////////////////////////////////////////
 // 関数定義。
@@ -74,7 +82,7 @@ SPSIn VSMainSkinInstancing(SVSIn vsIn, uint instanceID : SV_InstanceID)
 /// <summary>
 /// ピクセルシェーダーのエントリー関数。
 /// </summary>
-float4 PSMain( SPSIn In ) : SV_Target0
+float4 PSMainCore( SPSIn In, uniform int isSoftShadow ) 
 {
 	//G-Bufferの内容を使ってライティング
     //アルベドカラーをサンプリング。
@@ -91,7 +99,7 @@ float4 PSMain( SPSIn In ) : SV_Target0
     float smooth = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).a;
 
     //影生成用のパラメータ。
-    float shadowParam = metallicShadowSmoothTexture.Sample(Sampler, In.uv).g;
+    float shadowParam = 1.0f;
     
     float2 viewportPos = In.pos.xy;
 
@@ -104,10 +112,10 @@ float4 PSMain( SPSIn In ) : SV_Target0
     {
         // 影の落ち具合を計算する。
         float shadow = 0.0f;
-      /*  if( directionalLight[ligNo].castShadow == 1){
+        if( directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
             shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam;
-        }*/
+        }
         
         lig += CalcLighting(
             directionalLight[ligNo].direction,
@@ -136,3 +144,12 @@ float4 PSMain( SPSIn In ) : SV_Target0
     finalColor.xyz = lig;
     return float4(finalColor.xyz, albedoColor.a);
 }
+float4 PSMainSoftShadow(SPSIn In) : SV_Target0
+{
+    return PSMainCore( In, true);
+}
+//ハードシャドウを行うピクセルシェーダー。
+float4 PSMainHardShadow(SPSIn In) : SV_Target0
+{
+    return PSMainCore( In, false);
+} 

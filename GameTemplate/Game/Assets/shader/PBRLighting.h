@@ -2,10 +2,10 @@
 // 定数
 ///////////////////////////////////////
 static const float PI = 3.1415926f;         // π
-static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
+
 static const int MAX_POINT_LIGHT = 1000;    // ポイントライトの最大数
 
-static const int NUM_SHADOW_MAP = 3;        // シャドウマップの枚数。
+
 
 #define TILE_WIDTH 16
 #define TILE_HEIGHT 16
@@ -50,7 +50,7 @@ cbuffer LightCb : register(b1)
 ///////////////////////////////////////
 // テクスチャ
 ///////////////////////////////////////
-Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t3);  //シャドウマップ。
+
 
 ///////////////////////////////////////
 // サンプラステート。

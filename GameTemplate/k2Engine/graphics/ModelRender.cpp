@@ -228,6 +228,12 @@ namespace nsK2Engine {
 			modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
 		}
 		*/
+		if (g_renderingEngine->IsSoftShadow()) {
+			modelInitData.m_psEntryPointFunc = "PSMainSoftShadow";
+		}
+		else {
+			modelInitData.m_psEntryPointFunc = "PSMainHardShadow";
+		}
 		//モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetDeferredLightingCB();
@@ -235,11 +241,18 @@ namespace nsK2Engine {
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		modelInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
+		int expandSRVNo = 0;
 		if (m_isEnableInstancingDraw) {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
-			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+			modelInitData.m_expandShaderResoruceView[expandSRVNo] = &m_worldMatrixArraySB;
 		}
-		modelInitData.m_expandShaderResoruceView[1] = &g_renderingEngine->GetIBLTexture();
+		expandSRVNo++;
+		modelInitData.m_expandShaderResoruceView[expandSRVNo] = &g_renderingEngine->GetIBLTexture();
+		expandSRVNo++;
+		g_renderingEngine->QueryShadowMapTexture([&](Texture& shadowMap) {
+			modelInitData.m_expandShaderResoruceView[expandSRVNo] = &shadowMap;
+			expandSRVNo++;
+		});
 		m_translucentModel.Init(modelInitData);
 	}
 
@@ -267,7 +280,7 @@ namespace nsK2Engine {
 		}
 		else {
 			modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
-		};
+		}
 
 		if (m_isEnableInstancingDraw) {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。

@@ -236,6 +236,20 @@ namespace nsK2Engine {
         {
             return m_iblData.m_texture;
         }
+        /// <summary>
+        /// シャドウマップテクスチャにクエリを行う。
+        /// </summary>
+        /// <param name="queryFunc">クエリ関数</param>
+        void QueryShadowMapTexture(std::function< void(Texture& shadowMap) > queryFunc)
+        {
+            for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
+            {
+                for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
+                {
+                    queryFunc(m_shadowMapRenders[i].GetShadowMap(areaNo));
+                }
+            }
+        }
         SDeferredLightingCB& GetDeferredLightingCB()
         {
             return m_deferredLightingCB;

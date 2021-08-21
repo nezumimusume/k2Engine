@@ -16,7 +16,7 @@ namespace nsK2EngineLow {
 	struct MaterialReInitData;
 
 
-	const int MAX_MODEL_EXPAND_SRV = 6;	//拡張SRVの最大数。
+	const int MAX_MODEL_EXPAND_SRV = 32;	//拡張SRVの最大数。
 
 	/// <summary>
 	/// メッシュ
