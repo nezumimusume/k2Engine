@@ -4,7 +4,7 @@ namespace nsK2Engine {
 	/// <summary>
 	/// ライトカリング。
 	/// </summary>
-	class LightCulling {
+	class LightCulling : public Noncopyable{
 	public:
 		/// <summary>
 		/// 初期化。

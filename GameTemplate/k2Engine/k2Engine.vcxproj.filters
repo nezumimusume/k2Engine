@@ -113,6 +113,7 @@
     <ClCompile Include="geometry\SceneGeometryData.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\preRender\CalcAnimatedVertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -204,5 +205,6 @@
     <ClInclude Include="geometry\SceneGeometryData.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\preRender\CalcAnimatedVertex.h" />
   </ItemGroup>
 </Project>
