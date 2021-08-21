@@ -13,7 +13,7 @@ namespace nsK2EngineLow {
 	class Skeleton;
 	class Material;
 	class IShaderResource;
-
+	struct MaterialReInitData;
 
 
 	const int MAX_MODEL_EXPAND_SRV = 6;	//拡張SRVの最大数。
@@ -99,6 +99,10 @@ namespace nsK2EngineLow {
 		/// ディスクリプタヒープを作成。
 		/// </summary>
 		void CreateDescriptorHeaps();
+		/// <summary>
+		/// マテリアルを再初期化。
+		/// </summary>
+		void ReInitMaterials(const MaterialReInitData& reInitData);
 	private:
 		/// <summary>
 		/// tkmメッシュからメッシュを作成。

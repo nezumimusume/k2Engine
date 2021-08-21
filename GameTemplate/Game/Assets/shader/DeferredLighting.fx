@@ -40,6 +40,10 @@ Texture2D<float4> albedoTexture : register(t0);     // アルベド
 Texture2D<float4> normalTexture : register(t1);     // 法線
 Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
 
+TextureCube<float4> g_skyCubeMap : register(t15);
+// タイルごとのポイントライトのインデックスのリスト
+StructuredBuffer<uint> pointLightListInTile : register(t20);
+
 ///////////////////////////////////////
 // 関数
 ///////////////////////////////////////
@@ -89,19 +93,88 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow) : SV_Target0
 
     //影生成用のパラメータ。
     float shadowParam = metallicShadowSmoothTexture.Sample(Sampler, In.uv).g;
+    
+    float2 viewportPos = In.pos.xy;
 
-    float3 lig = CalcPBRLighting(
-        albedoColor,
-        normal,
-        worldPos,
-        specColor,
-        metaric,
-        smooth,
-        shadowParam,
-        isSoftShadow,
-        In.pos.xy,
-        screenParam
-    );
+    // 視線に向かって伸びるベクトルを計算する
+    float3 toEye = normalize(eyePos - worldPos);
+
+    float3 lig = 0;
+    
+    for(int ligNo = 0; ligNo < NUM_DIRECTIONAL_LIGHT; ligNo++)
+    {
+        // 影の落ち具合を計算する。
+        float shadow = 0.0f;
+        if( directionalLight[ligNo].castShadow == 1){
+            //影を生成するなら。
+            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam;
+        }
+        
+        lig += CalcLighting(
+            directionalLight[ligNo].direction,
+            directionalLight[ligNo].color,
+            normal,
+            toEye,
+            albedoColor,
+            metaric,
+            smooth,
+            specColor
+        ) * ( 1.0f - shadow );
+    }
+    // 続いてポイントライト
+    // スクリーンの左上を(0,0)、右下を(1,1)とする座標系に変換する
+    // ビューポート座標系に変換する
+
+    // このピクセルが含まれているタイルの番号を計算する
+    // スクリーンをタイルで分割したときのセルのX座標を求める
+    uint numCellX = (screenParam.z + TILE_WIDTH - 1) / TILE_WIDTH;
+
+    // タイルインデックスを計算する
+    uint tileIndex = floor(viewportPos.x / TILE_WIDTH) + floor(viewportPos.y / TILE_HEIGHT) * numCellX;
+
+    // 含まれるタイルの影響リストの開始位置と終了位置を計算する
+    uint lightStart = tileIndex * numPointLight;
+    uint lightEnd = lightStart + numPointLight;
+    for (uint lightListIndex = lightStart; lightListIndex < lightEnd; lightListIndex++)
+    {
+        uint ligNo = pointLightListInTile[lightListIndex];
+        if (ligNo == 0xffffffff)
+        {
+            // このタイルに含まれるポイントライトはもうない
+            break;
+        }
+        
+        float3 ligDir = normalize(worldPos - pointLight[ligNo].position);
+        // 2. 光源からサーフェイスまでの距離を計算
+        float distance = length(worldPos - pointLight[ligNo].position);
+        float3 ligColor = pointLight[ligNo].color;
+        float3 ptLig = CalcLighting(
+            ligDir,
+            ligColor,
+            normal,
+            toEye,
+            albedoColor,
+            metaric,
+            smooth,
+            specColor
+        );
+        // 3. 影響率を計算する。影響率は0.0～1.0の範囲で、
+        //     指定した距離（pointsLights[i].range）を超えたら、影響率は0.0になる
+        float affect = 1.0f - min(1.0f, distance / pointLight[ligNo].attn.x);
+        affect = pow( affect, pointLight[ligNo].attn.y );
+        lig += ptLig * affect;
+       
+    }
+    if (isIBL == 1) {
+        // 視線からの反射ベクトルを求める。
+        float3 v = reflect(toEye * -1.0f, normal);
+        int level = lerp(0, 12, 1 - smooth);
+        lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
+    }
+    else {
+        // 環境光による底上げ
+        lig += ambientLight * albedoColor;
+    }
    
     float4 finalColor = 1.0f;
     finalColor.xyz = lig;

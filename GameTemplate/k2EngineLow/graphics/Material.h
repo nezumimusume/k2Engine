@@ -82,6 +82,7 @@ namespace nsK2EngineLow {
 		{
 			return m_constantBuffer;
 		}
+		
 	private:
 		/// <summary>
 		/// パイプラインステートの初期化。

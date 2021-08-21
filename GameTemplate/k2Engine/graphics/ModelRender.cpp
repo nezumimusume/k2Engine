@@ -207,7 +207,8 @@ namespace nsK2Engine {
 		*/
 		//モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
-
+		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetDeferredLightingCB();
+		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetDeferredLightingCB());
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		modelInitData.m_alphaBlendMode = alphaBlendMode;
@@ -215,6 +216,7 @@ namespace nsK2Engine {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
+		modelInitData.m_expandShaderResoruceView[1] = &g_renderingEngine->UseIBLTexture(this);
 		m_forwardRenderModel.Init(modelInitData);
 	}
 

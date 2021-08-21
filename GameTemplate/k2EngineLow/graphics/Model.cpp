@@ -51,7 +51,10 @@ namespace nsK2EngineLow {
 		m_isInited = true;
 
 	}
-
+	void Model::ReInitMaterials(MaterialReInitData& reInitData)
+	{
+		m_meshParts.ReInitMaterials(reInitData);
+	}
 
 	Matrix Model::CalcWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale)
 	{

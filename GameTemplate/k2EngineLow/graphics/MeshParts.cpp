@@ -68,10 +68,16 @@ namespace nsK2EngineLow {
 		//ディスクリプタヒープを作成。
 		CreateDescriptorHeaps();
 	}
-
+	void MeshParts::ReInitMaterials(const MaterialReInitData& reInitData)
+	{
+		for (int i = 0; i < MAX_MODEL_EXPAND_SRV; i++) {
+			m_expandShaderResourceView[i] = reInitData.m_expandShaderResoruceView[i];
+		}
+		//ディスクリプタヒープを作成。
+		CreateDescriptorHeaps();
+	}
 	void MeshParts::CreateDescriptorHeaps()
 	{
-
 		//ディスクリプタヒープを構築していく。
 		int srvNo = 0;
 		int cbNo = 0;

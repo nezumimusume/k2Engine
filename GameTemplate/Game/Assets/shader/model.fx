@@ -2,6 +2,7 @@
  * @brief	シンプルなモデルシェーダー。
  */
 #include "ModelVSCommon.h"
+#include "PBRLighting.h"
 
 ////////////////////////////////////////////////
 // 構造体
@@ -24,11 +25,10 @@ struct SPSIn
 ///////////////////////////////////////
 // シェーダーリソース
 ///////////////////////////////////////
-Texture2D<float4> g_albedo : register(t0); //アルベドマップ
-Texture2D<float4> g_normal : register(t1); //法線マップ
-Texture2D<float4> g_spacular : register(t2); //スペキュラマップ
-
-sampler g_sampler : register(s0);	//サンプラステート。
+Texture2D<float4> albedoTexture : register(t0);     // アルベド
+Texture2D<float4> normalTexture : register(t1);     // 法線
+Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
+TextureCube<float4> g_skyCubeMap : register(t11);
 
 ////////////////////////////////////////////////
 // 関数定義。
@@ -74,8 +74,65 @@ SPSIn VSMainSkinInstancing(SVSIn vsIn, uint instanceID : SV_InstanceID)
 /// <summary>
 /// ピクセルシェーダーのエントリー関数。
 /// </summary>
-float4 PSMain( SPSIn psIn ) : SV_Target0
+float4 PSMain( SPSIn In ) : SV_Target0
 {
-	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
-	return albedoColor;
+	//G-Bufferの内容を使ってライティング
+    //アルベドカラーをサンプリング。
+    float4 albedoColor = albedoTexture.Sample(Sampler, In.uv);
+    //法線をサンプリング。
+    float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
+    //ワールド座標をサンプリング。
+    float3 worldPos = In.worldPos;
+    //スペキュラカラーをサンプリング。
+    float3 specColor = albedoColor.xyz;
+    //金属度をサンプリング。
+    float metaric = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).r;
+    //スムース
+    float smooth = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).a;
+
+    //影生成用のパラメータ。
+    float shadowParam = metallicShadowSmoothTexture.Sample(Sampler, In.uv).g;
+    
+    float2 viewportPos = In.pos.xy;
+
+	 // 視線に向かって伸びるベクトルを計算する
+    float3 toEye = normalize(eyePos - worldPos);
+
+    float3 lig = 0;
+    
+    for(int ligNo = 0; ligNo < NUM_DIRECTIONAL_LIGHT; ligNo++)
+    {
+        // 影の落ち具合を計算する。
+        float shadow = 0.0f;
+      /*  if( directionalLight[ligNo].castShadow == 1){
+            //影を生成するなら。
+            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam;
+        }*/
+        
+        lig += CalcLighting(
+            directionalLight[ligNo].direction,
+            directionalLight[ligNo].color,
+            normal,
+            toEye,
+            albedoColor,
+            metaric,
+            smooth,
+            specColor
+        ) * ( 1.0f - shadow );
+    }
+	
+	 if (isIBL == 1) {
+        // 視線からの反射ベクトルを求める。
+        float3 v = reflect(toEye * -1.0f, normal);
+        int level = lerp(0, 12, 1 - smooth);
+        lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
+    }
+    else {
+        // 環境光による底上げ
+        lig += ambientLight * albedoColor;
+    }
+   
+	float4 finalColor = 1.0f;
+    finalColor.xyz = lig;
+    return finalColor;
 }

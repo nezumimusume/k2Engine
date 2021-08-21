@@ -8,9 +8,7 @@
 #include "geometry/SceneGeometryData.h"
 
 namespace nsK2Engine {
-
-    class IRenderer;
-
+   
     /// <summary>
     /// レンダリングエンジン。
     /// </summary>
@@ -29,7 +27,14 @@ namespace nsK2Engine {
     {
     
     public:
-        
+        // ディファードライティング用の定数バッファ
+        struct SDeferredLightingCB
+        {
+            Light m_light;      // ライト
+            int m_isIBL;        // IBLを行う。
+            Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
+            float m_iblLuminance;   // IBLの明るさ。
+        };
 
         //メインレンダリングターゲットのスナップショット
         enum class EnMainRTSnapshot
@@ -48,6 +53,12 @@ namespace nsK2Engine {
             enForwardRender,        // フォワードレンダリングの描画パス
             enPostEffect,           // ポストエフェクト
             enRender2D,             // 2D描画。
+        };
+        /// <summary>
+        /// イベント。
+        /// </summary>
+        enum EnEvent {
+            enEventReInitIBLTexture,    // IBLテクスチャが再初期化された。
         };
         /// <summary>
         /// レンダリングパイプラインを初期化
@@ -192,8 +203,16 @@ namespace nsK2Engine {
         /// IBLを再初期化。
         /// </summary>
         void ReInitIBL(const wchar_t* iblTexFilePath, float luminance);
-       
-
+        
+        Texture& UesIBLTexture(ModelRender* modelRender)
+        {
+            m_userIBLTextureModelRenderList.push_back(modelRender);
+            return m_iblData.m_texture;
+        }
+        SDeferredLightingCB& GetDeferredLightingCB()
+        {
+            return m_deferredLightingCB;
+        }
     private:
         /// <summary>
         /// イメージベースドライティング(IBL)のためのデータを初期化する。
@@ -293,20 +312,14 @@ namespace nsK2Engine {
                                             enGBufferNum,                   // G-Bufferの数
         };
 
-        // ディファードライティング用の定数バッファ
-        struct SDeferredLightingCB
-        {
-            Light m_light;      // ライト
-            int m_isIBL;        // IBLを行う。
-            Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
-            float m_iblLuminance;   // IBLの明るさ。
-        };
+        
         /// <summary>
         /// IBLデータ
         /// </summary>
         struct SIBLData {
             Texture m_texture;          // IBLテクスチャ
             float m_luminance = 1.0f;   // 明るさ。
+            bool m_isDirty = false;     // ダーティフラグ。
         };
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
@@ -329,5 +342,6 @@ namespace nsK2Engine {
         Sprite m_2DSprite;                                              // 2D合成用のスプライト。
         Sprite m_mainSprite;
         SIBLData m_iblData;                                             // IBLデータ。
+        std::list<ModelRender*> m_userIBLTextureModelRenderList
     };    
 }

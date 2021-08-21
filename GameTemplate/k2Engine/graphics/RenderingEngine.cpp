@@ -87,7 +87,8 @@ namespace nsK2Engine {
             m_diferredLightingSprite.GetExpandConstantBufferGPU(),
             m_pointLightNoListInTileUAV
         );
-        
+        // IBLデータの変更フラグを立てる。
+        m_iblData.m_isDirty = true;
     }
     void RenderingEngine::InitShadowMapRender()
     {
@@ -389,7 +390,7 @@ namespace nsK2Engine {
             m_gBuffer[enGBufferAlbedoDepth].GetDSVCpuDescriptorHandle()
         );
         for (auto& renderObj : m_renderObjects) {
-            renderObj->OnForwardRender(rc);
+            renderObj->OnForwardRender(rc, m_iblData.m_isDirty);
         }
 
         // メインレンダリングターゲットへの書き込み終了待ち

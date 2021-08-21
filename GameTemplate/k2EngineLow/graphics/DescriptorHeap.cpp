@@ -57,6 +57,7 @@ namespace nsK2EngineLow {
 	int g_numDescriptorHeap = 0;
 	void DescriptorHeap::Commit()
 	{
+		Release();
 		const auto& d3dDevice = g_graphicsEngine->GetD3DDevice();
 		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 

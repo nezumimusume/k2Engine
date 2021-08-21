@@ -41,7 +41,12 @@ namespace nsK2EngineLow {
 			DXGI_FORMAT_UNKNOWN,
 		};	//レンダリングするカラーバッファのフォーマット。
 	};
-
+	/// <summary>
+	/// マテリアルを再初期化するためのデータ。
+	/// </summary>
+	struct MaterialReInitData {
+		std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };
+	};
 	/// <summary>
 	/// モデルクラス。
 	/// </summary>
@@ -160,6 +165,14 @@ namespace nsK2EngineLow {
 		{
 			return m_isInited;
 		}
+		/// <summary>
+		/// マテリアルを再初期化。
+		/// </summary>
+		/// <remark>
+		/// モデルに貼り付けるテクスチャを変更したい場合などに利用してください。
+		/// </remark>
+		/// <param name="reInitData">再初期化データ。</param>
+		void ReInitMaterials(MaterialReInitData& reInitData);
 	private:
 		bool m_isInited = false;						//初期化されている？
 		Matrix m_worldMatrix;							//ワールド行列。
