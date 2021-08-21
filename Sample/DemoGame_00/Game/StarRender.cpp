@@ -3,15 +3,14 @@
 
 bool StarRender::Start()
 {
-	//フォワードレンダリング。
-	m_modelRender.InitForwardRendering(
+	//このモデルは半透明描画を行うので、InitTranslucent()を使う。
+	m_modelRender.IniTranslucent(
 		"Assets/modelData/star.tkm",
 		nullptr,
 		0,
 		enModelUpAxisZ,
 		false,
-		m_maxStar,
-		AlphaBlendMode_None
+		m_maxStar
 	);
 	return true;
 }

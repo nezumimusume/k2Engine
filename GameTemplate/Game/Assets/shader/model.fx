@@ -134,5 +134,5 @@ float4 PSMain( SPSIn In ) : SV_Target0
    
 	float4 finalColor = 1.0f;
     finalColor.xyz = lig;
-    return finalColor;
+    return float4(finalColor.xyz, albedoColor.a);
 }

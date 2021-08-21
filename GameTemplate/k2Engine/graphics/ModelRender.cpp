@@ -3,13 +3,38 @@
 #include "RenderingEngine.h"
 
 namespace nsK2Engine {
+	ModelRender::ModelRender()
+	{
+		g_renderingEngine->AddEventListener(
+			this,
+			[&](RenderingEngine::EnEvent enEvent) { OnRecievedEventFromRenderingEngine(enEvent); }
+		);
+	}
 	ModelRender::~ModelRender()
 	{
-		for (auto& geomData : m_geometryDatas) {
-			// レンダリングエンジンから登録解除
-			if (g_renderingEngine != nullptr) {
+		if (g_renderingEngine != nullptr) {
+			g_renderingEngine->RemoveEventListener(this);
+			for (auto& geomData : m_geometryDatas) {
+				// レンダリングエンジンから登録解除
 				g_renderingEngine->UnregisterGeometryData(&geomData);
 			}
+		}
+	}
+	void ModelRender::OnRecievedEventFromRenderingEngine(RenderingEngine::EnEvent enEvent)
+	{
+		if (enEvent == RenderingEngine::enEventReInitIBLTexture
+			&& m_translucentModel.IsInited()
+		) {
+			// IBLテクスチャが更新されたので、PBRシェーダーを利用している
+			// フォワードレンダリングの場合は、ディスクリプタヒープを再初期化する。
+			// (IBLテクスチャを使っているので。)
+			MaterialReInitData matReInitData;
+			if(m_isEnableInstancingDraw) {
+				// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
+				matReInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
+			}
+			matReInitData.m_expandShaderResoruceView[1] = &g_renderingEngine->GetIBLTexture();
+			m_translucentModel.ReInitMaterials(matReInitData);
 		}
 	}
 	void ModelRender::SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData)
@@ -30,14 +55,13 @@ namespace nsK2Engine {
 			}
 		}
 	}
-	void ModelRender::InitForwardRendering(
+	void ModelRender::IniTranslucent(
 		const char* filePath,
 		AnimationClip* animationClips,
 		int numAnimationClips,
 		EnModelUpAxis enModelUpAxis,
 		bool isShadowReciever,
-		int maxInstance,
-		AlphaBlendMode alphaBlendMode)
+		int maxInstance)
 	{
 		//インスタンシング描画用のデータを初期化。
 		InitInstancingDraw(maxInstance);
@@ -45,8 +69,8 @@ namespace nsK2Engine {
 		InitSkeleton(filePath);
 		//アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
-		//フォワードレンダリング用のモデルを初期化。
-		InitModelOnForward(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever, alphaBlendMode);
+		//半透明オブジェクト描画パスで使用されるモデルを初期化。
+		InitModelOnTranslucent(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
 		//ZPrepass描画用のモデルを初期化。
 		InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 		//シャドウマップ描画用のモデルを初期化。
@@ -182,12 +206,11 @@ namespace nsK2Engine {
 
 	}
 
-	void ModelRender::InitModelOnForward(
+	void ModelRender::InitModelOnTranslucent(
 		RenderingEngine& renderingEngine,
 		const char* tkmFilePath,
 		EnModelUpAxis enModelUpAxis,
-		bool isShadowReciever,
-		AlphaBlendMode alphaBlendMode
+		bool isShadowReciever
 	)
 	{
 		ModelInitData modelInitData;
@@ -211,13 +234,13 @@ namespace nsK2Engine {
 		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetDeferredLightingCB());
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-		modelInitData.m_alphaBlendMode = alphaBlendMode;
+		modelInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
 		if (m_isEnableInstancingDraw) {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
-		modelInitData.m_expandShaderResoruceView[1] = &g_renderingEngine->UseIBLTexture(this);
-		m_forwardRenderModel.Init(modelInitData);
+		modelInitData.m_expandShaderResoruceView[1] = &g_renderingEngine->GetIBLTexture();
+		m_translucentModel.Init(modelInitData);
 	}
 
 	void ModelRender::InitModelOnShadowMap(
@@ -328,6 +351,9 @@ namespace nsK2Engine {
 		if (m_forwardRenderModel.IsInited()) {
 			m_forwardRenderModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 		}
+		if (m_translucentModel.IsInited()) {
+			m_translucentModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+		}
 		for (auto& models : m_shadowModels) {
 			for (auto& model : models) {
 				model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -335,14 +361,7 @@ namespace nsK2Engine {
 		}
 
 		if (m_skeleton.IsInited()) {
-			if (m_renderToGBufferModel.IsInited())
-			{
-				m_skeleton.Update(m_renderToGBufferModel.GetWorldMatrix());
-			}
-			if (m_forwardRenderModel.IsInited())
-			{
-				m_skeleton.Update(m_forwardRenderModel.GetWorldMatrix());
-			}
+			m_skeleton.Update(m_zprepassModel.GetWorldMatrix());
 		}
 
 		//アニメーションを進める。
@@ -412,6 +431,12 @@ namespace nsK2Engine {
 	{
 		if (m_forwardRenderModel.IsInited()) {
 			m_forwardRenderModel.Draw(rc, m_fixNumInstanceOnFrame);
+		}
+	}
+	void ModelRender::OnTlanslucentRender(RenderContext& rc)
+	{
+		if (m_translucentModel.IsInited()) {
+			m_translucentModel.Draw(rc, m_fixNumInstanceOnFrame);
 		}
 	}
 }

@@ -13,11 +13,10 @@ namespace nsK2Engine {
 	class ModelRender : public IRenderer
 	{
 	public:
-		ModelRender() {}
+		ModelRender();
 		~ModelRender();
 		/// <summary>
 		/// 初期化。通常はこの関数で初期化してください。
-		/// ディファードレンダリング。
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
 		/// <param name="animationClips">アニメーションクリップ。</param>
@@ -37,9 +36,7 @@ namespace nsK2Engine {
 			bool isShadowReciever = true,
 			int maxInstance = 1);
 		/// <summary>
-		/// 初期化。
-		/// フォワードレンダリング。
-		/// この関数で初期化したモデルはライト、シャドウなどの影響を受けません。
+		/// 半透明描画を行うオブジェクトを初期化。
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
 		/// <param name="animationClips">アニメーションクリップ。</param>
@@ -51,23 +48,21 @@ namespace nsK2Engine {
 		/// インスタンシング描画を行う際は描画したいインスタンスの数分だけ、UpdateInstancingDraw()を呼び出す必要があります。
 		/// インスタンシング描画の詳細はSmaple_XXを参照してください。
 		/// </param>	
-		void InitForwardRendering(
+		void IniTranslucent(
 			const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isShadowReciever = true,
-			int maxInstance = 1,
-			AlphaBlendMode alphaBlendMode = AlphaBlendMode_None);
+			int maxInstance = 1);
 		/// <summary>
-		/// Sky用。
+		/// 特殊なシェーディングを行いたい場合の初期化処理。
 		/// </summary>
 		/// <param name="initData">モデルデータ。</param>
 		void InitForwardRendering(ModelInitData& initData);
 		/// <summary>
 		/// 更新処理。
 		/// </summary>
-
 		void Update();
 		/// <summary>
 		/// インスタンシングデータの更新。
@@ -276,9 +271,17 @@ namespace nsK2Engine {
 		/// フォワードレンダーパスから呼ばれる処理。
 		/// </summary>
 		void OnForwardRender(RenderContext& rc) override;
-
+		/// <summary>
+		/// 半透明オブジェクト描画パスから呼ばれる処理。
+		/// </summary>
+		/// <param name="rc"></param>
+		void OnTlanslucentRender(RenderContext& rc) override;
 	private:
-
+		/// <summary>
+		/// レンダリングエンジンで発生したイベントを受け取ったときに呼ばれる処理。
+		/// </summary>
+		/// <param name="enEvent"></param>
+		void OnRecievedEventFromRenderingEngine(RenderingEngine::EnEvent enEvent);
 		/// <summary>
 		/// シャドウマップ描画用のモデルを初期化。
 		/// </summary>
@@ -316,18 +319,17 @@ namespace nsK2Engine {
 			EnModelUpAxis enModelUpAxis,
 			bool isShadowReciever);
 		/// <summary>
-		/// フォワードレンダリング用のモデルを初期化。
+		/// 半透明オブジェクト描画パスで使用されるモデルを初期化。
 		/// </summary>
 		/// <param name="renderingEngine"></param>
 		/// <param name="tkmFilePath"></param>
 		/// <param name="enModelUpAxis"></param>
 		/// <param name="isShadowReciever"></param>
-		void InitModelOnForward(
+		void InitModelOnTranslucent(
 			RenderingEngine& renderingEngine,
 			const char* tkmFilePath,
 			EnModelUpAxis enModelUpAxis,
-			bool isShadowReciever,
-			AlphaBlendMode alphaBlendMode
+			bool isShadowReciever
 		);
 		/// <summary>
 		/// 各種モデルの頂点シェーダーのエントリーポイントを設定。
@@ -355,6 +357,7 @@ namespace nsK2Engine {
 		Animation					m_animation;						// アニメーション。
 		Model						m_zprepassModel;					// ZPrepassで描画されるモデル
 		Model						m_forwardRenderModel;				// フォワードレンダリングの描画パスで描画されるモデル
+		Model						m_translucentModel;					// 半透明モデル。
 		Model						m_renderToGBufferModel;				// RenderToGBufferで描画されるモデル
 		Model						m_shadowModels[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];	// シャドウマップに描画するモデル
 		ConstantBuffer				m_drawShadowMapCameraParamCB[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];		// シャドウマップ作成時に必要なカメラパラメータ用の定数バッファ。

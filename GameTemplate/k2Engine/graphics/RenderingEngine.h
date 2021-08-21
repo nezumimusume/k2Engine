@@ -200,13 +200,40 @@ namespace nsK2Engine {
         /// </summary>
         void Update();
         /// <summary>
+        /// イベントリスナーを追加。
+        /// </summary>
+        void AddEventListener(
+            void* pListenerObj,
+            std::function<void(EnEvent enEvent)> listenerFunc
+        )
+        {
+            m_eventListeners.push_back({ pListenerObj, listenerFunc });
+        }
+        /// <summary>
+        /// イベントリスナーを削除。
+        /// </summary>
+        void RemoveEventListener(void* pListenerObj)
+        {
+            
+            auto it = std::find_if(
+                m_eventListeners.begin(),
+                m_eventListeners.end(),
+                [&](const SEventListenerData& listenerData){return listenerData.pListenerObj == pListenerObj;}
+            );
+            if (it != m_eventListeners.end()) {
+                m_eventListeners.erase(it);
+            }
+        }
+        /// <summary>
         /// IBLを再初期化。
         /// </summary>
         void ReInitIBL(const wchar_t* iblTexFilePath, float luminance);
-        
-        Texture& UesIBLTexture(ModelRender* modelRender)
+        /// <summary>
+        /// IBLテクスチャを取得。
+        /// </summary>
+        /// <returns></returns>
+        Texture& GetIBLTexture()
         {
-            m_userIBLTextureModelRenderList.push_back(modelRender);
             return m_iblData.m_texture;
         }
         SDeferredLightingCB& GetDeferredLightingCB()
@@ -319,7 +346,6 @@ namespace nsK2Engine {
         struct SIBLData {
             Texture m_texture;          // IBLテクスチャ
             float m_luminance = 1.0f;   // 明るさ。
-            bool m_isDirty = false;     // ダーティフラグ。
         };
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
@@ -342,6 +368,15 @@ namespace nsK2Engine {
         Sprite m_2DSprite;                                              // 2D合成用のスプライト。
         Sprite m_mainSprite;
         SIBLData m_iblData;                                             // IBLデータ。
-        std::list<ModelRender*> m_userIBLTextureModelRenderList
+
+        /// <summary>
+        /// イベントリスナーのデータ。
+        /// </summary>
+        struct SEventListenerData {
+            void* pListenerObj;     // リスナーオブジェクト
+            std::function<void(EnEvent enEvent)> listenerFunc;
+        };
+        
+        std::list< SEventListenerData > m_eventListeners;                // イベントリスナー。
     };    
 }
