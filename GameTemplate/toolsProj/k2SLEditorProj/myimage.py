@@ -29,6 +29,10 @@ class MyImage():
         self.false_height = None
 
         self.number_layer = 10
+
+        self.pivot = [0.5,0.5]
+
+        self.pivot_position = [0.0,0.0]
     
     #自身の情報を相手にコピーする
     #oppがコピー元
@@ -36,8 +40,14 @@ class MyImage():
         self.name = opp.name
         position=opp.get_position()
         self.set_position(canvas,position[0],position[1])
+        #参照渡しではなく、値渡しにする
+        #pivotがコピー元にも反映される不具合があったため。
         self.scale=opp.scale
         self.number_layer = opp.number_layer
+        self.pivot = opp.pivot.copy()
+        self.pivot_position = opp.pivot_position.copy()
+        #self.pivot = opp.pivot
+        #self.pivot_position = opp.pivot_position
 
     #画像の座標を取得
     #戻り値はキャンバス内の座標
@@ -49,6 +59,24 @@ class MyImage():
     def set_position(self,canvas,position_x,position_y):
         canvas.coords(self.item_id,position_x,position_y)
         self.position=[position_x,position_y]
+
+    def move_position(self,canvas,delta_x,delta_y):
+        canvas.coords(self.item_id,self.position[0]+delta_x,self.position[1]+delta_y)
+        self.position=[self.position[0]+delta_x,self.position[1]+delta_y]
+
+    def set_pivot_position(self,pivot_position):
+        self.pivot_position = pivot_position
+
+    def get_pivot_position(self):
+        return self.pivot_position
+
+    def convert_pivot_position_to_image_position(self,pivot_position_x,pivot_position_y,pivot):
+
+        position_x = pivot_position_x - self.width * pivot[0] + self.width / 2
+        position_y = pivot_position_y + self.height * pivot[1] - self.height / 2
+
+        return position_x,position_y
+
 
     #画像を移動量分動かす
     #移動量はキャンバス上での移動量
@@ -83,13 +111,19 @@ class MyImage():
             return
         self.scale=scale
 
-    #画像のを取得する
+    #画像の幅を取得する
     def get_width(self):
         return self.width
 
     #画像の高さを取得する
     def get_height(self):
         return self.height
+
+    def set_pivot(self,pivot):
+        self.pivot = pivot
+
+    def get_pivot(self):
+        return self.pivot
 
     #画像を読み込む
     def load_image(self,canvas,file,tag='img'):

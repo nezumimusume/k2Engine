@@ -13,6 +13,7 @@ namespace nsK2Engine {
 		);
 		m_spriteRender.SetPosition(objData->position);
 		m_spriteRender.SetScale(objData->scale);
+		m_spriteRender.SetPivot(objData->pivot);
 	}
 }
 

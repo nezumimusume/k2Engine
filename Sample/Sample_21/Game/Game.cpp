@@ -31,6 +31,7 @@ bool Game::Start()
 			m_spriteRender.Init(objData.ddsFilePath, objData.width, objData.height);
 			m_spriteRender.SetScale(objData.scale);
 			m_spriteRender.SetPosition(objData.position);
+			m_spriteRender.SetPivot(objData.pivot);
 			//return trueにすると、Level2D側で画像が読み込まれます。
 			//自身で画像を読み込みたい時は必ずtrueにしてください。
 			return true;

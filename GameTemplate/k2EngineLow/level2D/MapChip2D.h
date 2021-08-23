@@ -18,7 +18,7 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void Update()
 		{
-			m_sprite.Update(m_position, m_rotation, m_scale);
+			m_sprite.Update(m_position, m_rotation, m_scale,m_pivot);
 		}
 		/// <summary>
 		/// スプライトを描画する。
@@ -29,9 +29,10 @@ namespace nsK2EngineLow {
 			m_sprite.Draw(renderContext);
 		}
 	private:
-		Vector3 m_position;						//座標。
-		Quaternion m_rotation;					//回転。
-		Vector3 m_scale = g_vec3One;			//大きさ。
-		Sprite m_sprite;						//スプライト。
+		Vector3 m_position;							//座標。
+		Quaternion m_rotation;						//回転。
+		Vector3 m_scale = g_vec3One;				//大きさ。
+		Sprite m_sprite;							//スプライト。
+		Vector2 m_pivot = Sprite::DEFAULT_PIVOT;	//ピボット。
 	};
 }

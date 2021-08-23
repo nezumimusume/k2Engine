@@ -43,7 +43,7 @@
 ../../share/jupyter/nbconvert/templates/rst/index.rst.j2,sha256=BXVqeiQwOn2nrQJNdFP3URhSeDxnfpRIL7LX6u7WAv0,2838
 ../../share/jupyter/nbconvert/templates/script/conf.json,sha256=Ge_CouMHgIUbiQlAtxHbSC7EyJv9528b4Yb91kLaZYc,84
 ../../share/jupyter/nbconvert/templates/script/script.j2,sha256=y0yFbSu4hdd1rfX2yrzduG5zqeNv_mcmuE38MPK1ZYI,84
-../Scripts/jupyter-nbconvert.exe,sha256=5NpeguIF1gGbcTtoMv0TeyMA_4zKrxZJ66WkK2Z4snM,106375
+../Scripts/jupyter-nbconvert.exe,sha256=ojoHimmfD11EmEZlhzsQm0HG2Ygu01F3N4UYqZq0Qts,106380
 nbconvert-6.0.7.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
 nbconvert-6.0.7.dist-info/LICENSE,sha256=qpOlS3g-w8Lq_llp0beUf0J6eBOEZVGuZaUuH6VIn0I,2888
 nbconvert-6.0.7.dist-info/METADATA,sha256=ebRloSacVhb4zGbLfvs3I_56GrucJYtYBRDANoWJafw,6150

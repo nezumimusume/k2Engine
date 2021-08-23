@@ -61,6 +61,9 @@ class Application(tk.Frame):
         #画像の隅の四角が押された
         self.is_pressed_rect = False
 
+        #pivotが押された
+        self.is_pressed_pivot = False
+
         #どこの隅の画像を押したか
         self.number_rect = None
 
@@ -99,7 +102,8 @@ class Application(tk.Frame):
         #座標
         self.inspector_image_position_x_entry.delete(0, tk.END)
         self.inspector_image_position_y_entry.delete(0, tk.END)
-        position = myimg.get_position()
+        #position = myimg.get_position()
+        position = myimg.get_pivot_position()
         #キャンバス座標をtk座標に変換
         position_x,position_y = self.convert_canvas_position_to_tk_position(position[0],position[1])
         self.inspector_image_position_x_entry.insert(tk.END,position_x)
@@ -122,6 +126,14 @@ class Application(tk.Frame):
         self.inspector_layer_entry.delete(0,tk.END)
         self.inspector_layer_entry.insert(tk.END,myimg.number_layer)
 
+        #ピボット
+        pivot = myimg.get_pivot()
+        self.inspector_pivot_x_entry.delete(0,tk.END)
+        self.inspector_pivot_y_entry.delete(0,tk.END)
+
+        self.inspector_pivot_x_entry.insert(tk.END,pivot[0])
+        self.inspector_pivot_y_entry.insert(tk.END,pivot[1])
+
     #インスペクターウィンドウの情報を空にする
     def enpty_information_inspector_window(self):
         self.inspector_image_name_entry.delete(0, tk.END)
@@ -136,6 +148,9 @@ class Application(tk.Frame):
         self.inspector_image_scale_y_entry.delete(0, tk.END)
 
         self.inspector_layer_entry.delete(0, tk.END)
+
+        self.inspector_pivot_x_entry.delete(0,tk.END)
+        self.inspector_pivot_y_entry.delete(0,tk.END)
 
     #レイヤーの優先度順に画像を表示する
     def display_images_according_layer_priority(self):
@@ -174,8 +189,11 @@ class Application(tk.Frame):
         #self.myframe.create_frame(self.canvas,image_position_x,image_position_y,myimage)
         if self.myframe.get_is_rect() == False: 
             self.myframe.create_frame(self.canvas,image_position_x,image_position_y,myimage)
+            self.myimage_list[self.item_id].set_pivot_position(self.myframe.get_pivot_position())
         else:
             self.myframe.set_position(self.canvas,image_position_x,image_position_y,myimage)
+            self.myframe.set_pivot(self.canvas,image_position_x,image_position_y,myimage)
+            self.myimage_list[self.item_id].set_pivot_position(self.myframe.get_pivot_position())
 
         #枠を削除してから
         self.canvas.delete(self.canvas_rect)
@@ -240,7 +258,21 @@ class Application(tk.Frame):
         item_id = self.canvas.find_closest(event.x, event.y)[0]
         self.number_rect = self.myframe.determine_where_frame_pressed(item_id)
 
-    
+    def enter_pivot(self,event):
+        #マウスのカーソルを変更する
+        self.master.configure(cursor=constant.MOUSE_CURSOR_PIVOT)
+
+    def leave_pivot(self,event):
+        if self.is_pressed_pivot == False:
+            #マウスカーソルをデフォルトに戻す
+            self.master.configure(cursor=constant.DEFAULT_MOUSE_CURSOR)
+
+    def pressed_pivot(self,event):
+        self.is_pressed_pivot = True
+        #クリックした場所を保存
+        self.pressed_x = event.x
+        self.pressed_y = event.y
+
     #画像がクリックされたときの処理
     def pressed(self,event):
         #選択された画像を持ってくる
@@ -294,14 +326,21 @@ class Application(tk.Frame):
         image_position[0],
         image_position[1],
         img)
-        
+        img.set_pivot_position(self.myframe.get_pivot_position())
+
+    #ピボットの座標を変化させる
+    #delta_xとdelta_yはマウスの移動量
+    def change_pivot_position(self,delta_x,delta_y):
+        self.myimage_list[self.item_id].set_pivot(self.myframe.move_pivot(self.canvas,delta_x,delta_y,self.myimage_list[self.item_id]))
+        self.myimage_list[self.item_id].set_pivot_position(self.myframe.get_pivot_position())
 
     #画像がドラッグされたときの処理
     def dragged(self,event):
         #枠が表示されていなかったら、あるいは画像が押されていなかったら
         #あるいは画像の隅の四角形が押されていなかったら
         #画像を動かす処理をしない
-        if self.myframe.get_is_rect() == False or (self.is_pressed_image == False and self.is_pressed_rect == False):
+        if self.myframe.get_is_rect() == False or (self.is_pressed_image == False and self.is_pressed_rect == False
+        and self.is_pressed_pivot == False):
             return
         #tag = self.canvas.gettags(self.item_id[0])[0]
         #item = self.canvas.type(tag) # rectangle image
@@ -314,6 +353,9 @@ class Application(tk.Frame):
         elif self.is_pressed_image == True:
             #座標変更
             self.change_position(delta_x,delta_y)
+        elif self.is_pressed_pivot == True:
+            #ピボットの座標変更
+            self.change_pivot_position(delta_x,delta_y)
         self.pressed_x = event.x
         self.pressed_y = event.y
 
@@ -325,6 +367,7 @@ class Application(tk.Frame):
         #各フラグをオフにする
         self.is_pressed_image = False
         self.is_pressed_rect = False
+        self.is_pressed_pivot = False
         self.master.configure(cursor=constant.DEFAULT_MOUSE_CURSOR)
 
     #ファイル読み込みが選択されたときの処理
@@ -415,14 +458,21 @@ class Application(tk.Frame):
                     #スケール設定して
                     scale = [float(image[9]),float(image[10])]
                     myimg.set_scale(scale)
-                    #座標を設定する
-                    position_x,position_y = self.convert_tk_position_to_canvas_position(float(image[4]),float(image[5]))
-                    myimg.set_position_no_move(position_x,position_y)
+                   
+                    #ピボット設定して
+                    pivot = [float(image[11]),float(image[12])]
+                    myimg.set_pivot(pivot)
+                    
                 except:
                     messagebox.showerror('エラー', fn + 'の読み込みに失敗しました。')
                     is_success = False
                 try:
                     self.load_image(myimg)
+                    #座標は画像をロードして大きさが判明した際に、設定する。
+                    position_x,position_y = self.convert_tk_position_to_canvas_position(float(image[4]),float(image[5]))
+                    position_x,position_y = self.myimage_list[self.item_id].convert_pivot_position_to_image_position(position_x,position_y,pivot)
+                    self.myimage_list[self.item_id].set_position(self.canvas,position_x,position_y)
+                    self.select_image()
                 except:
                     messagebox.showerror('エラー', image[1] + 'が読み込めませんでした、ファイルパスを確認してください。')
                     is_success = False
@@ -430,6 +480,8 @@ class Application(tk.Frame):
             messagebox.showinfo('メッセージ', 'レベルの読み込みに成功しました！')
         #レイヤー優先度順に画像を表示させる
         self.display_images_according_layer_priority()
+        self.select_image()
+        
 
     #レベルデータを出力する
     def export_level(self):
@@ -451,14 +503,16 @@ class Application(tk.Frame):
             for i in self.myimage_list:
                 myimg=self.myimage_list[i]
                 #画像の座標を取得
-                x,y = myimg.get_position()
+                pivot_position = myimg.get_pivot_position()
+                x,y = pivot_position[0],pivot_position[1]
                 #画像の座標を書き出す
                 #キャンバス座標をtk座標に変換する
                 x,y=self.convert_canvas_position_to_tk_position(x,y)
                 scale=myimg.scale
-                width=myimg.image_size[0]
-                height=myimg.image_size[1]
+                width=myimg.false_width
+                height=myimg.false_height
                 layer=myimg.number_layer
+                pivot=myimg.get_pivot()
 
                 #画像の名前を書き出す
                 file.write(bytes((str(len(myimg.name)) + ',').encode()))
@@ -477,6 +531,9 @@ class Application(tk.Frame):
                 #画像のスケールを書き出す
                 file.write(bytes((str(scale[0]) + ',').encode()))
                 file.write(bytes((str(scale[1]) + ',').encode()))
+                #ピボットを書き出す
+                file.write(bytes((str(pivot[0]) + ',').encode()))
+                file.write(bytes((str(pivot[1]) + ',').encode()))
 
                 #ファイルパスを持ってきて
                 #dds_file_path = fn
@@ -615,6 +672,29 @@ class Application(tk.Frame):
         else:
             return False
 
+    
+
+    #文字列検証関数、文字の入力を0.0から1.0fに限定させる
+    #Falseで入力拒否
+    def validation_pivot(self,before_word, after_word):
+        if len(after_word) == 0:
+            return True
+        #elif (after_word.isdecimal()):
+        #入力された文字が0～9の半角であれば
+        elif re.match(re.compile('[0-9]'),after_word):
+            #self.apply_input_information()
+            num = None
+            try:
+                num = float(after_word)
+                if num < 0.0 and num > 1.0:
+                    return False
+                else:
+                    return True
+            except:
+                return False
+        else:
+            return False
+
     #入力項目が空かどうか判断する
     def determine_input_empty(self,entry):
         if entry == '':
@@ -623,7 +703,6 @@ class Application(tk.Frame):
         else:
             return False
 
-    
     #入力された情報を反映させる
     def apply_input_information(self):
         #何も選択されてなかったら処理しない
@@ -639,6 +718,8 @@ class Application(tk.Frame):
         entry_list.append(self.inspector_layer_entry.get())
         entry_list.append(self.inspector_image_scale_x_entry.get())
         entry_list.append(self.inspector_image_scale_y_entry.get())
+        entry_list.append(self.inspector_pivot_x_entry.get())
+        entry_list.append(self.inspector_pivot_y_entry.get())
         for entry in entry_list:
             #入力が空であれば以下の処理をしない
             if self.determine_input_empty(entry) == True:
@@ -648,18 +729,39 @@ class Application(tk.Frame):
         self.myimage_list[self.item_id].name = name
         self.project_list.insert(self.number_image, self.myimage_list[self.item_id].name)
 
-        #ウィンドウから入力情報持ってくる
+        
+        #ウィンドウから情報を持ってくる。
+
+        #ピボット
+        pivot = [float(self.inspector_pivot_x_entry.get()),float(self.inspector_pivot_y_entry.get())]
+        old_position = self.myframe.get_pivot_position()
+
+        #if abs(pivot[0] - self.myframe.pivot[0]) > 0.001 or abs(pivot[1] - self.myframe.pivot[1]):
+        self.myimage_list[self.item_id].set_pivot(pivot)
+        image_position = self.myimage_list[self.item_id].get_position()
+        self.myframe.set_pivot(self.canvas,image_position[0],image_position[1],self.myimage_list[self.item_id])
+        self.myimage_list[self.item_id].set_pivot(pivot)
+        #old_position = self.myframe.get_pivot_position()
+        #self.myframe.set_pivot(self.canvas,position_x,position_y,self.myimage_list[self.item_id])
+
         #座標
         position_x = float(self.inspector_image_position_x_entry.get())
         position_y = float(self.inspector_image_position_y_entry.get())
         position_x,position_y = self.convert_tk_position_to_canvas_position(position_x,position_y)
+        delta_x,delta_y = position_x-old_position[0], position_y - old_position[1]
+        self.myframe.set_pivot(self.canvas,image_position[0]+delta_x,image_position[1]+delta_y,self.myimage_list[self.item_id])
+        pivot_position = self.myframe.get_pivot_position()
+
+        position_x,position_y = self.myimage_list[self.item_id].convert_pivot_position_to_image_position(pivot_position[0],pivot_position[1],pivot)
         self.myimage_list[self.item_id].set_position(self.canvas,
         position_x,
         position_y)
+        
         self.myimage_list[self.item_id].set_scale([float(self.inspector_image_scale_x_entry.get()),
         float(self.inspector_image_scale_y_entry.get())])
         #レイヤー優先度
         self.myimage_list[self.item_id].number_layer = int(self.inspector_layer_entry.get())
+        
         #リストボックスを選択
         self.project_list.select_set(self.number_image)
         self.select_image()
@@ -796,6 +898,7 @@ class Application(tk.Frame):
         #self.canvas.place_forget()
         #self.canvas.pack(side=tk.LEFT,anchor=tk.NE)
 
+
     #キャンバスを初期化
     def init_canvas(self):
         #キャンバス作って
@@ -812,6 +915,11 @@ class Application(tk.Frame):
         self.canvas.tag_bind(constant.MYFRAME_IMAGE_TAG, '<ButtonPress-1>', self.pressed_rect)
         self.canvas.tag_bind(constant.MYFRAME_IMAGE_TAG, '<Enter>', self.enter_rect)
         self.canvas.tag_bind(constant.MYFRAME_IMAGE_TAG, '<Leave>', self.leave_rect)
+
+
+        self.canvas.tag_bind(constant.MYFRAME_IMAGE_PIVOT_TAG, '<ButtonPress-1>', self.pressed_pivot)
+        self.canvas.tag_bind(constant.MYFRAME_IMAGE_PIVOT_TAG, '<Enter>', self.enter_pivot)
+        self.canvas.tag_bind(constant.MYFRAME_IMAGE_PIVOT_TAG, '<Leave>', self.leave_pivot)
 
         
         #マウスの座標を表示したい
@@ -968,6 +1076,34 @@ class Application(tk.Frame):
         #Validationコマンドを設定（'key'は文字が入力される毎にイベント発火）
         self.inspector_layer_entry.configure(validate='key', vcmd=vcmd)
 
+    def init_inspector_pivot_label(self):
+        inspector_pivot = tk.Label(self.inspector,text='ピボット')
+        inspector_pivot.place(x=constant.INSPECTOR_STANDARS_POSITION_X,y=constant.INSPECTOR_PIVOT_Y)
+
+        #X
+        inspector_pivot_x = tk.Label(self.inspector,text='x',font=("", "15", ""))
+        inspector_pivot_x.place(x=constant.INSPECTOR_STANDARS_POSITION_X,y=constant.INSPECTOR_PIVOT_XY_Y)
+        #entryを設定
+        sv = tk.StringVar()
+        self.inspector_pivot_x_entry = tk.Entry(self.inspector,width=constant.INSPECTOR_PIVOT_ENTRY_SIZE_X,textvariable=sv)
+        self.inspector_pivot_x_entry.place(x=constant.INSPECTOR_PIVOT_X_ENTRY_X,y=constant.INSPECTOR_PIVOT_ENTRY_Y)
+        # %s は変更前文字列, %P は変更後文字列を引数で渡す
+        vcmd1 = (self.inspector_pivot_x_entry.register(self.validation_pivot), '%s', '%P')
+        #Validationコマンドを設定（'key'は文字が入力される毎にイベント発火）
+        self.inspector_pivot_x_entry.configure(validate='key', vcmd=vcmd1)
+
+        #y
+        inspector_pivot_y = tk.Label(self.inspector,text='y',font=("", "15", ""))
+        inspector_pivot_y.place(x=constant.INSPECTOR_PIVOT_Y_X,y=constant.INSPECTOR_PIVOT_XY_Y)
+        #entryを設定
+        sv = tk.StringVar()
+        self.inspector_pivot_y_entry = tk.Entry(self.inspector,width=constant.INSPECTOR_PIVOT_ENTRY_SIZE_X,textvariable=sv)
+        self.inspector_pivot_y_entry.place(x=constant.INSPECTOR_PIVOT_Y_ENTRY_X,y=constant.INSPECTOR_PIVOT_ENTRY_Y)
+        # %s は変更前文字列, %P は変更後文字列を引数で渡す
+        vcmd2 = (self.inspector_pivot_y_entry.register(self.validation_pivot), '%s', '%P')
+        #Validationコマンドを設定（'key'は文字が入力される毎にイベント発火）
+        self.inspector_pivot_y_entry.configure(validate='key', vcmd=vcmd2)
+        return
 
 
     #インスペクターウィンドウ？の初期化
@@ -992,6 +1128,8 @@ class Application(tk.Frame):
         #レイヤー表示優先度項目の初期化
         self.init_inspector_layer_label()
 
+        #ピボット項目の初期化
+        self.init_inspector_pivot_label()
 
         self.inspector_button = tk.Button(self.inspector,text='入力項目を反映させる',command=self.apply_input_information,fg='red')
         self.inspector_button.place(x=constant.INSPECTOR_BUTTON_X,y=constant.INSPECTOR_BUTTON_Y)

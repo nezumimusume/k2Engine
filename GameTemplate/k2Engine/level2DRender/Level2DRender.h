@@ -15,6 +15,7 @@ namespace nsK2Engine {
 		int height = 0;		//縦幅。
 		const char* name;	//名前。
 		const char* ddsFilePath;		//.ddsファイルのファイルパス。
+		Vector2 pivot = Sprite::DEFAULT_PIVOT;	//ピボット。
 		/// <summary>
 		/// 引数で渡したオブジェクト名のオブジェクトを調べる。
 		/// </summary>

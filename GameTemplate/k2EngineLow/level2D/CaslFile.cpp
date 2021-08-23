@@ -62,8 +62,15 @@ namespace nsK2EngineLow {
 			caslData.get()->numberLayer = ReadInteger(fp);
 
 			//大きさの倍率を取得。
-			caslData.get()->scale.x = ReadDecimal(fp);
-			caslData.get()->scale.y = ReadDecimal(fp);
+			//現在は1.0fに固定。
+			ReadDecimal(fp);
+			ReadDecimal(fp);
+			caslData.get()->scale.x = 1.0f;
+			caslData.get()->scale.y = 1.0f;
+
+			//ピボットを取得。
+			caslData.get()->pivot.x = ReadDecimal(fp);
+			caslData.get()->pivot.y = ReadDecimal(fp);
 
 			//ddsファイルパスの名前の長さを取得。
 			int ddsFileNameCount = ReadInteger(fp);
