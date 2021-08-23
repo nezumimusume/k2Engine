@@ -29,9 +29,6 @@ namespace nsK2Engine {
 			m_spriteRender.Draw(renderContext);
 		}
 	private:
-		Vector3 m_position;						//座標。
-		Quaternion m_rotation;					//回転。
-		Vector3 m_scale = g_vec3One;			//大きさ。
 		SpriteRender m_spriteRender;			//スプライト。
 	};
 }

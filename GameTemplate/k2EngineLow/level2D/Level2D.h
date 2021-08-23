@@ -14,6 +14,7 @@ namespace nsK2EngineLow {
 		Vector3 scale = Vector3::One;			//拡大率。
 		int width = 0;		//横幅。
 		int height = 0;		//縦幅。
+		Vector2 pivot = Sprite::DEFAULT_PIVOT;	//ピボット。
 		const char* name;	//名前。
 		const char* ddsFilePath;		//.ddsファイルのファイルパス。
 		/// <summary>

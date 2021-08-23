@@ -38,6 +38,7 @@ namespace nsK2EngineLow {
 			objData.height = caslData->height;
 			objData.name = caslData->name.get();
 			objData.ddsFilePath = caslData->ddsFilePath.get();
+			objData.pivot = caslData->pivot;
 			auto isHook = false;
 			if (hookFunc != nullptr) {
 				//hookŠÖ”‚ªŽw’è‚³‚ê‚Ä‚¢‚é‚Ì‚ÅhookŠÖ”‚ðŒÄ‚Ño‚·B

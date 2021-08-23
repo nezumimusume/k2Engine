@@ -19,6 +19,8 @@ namespace nsK2EngineLow {
 		//大きさ。
 		m_scale.x = caslData->scale.x;
 		m_scale.y = caslData->scale.y;
+		//ピボット。
+		m_pivot = caslData->pivot;
 	}
 }
 

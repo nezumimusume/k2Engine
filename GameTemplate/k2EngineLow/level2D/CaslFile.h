@@ -18,6 +18,7 @@ namespace nsK2EngineLow {
 		int height = 0;							//縦幅。
 		int numberLayer = 0;					//レイヤー優先度。
 		Vector2 scale;							//大きさ。
+		Vector2 pivot = Sprite::DEFAULT_PIVOT;	//ピボット。
 	};
 
 	/// <summary>
