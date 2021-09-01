@@ -88,7 +88,7 @@ float SpcFresnel(float f0, float u)
 /// <param name="smooth">滑らかさ</param>
 float CookTorranceSpecular(float3 L, float3 V, float3 N, float smooth)
 {
-    float microfacet = 0.76f;
+    float microfacet = 1.0f - smooth;
 
     // 金属度を垂直入射の時のフレネル反射率として扱う
     // 金属度が高いほどフレネル反射は大きくなる
@@ -133,14 +133,14 @@ float CookTorranceSpecular(float3 L, float3 V, float3 N, float smooth)
 /// <param name="L">光源に向かうベクトル。光の方向と逆向きのベクトル。</param>
 /// <param name="V">視線に向かうベクトル。</param>
 /// <param name="roughness">粗さ。0～1の範囲。</param>
-float CalcDiffuseFromFresnel(float3 N, float3 L, float3 V)
+float CalcDiffuseFromFresnel(float3 N, float3 L, float3 V, float smooth)
 {
     // step-1 ディズニーベースのフレネル反射による拡散反射を真面目に実装する。
     // 光源に向かうベクトルと視線に向かうベクトルのハーフベクトルを求める
     float3 H = normalize(L+V);
     
     //粗さは0.5で固定。
-    float roughness = 0.5f;
+    float roughness = 1.0f - smooth;
     
     //これは
     float energyBias = lerp(0.0f, 0.5f, roughness);
@@ -225,7 +225,7 @@ float3 CalcLighting(
     // ディズニーベースの拡散反射を実装する
     // フレネル反射を考慮した拡散反射を計算
     float diffuseFromFresnel = CalcDiffuseFromFresnel(
-        normal, -ligDir, toEye);
+        normal, -ligDir, toEye, smooth);
 
     // 正規化Lambert拡散反射を求める
     float NdotL = saturate(dot(normal, -ligDir));
