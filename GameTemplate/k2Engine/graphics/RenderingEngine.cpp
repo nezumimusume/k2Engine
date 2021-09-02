@@ -7,7 +7,6 @@ namespace nsK2Engine {
     {
         m_isSoftShadow = isSoftShadow;
 
-        InitIBLData(L"Assets/modelData/preset/skyCubeMapNight_Toon_02.dds", 0.1f);
         InitZPrepassRenderTarget();
         InitMainRenderTarget();
         InitGBuffer();
