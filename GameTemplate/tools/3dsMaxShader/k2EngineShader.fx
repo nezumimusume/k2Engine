@@ -9,12 +9,10 @@
 /////////////////////////////////////////////
 
 // ライトの方向
-float3 lightDir : Direction <
-    string UIName = "Light Direction";
-    string Object = "TargetLight";
-> = { -0.577, -0.577, 0.577 };
+float3 lightDir : Direction;
 
 float3 lightColor : LIGHTCOLOR;
+
 
 // transformations
 cbuffer everyFrame
@@ -98,9 +96,7 @@ bool g_useNormalMap
     string UIName = "Use Normal Map";
 > = false;
 
-float3 g_ambient <
-    string UIName = "Ambient";
-> = { 0.5, 0.5, 0.5 };
+float3 g_ambient  = { 0.5, 0.5, 0.5 };
 /////////////////////////////////////////////
 // サンプラ
 /////////////////////////////////////////////
@@ -162,10 +158,11 @@ float4 PS(VS_OUTPUT In) : SV_Target
     }
     float4 metaricAndSmooth = g_metallicAndSmoothMap.Sample(g_sampler, In.uv);
 
-    float3 toEye = ViewI[3].xyz - In.worldPos;
+    float3 toEye = normalize(ViewI[3].xyz - In.worldPos);
+    float3 lightDirN = normalize(lightDir);
     float4 finalColor;
     finalColor.xyz = CalcLighting(
-        -lightDir,
+        -lightDirN,
         lightColor,
         normal,
         toEye,
