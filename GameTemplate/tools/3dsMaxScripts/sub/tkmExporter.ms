@@ -169,15 +169,15 @@ private
 	),
 	fn GetMaterialType material = 
 	(
-		if material.classID[1] == 2  then(
-			if material.classID[2] == 0  then(
-				--標準マテリアル
+		if material.classID[1] == 249140708  then(
+			if material.classID[2] == 1630788338  then(
+				--DirectXシェーダーマテリアル
 				return 1
 			)
 		)
-		if material.classID[1] == 1030429932L  then(
-			if material.classID[2] == 3735928833L  then(
-				--物理マテリアル
+		if material.classID[1] == 512  then(
+			if material.classID[2] == 0  then(
+				--マルチマテリアル
 				return 2
 			)
 		)
@@ -189,33 +189,17 @@ private
 	(
 		
 		if c_node.material != undefined then(
-			numSubMaterial = getNumSubMtls c_node.material
-			if numSubMaterial == 0 then(
-				--サブマテリアルはない。
-				matType = GetMaterialType c_node.material
+			matType = GetMaterialType c_node.material
+			if matType == 1 then(
+				--DirectXシェーダーマテリアル
+				diffMap = c_node.material.g_albedo
+				normalMap = c_node.material.g_normal 
+				specMap = c_node.material.g_metallicAndSmoothMap
 				
-				if matType == 1 then(
-					--標準マテリアル
-					diffMap = c_node.material.diffuseMap
-					normalMap = c_node.material.bumpMap 
-					specMap = c_node.material.specularMap
-					reflectionMap = c_node.material.reflectionMap 
-					--屈折マップはオミット
-					--refractionMap = c_node.material.refractionMap
-				)
-		
-				if matType == 2 then (
-					--物理マテリアル
-					diffMap = c_node.material.base_color_map
-					normalMap = c_node.material.bump_map
-					specMap = c_node.material.metalness_map
-					reflectionMap = c_node.material.reflectivity_map
-					--屈折マップはオミット
-					--refractionMap = c_node.material.refractionMap
-				)
-				if matType == 0 then(
-					messageBox "標準マテリアルとフィジカルマテリアル以外は未対応です。"
-				)
+				
+				-- if matType == 0 then(
+				-- 	messageBox "標準マテリアルとフィジカルマテリアル以外は未対応です。"
+				--)
 				albedoFileName = ""
 				if diffMap != undefined then(
 					albedoFileName = diffMap.fileName
@@ -228,19 +212,18 @@ private
 				if specMap != undefined then(
 					specMapFileName = specMap.fileName
 				)
+
+				-- 反射マップと屈折マップはオミット。
 				reflectionMapFileName = ""
-				if reflectionMap != undefined then(
-					reflectionMapFileName = reflectionMap.fileName
-				)
 				refractionMapFileName = ""
-				if refractionMap != undefined then(
-					refractionMapFileName = refractionMap.fileName
-				)
+				
 				newMat = tkMaterial refractionMap:refractionMapFileName reflectionMap:reflectionMapFileName albedoMap:albedoFileName normalMap:normalMapFileName specMap:specMapFileName id:-1
 				append ms.materials newMat
-			)else(
+			)else if matType == 2 then(
 				--マルチマテリアル。
 				--面ごとに異なるマテリアルが貼り付けられている。
+				--まずマテリアル数を取得。
+				numSubMaterial = getNumSubMtls c_node.material
 				matIds = #()
 				for faceNo = 1 to numFace do (
 					matId  = getFaceMatID meshObj faceNo
@@ -255,33 +238,17 @@ private
 							)
 						)
 						if regist == 0 then(
-						
 							--未登録のマテリアルなので、追加する。
 							mat = getSubMtl c_node.material matId
-
+							--マテリアルタイプを取得
 							matType = GetMaterialType mat
-							if matType == 1 then(
-								--標準マテリアル
-								diffMap = mat.diffuseMap
-								normalMap = mat.bumpMap 
-								specMap = mat.specularMap
-								reflectionMap = mat.reflectionMap 
-								--屈折マップはオミット
-								--refractionMap = c_node.material.refractionMap
+							if matType == 0 then(
+								messageBox "DirectXマテリアル以外は使えません。"
 							)
 					
-							if matType == 2 then (
-								--物理マテリアル
-								diffMap = mat.base_color_map
-								normalMap = mat.bump_map
-								specMap = mat.metalness_map
-								reflectionMap = mat.reflectivity_map
-								--屈折マップはオミット
-								--refractionMap = c_node.material.refractionMap
-							)
-							if matType == 0 then(
-								messageBox "標準マテリアルとフィジカルマテリアル以外は未対応です。"
-							)
+							diffMap = mat.g_albedo
+							normalMap = mat.g_normal 
+							specMap = mat.g_metallicAndSmoothMap
 
 							albedoFileName = ""
 							if diffMap != undefined then(
@@ -295,20 +262,20 @@ private
 							if specMap != undefined then(
 								specMapFileName = specMap.fileName
 							)
+
+							-- 反射マップと屈折マップはオミット。
 							reflectionMapFileName = ""
-							if reflectionMap != undefined then(
-								reflectionMapFileName = reflectionMap.fileName
-							)
 							refractionMapFileName = ""
-							if refractionMap != undefined then(
-								refractionMapFileName = refractionMap.fileName
-							)
+							
 							newMat = tkMaterial refractionMap:refractionMapFileName reflectionMap:reflectionMapFileName albedoMap:albedoFileName normalMap:normalMapFileName specMap:specMapFileName id:matId
 							append ms.materials newMat
 						)
 					)
 				)
+			)else(
+				messageBox "使えません以外は使えません"
 			)
+	
 		)
 	),
 	--インデックスバッファを構築する。
