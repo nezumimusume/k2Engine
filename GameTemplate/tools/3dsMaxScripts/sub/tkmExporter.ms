@@ -193,6 +193,7 @@ private
 			if numSubMaterial == 0 then(
 				--サブマテリアルはない。
 				matType = GetMaterialType c_node.material
+				
 				if matType == 1 then(
 					--標準マテリアル
 					diffMap = c_node.material.diffuseMap
@@ -493,7 +494,6 @@ private
 public
 	fn SaveTkm nodes filePath isFlatShading=
 	(
-		
 		m_isFlatShading = isFlatShading
 		--選択しているノードを退避させる。
 		nodesTmp = #()
