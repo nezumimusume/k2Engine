@@ -12,6 +12,11 @@
 
 #include "tkmExporter.h"
 #include <vector>
+#include <filesystem>
+#include "AssetManagement/AssetUser.h"
+#include "IDxMaterial.h"
+#include <RTMax.h>
+#include <functional>
 
 #define tkmExporter_CLASS_ID Class_ID(0x85d8d367, 0x973ecfa3)
 
@@ -23,8 +28,24 @@ namespace {
 	/// <returns></returns>
 	TriObject* GetTriObjectFromNode(INode* node) 
 	{
+		auto name = node->GetName();
 		Object *obj = node->EvalWorldState(0).obj;
-		return (TriObject *)(obj->ConvertToType(0, Class_ID(TRIOBJ_CLASS_ID, 0)));
+		if (obj) {
+			return (TriObject *)(obj->ConvertToType(0, Class_ID(TRIOBJ_CLASS_ID, 0)));
+		}
+		return nullptr;
+	}
+	/// <summary>
+	/// パラメータマネージャーからwchar_t型の文字列データを取得する関数。
+	/// </summary>
+	/// <param name="paramManager">パラメータマネージャ</param>
+	/// <param name="stringDst">文字列の格納先</param>
+	void GetWStringFromParamManager(IParameterManager* paramManager, int paramNo, std::wstring& stringDst)
+	{
+		std::wstring paramName = paramManager->GetParamName(paramNo);
+		auto size = paramManager->GetParamSize(paramNo);
+		stringDst.resize(size + 1);
+		paramManager->GetParamData(&stringDst.front(), paramName.c_str());
 	}
 }
 class tkmExporter : public SceneExport
@@ -84,6 +105,7 @@ private:
 	///////////////////////////////////////////////////
 	// メンバ変数。
 	///////////////////////////////////////////////////
+	std::filesystem::path m_outputFolderPath;	//出力フォルダのパス。
 	std::wstring m_ext = L"tkm";	// 拡張子
 	std::wstring m_outputFilder;	// 出力フォルダのパス。
 	ModelData m_modelData;			// モデルデータ。
@@ -94,25 +116,30 @@ private:
 	///////////////////////////////////////////////////
 	// privateメンバ関数
 	///////////////////////////////////////////////////
-	
 	/// <summary>
-	/// マテリアル情報を構築する。
+	/// メッシュパーツを構築(parts of directX material)。
 	/// </summary>
-	void BuildMatrialData(INode* node);
+	/// <param name="mat"></param>
+	void BuildMeshParts_DirectXMaterial(Mtl* mat);
 	/// <summary>
-	/// メッシュパーツを構築
+	/// メッシュパーツを構築(parts of material)
 	/// </summary>
-	/// <param name="node">構築するノード</param>
-	void BuildMeshParts_Matrial(INode* node);
+	/// <param name="mat">マテリアル</param>
+	void BuildMeshParts_Matrial(Mtl* mat);
 	/// <summary>
-	/// 頂点バッファを構築。
+	/// メッシュパーツを構築(parts of vertexBuffer)。
 	/// </summary>
 	/// <param name="node"></param>
 	void BuildMeshParts_VertexBuffer(INode* node);
 	/// <summary>
-	/// インデックスバッファを構築。
+	/// メッシュパーツを構築(parts of indexBffer)。
 	/// </summary>
 	void BuildMeshParts_IndexBufer(INode* node);
+	/// <summary>
+	/// メッシュパーツを構築。
+	/// </summary>
+	/// <param name="node"></param>
+	void BuildMeshParts(INode* node);
 	
 public:
 	// Constructor/Destructor
@@ -200,49 +227,41 @@ int tkmExporter::ExtCount()
 
 const TCHAR* tkmExporter::Ext(int /*i*/)
 {
-#pragma message(TODO("Return the 'i-th' file name extension (i.e. \"3DS\")."))
 	return m_ext.c_str();
 }
 
 const TCHAR* tkmExporter::LongDesc()
 {
-#pragma message(TODO("Return long ASCII description (i.e. \"Targa 2.0 Image File\")"))
 	return _T("3DModel exporter that format for k2Engine.");
 }
 
 const TCHAR* tkmExporter::ShortDesc()
 {
-#pragma message(TODO("Return short ASCII description (i.e. \"Targa\")"))
 	return _T("tkm");
 }
 
 const TCHAR* tkmExporter::AuthorName()
 {
-#pragma message(TODO("Return ASCII Author name"))
 	return _T("Takayuki Kiyohara");
 }
 
 const TCHAR* tkmExporter::CopyrightMessage()
 {
-#pragma message(TODO("Return ASCII Copyright message"))
 	return _T("");
 }
 
 const TCHAR* tkmExporter::OtherMessage1()
 {
-	// TODO: Return Other message #1 if any
 	return _T("");
 }
 
 const TCHAR* tkmExporter::OtherMessage2()
 {
-	// TODO: Return other message #2 in any
 	return _T("");
 }
 
 unsigned int tkmExporter::Version()
 {
-#pragma message(TODO("Return Version number * 100 (i.e. v3.01 = 301)"))
 	return 100;
 }
 
@@ -253,12 +272,57 @@ void tkmExporter::ShowAbout(HWND /*hWnd*/)
 
 BOOL tkmExporter::SupportsOptions(int /*ext*/, DWORD /*options*/)
 {
-#pragma message(TODO("Decide which options to support.  Simply return true for each option supported by each Extension the exporter supports."))
 	return TRUE;
 }
-void tkmExporter::BuildMeshParts_Matrial(INode* node)
+void tkmExporter::BuildMeshParts_DirectXMaterial(Mtl* mat)
 {
+	auto dxMat = dynamic_cast<IDxMaterial3*>(mat->GetInterface(IDXMATERIAL3_INTERFACE));
+	if (dxMat == nullptr) {
+		// directXマテリアルではない。
+		return;
+	}
+	// DirectXマテリアル。
+	// 新しいマテリアルのインスタンスを作成する。
+	MaterialPtr newMaterial = std::make_unique<Material>();
+	auto paramManager = dxMat->GetCurrentParameterManager();
+	const int numParam = paramManager->GetNumberOfParams();
+	for (int paramNo = 0; paramNo < numParam; paramNo++) {
 
+		std::wstring paramName = paramManager->GetParamName(paramNo);
+		if (paramName == L"g_albedo") {
+			// アルベドテクスチャのファイルパスを取得する。
+			GetWStringFromParamManager(paramManager, paramNo, newMaterial->albedoMapFilePath);
+		}
+		else if (paramName == L"g_normal") {
+			// 法線のファイルパスを取得する。
+			GetWStringFromParamManager(paramManager, paramNo, newMaterial->normalMapFilePath);
+		}
+		else if (paramName == L"g_metallicAndSmoothMap") {
+			// ファイルパスを取得する。
+			GetWStringFromParamManager(paramManager, paramNo, newMaterial->metallicAndSmoothMapFilePath);
+		}
+	}
+	// メッシュパーツに新しいマテリアルを追加。
+	m_meshParts->materials.push_back(newMaterial);
+}
+void tkmExporter::BuildMeshParts_Matrial(Mtl* mat)
+{
+	if (mat == nullptr) {
+		return;
+	}
+	// マルチマテリアルじゃないか調べる。
+	auto multiMat = dynamic_cast<MultiMtl*>(mat);
+	if (multiMat) {
+		// マルチマテリアル。
+		for (int matNo = 0; matNo < multiMat->NumSubMtls(); matNo++) {
+			BuildMeshParts_Matrial(multiMat->GetSubMtl(matNo));
+		}
+	}
+	else {
+		// マルチマテリアルではない。
+		BuildMeshParts_DirectXMaterial(mat);
+			
+	}
 }
 void tkmExporter::BuildMeshParts_VertexBuffer(INode* node)
 {
@@ -270,41 +334,36 @@ void tkmExporter::BuildMeshParts_IndexBufer(INode* node)
 }
 void tkmExporter::BuildMeshParts(INode* node)
 {
-	// マテリアル情報を構築する。
-	BuildMeshParts_Matrial(node);
+	// 三角形オブジェクトに変換する。
+	auto triObject = GetTriObjectFromNode(node);
+	if (triObject != nullptr) {
+		// 変換出来たらメッシュパーツを構築する。
+		m_meshParts = std::make_shared<MeshParts>();
 
-	// 頂点バッファを構築する。
-	BuildMeshParts_VertexBuffer(node);
+		// マテリアル情報を構築する。
+		BuildMeshParts_Matrial(node->GetMtl());
 
-	// インデックスバッファを構築する。
-	BuildMeshParts_IndexBufer(node);
+		// 頂点バッファを構築する。
+		BuildMeshParts_VertexBuffer(node);
 
+		// インデックスバッファを構築する。
+		BuildMeshParts_IndexBufer(node);
+	}
 	auto numChild = node->NumChildren();
 	for (int childNo = 0; childNo < numChild; childNo++) {
 		auto childNode = node->GetChildNode(childNo);
-		auto triObject = GetTriObjectFromNode(childNode);
-		if (triObject != nullptr) {
-			BuildMeshParts(node);
-		}
+		BuildMeshParts(childNode);
 	}
 	
 }
 int tkmExporter::DoExport(const TCHAR* name, ExpInterface* ei, Interface* ip, BOOL suppressPrompts, DWORD options)
 {
-	
+	std::filesystem::path outputFilePath;
+	outputFilePath = name;
+	m_outputFolderPath = outputFilePath.remove_filename();
+
 	auto rootNode = ip->GetRootNode();
-	auto numChild = rootNode->NumChildren();
-	for (int childNo = 0; childNo < numChild; childNo++) {
-		auto childNode = rootNode->GetChildNode(childNo);
-		auto triObject = GetTriObjectFromNode(childNode);
-		if (triObject != nullptr) {
-			// 三角形オブジェクトに変換できた。
-			// メッシュパーツを構築
-			BuildMeshParts(childNode);
-			wchar_t hoge[256];
-			wsprintf(hoge, L"%ls\n", childNode->NodeName());
-			OutputDebugString(hoge);
-		}
-	}
+	BuildMeshParts(rootNode);
+	
 	return FALSE;
 }
