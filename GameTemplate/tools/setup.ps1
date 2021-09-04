@@ -3,14 +3,18 @@ Add-Type -Assembly System.Windows.Forms
 
 function CopyAndCreateShortCut($maxVersion)
 {
+    # maxスクリプトをコピー。
     #コピー元のフォルダのパス
     $copySrcFolder = "3dsMaxScripts\*"
     #コピー先のフォルダのパス
     $copyDstFolder = $copyDstFolderPrefix + "\" + $maxVersion + " - 64bit\JPN\scripts"
+    
+
     if( Test-path $copyDstFolder){
         #コピー先のフォルダがあれば。
         #フォルダの内容をコピー。
         Copy-Item $copySrcFolder -Destination $copyDstFolder -Recurse -Force
+       
         #デスクトップにショートカットを作る。
         $shell = New-Object -ComObject WScript.shell
 
@@ -19,6 +23,10 @@ function CopyAndCreateShortCut($maxVersion)
  
         #リンク先パス設定
         $lnk.TargetPath = $copyDstFolder + "\tkExporter.ms"
+        if( Test-Path $lnk.TargetPath){
+        }else{
+            [System.Windows.Forms.MessageBox]::Show('hoge')
+        }
         $lnk.WorkingDirectory = $desktopFolder
  
         #ショートカットを保存
@@ -46,6 +54,16 @@ CopyAndCreateShortCut("2021")
 CopyAndCreateShortCut("2022")
 CopyAndCreateShortCut("2023")
 CopyAndCreateShortCut("2024")
+
+# 続いてシェーダーのショートカットをデスクトップに作成。
+$shell = New-Object -ComObject WScript.shell
+$lnk = $shell.CreateShortcut($desktop + "\k2EngineShader For 3dsMax " + ".lnk")
+$currentDir = Get-Location 
+
+$lnk.TargetPath = $currentDir.Path + "\3dsMaxShader" + "\k2EngineShader.fx"
+
+#ショートカットを保存
+$lnk.Save()
 
 #ユーザーパスにmake.exeまでのパスを追加する。
 $oldUserPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
