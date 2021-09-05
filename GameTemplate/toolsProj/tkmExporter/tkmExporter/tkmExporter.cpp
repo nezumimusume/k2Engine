@@ -321,11 +321,23 @@ void tkmExporter::BuildMeshParts_Matrial(Mtl* mat)
 	else {
 		// マルチマテリアルではない。
 		BuildMeshParts_DirectXMaterial(mat);
-			
 	}
 }
 void tkmExporter::BuildMeshParts_VertexBuffer(INode* node)
 {
+	// maxでは、テクスチャ頂点という概念があり、
+	// UV座標のみ別の頂点バッファになっている。
+	// k2Engineでは別の頂点バッファになっていると非効率なため、
+	// 二つの頂点バッファを結合して一つにする。
+
+	// 3dsMax上での頂点バッファを確保する。
+	auto obj = node->GetObjectRef();
+	if (obj == nullptr) {
+		return;
+	}
+	int numMod = obj->Num
+	
+	
 
 }
 void tkmExporter::BuildMeshParts_IndexBufer(INode* node)
