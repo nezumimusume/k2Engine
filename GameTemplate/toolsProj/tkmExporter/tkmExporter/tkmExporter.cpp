@@ -17,6 +17,9 @@
 #include "IDxMaterial.h"
 #include <RTMax.h>
 #include <functional>
+#include <modstack.h>
+#include <iskin.h>
+#include <triobj.h>
 
 #define tkmExporter_CLASS_ID Class_ID(0x85d8d367, 0x973ecfa3)
 
@@ -323,6 +326,29 @@ void tkmExporter::BuildMeshParts_Matrial(Mtl* mat)
 		BuildMeshParts_DirectXMaterial(mat);
 	}
 }
+ISkin* FindSkinModifier(Object* obj)
+{
+	auto pDerivedObj = dynamic_cast<IDerivedObject*>(obj);
+	if (pDerivedObj == nullptr) {
+		return nullptr;
+	}
+	// モディファイアスタックがある。
+	ISkin* pSkin = nullptr;
+	//  スキンモディファイアを探す。
+	if (pDerivedObj) {
+		// モディファイアが存在している。
+		const int numMod = pDerivedObj->NumModifiers();
+		for (int modNo = 0; modNo < numMod; modNo++) {
+			pSkin = (ISkin*)pDerivedObj->GetModifier(modNo)->GetInterface(I_SKIN);
+			if (pSkin != nullptr) {
+				// スキンモディファイアを見つけた
+				return pSkin;
+			}
+		}
+	}
+	return FindSkinModifier(pDerivedObj->GetObjRef());
+
+}
 void tkmExporter::BuildMeshParts_VertexBuffer(INode* node)
 {
 	// maxでは、テクスチャ頂点という概念があり、
@@ -335,7 +361,62 @@ void tkmExporter::BuildMeshParts_VertexBuffer(INode* node)
 	if (obj == nullptr) {
 		return;
 	}
-	int numMod = obj->Num
+	
+	//  スキンモディファイアを探す。
+	ISkin* pSkin = FindSkinModifier(obj);
+
+	auto triObj = GetTriObjectFromNode(node);
+	auto& mesh = triObj->GetMesh();
+	//　重複頂点を考慮しない、フル頂点の頂点バッファを構築。
+	std::vector < VertexPtr > fullVertexBuffer;
+	
+	// まずはUVなし頂点バッファを構築
+	int numVert = mesh.getNumVerts();
+	for (int vertNo = 0; vertNo < numVert; vertNo++) {
+		// 頂点座標を取得。
+		const auto& pos = mesh.getVert(vertNo);
+		// 法線を取得。
+		auto normal = mesh.getNormal(vertNo);
+		// 正規化されてないね。
+		normal.Normalize();
+		/* todo maxScriptのコードをコピー。意味がよくわからなかったので、要確認。
+		
+		if skinMod != undefined then(
+				--スキンがあるときは、骨で動かされているのでトランスフォームでの動きを除去する？
+				--ホンマか？要確認。
+				invTrans = inverse c_node.transform
+				pos = pos * invTrans
+				invRot = c_node.rotation as Matrix3
+			--	invRot = inverse invRot
+				normal = normal * invRot
+			)
+		*/
+		// スキンウェイト
+		float skinWeight[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		int skinIndex[] = {-1, -1, -1, -1};
+		if (pSkin) {
+			// スキンモディファイアがある。
+			auto skinContext = pSkin->GetContextInterface(node);
+			int numWeight = skinContext->GetNumAssignedBones(vertNo);
+			if (numWeight > 4) {
+				// スキンウェイトの最大数は4
+				numWeight = 4;
+			}
+			for (int wno = 0; wno < numWeight; wno++) {
+				skinWeight[wno] = skinContext->GetBoneWeight(vertNo, wno);
+				// 3dsMaxのボーンは頂点に割り当てられているボーンのみ。
+				// しかし、k2Engineではすべての骨の情報を必要としているため、
+				// 事前に構築しているスケルトン情報からk2Engineで使用する骨番号に変換する。
+				int systemBoneNo = skinContext->GetAssignedBone(vertNo, wno);
+
+				 // ここから明日やるぜ。
+				auto boneName = pSkin->GetBoneName(systemBoneNo);
+				printf( "hoge\n" );
+				
+			}
+		}
+	}
+	
 	
 	
 
