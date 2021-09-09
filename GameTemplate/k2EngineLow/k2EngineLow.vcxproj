@@ -76,7 +76,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)/ExEngine/bulletPhysics/src/;$(ProjectDir)/ExEngine/;$(ProjectDir)/;$(ProjectDir)/MiniEngine/;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\effekseer/install_msvc2019/lib;$(ProjectDir)..\k2EngineLow\ExEngine\Photon\Photon-cpp\lib;$(ProjectDir)..\k2EngineLow\ExEngine\Photon\LoadBalancing-cpp\lib;$(ProjectDir)..\k2EngineLow\ExEngine\Photon\Common-cpp\lib;$(LibraryPath)</LibraryPath>
     <OutDir>..\exlib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -86,7 +86,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)/ExEngine/bulletPhysics/src/;$(ProjectDir)/ExEngine/;$(ProjectDir)/;$(ProjectDir)/MiniEngine/;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\MiniEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)\MiniEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)\ExEngine\effekseer/install_msvc2019/lib;$(ProjectDir)..\k2EngineLow\ExEngine\Photon\Common-cpp\lib;$(ProjectDir)..\k2EngineLow\ExEngine\Photon\Photon-cpp\lib;$(ProjectDir)..\k2EngineLow\ExEngine\Photon\LoadBalancing-cpp\lib;$(LibraryPath)</LibraryPath>
     <OutDir>..\exlib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -120,7 +120,7 @@
       <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dxguid.lib;d3d12.lib;DirectXTK12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX12d.lib;LLGId.lib</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3d12.lib;DirectXTK12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX12d.lib;LLGId.lib;Photon-cpp_vc16_debug_windows_mt_x64.lib;LoadBalancing-cpp_vc16_debug_windows_mt_x64.lib;Common-cpp_vc16_debug_windows_mt_x64.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,7 +162,7 @@
       <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dxguid.lib;d3d12.lib;DirectXTK12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseer.lib;EffekseerRendererDX12.lib;LLGI.lib</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3d12.lib;DirectXTK12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseer.lib;EffekseerRendererDX12.lib;LLGI.lib;Photon-cpp_vc16_release_windows_mt_x64.lib;LoadBalancing-cpp_vc16_release_windows_mt_x64.lib;Common-cpp_vc16_release_windows_mt_x64.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
