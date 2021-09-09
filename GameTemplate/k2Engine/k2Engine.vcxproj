@@ -144,7 +144,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\exlib\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectDIr);$(ProjectDir)../k2EngineLow/;$(ProjectDir)../k2EngineLow/MiniEngine/;$(ProjectDir)../k2EngineLow/ExEngine/;$(ProjectDir)../k2EngineLow/ExEngine/bulletPhysics/src;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDIr);$(ProjectDir)../k2EngineLow/;$(ProjectDir)../k2EngineLow/MiniEngine/;$(ProjectDir)../k2EngineLow/ExEngine/;$(ProjectDir)../k2EngineLow/ExEngine/bulletPhysics/src;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(ProjectDir)..\k2EngineLow\ExEngine\Photon;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\$(Platform)\$(Configuration)\;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffeseerRendererDX12</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -154,7 +154,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\exlib\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDIr);$(ProjectDir)../k2EngineLow/;$(ProjectDir)../k2EngineLow/MiniEngine/;$(ProjectDir)../k2EngineLow/ExEngine/;$(ProjectDir)../k2EngineLow/ExEngine/bulletPhysics/src;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\$(Platform)\$(Configuration)\;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffeseerRendererDX12</LibraryPath>
+    <LibraryPath>$(ProjectDir)\..\exlib\$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\$(Platform)\$(Configuration)\;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffeseerRendererDX12;$(ProjectDir)..\k2EngineLow\ExEngine\Photon</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
