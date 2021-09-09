@@ -1,0 +1,11 @@
+* release_history-photonVoice-cpp.txt
+* Release history for the Exit Games PhotonVoice C++ Client Library
+
+Copyright (C) 2004-2021 Exit Games GmbH, http://www.photonengine.com
+
+Questions? Write to developer@photonengine.com or visit forum.photonengine.com
+
+
+*** version 5.0.0.0
+	Date: 08-03-2021
+	- initial version of the Photon Voice C++ Library

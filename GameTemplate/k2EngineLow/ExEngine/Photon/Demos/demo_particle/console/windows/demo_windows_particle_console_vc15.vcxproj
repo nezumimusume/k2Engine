@@ -1,0 +1,708 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug_windows_md|ARM">
+      <Configuration>debug_windows_md</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_windows_md|ARM64">
+      <Configuration>debug_windows_md</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_windows_md|Win32">
+      <Configuration>debug_windows_md</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_windows_md|x64">
+      <Configuration>debug_windows_md</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_windows_mt|ARM">
+      <Configuration>debug_windows_mt</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_windows_mt|ARM64">
+      <Configuration>debug_windows_mt</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_windows_mt|Win32">
+      <Configuration>debug_windows_mt</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_windows_mt|x64">
+      <Configuration>debug_windows_mt</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_windows_md|ARM">
+      <Configuration>release_windows_md</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_windows_md|ARM64">
+      <Configuration>release_windows_md</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_windows_md|Win32">
+      <Configuration>release_windows_md</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_windows_md|x64">
+      <Configuration>release_windows_md</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_windows_mt|ARM">
+      <Configuration>release_windows_mt</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_windows_mt|ARM64">
+      <Configuration>release_windows_mt</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_windows_mt|Win32">
+      <Configuration>release_windows_mt</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_windows_mt|x64">
+      <Configuration>release_windows_mt</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2127FBF7-6572-4359-BE1E-9B303503AFC0}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|ARM64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|ARM64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|ARM64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|ARM64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|ARM'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|ARM64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|ARM'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|ARM64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|ARM'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|ARM64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|ARM'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|ARM64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)vc15_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_md|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_windows_mt|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_md|ARM64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_windows_mt|ARM64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../..;../../../shared/inc;../../../shared/desktop/inc</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common-cpp_vc15_$(Configuration)_$(Platform).lib;Photon-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Link>
+      <AdditionalDependencies>Photon-cpp_vc15_$(Configuration)_$(Platform).lib;Common-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../../..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Link>
+      <AdditionalDependencies>Photon-cpp_vc15_$(Configuration)_$(Platform).lib;Common-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../../..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>Photon-cpp_vc15_$(Configuration)_$(Platform).lib;Common-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../../..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <Link>
+      <AdditionalDependencies>Photon-cpp_vc15_$(Configuration)_$(Platform).lib;Common-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../../..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Link>
+      <AdditionalDependencies>Photon-cpp_vc15_$(Configuration)_$(Platform).lib;Common-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../../..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Link>
+      <AdditionalDependencies>Photon-cpp_vc15_$(Configuration)_$(Platform).lib;Common-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../../..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <AdditionalDependencies>Photon-cpp_vc15_$(Configuration)_$(Platform).lib;Common-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../../..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <Link>
+      <AdditionalDependencies>Photon-cpp_vc15_$(Configuration)_$(Platform).lib;Common-cpp_vc15_$(Configuration)_$(Platform).lib;LoadBalancing-cpp_vc15_$(Configuration)_$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../../Common-cpp;../../../../Photon-cpp;../../../../LoadBalancing-cpp;../../../../Common-cpp/lib;../../../../Photon-cpp/lib;../../../../LoadBalancing-cpp/lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../../..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_EG_WINDOWS_PLATFORM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\shared\src\Console.cpp" />
+    <ClCompile Include="..\..\src\LoadBalancingListener.cpp" />
+    <ClCompile Include="..\src\ConsoleView.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\shared\inc\Console.h" />
+    <ClInclude Include="..\..\..\shared\inc\OutputListener.h" />
+    <ClInclude Include="..\..\src\BaseView.h" />
+    <ClInclude Include="..\..\src\DemoConstants.h" />
+    <ClInclude Include="..\..\src\LoadBalancingListener.h" />
+    <ClInclude Include="..\src\ConsoleView.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
