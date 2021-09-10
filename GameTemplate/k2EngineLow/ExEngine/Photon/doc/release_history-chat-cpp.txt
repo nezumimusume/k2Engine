@@ -1,0 +1,186 @@
+* release_history-chat-cpp.txt
+* Release history for the Exit Games Chat C++ Client Library
+
+Copyright (C) 2004-2021 Exit Games GmbH, http://www.photonengine.com
+
+Questions? Visit:
+	http://doc.photonengine.com/en/chat
+	http://forum.photonengine.com
+
+
+*** version 5.0.0.0
+	Date: 08-03-2021
+	- changed: class AuthenticationValues now inherits from Common::ToString instead of from Common::Base
+	- changed: class Channel now inherits from Common::ToString instead of from Common::Base
+	- added: AuthenticationValues::setData() overloads for JString and Dictionary<JString, Object>
+	- changed: AuthenticationValues::getData() now returns an Object instead of a JVector<nByte>
+	- changed: AuthenticationValues::toString() now returns the variable names for which it prints the values, in its output
+
+
+*** version 4.1.15.2
+	Date: 12-06-2019
+	- changed: turned off the 'whole program optimization' compiler flag for the XB One release libraries to reduce their size
+
+
+*** version 4.1.14.0
+	Date: 08-14-2019
+	- added: Channel::getID()
+	- added: Channel::getCustomProperties()
+	- added: Listener::onReceiveBroadcastMessage()
+
+
+*** version 4.1.12.4
+	Date: 04-11-2019
+	- added: new constant NINTENDO_SWITCH to the CustomAuthenticationType namespace
+
+
+*** version 4.1.12.0
+	Date: 09-06-2018
+	- fixed: class AuthenticationValues was hiding the inherited signature of toString(bool=false) with its override of toString(JString&, bool=false)
+
+
+*** version 4.1.11.0
+	Date: 07-20-2018
+	- added: support for setting the user ID not through the client, but through a custom auth service or letting a server assign a GUID for the user ID
+	- added: Client::getLogFormatOptions()
+	- added: Client::setLogFormatOptions()
+	- fixed: made Client::getQuickResendAttempts() const correct
+	- added: Client::getChannelCountUserChannels()
+
+
+*** version 4.1.8.2
+	Date: 08-25-2017
+	- changed: the optional parameter 'authenticationValues' of Client::connect() is now passed by const reference instead of by copy
+	- fixed: after reconnecting with Client::connect() without setting a user ID in the passed AuthValues, the client was identified as a new user, as each connect() without a passed-in user ID was resetting the user ID to an empty string, so that Photon would generate a new one; now Photon simply continues to use a previously user-provided or Photon-generated userID, when the user is not expliticly providing a new value
+
+
+*** version 4.1.8.1
+	Date: 08-15-2017
+	- fixed: a caching issue in our Android NDK build piple that got introduced in 4.0.0.7 and that prevented the 'libc++' and the 'no_rtti' binaries from actually being built with the options that are mentioned in the filenames
+
+
+*** version 4.1.8.0
+	Date: 07-20-2017
+	- changed: renamed Client::getPeerId() into getPeerID()
+	- changed: renamed Client::getIsEncryptionAvailable() into Client::getIsPayloadEncryptionAvailable()
+	- added: bitcode support for iOS, OS X and tvOS
+
+
+*** version 4.1.7.0
+	Date: 06-12-2017
+	- changed: the 'message' parameter of Peer::opPublishMessage() is now passed by const reference instead of by copy
+	- changed: the 'message' parameter of Peer::opSendPrivateMessage() is now passed by const reference instead of by copy
+	- changed: the 'message' parameter of Peer::opSetOnlineStatus() is now passed by const reference instead of by copy
+	- fixed: made the array overloads of Peer::opPublishMessage() const correct
+	- fixed: made the array overloads of Peer::opSendPrivateMessage() const correct
+	- fixed: made the array overloads of Peer::opSetOnlineStatus() const correct
+	- changed: the 'message' parameter of Client::opPublishMessage() is now passed by const reference instead of by copy
+	- changed: the 'message' parameter of Client::opSendPrivateMessage() is now passed by const reference instead of by copy
+	- changed: the 'message' parameter of Client::opSetOnlineStatus() is now passed by const reference instead of by copy
+	- fixed: made the array overloads of Client::opPublishMessage() const correct
+	- fixed: made the array overloads of Client::opSendPrivateMessage() const correct
+	- fixed: made the array overloads of Client::opSetOnlineStatus() const correct
+
+
+*** version 4.1.6.0
+	Date: 01-25-2017
+	- fixed: class Client did not in all cases of connection errors set its state accordingly, so, while reconnects still worked as they should in such cases, Client::getState() did not return the correct state in these cases
+	- fixed: for UDP connections Listener::disconnectReturn() did not get called in case of some connection errors, even when they appeared while the Client was fully connected, while it did get called for others - it now always gets called, when a connection error appears on a connected Client (but it is intentionally not getting called, when the connectionError already happens during the attempt to establish a connection: only connected Client instances can change their state from being connected to being disconnected)
+
+
+*** version 4.1.5.0
+	Date: 11-04-2016
+	- changed: renamed Client::getPacketLossByCrc() into getPacketLossByCRC()
+	- fixed: AuthenticationValues now inherit from Common::Base publicly
+
+
+*** version 4.1.4.0
+	Date: 09-28-2016
+	- fixed: Client::opSetOnlineStatus() now can actually be used with just the 'status' parameter without providing a status message
+	- removed: the skipMessage parameter from Client::opSetOnlineStatus() (just don't provide a message parameter to skip the message)
+	- changed: renamed Client::getCrcEnabled() into getCRCEnabled()
+	- changed: renamed Client::setCrcEnabled() into setCRCEnabled()
+
+
+*** version 4.1.1.0
+	Date: 03-16-2016
+	- fixed: a performance bottleneck on receiving very large messages
+
+
+*** version 4.0.5.0
+	Date: 12-02-2015
+	- changed: the following functions now directly accept every type of data as payload that is supported by Photons serialization, without the need for the caller to first wrap the payload in a Common::Object instance:
+		- Peer::opPublishMessage()
+		- Peer::opSendPrivateMessage()
+		- Peer::opSetOnlineStatus()
+		- Client::opPublishMessage()
+		- Client::opSendPrivateMessage()
+		- Client::opSetOnlineStatus()
+	- changed: the inheritance of Listener from Common::BaseListener is now virtual
+	- removed: all non default constructors from class AuthenticationValues
+	- added: AuthenticationValues::setType()
+	- added: AuthenticationValues::setParameters()
+	- added: AuthenticationValues::setParametersWithUsernameAndToken()
+	- added: AuthenticationValues::setData()
+	- added: AuthenticationValues::getUserID()
+	- added: AuthenticationValues::setUserID()
+	- removed: parameter 'userID' from the constructor of class Client
+	- moved: parameter 'authenticationValues' from the constructor of class Client to Client::connect()
+	- changed: renamed Client::getUserId() to getUserID()
+	- fixed: Client::getUserID() is now const-correct
+	- removed: Client::setUserId()
+	- removed: parameter 'userID' from Peer::opAuthenticateOnNameServer()
+
+
+*** version 4.0.4.0
+	Date: 08-07-2015
+	- changed: renamed MutableRoom::getRoomTtl() to MutableRoom::getEmptyRoomTtl()
+	- fixed: Client::connect() changed the Client state to Connecting even when returning false
+	- added: Client::getQuickResendAttempts()
+	- added: Client::setQuickResendAttempts()
+	- changed: ClientState enum from namespaced native enum to namespaced group of static const int
+
+
+*** version 4.0.3.0
+	Date: 06-04-2015
+	- added: AuthenticationValues constructor overload for parameters "parameters" and "data"
+	- changed: AuthenticationValues now inherits from Common::Base and is therefor stringifyable
+	- removed: Channel constructor from public interface
+	- removed: Channel::add() from public interface
+	- changed: Client::getPublicChannels() now returns a Common::JVector<Channel*>& instead of a Common::JVector<Channel>&
+	- changed: Client::getPrivateChannels() now returns a Common::JVector<Channel*>& instead of a Common::JVector<Channel>&
+	- fixed: Listener::connectReturn() was not getting called
+
+
+*** version 4.0.0.0
+	Date: 12-04-2014
+	- changed: versioning system to use the general Client SDK version instead of a separate Chat SDK version
+	- added: optional "encrypt" parameter to Client::opSendPrivateMessage() - sends operation encrypted
+	- added: Client::setUserId() and Client::getUserId()
+	- changed: Listener::subscribeReturn() and Listener::unsubscribeReturn(): error code and message have been removed from parameters since server sends events on opSubscribe() and opUnsubscribe() instead of responses
+	- removed: Peer::opSetFriendList()
+	- added: Peer::opAddFriends()
+	- added: Peer::opRemoveFriends()
+	- added: parameter "encrypt" to Peer::opSendPrivateMessage()
+	- added: parameter "skipMessage" to Peer::opSetOnlineStatus()
+	- added: Client::connect() overload without nameserver address parameter, that connects to the Photon public cloud nameserver
+	- removed: optional parameter "lastMessageIndex" from Peer::opSubscribe()
+	- added: optional parameter "messagesFromHistory" to Peer::opSubscribe()
+	- removed: parameters "errorCode" and "errorString" from Listener::subscribeReturn()
+	- removed: parameters "results", "errorCode" and "errorString" from Listener::unsubscribeReturn()
+	- added: parameter "gotMessage" to Listener::onStatusUpdate()
+	- removed: parameter "highestMessageId" from Listener::onGetMessages()
+	- added: parameter "channelName" to Listener::onPrivateMessage()
+	- added: wrapper functions in Chat::Client for everything in the public Chat::Peer API that makes sense to also have access to in the public Chat::Client API
+	- removed: Client::getNameserverAddress(); it only provides irrelevant information, because the nameserver address is always either what the app has passed to connect or the default parameter value of that function, so it is known to the app anyway
+	- fixed: when connecting to the the Cloud Chat service via TCP without explicitly specifying the address and the port, then the wrong port has been used 
+
+
+*** version 1.0.0.2
+	Date: 05-27-2014
+	- fixed: missing graphs in documentation
+
+
+*** version 1.0.0.0
+	Date: 04-24-2014
+	Initial Version

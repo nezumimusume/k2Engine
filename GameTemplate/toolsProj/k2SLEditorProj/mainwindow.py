@@ -884,6 +884,18 @@ class Application(tk.Frame):
         myimg.set_position(self.canvas,position_x,position_y)
         self.select_image()
 
+    def change_bg_color_to_black(self):
+        self.canvas['bg'] = 'black'
+
+    def change_bg_color_to_gray(self):
+        self.canvas['bg'] = 'gray'
+
+    def change_bg_color_to_white(self):
+        self.canvas['bg'] = 'white'
+
+    def change_bg_color_to_red(self):
+        self.canvas['bg'] = 'red'
+
     #今は使ってない
     #使うときが来るかもしれない
     def on_resize(self,event):
@@ -958,6 +970,7 @@ class Application(tk.Frame):
         self.mcom = tk.Menu(self.mbar,tearoff=0)
         self.mcom2 = tk.Menu(self.mbar,tearoff=0)
         self.mcom3 = tk.Menu(self.mbar,tearoff=0)
+        self.mcom4 = tk.Menu(self.mbar,tearoff=0)
         #コマンドを追加
         self.mcom.add_command(label='画像読み込み',command=self.load_image)
         self.mcom.add_command(label='全削除',command=self.delete_all_image)
@@ -975,6 +988,11 @@ class Application(tk.Frame):
         self.mcom3.add_command(label='左',command=self.move_image_left)
         self.mcom3.add_command(label='右',command=self.move_image_right)
         self.mbar.add_cascade(label='移動',menu=self.mcom3)
+        self.mcom4.add_command(label='黒',command=self.change_bg_color_to_black)
+        self.mcom4.add_command(label='白',command=self.change_bg_color_to_white)
+        self.mcom4.add_command(label='グレー',command=self.change_bg_color_to_gray)
+        self.mcom4.add_command(label='赤',command=self.change_bg_color_to_red)
+        self.mbar.add_cascade(label='背景色',menu=self.mcom4)
         self.master['menu'] = self.mbar
 
     #ラベルを初期化

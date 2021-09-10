@@ -4,6 +4,7 @@
 #pragma comment( lib, "xinput.lib")
 #pragma comment(lib, "dxcompiler.lib")
 
+#include <winsock2.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory>

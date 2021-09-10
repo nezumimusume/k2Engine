@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoadBalancing-cpp_vc14", "LoadBalancing-cpp_vc14.vcxproj", "{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug_ps3|ARM = debug_ps3|ARM
+		debug_ps3|ARM64 = debug_ps3|ARM64
+		debug_ps3|Win32 = debug_ps3|Win32
+		debug_ps3|x64 = debug_ps3|x64
+		debug_windows_md|ARM = debug_windows_md|ARM
+		debug_windows_md|ARM64 = debug_windows_md|ARM64
+		debug_windows_md|Win32 = debug_windows_md|Win32
+		debug_windows_md|x64 = debug_windows_md|x64
+		debug_windows_mt|ARM = debug_windows_mt|ARM
+		debug_windows_mt|ARM64 = debug_windows_mt|ARM64
+		debug_windows_mt|Win32 = debug_windows_mt|Win32
+		debug_windows_mt|x64 = debug_windows_mt|x64
+		release_ps3|ARM = release_ps3|ARM
+		release_ps3|ARM64 = release_ps3|ARM64
+		release_ps3|Win32 = release_ps3|Win32
+		release_ps3|x64 = release_ps3|x64
+		release_windows_md|ARM = release_windows_md|ARM
+		release_windows_md|ARM64 = release_windows_md|ARM64
+		release_windows_md|Win32 = release_windows_md|Win32
+		release_windows_md|x64 = release_windows_md|x64
+		release_windows_mt|ARM = release_windows_mt|ARM
+		release_windows_mt|ARM64 = release_windows_mt|ARM64
+		release_windows_mt|Win32 = release_windows_mt|Win32
+		release_windows_mt|x64 = release_windows_mt|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_ps3|ARM.ActiveCfg = debug_ps3|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_ps3|ARM.Build.0 = debug_ps3|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_ps3|ARM64.ActiveCfg = debug_ps3|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_ps3|ARM64.Build.0 = debug_ps3|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_ps3|Win32.ActiveCfg = debug_ps3|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_ps3|Win32.Build.0 = debug_ps3|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_ps3|x64.ActiveCfg = debug_ps3|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_ps3|x64.Build.0 = debug_ps3|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_md|ARM.ActiveCfg = debug_windows_md|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_md|ARM.Build.0 = debug_windows_md|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_md|ARM64.ActiveCfg = debug_windows_md|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_md|ARM64.Build.0 = debug_windows_md|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_md|Win32.ActiveCfg = debug_windows_md|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_md|Win32.Build.0 = debug_windows_md|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_md|x64.ActiveCfg = debug_windows_md|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_md|x64.Build.0 = debug_windows_md|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_mt|ARM.ActiveCfg = debug_windows_mt|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_mt|ARM.Build.0 = debug_windows_mt|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_mt|ARM64.ActiveCfg = debug_windows_mt|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_mt|ARM64.Build.0 = debug_windows_mt|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_mt|Win32.ActiveCfg = debug_windows_mt|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_mt|Win32.Build.0 = debug_windows_mt|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_mt|x64.ActiveCfg = debug_windows_mt|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.debug_windows_mt|x64.Build.0 = debug_windows_mt|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_ps3|ARM.ActiveCfg = release_ps3|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_ps3|ARM.Build.0 = release_ps3|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_ps3|ARM64.ActiveCfg = release_ps3|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_ps3|ARM64.Build.0 = release_ps3|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_ps3|Win32.ActiveCfg = release_ps3|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_ps3|Win32.Build.0 = release_ps3|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_ps3|x64.ActiveCfg = release_ps3|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_ps3|x64.Build.0 = release_ps3|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_md|ARM.ActiveCfg = release_windows_md|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_md|ARM.Build.0 = release_windows_md|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_md|ARM64.ActiveCfg = release_windows_md|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_md|ARM64.Build.0 = release_windows_md|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_md|Win32.ActiveCfg = release_windows_md|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_md|Win32.Build.0 = release_windows_md|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_md|x64.ActiveCfg = release_windows_md|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_md|x64.Build.0 = release_windows_md|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_mt|ARM.ActiveCfg = release_windows_mt|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_mt|ARM.Build.0 = release_windows_mt|ARM
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_mt|ARM64.ActiveCfg = release_windows_mt|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_mt|ARM64.Build.0 = release_windows_mt|ARM64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_mt|Win32.ActiveCfg = release_windows_mt|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_mt|Win32.Build.0 = release_windows_mt|Win32
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_mt|x64.ActiveCfg = release_windows_mt|x64
+		{EA5D8C8B-8D27-46E4-BDD9-DBD6A3C685E8}.release_windows_mt|x64.Build.0 = release_windows_mt|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

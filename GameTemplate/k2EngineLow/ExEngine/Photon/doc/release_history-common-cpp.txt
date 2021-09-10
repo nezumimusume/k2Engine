@@ -1,0 +1,1031 @@
+* release_history-common-cpp.txt
+* Release history for the Exit Games Common C++ Client Library
+
+Copyright (C) 2004-2021 Exit Games GmbH, http://www.photonengine.com
+
+Questions? Write to developer@photonengine.com or visit forum.photonengine.com
+
+
+*** version 5.0.0.0
+	Date: 08-03-2021
+	- added: Microsoft Gamecore as new supported platform
+	- added: PS5 as new supported platform
+	- fixed: Object::operator==() did not give correct results if either both operands where null-objects or both operands where null-arrays
+	- fixed: EG_MALLOC() and EG_REALLOC() now return NULL, when they get called with a value of 0 for their 'size' parameter, like their reference doc has already stated before, but which wasn't their actual behavior until now
+	- changed: renamed CustomType::deconstructClass() into destructClass()
+	- fixed: UTF8String::operator=() now stores "<invalid string>" in its left operand, when its right operand is not a valid UTF8 string; previously a right operand which isn't a valid UTF8 string was undefined behavior and could result in an infinite loop inside the operator
+	- added: class template AssociativeContainer
+	- added: class template AssociativeContainerBase
+	- added: class template GenericAssociativeContainer
+	- added: class template GenericAssociativeContainerBase
+	- added: class template JArray
+	- added: class template JDictionary
+	- added: class template JHashSet
+	- added: class template JHashtable
+	- added: class template JLinkedList
+	- added: class template JList
+	- added: class template JQueue
+	- added: class template JSortedList
+	- added: class template JStack
+	- added: class template SequenceContainer
+	- added: lots of new classes in the subnamespace 'Helpers'
+	- changed: class template JVector now inherits from SequenceContainer
+	- changed: class Hashtable now inherits from AssociativeContainer
+	- changed: class template DictionaryBase now inherits from GenericAssociativeContainerBase
+	- added: class template LoggingBase
+	- changed: class Base now inherits from LoggingBase
+	- changed: moved all static public functions from class Base to LoggingBase
+	- changed: the only argument of the constructor of class EGTime is now optional and defaults to GETTIMEMS()
+	- fixed: EGTime::operator+=() now returns a non-const reference
+	- fixed: EGTime::operator-=() now returns a non-const reference
+	- fixed: an overload of EGTime::operator+=() for int arguments
+	- fixed: an overload of EGTime::operator-=() for int arguments
+	- added: the following free operators for class EGTime:
+		- operator+=()
+		- operator-=()
+		- operator+()
+		- operator-()
+		- operator==()
+		- operator!=()
+		- operator<()
+		- operator>()
+		- operator<=()
+		- operator>=()
+	- added: LogFormatOptions::operator==()
+	- added: LogFormatOptions::operator!=()
+	- added: Logger::operator==()
+	- added: Logger::operator!=()
+	- added: free function template Nullable::null()
+	- added: macro SLEEP()
+	- added: class ToStringDefaultImplementation
+	- added: DictionaryBase::getValueCustomType()
+	- added: support for sending custom types as Dictionary values
+	- changed: greatly simplified the CustomType APIs:
+		- moved: class CustomTypeFactory into namespace ExitGames::Common::Helpers as the user is no longer required to implement CustomTypeFactory subclasses, as a factory clas is now automatically created by the library internally when the user registers a custom type
+		- removed: CustomType::constructClass()
+		- removed: CustomType::denstructClass()
+		- added: CustomType::registerType() as a replacement for constructClass()
+		- added: CustomType::unregisterType() as a replacement for destructClass()
+		- removed: CustomTypeBase::cleanup()
+		- removed: CustomTypeFactory::copyFactory()
+		- removed: CustomTypeFactory::destroyFactory()
+		- changed: CustomTypeFactory::create() is now just virtual instead of pure virtual
+		- changed: CustomTypeFactory::copy() is now just virtual instead of pure virtual
+		- changed: CustomTypeFactory::destroy() is now just virtual instead of pure virtual
+		- changed: CustomTypeFactory::sizeOf() is now just virtual instead of pure virtual
+
+
+*** version 4.1.16.6
+	Date: 05-19-2021
+	- added: Mac OS ARM64 (Apple Silicon) support
+
+
+*** version 4.1.16.5
+	Date: 12-4-2020
+	- changed: the Emscripten SDK now includes clang binaries that have been built against Emscripten 2.0.1 and fastcomp binaries that have been built against Emscripten 1.40.1
+	- note: all prior releases of the Emscripten SDK included binaries that have been built against Emscripten 1.35.0
+
+
+*** version 4.1.16.2
+	Date: 04-17-2020
+	fixed: the PS4 SDKs compatibility to Sony SDK 7.000
+
+
+*** version 4.1.16.1
+	Date: 04-07-2020
+	- added: support for iOS Mac Catalyst builds
+	- removed: support for iOS C++ 98 libstdc++ builds
+	- removed: support for OS X C++ 98 libstdc++ builds
+	- note: libstdc++ is no longer supported by Xcode from version 10 upwards and Xcode 9 is no longer supported by Mac OS from version 10.15 upwards
+
+
+*** version 4.1.16.0
+	Date: 03-11-2020
+	- added: Windows ARM and ARM64 support for Visual Studio 2017 and Visual Studio 2019
+	- added: Visual Studio 2017 and Visual Studio 2019 support for WindowsStore
+	- added: WindowsStore ARM64 support for Visual Studio 2017 and Visual Studio 2019
+	- rebuilt: the SDK for PS4 against Sony SDK 7.000
+
+
+*** version 4.1.15.3
+	Date: 01-14-2020
+	- added: Visual Studio 2019 support for Windows (VS2012, VS2013, VS2015 and VS2017 also stay supported for now)
+
+
+*** version 4.1.15.2
+	Date: 12-06-2019
+	- fixed: 4.1.15.1 introduced a bug on Unix platforms which caused EGLOG() to request exponentially growing amounts of memory until the system would run out of memory, when one of the optional parameters to that very EGLOG() call was a string that contained illegal unicode characters
+	- added: Visual Studio 2017 support for XB One (VS2015 also stays supported for now)
+	- changed: turned off the 'whole program optimization' compiler flag for the XB One release libraries to reduce their size
+
+
+*** version 4.1.15.1
+	Date: 10-18-2019
+	- fixed: the fix for Android in 4.1.15.0 broke EGLOG() on several other Unix platforms
+
+
+*** version 4.1.15.0
+	Date: 10-10-2019
+	- fixed: calling EGLOG() with parameters that would result in a logged message with a length of more than 4096 characters (including the string-terminator) could result in a crash on Android
+
+
+*** version 4.1.13.0
+	Date: 07-22-2019
+	- fixed: JVector::addElements() crashed when it needed to enhance the capacity of the instance on which it was called
+
+
+*** version 4.1.12.6
+	Date: 05-08-2019
+	- fixed: build errors in UE 4.21
+
+
+*** version 4.1.12.5
+	Date: 04-26-2019
+	- rebuilt: the SDK for XB One against Microsoft SDK 180706
+
+
+*** version 4.1.12.1
+	Date: 02-12-2019
+	- rebuilt: the SDK for XB One against Microsoft SDK 180704
+
+
+*** version 4.1.12.0
+	Date: 10-16-2018
+	- fixed: some code in the headers was trying to use std::atomic with gcc/g++ when the GCC version is at least 4.8, while due to a bug in gcc/g++ 4.8 std::atomic is actually only useable when the GCC version is at least 4.9
+	- fixed: for 1D arrays of const nByte the maximum supported element count in Helpers::ValueToObject was SHORT_MAX; it's now INT_MAX like in the rest of the code. 1D arrays of non-const nByte were not affected
+
+
+*** version 4.1.11.2
+	Date: 08-29-2018
+	- fixed: JString.h no longer forward declares basic_ostream (this change was necessary for compatibility with version 4.20 and up of Unreal Engine)
+
+
+*** version 4.1.11.1
+	Date: 08-21-2018
+	- fixed: JString::operator+=() can now happily attach a string instance to that very same string instance (meaning it works just fine even when &param==this)
+
+
+*** version 4.1.11.0
+	Date: 07-24-2018
+	- changed: removed the code for setting the heap memory mode and size global variables on PS4 and PS Vita as they should be set by the app or engine, not by a 3rd party library, to prevent them from being set by multiple source files to different values
+	- note: don't forget to set proper values for those variables in your app code if your engine does not do that for you, as the default values are not working for Photon; see HeapSettings.cpp in the the demo projects for an example
+	- fixed: storing doubles in Object-arrays that got allocated by a call to allocateArray() resulted in garbage values in Emscripten due to special alignment requirements for doubles in the Emscripten compiler
+	- fixed: support for receiving empty Object-arrays (Object[] with element count 0)
+	- changed: ValueObject::getDataCopy() now returns NULL if the ValueObject instance holds an array of size 0; previously it returned a pointer to a heap-allocated array of size 0, which was just useless and confusing, as a pointer to the first element of a 0-element array would just point to garbage anyway
+	- fixed: a crashbug in Dictionary::typeToString()
+	- fixed: adding a float, double or long double to a JString produced undefined behavior, when the floating point variable held a very big value
+	- added: class LogFormatOptions
+	- added: Logger::toString()
+	- added: Logger::getLogFormatOptions()
+	- added: Logger::setLogFormatOptions()
+	- added: Base::getLogFormatOptions()
+	- added: Base::setLogFormatOptions()
+	- fixed: JVector::getCArray() now returns NULL, when the JVector is empty
+	- added: JVector::addElements()
+	- fixed: Logging was not working properly in Nintendo Switch device builds
+	- changed: turned off the 'whole program optimization' compiler flag for the Windows release libraries to reduce their size
+
+
+*** version 4.1.10.2
+	Date: 07-09-2018
+	- fixed: support for serializing arrays of custom types
+
+
+*** version 4.1.10.1
+	Date: 07-03-2018
+	- changed: library code no longer creates global or static instances of classes that may need to allocate dynamic memory during their construction
+
+
+*** version 4.1.10.0
+	Date: 06-11-2018
+	- added: AllocatorInterface::get()
+	- changed: the default value of parameter 'initialCapacity' in the constructor of class JVector from 40 to 0
+	- changed: the default value of parameter 'capacityIncrement' in the constructor of class JVector from 10 to 1
+
+
+*** version 4.1.9.3
+	Date: 05-25-2017
+	- changed: the Nintendo Switch SDK is now built with RTTI on for all platforms, while previously RTTI was only turned on for Win32 and x64, but not for NX32 and NX64
+	- rebuilt: the SDK for the Nintendo Switch against Nintendo SDK 5.4.0
+
+
+*** version 4.1.9.1
+	Date: 01-26-2018
+	- rebuilt: the SDK for PS4 against Sony SDK 5.000
+	- rebuilt: the SDK for the Nintendo Switch against Nintendo SDK 4.4.1
+	- rebuilt: the SDK for XB One against Microsoft SDK 171101
+
+
+*** version 4.1.9.0
+	Date: 12-22-2017
+	- added: MemoryManagement::setMaxAllocSize()
+	- added: MemoryManagement::setMaxSizeForAllocatorUsage()
+	- added: MemoryManagement::setAllocator()
+	- added: MemoryManagement::setAllocatorToDefault()
+	- added: class MemoryManagement::AllocatorInterface
+	- fixed: storing doubles in instances of Hashtable, Dictionary, JVector<Object> or in c-arrays that got allocated by a call to allocateArray() resulted in garbage values in Emscripten due to special alignment requirements for doubles in the Emscripten compiler
+	- fixed: Object::operator==() did not work correctly for multidimensional arrays
+	- fixed: Object::operator!=() did not work correctly for multidimensional arrays
+
+
+*** version 4.1.8.2
+	Date: 11-28-2017
+	- added: Visual Studio 2017 support for Windows (VS2012, VS2013 and VS2015 also stay supported for now)
+
+
+*** version 4.1.8.1
+	Date: 08-15-2017
+	- fixed: a caching issue in our Android NDK build piple that got introduced in 4.0.0.7 and that prevented the 'libc++' and the 'no_rtti' binaries from actually being built with the options that are mentioned in the filenames
+
+
+*** version 4.1.8.0
+	Date: 08-01-2017
+	- added: bitcode support for iOS, OS X and tvOS
+
+
+*** version 4.1.7.0
+	Date: 07-14-2017
+	- fixed: instantiations of the array overloads of Dictionary::put() did not build
+	- fixed: made the array overloads of DictionaryBase::put() const correct
+	- fixed: instantiations of DictionaryBase::remove() did not build
+	- changed: the 'data' parameter of the KeyObject constructor is now passed by const reference instead of by copy
+	- changed: the 'data' parameter of the ValueObject constructor is now passed by const reference instead of by copy
+	- fixed: made the array overloads of the ValueObject constructor const correct
+	- fixed: 4.1.3.0 introduced an infinite hang in MemoryManagement::reallocateArray(), REALLOCATE_ARRAY() and EG_REALLOC()
+
+
+*** version 4.1.6.0
+	Date: 04-07-2017
+	- fixed: Dictionary::remove() did not compile
+	- added: DictionaryBase::remove()
+	- added: DictionaryBase::contains()
+	- added: Nintendo Switch as new supported platform
+	- added: support for Android libc++ builds
+	- note: libstdc++ builds stay the default for Android
+
+
+*** version 4.1.5.1
+	Date: 01-11-2017
+	- fixed: 4.1.1.0 introduced a crash in Object::toString() for custom type payloads on OS X
+
+
+*** version 4.1.5.0
+	Date: 12-16-2016
+	- changed: Serializer::push() now uses ArrayLengthType in it's API instead of overloading the push template for 1D arrays with a non-template variant for byte-arrays
+	- changed: DictionaryBase::toString() and Dictionary::toString() instances now print the type for each key/value, if the key/value type is Object and 'true' got passed for 'withTypes'
+	- added: support for iOS C++ 98 libstdc++ builds
+	- added: support for OS X C++ 98 libstdc++ builds
+	- note: C++ 11 libc++ builds stay the default for these platforms
+
+
+*** version 4.1.4.1
+	Date: 11-04-2016
+	- added: support for Marmalade iosnative x86_64 (native 64bit simulator builds)
+
+
+*** version 4.1.4.0
+	Date: 09-28-2016
+	- added: XBox 1 as new supported platform
+
+
+*** version 4.1.3.0
+	Date: 05-24-2016
+	- added: support for Marmalade Universal Windows Platform
+	- changed: all memory management is now threadsafe
+	- fixed: DictionaryBase::getKeys() support for keytype Object
+
+
+*** version 4.1.2.0
+	Date: 04-12-2016
+	- added: PS Vita as new supported platform
+
+
+*** version 4.1.1.0
+	Date: 04-01-2016
+	- fixed: using Dictionaries with Object as their Key- and/or Valuetype could "sometimes" lead into forced disconnects of the client by the server due to serialization errors
+	- added: Emscripten as new supported platform
+	- fixed: added missing support for receiving byte-arrays as elements of object arrays
+	- fixed: Object::toString() did not work correctly if the Objects payload was byte-array with an element count of more than SHRT_MAX
+	- fixed const correctness of JString::deleteChars()
+
+
+*** version 4.1.0.3
+	Date: 02-04-2016
+	- added: Windows Store as new supported platform
+
+
+*** version 4.1.0.0
+	Date: 01-26-2016
+	- changed: raised the minimum supported version of Visual Studio on the Windows platform to VS2012
+
+
+*** version 4.0.5.0
+	Date: 12-04-2015
+	- added: Apple tvOS as new supported platform
+	- added: support for Marmalade AndroidNativeDebug
+	- added: Visual Studio 2015 support for Windows (VS2010, VS2012 and VS2013 also stay supported for now)
+	- fixed: adding an unsigned char to a JString instance lead to a crash on 64bit Android
+	- fixed: const correctness for the c-array-parameter overload of the JVector constructor
+	- fixed: since 4.0.4.0 calls to BaseCharString:length() and UTF8String::size() on an UTF8String returned invalid results after constructing that UTF8String from a JString or from a wchar_t* or after assigning a JString or wchar_t* to that UTF8String
+
+
+*** version 4.0.4.0
+	Date: 08-07-2015
+	- changed: DebugLevel enum from namespaced native enum to namespaced group of static const int
+	- fixed: class template Dictionary will now fail to compile on an attempt to add a key without a value, when the value type is anything else than Object as this is not supported by the server and an attempt to use it would only trigger error responses
+	- added: support for unicode characters that need more than 2bytes per character
+
+
+*** version 4.0.3.2
+	Date: 06-23-2015
+	- fixed: system threads now get correctly cleaned up when they terminate, so that they release their resources
+
+
+*** version 4.0.2.0
+	Date: 04-15-2015
+	- changed: JString::operator<<() for std::basic_ostream is now contained inside an "#ifndef EG_NOSTDLIB" so that one can deactivate it by defining EG_NOSTDLIB when this is necessary for ABI compatibility reasons between different stdlib implementations or different versions of the same stdlib implementation
+	- fixed: JString::operator=() overload for unsigned long long
+
+
+*** version 4.0.1.0
+	Date: 03-17-2015
+	- fixed: support in serialization/deserialization for nesting CustomTypes into each other
+	- fixed: deserialization of arrays of CustomTypes
+	- fixed: MemoryManagement::reallocateArray() did not work properly
+	- fixed: EG_REALLOC() did not work properly
+	- added: EG_CALLOC()
+	- fixed: JString::deleteChars()
+	- added: PS4 as new supported platform
+
+
+*** version 4.0.0.7
+	Date: 02-27-2015
+	- added: support for Android ARM64, Android x86, Android x86_64, Android Mips and Android Mips64
+
+
+*** version 4.0.0.6
+	Date: 02-03-2015
+	- updated: Marmalade binaries have been rebuilt against Marmalade 7.5.1
+
+
+*** version 4.0.0.5
+	Date: 01-30-2015
+	- fixed: support for putting 1D nByte arrays with a size up to INT_MAX instead of SHORT_MAX into Hashtables and Dictionaries
+
+
+*** version 4.0.0.4
+	Date: 01-28-2015
+	- added: support for Marmalade 64bit platforms
+
+
+*** version 4.0.0.0
+	Date: 12-01-2014
+	- fixed: JString::operator= crashed when passing a NULL wchar_t pointer as parameter
+	- fixed: ANSIString::operator= crashed when passing a NULL char pointer as parameter
+	- fixed: the Dictionary::getKeys() template didn't compile
+	- added: new define EG_LOGGING, which determines, if logging will be activated
+	- added: new define EG_NOLOGGING, which prevents EG_LOGGING from getting defined automatically; use this to deactivate logging in the app code, if you wish so
+	- changed: logging functionality now is not dependent on the EG_DEBUGGER define anymore, but depends on EG_LOGGING, which makes it also available in release builds of the libs
+	- fixed: deserialization of CumstomType instances as elements of Object arrays did not work correctly if the element count of the Object arrays has been above 1 (other element types have worked fine and also using CustomType outside of Object arrays has worked fine)
+
+
+*** version 3.2.5.4
+	Date: 09-03-2014
+	- fixed: added support for deserializing Object arrays with Dictionary elements
+	- added: debug output in case of detecting an unsupported type during deserialization
+	- changed: greatly improved memory consumption efficiency for big (hundreds of kb or more in size) messages
+	- fixed: support for 1D nByte arrays with a size up to INT_MAX instead of SHORT_MAX
+
+
+*** version 3.2.5.2
+	Date: 01-17-2014
+	- fixed: EGLOG did not work with exactly one optional argument, if that optional argument has been of type char* (a problem with overload resolution inside the implementation)
+	- added: Visual Studio 2013 support for Windows (VS2010 and VS2012 also stay supported for now)
+
+
+*** version 3.2.5.0
+	Date: 11-06-2013
+	- added: an additional JVector constructor-overload, which makes it possible to initialize JVectors with the contents of c-arrays
+	- added: JVector::getCArray()
+	- fixed: JVector::getElementAt() has not been const-correct
+	- changed: 1D nByte-arrays unlike all other arrays now have an int size instead of a short size so that its possible to send rather big data like for example a whole file of more than 32kb as byte-array
+	- note: photon is not optimized for big amounts of data and a webserver will be the better choice for tasks like filetransfer
+	- added: the SDK for AndroidNDK from now on ships noRTTI-builds of the libraries additionally to the normal builds, which have RTTI enabled - this is because with AndroidNDK RTTI is disabled by default and has to be explicilty enabled, which results in compatibility issues with other 3rd party libs if we don't offer two versions, we will continue to only ship RTTI enabled version for other platforms than AndroidNDK for reasons of simplicity as on other plaforms enabled RTTI is the default
+	- added: fallback code for passing true for withTypes to ToString::toString() with disabled RTTI (it will then just print "?" instead of the actual name of a class)
+	- fixed: serialization of a Dictionary with the keyType being Object and the value type being anything but Object did not work properly
+	- fixed: const correctness of parameter dbgMsg in va_list overload of Logger::log()
+	- removed: BaseCharString::operator const EG_CHAR* (void) const, as it didn't actually work
+	- changed: GETTIMEMS() and GETUPTIMEMS() macros now return int on Windows, not unsigned int anymore, so that the return type now matches across platforms
+	- changed: rephrased the doc of JString::substring()
+	- added: Windows 64bit support
+	- added: support for Marmalade MIPS, Marmalade Android x86 and Marmalade Windows Phone 8 subplatforms
+	- fixed: optimizations in version 3.2.0.0 apparently introduced a bug in the serialization of arrays of non-primitive types - the memory needs to hold their serialized versions have been calculated by elementCount times memoryNeedsOfFirstElement, which of course does not give correct results if separate elements need different amounts of memory, this resulted in the issue that for arrays of JString, Hashtable, Dictionary or CustomType the serialized data to send may got cut off before it's actual end
+	- fixed: Object::typeToString() crashed, if the payload of the Object instance has been a multidimensional Dictionary array
+	- changed: DictionaryBase::typeToString() now does not simply print "(DictionaryBase)", but pretends to be a Dictionary<key, value> by reading out the type-info of the instance it has been called on to also print its nested types, so that it now prints something like i.e. "Dictionary<int, JString>" or "Dictionary<short, Dictionary<float Hashtable>>"
+	- note: known limitation: DictionaryBase does not have any information about the custom type code of a CustomType, so for a CustomType its TypeToString() implementation can just print "CustomType"
+and not the actual type
+	- changed: DictionaryBase::toString() no longer prints out the key- and valuetype before each element, if true has been passed for withTypes, as printing them per entry just spams the output with too much redundant and unneeded information (it however still passes that flag through to nested containers for which it may be of use (which is indeed the case for example for nested Hashtables, in which the types can differ per element))
+
+
+*** version 3.2.3.2
+	Date: 07-31-2013
+	- added: dynamic runtime configs for Windows, so all Visual Studio Windows project configs now come in two flavors: mt (which use multithreaded static runtime) and md (which use multithreaded dynamic runtime)
+
+
+*** version 3.2.2.1
+	Date: 06-13-2013
+	- added: Visual Studio 2012 support for Win32 (VS2010 also stays supported for now)
+
+
+*** version 3.2.2.0
+	Date: 05-07-2013
+	- added: support for float and double as key types
+	- fixed: KeyObject::getDataAddress() hasn't ben compiling anymore in the last releases
+	- fixed: the win32 build now only defines _WIN32_WINNT, if it has not yet been defined by some other code or if the old definition is smaller (in which case its undefined and redefined)
+	- fixed: EGTime comparisons have got broken with version 3.0.4.0
+	- changed: the API of classes Serializer and DeSerializer has completely been rewritten to be easier to use
+	- added: (De-)Serialization API doc
+	- added: Logging API doc
+	- added: MemoryManagement API doc
+	- added: EGTime doc
+	- added: docs for some prior undocumented public getters of class DictionaryBase
+	- added: DebugLevel doc
+	- added: TypeCode doc
+	- changed: classes Serializer and DeSerializer now inherit from Base, so that they have access to the debugging callback interface and can be stringified
+	- added: Dictionary::getKyTypes(), Dictionary::getValueTypes() and Dictionary::getValueDimensions() to public API of class Dictionary, as they are also avialable in the public API of base class DictionaryBase and its also useful to have them public here, without having to first cast an instance to its base
+	- added: a defaultvalue parameter to the default constructor of class Logger to smake it possible to already set a logging level on construction, the default is DebugLevel::WARNINGS, which is the same behavior as before
+	- fixed: Hashtable::put() and  Dictionary::put() now correctly prevent from adding NULL-keys, which are not supported in serialization or on the server and also don't make sense
+	- fixed: when putting values into a Hashtable or Dictionary, const char* and const wchar_t* are now treated as strings, same as their non-nonst versions and as const char[] and const wchar_t[] and not as arrays of char/wchar_t like before
+
+
+*** version 3.2.1.0
+	Date: 03-20-2013
+	- added: Linux as new supported platform
+	- fixed: Serializer::getData() is now const-correct
+	- renamed MALLOC to EG_MALLOC
+	- renamed FREE to EG_FREE
+	- renamed REALLOC to EG_REALLOC
+	- fixed: unicode support got broken in version 3.2.0.0
+
+
+*** version 3.2.0.0
+	Date: 02-21-2013
+	- changed: removed the whole internal C implementation and replaced it by a new C++ implementation, which is a lot more performant than the old implementation
+	- optimized: all dynamic memory allocations now go through a custom memory manager, that is based on several memory pools, instead of direct calls to malloc/new/new[], internally these MemoryPools allocate chunks with increasing amounts of blocks per new nByte[]
+	- fixed: some incompatibility with custom new/new[] overrides
+	- fixed: serialization of 1D DictionaryArrays
+	- fixed: deserialization of 1D DictionaryArrays
+	- added: DictionaryBase::getValueSizes()
+	- added: DictionaryBase::getValue()
+	- added: DictionaryBase::getKeys()
+	- fixed: Dictionary::getValue() has not been working for arrays
+	- fixed: ValueObject::getDataAddress() has been broken for arrays since the 3.0.4.0 release
+	- changed: BaseListener::debugReturn() now has a new first parameter DebugLevel, so that your implementation of this callback can treat debugmessages with different debuglevel levels differently 
+	- added: Base::getDebugOutputLevel()
+	- added: Base::setDebugOutputLevel()
+	- added: BaseCharString::length()
+	- changed: CustomTypeFactory::copy()'s first parameter is now const
+	- changed: CustomTypeFactory::destroy()'s first paramaeter is now const
+	- changed: Hashtable::getKeys() now returns a const reference instead of a copy
+	- renamed: PhotonPeer_DebugLevel into DebugLevel and moved it into ExitGames::Common namespace
+	- added: MemoryManagement::allocate()
+	- added: MemoryManagement::allocateArray()
+	- added: MemoryManagement::reallocateArray()
+	- added: MemoryManagement::deallocate()
+	- added: MemoryManagement::deallocateArray()
+	- added: class Serializer (serialization is now part of the public API)
+	- added: class DeSerializer (deserialization is now part of the public API)
+	- added: class Logger (all classes, that want to use EGLOG(), have to have a member instance mLogger of class Logger), Peers use their own seperate loggers per instance, while all classes, that inheit from Base, access the static Logger instance, that they have inherited from Base
+	- changed: destructor of class Base is now virtual
+	- changed: EG_DEBUGGER now on default gets defined if _DEBUG has been defined and NDEBUG has not been defined (define EG_NDEBUG to prevent this)
+	- added: PS3 as new supported platform
+	- added: BaseCharString::size()
+	- changed: BaseCharString::cstr() isn't pure virtual or even virtual anymore, as it should always just return mBuffer, independently of the subclass implementation
+	- changed: BaseCharString::length() isn't virtual anymore, as it should always just return mLenght, independently of the subclass implementation
+	- changed: BaseCharString::toString() isn't virtual anymore, as it should always just call JStringRepresentation().toString(), independently of the subclass implementation (the actual output will still be affected on how the subclass implements JStringRepresentation())
+	- added: empty virtual destructor to BaseListener (the class isn't used polymorphically, so it has still worked correctly before)
+	- changed: JString now consistently interprets char* as UTF8, not only sometimes as UTF8 and sometimes as ANSI
+	- removed: dependency of the Android build on the C++ std lib (this should fix issues that some customers had with using a different stl version than the lib is compiled against)
+
+
+*** version 3.0.4.0
+	Date: 08-09-2012
+	- fixed: Hashtable::operator==() and operator!=() have seen two instances as not equal, when they compared the exactly same entries, but in another order, in which they have been added to the instances, now that order isn't relevant anymore
+	- changed: all overloads of JString::replace() are now marked as const, as they should always have been, as they operate on a copy of the instance, on which they have been called on, and do not change the original instance
+	- fixed: type names for templates have not been printed correctly by ToString::toString(true)
+	- changed: JString::toString() now adds quotation marks at the start and end of its return string, so that the return string is easier to distinguish as a string-instance's string representation, especially for empty strings or strings with only whitespace or not displayable characters
+	- added: support of holding instances of classes, which to not have a publicly available default-constructor, to class template JVector
+	- fixed: assignments between instances of KeyObject<Etype> or ValueObject<EType>, that are referenced by or pointed to an Object& or Object* now work polymorphically correct
+	- removed: all constructors of class Object except default-constructor and except copy-constructor and also all overloads of the set()-function from public API, so that one can't create any Object-instances that aren't either empty or copies of already existing ones anymore via the public interface of  class Object, and also can't write-access the payload of existing ones via this interface anymore, but has to use the KeyObject- or ValueObject-interface therefor, which do not let one by accident initialize an Object with illegal data, that will lead into crashes, that easily as the own constructors of class Object do
+	- renamed: Object::getSize() into getSizes(), so that already the name of the function shows, that the memory to which the returned pointer points to can potenially hold more then just one size-value (and will in case of multi-dimensional arrays)
+	- removed: Object::payloadTypeToString() from public to private, as it is just an internal helper-method
+	- removed: Object::getData() from public API, public read-access on the raw payload data should be done via the functions getDataCopy() and getDataAddress() of subclass templates KeyObject and ValueObject
+	- fixed: KeyObject::getDataCopy() is now const correct
+	- fixed: KeyObject::getDataAddress() is now const correct
+	- fixed: ValueObject::getDataCopy() is now const correct
+	- fixed: ValueObject::getDataAddress() is now const correct
+	- added: multi-dimensional array support to ValueObject::getDataCopy(), so that you do no have to manually copy the data, if you need a copy of a array with more than one dimensions, anymore
+	- changed: switched accesslevel of CustomType::constructClass() from protected to public, so that concrete implementations do not any longer have to reimplement it, even if they only call the base-implementation
+	- changed: switched accesslevel of CustomType::deconstructClass() from protected to public for the same reason
+	- fixed: CustomTypeFactory::copy() now offers a parameter to specify the amount of array elements
+	- added: pure vitual operator const EG_CHAR* (void) const to class BaseCharString
+	- renamed: JVectorBase::capacity() into getCapacity() for naming consistency reasons
+	- renamed: JVectorBase::firstElement() into getFirstElement() for naming consistency reasons
+	- renamed: JVectorBase::indexOf() into getIndexOf() for naming consistency reasons
+	- renamed: JVectorBase::isEmpty() into getIsEmpty() for naming consistency reasons
+	- renamed: JVectorBase::lastElement() into getLastElement() for naming consistency reasons
+	- renamed: JVectorBase::lastIndexOf() into getLastIndexOf() for naming consistency reasons
+	- renamed: JVectorBase::size() into getSize() for naming consistency reasons
+	- renamed: JVectorBase::elementAt() into getElementAt() for naming consistency reasons
+	- renamed: HashTable::size() into getSize() for naming consistency reasons
+	- renamed: HashTable::keys() into getKeys() for naming consistency reasons
+	- added: new class template Dictionary, which behaves like a strong-typed version of Hashtable, resulting in less overhead compared to an Hahstable with all keys or all values beeing of the same type, and its base class DictionaryBase
+	- added: new class DictionaryFactory for the creation of Dictionary-instances with template-parameters, which values are not known at compiletime
+	- changed: switched from .pdf doc to .html doc with a lot of new useful help like class diagrams
+	- updated: outdated informations in the docs
+	- added: full support for arrays of custom types, including multidimensional arrays and object-arrays with custom elements
+	- moved: everything from namespace ExitGames into new sub-namespace ExitGames::Common
+	- moved: helper classes into a separate subfolder nameD "Helpers"
+	- moved: helper classes into a separate namespace ExitGames::Common::Helpers
+	- changed: reworked the API of class Hashtable for simpler usage:
+		- Note: you will have to adjust your calls to this API like in the following example, when upgrading to the new version:
+			- old way to add an entry to a Hashtable-instance:
+				hash.put(ExitGames::Common::KeyObject<ExitGames::Common::JString>(ExitGames::Common::JString(L"key")), ExitGames::Common::ValueObject<int>(1));
+			- new way:
+				hash.put(L"key", 1);
+
+
+*** version 3.0.3.2
+	Date: 05-16-2012
+	- fixed: a crashbug on iOS / OS X, which has been occurring when receiving strings of certain lengths
+	- changed: typenames are demangled on all Marmalade platforms now (have only been so, when compiling for Marmalade simulator on Windows until now), like on all other platforms except AndrodiNDK
+
+
+*** version 3.0.3.1
+	Date: 05-15-2012
+	- changed: Android Unicode support now like the rest of the code doesn't throw exceptions anymore, for compatibility with the AndroidNDK version of stlport
+	- changed: typenames are not demangled on Android anymore for compatibility with stlport
+	- changed: the lib can now be used by apps, that are build with stlport, not only by the ones, which are using gnulibstdc++ anymore
+
+
+*** version 3.0.3.0
+	Date: 04-17-2012
+	- fixed: a crashbug in the 1 parameter overload of JString::substring()
+	- fixed: a memory leak in deserialization of jagged object arrays
+	- fixed: UTF8String().JStringRepresentation() has been broken since 3.0.0.0.Alpha release
+	- added: new class ToString as base class for class Base and class JString
+	- moved: toString-interface from class Base into class ToString
+	- changed: format of type-output of toString() API
+	- added: namespace TypeName, which provides functions for getting classnames as strings without name-mangling and without namespaces
+	- fixed: JString::lastIndexOf() overload for char was returning the first index instead of the last
+	- added: ToString::typeToString()
+	- added withTypes-flag as new optional parameter to ToString::toString() - please adjust custom subclasses accordingly!
+	- fixed: behavior of class Object for NULL-pointers and empty arrays as payload
+
+
+*** version 3.0.1.0
+	Date: 03-08-2012
+	- added: support for android ndk as new platform
+	- added: pure virtual Base::toString() and suitable implementations and overloads to all its subclasses - so you now can print out every instance of every class, which inherits from Base (which means practically every utility class except JString)
+	- changed: BaseCharString now inherits public from Base instead of protected
+	- changed: CustomTypeBase now inherits public from Base instead of protected
+	- changed: EGTime now inherits public from Base instead of protected
+	- changed: Hastable now inherits public from Base instead of protected
+	- changed: Object now inherits public from Base instead of protected
+	- renamed: EGTime::Overflowed() into overflowed()
+	- added: JString::operator=() overloads for parameters of types signed char, unsigned char, unsigned shot, unsigned int, long, unsigned long, unsigned long long and long double, so that now all fundamental types are supported by class JString
+	- changed: JString::operator+() is now implemented as template instead of as a bunch of overloads
+	- changed: JString::operator==() is now implemented as template instead of as a bunch of overloads
+	- changed: JString::operator!=() is now implemented as template instead of as a bunch of overloads
+	- changed: JString::operator<() is now implemented as template instead of as a bunch of overloads
+	- changed: JString::operator>() is now implemented as template instead of as a bunch of overloads
+	- changed: JString::operator<=() is now implemented as template instead of as a bunch of overloads
+	- changed: JString::operator>=() is now implemented as template instead of as a bunch of overloads
+	- added: struct template IsPrimitiveType,  which can be used to determinate, if a passed template parameter is a primitive or a complex type
+	- moved: most of the functionality of JVector into its abstract base class template JVectorBase
+	- added: JVectorBase::operator==()
+	- added: JVectorBase::operator!=()
+	- added: internal helper class ObjectToStringConverter
+	- added: internal helper class PrimitiveToStringConverter
+	- added: internal helper class ToStringImplementation
+	- fixed: the destructor of class Object is now virtual, as it should be
+
+
+*** version 3.0.0.0
+	Date: 02-09-2012
+	- fixed: JString::operator=() overload for parameter type int64 wasn't allocating enough memory
+	- added: Hashtable::put() overload for parameters of type const Hashtable&
+	- fixed: Object::operator== now returns true, when both instances are empty
+	- fixed: JString::operator=() could corrupt memory on Marmalade ARM
+
+
+*** version 3.0.0.0.RC4
+	Date: 01-30-2012
+	- fixed: iOS ARMv6 support
+	- added: overload of JString::operator=() for bool
+	- added: overload of JString::operator+=() for bool
+	- added: overload of JString::operator+() for bool
+	- fixed: KeyObject::operator=() overload for type const Object&
+	- renamed: JString::UTF8Represantation() into JString::UTF8Representation()
+	- changed: JString constructor-overload for parameter "bufferlen=0" (which is also the default constructor due to the default value of its only parameter!) is now  explicit to avoid, that it is accidentally used, where operator=(int) has been intended to use
+
+
+*** version 3.0.0.0.Beta
+	Date: 11-04-2011
+	- fixed: Marmalade ARM debug output issues
+	- added: class-templates KeyObject and ValueObject now provide copy-constructors with references of their base class Object as parameter
+	- added: operator=()-overloads to class-templates KeyObject and ValueObject
+	- fixed: a memory leak for object-arrays
+	- fixed: memory leaks in deserialization of custom types
+	- fixed: marmalade-implementation of JString::getANSIRepresentation() now null-terminates the returned ANSI string, like the other platform's implementations do and like it should be
+
+
+*** version 3.0.0.0.PublicAlpha
+	Date: 10-26-2011
+	- fixed: a buffer-overflow in iOS implementation of JString::operator+=() overload for parameters of type char
+	- fixed: memory management for custom types
+	- fixed: a memory leak, which has been introduced with the changes from the Alpha release
+
+
+*** version 3.0.0.0.Alpha
+	Date: 09-16-2011
+	- changed: versioning - first two numbers of client versions from now on match the first two numbers of Photon server version
+	- changed: class ANSIString and class UTFGString now inherit protected instead of public from class BaseCharString
+	- changed: class BaseCharString now inherits protected instead of public from class Base
+	- added: support for custom types (only supported as scalars for now, array-support for them is coming soon):
+		- changed: added new parameter customType to all overloads of Object::Object() except default constructor and copy-constructor
+		- changed: added new parameter customType to to Object::set()
+		- added: Object::getCustomType()
+		- added: class template CustomTypeFactory
+		- added: class template CustomType
+	- fixed: Marmalade implementation of JString::ANSIRepresentation() was not null-terminating it's output string like other platforms' implementations
+	- added: support for sending null-pointers as Hashtable values
+	- added: support for arrays of Object (only supported as array, not as scalar!)
+	- added: optional parameter bufferlen to constructor of empty JStrings
+	- added: JString::capacity()
+	- added: JString::ensureCapacity()
+	- fixed: Hashtable::contains() is now const-correct
+	- added: overloads of comparison operators (==, !=, <, >, <=, >=) for one operand being of type JSString and the other one of either type EG_CHAR*, char*, UTF8String or ANSIString
+	- added: operator EG_CHAR* to class UTF8String
+	- fixed: added missing implementation for operator EG_CHAR* declaration to class ANSIString
+	- changed: JString constructors for parameters of types char* and EG_CHAR* now do not assert on NULL-pointer parameters anymore, but initialize an empty string instead. This fixes the bug, that PhotonPeer::getServerAddress() crashes, when called before first connect.
+
+
+*** version 6.5.4
+	Date: 06-24-2011
+	- changed: JString::toInt() is now const
+	- changed: JString::UTF8Represantation() is now const
+	- changed: JString::ANSIRepresentation() is now const
+	- added: support for marmalade as new platform
+	- meego only:
+		- fixed: DBGPRINTF-macros are now compiling without errors if they are activated due to preprocessor-defines
+
+
+*** version 6.5.2
+	Date: 05-26-2011
+	- fixed: several memory-leaks, which have been introduced with version 6.5.0
+
+
+*** version 6.5.0
+	Date: 04-28-2011
+	- win32 only:
+		- fixed: bool-arrays are working now
+	- added: abstract base class BaseCharString and it's concrete subclasses UTF8String and ANSIString as container-classes to hold char*-strings
+	- added: constructors for parametertypes char* and wchar_t* to class-template-specializations KeyObject<JString> and ValueObject<JString> and the pointer of arbitrary dimensions templates for ValueObject<JString>
+	- removed: macros DELETE_IF and DELETE_ARRAY_IF - they are superfluous and only add runtime-overhead, when used, as delete is guaranteed by the C++ standard to be safe on NULL
+	- added: macros DELETE_SETNULL and DELETE_SETNULL_ARRAY for convenience
+	- fixed: JString::operator+=() overload for parametertype int64 now allocates memory for 21 characters, not 20, to avoid buffer-overflows, as string-representations of 64-bit integers including preceding "-" can up to 20 characters + a 21st one for the \0
+	- added: JString::UTF8Represantation() and JString::ANSIRepresentation() to simplify teamplay between class JString and interfaces, needing 8bit-strings, this way the application coder does not have to care about conversion workflow (allocate buffers, calculate lengths and sizes, call c-conversion-functions correctly, etc.)
+	- added: class JString got overloads for copy-constructors, =operators, +=operators and +operators for instances of classes UTF8String and ANSIString as parameters/operands
+	- added: support for meego as new platform
+	- fixed: some issues with JString-class introduced with recent switch to unicode
+	- added: support for arrays of class Hashtable
+	- added: full support for multidimensional arrays of all types, which are supported as single-dimensional-arrays (meaning all datatypes supported by protocol for Photon)
+	- changed: in Common-cpp class Object the parameter 'makeCopy' of constructors has no default value anymore to avoid ambiguity on calls of the different overloads, pass true for prior default behaviour
+	- added: support for multi-dimensional arrays (for all types, supported as single dimensional arrays) and for arrays of type Hashtable to class template ValueObject (beta!)
+	- added: overload of Object:set() with additional "dimensions" parameter
+	- added: Object::getDimensions()
+	- changed: added const-qualifier to returntype of Object::getSize()
+	- changed: added const-qualifier to returntype of Object::getData()
+	- changed: Object::Object() parameter "dimensions" from signed to unsigned
+	- fixed: all subclasses of class base now inherit protected from Base instead of private, so you can access inherited non-public members from subclasses of its subclasses
+	- changed: added const-qualifier to parameter of Base::debugReturn()
+	- changed: added const-qualifier to parameter of Base::setListener()
+	- changed: the type-constants for array types. Use the same type-constants for array-types like for non-array types from now on please, using the old constants will not work anymore!
+	- fixed: JString::operator= overload for char*, which has gone broken with version 6.4.0
+	- fixed: Hashtable::toString() now displays the types as letters again instead of numbers, which have been introduced accidentally with version 6.4.0
+	- fixed: JString::operator+=(char aChar) has gone broke in version 6.4.0
+	- added: support for empty arrays (NULL-pointer as data and 0 as size)
+	- fixed: comparison of string keys in class Hashtable has been broken in 6.4.0
+
+
+*** version 6.4.2
+	Date: 03-24-2011
+	- changed: iOS binaries are now build as armv6/armv7 universal binaries instead of armv6 only, as Xcode 4 does not allow to link armv6 static libraries into armv7 application builds anymore, as Xccode 3 does. Please be aware of, that an issue in Xcode libtools prevents you from using "load_all" linker setting, when linking to universal static libraries, which have other universal static libraries included. Please use "force_load" instead to work around the categories in static libraries bug from Xcode 3.
+
+
+*** version 6.4.0
+	Date: 01-19-2011
+	- added: macros DEBUG_ONLY(arg), RELEASE_ONLY(arg) and DEBUG_RELEASE(arg1, arg2) to execute code depending on the configuration
+	- added: support for unicode-strings
+	- added: support for multidimensional arrays (prealpha, only supported in class Object, not in template ValueObject, yet!)
+
+
+*** version 6.1.0
+	Date: 10-14-2010
+	- fixed: reason for warning "'0' flag used with '%s' printf format", when using DBGPRINTF-macros in version 6.0
+	- changed: nByte is now defined as unsigned char, not as char anymore, so it is the same like type byte in .NET-clients and on Photon server now
+	- changed: all occurences of boolean (which has been defined as unsigned char) have been replaced by C++ standard type bool, to make the API more standard, over the network still only one byte is send per bool, although a bool can have a size of 4 bytes on some platforms
+
+
+*** version 6.0.0.RC3
+	Date: 07-06-2010
+	- fixed: Hashtable::toString() now does not crash on NULL_pointer entries in the hash anymore, but adds an "ERROR: unsupported type" to the string instead of the entry
+
+
+*** version 6.0.0.RC1
+	Date: 04-21-2010
+	- split: Neutron and Photon Clients into seperate SDKs, to get rid of confusion with mixed API
+	- added: DBGPRINTF-macros are not longer internal, but public API now and can be used for debugging purposes in parts of your appliation not diretly related to our libraries, too
+	- added: new parameter "withTypes" to Hashtable::toString(), default value is FALSE (old behaviour)
+
+
+*** version 5.8.0
+	Date: 11-26-2009
+	- fixed: critical iPhone photon only memory leak on sending/receiving data 
+	- removed: NPeer::getTimeAllowanceInt()
+	- fixed: NeutronSession::serializeData() is now working fine like the internal serialization
+	- fixed: NeutronSession::deserializeData() is now working fine like the internal deserialization
+	- removed: Photon does not support vectors any longer (Neutron still does)
+	- added: Photon (but not Neutron!) now supports the following new data types: EGN_FLOAT, EGN_DOUBLE, EGN_LONGARRAY, EGN_SHORTARRAY, EGN_BOOLEANARRAY, EGN_FLOATARRAY, EGN_DOUBLEARRAY
+	- increased overall performance of Photon communication
+	- added: Photon now supports Properties (NPeer::opSetPropertiesForActor, NPeer::opSetPropertiesForGame)
+	- added: Photon now supports transmission of huge data blocks by automatic fragmentation to multiple UDP packets
+	- added: Photon now supports transmission channels to avoid data congestion 
+		-added new default parameter 'channelId' = 0 to opRaiseEvent() and to opCustom()
+	- added: NPeer::getListener()
+	- fixed: Neutron crashed with a buffer-overflow in NeutronSession::egnRegister, if EGN_DEBUGGER was activated and username and password together were longer than 35 characters. 
+	- changed: signature of most functions in NeutronListener, NPeerListener, NeutronSession, NeutronGame and NPeer. This was done to achieve const correctness throughout the whole Neutron C++ client library.
+		- double pointer arguments were changed to "const * const", whereever applicable
+		- single pointer arguments were changed to const references, whereever applicable
+		- pass-by-value object arguments were changed to const references, whereever applicable
+		- added const keyword to getter functions in NeutronUtiliy classes                
+	- removed deprecated callback NeutronListener::forceGameSkilledReturn()
+	- added: NPeer::setDebugOutputLevel(), NPeer::getDebugOutputLevel() to make the debug output sent to NeutronListener::DebugReturn more readable, the messages are now devided into different levels of importance. 
+	- added: NPeer::serviceBasic()
+	
+
+*** version 5.7.1
+	Date: 03-25-2009
+	- changed: NPeer::service() now has a default boolean argument for disabling automatic dispatching of incoming events
+	- fixed: Neutron clean up
+	- moved/renamed: NeutronGame::shutDownSession() to NeutronSession::shutDown()
+
+
+*** version 5.7.0
+	Date: 02-25-2009
+	- fixed: BREW: NPeer::getBytesIn() will now return the correct number of bytes received
+	- changed NPeerListener::nPeerEventAction: To avoid collisions with Neutron's built-in keys, Neutron will now wrap the user data within another EGN::HashTable, that is stored in the event hashtable at key EV_RT_KEY_DATA.
+
+
+*** version 5.6.0
+	Date: 02-18-2009
+	- fixed: changed parameter evCode of NeutronListener::eventAction() from int to nByte
+	- fixed: changed parameter opCode of NPeerListener::eventAction() from int to nByte
+	- fixed: changed parameter opCode of NPeerListener::nPeerReturn() from int to nByte
+	- added: NPeer::getBytesOut()
+	- added: NPeer::getBytesIn()
+	- added: NPeer::getPeerState()
+	- added: NPeer::getTimeAllowanceInt()
+	- added: NPeer::getSentCountAllowance()
+	- added: NPeer::getTimePingInterval()
+	- added: NPeer::setTimeAllowanceInt()
+	- added: NPeer::setSentCountAllowance()
+	- added: NPeer::setTimePingInterval()
+	- added: NPeer::getRoundTripTime()
+	- added: NPeer::getRoundTripTimeVariance()
+
+
+*** version 5.5.2
+	Date: 02-13-2009
+	- initial winMobile version of Neutron C client library
+	- no relevant changes to other Neutron C platforms
+
+
+*** version 5.5.1
+	Date: 02-06-2009
+	- added: boolean NeutronSession::sslLoadRootCertificate(JString fileName) to load internal or external root certificates
+	- added: boolean NeutronSession::sslEnableAuthentication(boolean enable) to (de)activate SSL authentication
+	- added: new default boolean parameter for temporary encryption in the following functions: NeutronSession::login, NeutronSession::autologin, NeutronSession::anonymousLogin, NeutronSession::autoLogin, NeutronSession::egnRegister, NeutronSession::forceRegister, NeutronSession::customOperation, NeutronGame::raiseEvent, NeutronSession::raiseEventForActor, NeutronSession::raiseEventInChannelInGame, NeutronGame::raiseEventInChannel
+	- removed: NeutronSession::getSecureConnection(void), NeutronSession::setSecureConnection(boolean secure)
+	- fixed: removed faulty and error-prone void pointers to the user's application in NPeerListener::PeerReturn() and NPeerListener::EventAction
+	- fixed: #defines for EV_RT_KEY_ACTORNR, EV_RT_KEY_ACTORLIST and EV_RT_KEY_CODE in UDP_Constants.h
+
+
+*** version 5.5.0
+	Date: 01-08-2009
+	- fixed: problem where UDP DEBUGRETURN callback would not work for BREW
+	- fixed: (BREW only) memory leak when sending realtime data
+	- added: NeutronSession::setUniqueDeviceID()
+	- fixed:  EGN::JVector operator= overload: A deep copy of the source vector is now performed correctly
+	- changed function signature NPeerListener::DebugReturn(JString string) to NPeerListener::DebugReturn(const JString& string)
+	- added: NeutronGame::getMinPlayers()
+	- added: NeutronGame::getMaxPlayers()
+	- added: NeutronGame::getPlayerLocalActorNr()
+	- added: NeutronGame::getNumPlayerNames()
+	- added: NeutronGame::getPlayersSkill()
+	- added: NeutronGame::getName()
+	- added: NeutronGame::getActorSessionId()
+	- added: NeutronGame::getDateTimeCreated()
+	- added: NeutronGame::getModeratorActorNr()
+	- added: NeutronGame::getPlayersSkillSize()
+	- added: NeutronSession::getPassword()
+	- added: NeutronSession::getScoreTableId()
+	- added: NeutronSession::getUserCulture()
+	- added: NeutronSession::getAppKey()
+	- added: NeutronSession::getConnectionString()
+	- added: NeutronSession::getSecureConnection()
+	- added: NeutronSession::setSecureConnection()
+	- fixed: NeutronSession::getAutoPolling() 
+	- fixed: NeutronSession::setAutoPolling()
+	- moved: getAutoPolling() from class NeutronGame to class NeutronSession
+	- moved: setAutoPolling() from class NeutronGame to class NeutronSession
+	- changed NeutronSession::customOperation(): it's now possible to send custom operations without being logged in.
+
+
+*** version 5.4.0
+	Date: 10-09-2008
+	- improved: you do not need to set the platform  for neutron in preprozessor definitions in your project or makefile anymore, because neutron can now find out on its own, for which platform the sdk is
+	- removed: deprecated function NeutronGame::getEventHistory() and related callback getEventHistoryReturn()
+	- added: NPeer::getServerTimeOffset()
+
+
+*** version 5.3.0
+	Date: 09-26-2008
+	- fixed memory leak in JVector (operator '=' did not free previous data)
+	- removed: deprecated function NeutronSession::getScorePosition() and related callback NeutronListener::getScorePositionReturn()
+	- removed: deprecated argument "broadcast" from setActorProperties()
+	- removed: deprecated function NeutronSession::setEventHandler() and related callback NeutronListener::setEventHandlerReturn()
+	- renamed: NeutronSession::setMaxWaitMutliplier() to NeutronSession::setMaxWaitMultiplier()
+
+
+*** version 5.2.0
+	Date: 09-12-2008
+	- removed: JVector::setSize() (would provocate bad memory access bugs for non pointer types)
+	- added: operator!= for class NeutronObject
+	- added: operator== for class NeutronObject
+	- added: operator!= for class Hashtable
+	- added: operator== for class Hashtable
+	- improved: NPeerListener::DebugReturn() is now in use
+	- fixed issue where NeutronSession::resumeCommunication() would not work
+	- fixed memleaks in NPeer functions for Win32
+
+
+*** version 5.1.0
+	Date: 08-26-2008
+	- changed: ValueObject(NeutronObject* obj) has been changed into ValueObject(const NeutronObject* const obj)
+	- changed: KeyObject(NeutronObject* obj) has been changed into KeyObject(const NeutronObject* const obj)
+	- changed: Hashtable::remove() and Hashtable::contains() now take a const NeutronObject& instead of a NeutronObject* as parameter
+	- changed include-structure of the headers, you now only have to include NeutronSession.h and optional for udp-lib udp/NPeer.h and nothing more (more infos in documentation)
+	- changed: NeutronGame::getAsid now needs no C-struct-poiter to the game as parameter anymore but takes its own class-mmber instead, so there is no parameter anymore, now.
+	- changed: returnTypes from NeutronSession-functions serializeData() and gameGetActive() from C-structs to C++ classes
+	- replaced: return type of function Hashtable::keys(() Enumeration* with a simple JVector<NeutronObject>
+	- removed: Hashtable: releaseEnumeration
+	- removed: template class EnumerationAny and typedef Enumeration
+	- we now provide a http-only and a full-version (http-udp) of neutron-wrapper instead of a http- and an udp-wrapper
+
+
+*** version 5.0.2
+	Date: 07-29-2008
+	- fixed: C++ wrapper crashed on Hashtable-content of type string-array
+	- fixed: ValueObject::getDataAdress() for data of arraytypes (for all other types than arrays is was already correct before)
+
+
+*** version 5.0.1
+	Date: 07-17-2008
+	- fixed: NeutronSession::hasBadwords() didn't accept passing '0' as the badwordFilter.
+	- fixed: String deserialization, so Neutron now can receive correctly full ANSI and not only ASCII
+
+
+*** version 5.0.0
+	Date: 07-11-2008
+	- added: NeutronSession::hasBadwords() for server side swear word filtering
+	- removed: NeutronSession::cancelCurrentRequest()
+	- replaced: _UDP_BREW_PLATFORM by _EGN_BREW_PLATFORM
+	- replaced: _UDP_BREW_STATIC by _EGN_BREW_STATIC
+	- replaced: namespace UDP by namespace EGN
+	- wrapper utility classes are now members of the namespace EGN like the rest of the wrapper classes
+	- replaced: int8 in API by nByte
+	- removed: NeutronSession::isUserValid() and NeutronSession::isPassValid() as the naming rules depend on the Lobby
+	- new: NeutronObject::set(void *data, nByte type, boolean makeCopy = TRUE); NeutronObject::setArray(void *data, nByte type, int size, boolean makeCopy = TRUE); to set more than one member-variable of a NeutronObject-instance by one function-call
+	- fixed: memoryLeak, which appeared on receiving any Hashtable from Neutron
+	- replaced: __int64 by int64 (defined as __int64 on win32 plaform and as long long otherwise)
+	Win32 only:
+		- you now have to define _EGN_WIN32_PLATFORM in your project properties preprocessor settings, to build your projects with neutron
+	- renamed: URL_NEUTRON_SERVER_TEST into URL_NEUTRON_SERVER_TEST_EU
+	- renamed: URL_NEUTRON_SERVER_RUN into URL_NEUTRON_SERVER_RUN_EU
+	- new: implemented class BaseListener - you can inherit from it, to create a debugListener, receiving debugReturn-calls from the utility classes
+	- new: implemented clas NeutronBase as Baseclass for all utility classes. If you call NeutronBase::setListener, all utility classes and objects know your baseListener implementation call its debugReturn for possible debugOutput
+	- new: NPeerListener now has a debugReturn, so NPeer can send its debug output to your app
+	Brew only:
+		- replaced existing and missing new- and delete-class-member-overloads by global new-, new[]-, delete- and delete[]-overloads, to support primitive types, too - defining _EGN_DEACTIVATE_NEW_OVERLOADS deactivates the global overloads, in case you have own overloads, you want to use instead
+	Win32 only:
+		- removed new- and delete-class-member overloads, cause in Visual Studio there are standard implementations for them, which are better
+	- ValueObject-constructors for elements of type JVector and Hashtable now take references instead of copies as parameters, which makes no difference in usage (the data is copied intern, anyway), but removes an unneeded additional local copy for these types of data with potential huge content, which increases the performance
+	- removed: NeutronObject-member-functions cleanup(), setSize(), setData(), setDataNoCopy() and setType() are not longer public, please use set(), setArray() and the destructor or (even better) classes Key-/ValueObject instead
+
+
+*** version 5.0.0 RC3
+	Date: 06-05-2008
+	- added: parameter "revision" to getPropertiesReturn()
+	- all API-functions now show consistend baehaviour for Strings and use JString for Strings and not char* anymore like some of them did before, for Stringarrays it is JString* instead of char**, which it was for some functions before, callbacks now all use JString* as pointers to Strings and JString** as pointers to Stringarrays, instead of char* and char**, which some callback did before
+	- added: parameters "userErrorList" and "userErrorList_len" to gameInviteReturn()
+	- added: parameters "userErrorList" and "userErrorList_len" to gameInviteReturn()
+	- modified: behaviour of NeutronSession::egnRegister(): will fail if the username is already taken and not change the username to a free one. User NeutronSession::forceRegister() for the previous behavior.
+	- added: NeutronSession::forceRegister()
+	- improved: data containers now are fully implemented:
+		- no memory leaks anymore
+		- full support for complex dataTypes
+		- new Hashtable::toString as help for debugging
+		- modified: NeutronObject::setData now makes a deep copy, to avoid a deep copy use NeutronObject::setDataNoCopy
+		- new: NeutronObject::NeutronObject(void* data, nByte type, int size=0, boolean makeCopy = true);
+
+
+*** version 5.0.0 RC2 Brew
+	Date: 05-16-2008
+	- New: EV_KEY_CHANNELTYPE  for channel-type in property-change events
+	- removed NeutronGame::sendData() - please use NeutronGame::raiseEvent() instead
+	- removed NeutronGame::sendTextMsg() - please use NeutronGame::raiseEvent() instead
+	- removed NeutronGame::handOverTurn() - please use NeutronGame::raiseEvent() instead
+	- removed sendGameDataReturn() - please use NeutronGame::raiseEvent() instead
+	- added NeutronListener::raiseEventReturn()
+	- added NeutronListener::getEventsFailedReturn(). This callback will be called if the Operation for getting new events fails for some reason.
+	- added NeutronListener::renameReturn() 
+	- added NeutronListener::renameUserReturn()
+	- modified: Operations that fail due to missing moderation-rights now return RC_MODERATION_DENIED instead of RC_COMMAND_ACCESS_DENIED
+	- Change: actor-properties can no longer be broadcasted in any way - removed "broadcast" parameter from setActorProperties()
+	- Change: properties now have a revision which is increased on each change. this way outdated updates might be skipped
+	- Change: EV_PROPERTIES_CHANGE now has a key EV_KEY_OWNERNR if it's a "player property" (the key is missing if it's a game-property)
+	- Internal: changed setProperties and getProperties to new operation-codes using different parameters (with similar results)
+	- New: parameter "textMessage" for NeutronGame.invite() adds personal message to invited players (in EV_INV and gameListInvitations())
+	- New: key EV_KEY_INFO will be added to EV_INV if "textMessage" was used in NeutronGame.invite() (it's not there otherwise)
+	- New: gameListInvitations() has new value parameter {t} to get "textMessage" from NeutronGame.invite()
+	- New: RC_APPINSTANCE_NOT_OPEN is now used for "singleton namebased pools" where a game is full (not able to join / instanciate)
+	- New: gameCreate() with invitations will fail if the chosen game-name is already taken in a "singleton namebased pool"
+	- New: RC_APPINSTANCE_ALREADY_EXISTS for the case above
+
+
+*** version 5.0.0 RC2 Win32
+	Date: 04-24-2008
+	Win32 only:
+		- fixed an error on SubscriptionIDs: now they are successfully saved to file
+	- fixed an error that occurred if MSISDN was zero
+	- modified: the wrapper now uses "boolean" instead of bool. This was necessary to enable support for boolean in Hashtables on ARM devices.
+	- modified: type "byte" (unsigned char) was changed to nByte (char). This was necessary to achieve consistent behaviour in all Neutron ports.
+	- New: Parameter "eventCode" in NeutronGame::raiseEvent() to have the eventCode be set automatically
+	- New: Parameter "filter" for badWord-filtering in text-messages in all versions of raiseEvent
+	- New: NeutronGame::raiseEventInChannelInGame() replaces the removed parameter ingame of NeutronSession::raiseEventInChannel()
+	- removed: parameter ingame in NeutronSession::raiseEventInChannel()
+	- modified: parameter-order of NeutronGame::raiseEvent() now is: byte eventCode, EGN_HashTable *event, boolean filter, int targetActorNr
+	- modified: parameter-order of NeutronSession::raiseEventInChannel() now is: byte eventCode, EGN_HashTable *event, boolean filter, int minutesValid, byte maxTypeCount, byte channel
+	- modified: parameter-order of NeutronSession::raiseEventForActor() now is: byte eventCode, EGN_HashTable *event, boolean filter, char *userID, int minutesValid, byte maxTypeCount, byte channel
+	- New: void(*CB_RaiseEventInChannelInGameReturn)(void *pApp, int retCode);
+	- fixed: a few memory leaks, which appeared by calling with wrong parameters, in NeutronGame::raiseEvent(), NeutronSession::raiseEventInChannel() and NeutronSession::raiseEventForActor()
+	- fixed a bug in NeutronSession::setShadowChunked() and NeutronSession::setShadow(), where 0 passed for shadowsize could cause a crash.
+	 Win32 only:
+		- New: NeutronSession::setProxySettings() (see documentation,  SampleNeutron and SampleWrapper for more info)
+		- New: NeutronSession::setProxyAuthentication() (see documentation,  SampleNeutron and SampleWrapper for more info)
+		- New: returncode RC_PROXY_AUTH_ERROR 407; you get it in case, username or pw for proxy is wrong
+		- New: returncode RC_SERVICE_NOT_SUPPORTED 501; Returned if server not supports requested operation (e.g. trying to make SSL connection through proxy without tunnelling support, or trying to connect to non neutron server)
+
+
+*** version 5.0.0 RC1
+	Date: 21-02-2008
+	- classes are now located in the new namespace "EGN" (Win32)
+	- NeutronGame::sendData(), NeutronGame::handoverTurn(), NeutronGame::raiseEvent(), NeutronSession::raiseEventForActor(), NeutronSession::raiseEventInChannel(), NeutronGame::setGameProperties(), NeutronGame::setLocalPlayerProperties() and NeutronSession::setActorProperties now return FALSE, if their HashTable param is NULL
+	- kicked all internal classes and member functions out of the API
+	- rewrote the API to be much more logic and easy to understand and to use and to be more similar to Java-API
+	- completely rewritten Hashtable-/Object-system (please see Doc and C++ samples for more infos on this)
+	- kicked intern classes NCommand, NConnect and NeutronUtils out of the API
+	- made all intern member functions of class NPeer private
+
+
+***     Version: 4.9.4
+	Date: 30-11-2007
+	- added following functions to class NeutronSession:
+		- void setEventHandler(void);
+		- void switchTickStatus(void);
+		- void getTickStatus(void);
+		- boolean isWaiting(void);
+		- static void setEventHandlerReturn(void* pApp, int retCode);
+	- added following function to class NeutronListener:
+		- virtual void setEventHandlerReturn(int retCode)=0;
+
+***     Version: 4.1.0
+	Date: 01-17-2008
+	- classes are now located in the new namespace "UDP"
+
+
+***    Version: 4.0.0
+	Date: 07-31-2007
+	- Updated: Neutron has now been upgraded to 4.0! This mostly means that we are now offering a UDP/Realtime extension as part of Neutron.

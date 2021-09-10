@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_windows_particle_console_vc14", "demo_windows_particle_console_vc14.vcxproj", "{2127FBF7-6572-4359-BE1E-9B303503AFC0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug_windows_md|ARM = debug_windows_md|ARM
+		debug_windows_md|ARM64 = debug_windows_md|ARM64
+		debug_windows_md|Win32 = debug_windows_md|Win32
+		debug_windows_md|x64 = debug_windows_md|x64
+		debug_windows_mt|ARM = debug_windows_mt|ARM
+		debug_windows_mt|ARM64 = debug_windows_mt|ARM64
+		debug_windows_mt|Win32 = debug_windows_mt|Win32
+		debug_windows_mt|x64 = debug_windows_mt|x64
+		release_windows_md|ARM = release_windows_md|ARM
+		release_windows_md|ARM64 = release_windows_md|ARM64
+		release_windows_md|Win32 = release_windows_md|Win32
+		release_windows_md|x64 = release_windows_md|x64
+		release_windows_mt|ARM = release_windows_mt|ARM
+		release_windows_mt|ARM64 = release_windows_mt|ARM64
+		release_windows_mt|Win32 = release_windows_mt|Win32
+		release_windows_mt|x64 = release_windows_mt|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_md|ARM.ActiveCfg = debug_windows_md|ARM
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_md|ARM.Build.0 = debug_windows_md|ARM
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_md|ARM64.ActiveCfg = debug_windows_md|ARM64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_md|ARM64.Build.0 = debug_windows_md|ARM64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_md|Win32.ActiveCfg = debug_windows_md|Win32
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_md|Win32.Build.0 = debug_windows_md|Win32
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_md|x64.ActiveCfg = debug_windows_md|x64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_md|x64.Build.0 = debug_windows_md|x64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_mt|ARM.ActiveCfg = debug_windows_mt|ARM
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_mt|ARM.Build.0 = debug_windows_mt|ARM
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_mt|ARM64.ActiveCfg = debug_windows_mt|ARM64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_mt|ARM64.Build.0 = debug_windows_mt|ARM64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_mt|Win32.ActiveCfg = release_windows_mt|Win32
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_mt|Win32.Build.0 = release_windows_mt|Win32
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_mt|x64.ActiveCfg = debug_windows_mt|x64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.debug_windows_mt|x64.Build.0 = debug_windows_mt|x64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_md|ARM.ActiveCfg = release_windows_md|ARM
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_md|ARM.Build.0 = release_windows_md|ARM
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_md|ARM64.ActiveCfg = release_windows_md|ARM64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_md|ARM64.Build.0 = release_windows_md|ARM64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_md|Win32.ActiveCfg = debug_windows_md|Win32
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_md|Win32.Build.0 = debug_windows_md|Win32
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_md|x64.ActiveCfg = release_windows_md|x64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_md|x64.Build.0 = release_windows_md|x64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_mt|ARM.ActiveCfg = release_windows_mt|ARM
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_mt|ARM.Build.0 = release_windows_mt|ARM
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_mt|ARM64.ActiveCfg = release_windows_mt|ARM64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_mt|ARM64.Build.0 = release_windows_mt|ARM64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_mt|Win32.ActiveCfg = release_windows_mt|Win32
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_mt|Win32.Build.0 = release_windows_mt|Win32
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_mt|x64.ActiveCfg = release_windows_mt|x64
+		{2127FBF7-6572-4359-BE1E-9B303503AFC0}.release_windows_mt|x64.Build.0 = release_windows_mt|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

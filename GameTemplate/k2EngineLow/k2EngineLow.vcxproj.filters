@@ -199,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="graphics\FrameBuffer.cpp" />
     <ClCompile Include="k2EngineLow.cpp" />
+    <ClCompile Include="online\LobbyManager.cpp">
+      <Filter>online</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -441,6 +444,9 @@
     </ClInclude>
     <ClInclude Include="graphics\FrameBuffer.h" />
     <ClInclude Include="k2EngineLow.h" />
+    <ClInclude Include="online\LobbyManager.h">
+      <Filter>online</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -487,6 +493,9 @@
     </Filter>
     <Filter Include="util">
       <UniqueIdentifier>{d22bcaef-43e4-45a4-bd3b-412ecb38dfd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="online">
+      <UniqueIdentifier>{077f7c0d-1513-4644-b409-09887e0cfb01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
