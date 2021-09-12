@@ -65,6 +65,7 @@ namespace nsK2EngineLow {
 		void NotifyPossibleStartPlayGame()
 		{
 			m_isPossibleGameStart = true;
+			SendPossibleGameStart();
 		}
 	private:
 		/// <summary>
@@ -111,7 +112,7 @@ namespace nsK2EngineLow {
 		void warningReturn(int warningCode) override {}
 		void serverErrorReturn(int errorCode) override {}
 		void debugReturn(int debugLevel, const ExitGames::Common::JString& string) override {}
-		void joinRoomEventAction(int playerNr, const ExitGames::Common::JVector<int>& playernrs, const ExitGames::LoadBalancing::Player& player) override {}
+		void joinRoomEventAction(int playerNr, const ExitGames::Common::JVector<int>& playernrs, const ExitGames::LoadBalancing::Player& player) override;
 		void leaveRoomReturn(int errorCode, const ExitGames::Common::JString& errorString) override {}
 	private:
 		/// <summary>
@@ -130,22 +131,28 @@ namespace nsK2EngineLow {
 		/// サーバーから切断。
 		/// </summary>
 		void Disconnect();
+		/// <summary>
+		/// パッドデータの再送リクエスト
+		/// </summary>
+		/// <param name="frameNo">再送リクエストを行うフレーム番号</param>
+		void RequestResendPadData( int frameNo );
 	private:
 
 		enum State
 		{
-			INITIALIZED = 0,	// 初期化
-			CONNECTING,			// サーバー接続中
-			CONNECTED,			// サーバーに接続済み
-			JOINING,			// ルームにジョイン中
-			JOINED,				// ルームにジョイン済み。
-			WAIT_START_GAME,	// ゲームの開始待ち
+			INITIALIZED = 0,		// 初期化
+			CONNECTING,				// サーバー接続中
+			CONNECTED,				// サーバーに接続済み
+			JOINING,				// ルームにジョイン中
+			JOINED,					// ルームにジョイン済み。
+			WAIT_RECV_START_DATA,	// 開始データの受け取り待ち。
+			WAIT_START_GAME,		// ゲームの開始待ち
 			IN_GAME_BUFFERING_PAD_DATA,	// パッドデータのバッファリング中
-			IN_GAME,			// ゲームプレイ中。
-			LEAVING,			// ルームから退出中。
-			LEFT,				// ルームから退出。
-			DISCONNECTING,		// サーバーから切断中。
-			DISCONNECTED		// サーバーから切断済み。
+			IN_GAME,				// ゲームプレイ中。
+			LEAVING,				// ルームから退出中。
+			LEFT,					// ルームから退出。
+			DISCONNECTING,			// サーバーから切断中。
+			DISCONNECTED			// サーバーから切断済み。
 		};
 		/// <summary>
 		/// イベント
@@ -158,8 +165,24 @@ namespace nsK2EngineLow {
 		/// パッドデータ
 		/// </summary>
 		struct SPadData {
+			int dataType;				// データの種類。
 			XINPUT_STATE xInputState;	// XInputステート
 			int frameNo;				// フレーム番号
+		};
+		/// <summary>
+		/// パッドデータの再送リクエスト
+		/// </summary>
+		struct SRequestResendPadData {
+			int dataType;
+			int frameNo;
+		};
+		/// <summary>
+		/// プレイヤータイプ
+		/// </summary>
+		enum PlayerType {
+			PlayerType_Host,		// ホスト
+			PlayerType_Client,		// クライアント
+			PlayerType_Undef,		// 
 		};
 		using OnAllPlayerJoinedRoom = std::function<void(void* pRecvData, int dataSize)>;
 		using OnErrorFunc = std::function<void()>;
@@ -168,6 +191,7 @@ namespace nsK2EngineLow {
 		ExitGames::Common::Logger m_logger;		// ログ出力処理。
 		State m_state = INITIALIZED;			// 状態。
 		int m_frameNo = 0;						// フレーム番号。
+		int m_playFrameNo = 0;
 		bool m_isJoinedOtherPlayer = false;		// 他プレイヤーがルームにジョインした。
 		bool m_isPossibleGameStartOtherPlayer = false;	// 他プレイヤーもゲーム開始リクエストを受けた？
 		bool m_isPossibleGameStart = false;		//ゲーム開始可能
@@ -179,5 +203,7 @@ namespace nsK2EngineLow {
 		std::unique_ptr<std::uint8_t[]> m_recieveDataOnGameStart;	// ゲーム開始のために受け取ったデータ。
 		int m_recieveDataSize = 0;									// ゲーム開始のために受け取ったデータのサイズ。
 		bool m_isInited = false;									// 初期化済み？
+		float m_timer = 0.0f;										// タイマー
+		PlayerType m_playerType = PlayerType_Undef;
 	};
 }

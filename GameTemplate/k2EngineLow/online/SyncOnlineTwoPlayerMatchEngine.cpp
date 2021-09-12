@@ -8,6 +8,8 @@ namespace nsK2EngineLow {
 
 	SyncOnlineTwoPlayerMatchEngine::~SyncOnlineTwoPlayerMatchEngine()
 	{
+		m_loadBalancingClient->opLeaveRoom();
+		m_loadBalancingClient->opLeaveLobby();
 		m_loadBalancingClient->disconnect();
 	}
 	void SyncOnlineTwoPlayerMatchEngine::Init(
@@ -54,24 +56,23 @@ namespace nsK2EngineLow {
 	}
 	void SyncOnlineTwoPlayerMatchEngine::SendPossibleGameStart()
 	{
-		if (m_isPossibleGameStart) {
-			// ゲーム開始ベントを送信。
-			ExitGames::LoadBalancing::RaiseEventOptions eventOpt;
+		// ゲーム開始ベントを送信。
+		ExitGames::LoadBalancing::RaiseEventOptions eventOpt;
 
-			ExitGames::Common::Hashtable event;
+		ExitGames::Common::Hashtable event;
 
-			m_loadBalancingClient->opRaiseEvent(
-				true,
-				event,
-				Event_PossibleGameStartOtherPlayer,
-				eventOpt
-			);
-		}
+		m_loadBalancingClient->opRaiseEvent(
+			true,
+			event,
+			Event_PossibleGameStartOtherPlayer,
+			eventOpt
+		);
 	}
 	void SyncOnlineTwoPlayerMatchEngine::SendPadData()
 	{
 		// 送るパッドデータを構築する。
 		SPadData padData;
+		padData.dataType = 0;
 		padData.xInputState = g_pad[0]->GetXInputState();
 		padData.frameNo = m_frameNo;
 		m_padData[0].insert({ m_frameNo, padData });
@@ -79,6 +80,17 @@ namespace nsK2EngineLow {
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
 			sizeof(padData)
+		);
+	}
+	void SyncOnlineTwoPlayerMatchEngine::RequestResendPadData(int frameNo)
+	{
+		SRequestResendPadData reqResendPadData;
+		reqResendPadData.dataType = 1;
+		reqResendPadData.frameNo = frameNo;
+
+		m_loadBalancingClient->sendDirect(
+			(std::uint8_t*)&reqResendPadData,
+			sizeof(reqResendPadData)
 		);
 	}
 	void SyncOnlineTwoPlayerMatchEngine::Update()
@@ -102,24 +114,24 @@ namespace nsK2EngineLow {
 			roomOption.setMaxPlayers(2);
 			roomOption.setDirectMode(ExitGames::LoadBalancing::DirectMode::ALL_TO_ALL);
 			m_loadBalancingClient->opJoinOrCreateRoom(L"Test", roomOption);
+			m_timer = 0.0f;
 			m_state = State::JOINING;
 		}break;
 		case State::JOINED:
 			// ルームに入ったことを他プレイヤーに通知。
-			SendJoined();
+			
 			if (m_isJoinedOtherPlayer) {
 				// すべてのプレイヤーがルームにそろったこと。
-				m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
+				SendJoined();
+				
+				m_timer = 0.0f;
 				m_state = State::WAIT_START_GAME;
 			}
 			break;
 		case State::WAIT_START_GAME:
-			// ゲーム開始可能になっていることを他プレイヤーに通知。
-			SendPossibleGameStart();
 			if (m_isPossibleGameStart
 				&& m_isPossibleGameStartOtherPlayer) {
-				// 全プレイヤーゲーム開始可能になっている。
-				m_frameNo = 0;
+				m_frameNo++;
 				m_allPlayerNotifyPossibleGameStartFunc();
 				m_state = State::IN_GAME_BUFFERING_PAD_DATA;
 			}
@@ -127,33 +139,36 @@ namespace nsK2EngineLow {
 			break;
 		case State::IN_GAME_BUFFERING_PAD_DATA:
 			// パッドデータを送信。
-			SendPadData();
-			// todo 遅延はどうする？
-			if (m_padData[1].size() > 2) {
-				// パッドデータが3フレーム分届いた。
+			if (m_frameNo < 3) {
+				// 3フレーム分だけ送る。
+				SendPadData();
+				m_frameNo++;
+			}
+			else {
+				// 3フレーム遅延させてスタート。
 				m_state = State::IN_GAME;
 			}
-			m_frameNo++;
+			
 			break;
 		case State::IN_GAME: {
-			// パッドデータを送信。
-			SendPadData();
 			int loopCount = 0;
 			while(true) {	
-				auto it = m_padData[1].find(m_frameNo);
+				auto it = m_padData[1].find(m_playFrameNo);
 				if (it != m_padData[1].end()) {
 					// 再生フレームのパッド情報を受け取っている。
-					m_pad[0].Update(m_padData[0][m_frameNo].xInputState);
+					m_pad[0].Update(m_padData[0][m_playFrameNo].xInputState);
 					m_pad[1].Update(it->second.xInputState);
 					// 再生済みのパッド情報を削除。
-					m_padData[0].erase(m_frameNo);
-					m_padData[1].erase(m_frameNo);
+					m_padData[0].erase(m_playFrameNo);
+					m_padData[1].erase(m_playFrameNo);
 					break;
 				}
 				else {
-					// まだデータが間に合っていない。
+					// データが来ていない？
+					// UDPなのでパケットロストしている可能性があるので、再送リクエストを送る。
+					RequestResendPadData(m_playFrameNo);
 					loopCount++;
-					Sleep(3);
+					Sleep(100);
 					m_loadBalancingClient->service();
 					if (loopCount == 100) {
 						// 接続エラー。
@@ -162,6 +177,8 @@ namespace nsK2EngineLow {
 					}
 				}
 			} 
+			SendPadData();
+			m_playFrameNo++;
 			m_frameNo++;
 		}break;
 		case State::DISCONNECTING:
@@ -181,9 +198,34 @@ namespace nsK2EngineLow {
 		auto valueObj = (ExitGames::Common::ValueObject<std::uint8_t*>*)&msg;
 		const int* sizes = valueObj->getSizes();
 		std::uint8_t* pData = (std::uint8_t*)valueObj->getDataCopy();
-		SPadData padData;
-		memcpy(&padData, pData, sizes[0]);
-		m_padData[1].insert({ padData.frameNo, padData });
+		int dataType = (int)(*pData);
+		switch (dataType) {
+		case 0: {
+			// パッド情報
+			SPadData padData;
+			memcpy(&padData, pData, sizes[0]);
+			m_padData[1].insert({ padData.frameNo, padData });
+		}break;
+		case 1: {
+			// パッドデータの再送リクエスト
+			SRequestResendPadData reqResendPadData;
+			memcpy(&reqResendPadData, pData, sizes[0]);
+			
+			// 送るパッドデータを構築する。
+			SPadData padData;
+			padData.dataType = 0;
+			padData.xInputState = m_padData[0][reqResendPadData.frameNo].xInputState;
+			padData.frameNo = m_padData[0][reqResendPadData.frameNo].frameNo;
+			m_padData[0].insert({ padData.frameNo, padData });
+
+			m_loadBalancingClient->sendDirect(
+				(std::uint8_t*)&padData,
+				sizeof(padData)
+			);
+
+		}break;
+		}
+		
 	}
 
 	void SyncOnlineTwoPlayerMatchEngine::leaveRoomEventAction(int playerNr, bool isInactive)
@@ -197,7 +239,9 @@ namespace nsK2EngineLow {
 		ExitGames::Common::Hashtable eventContent = ExitGames::Common::ValueObject<ExitGames::Common::Hashtable>(eventContentObj).getDataCopy();
 		switch (eventCode) {
 		case Event_JoinedOtherPalyer:
-			m_isJoinedOtherPlayer = true;
+
+			m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
+			m_state = WAIT_START_GAME;
 			break;
 		case Event_PossibleGameStartOtherPlayer:
 			m_isPossibleGameStartOtherPlayer = true;
@@ -231,7 +275,24 @@ namespace nsK2EngineLow {
 			m_state = State::CONNECTED;
 			return;
 		}
+		if (localPlayerNr == 1) {
+			// 部屋を作ったホスト。
+			m_playerType = PlayerType_Host;
+		}
+		else {
+			// クライアント。
+			m_isJoinedOtherPlayer = true;
+			m_playerType = PlayerType_Client;
+		}
 		// ルームに入った。
 		m_state = State::JOINED;
+	}
+	void SyncOnlineTwoPlayerMatchEngine::joinRoomEventAction(int playerNr, const ExitGames::Common::JVector<int>& playernrs, const ExitGames::LoadBalancing::Player& player)
+	{
+		if (m_playerType == PlayerType_Host
+			&& playerNr == 2
+		) {
+			m_isJoinedOtherPlayer = true;
+		}
 	}
 }

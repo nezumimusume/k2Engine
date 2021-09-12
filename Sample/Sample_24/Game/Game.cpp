@@ -49,8 +49,15 @@ void Game::Update()
 		}
 	}break;
 		break;
-	case enStep_InGame:
-		break;
+	case enStep_InGame: {
+		for (int i = 0; i < 2; i++) {
+			auto& pad = m_onlineTwoPlayerMatchEngine->GetGamePad(i);
+			pos[i].x += pad.GetLStickXF();
+			pos[i].y += pad.GetRStickXF();
+			m_modelRender[i].SetPosition(pos[i]);
+			m_modelRender[i].Update();
+		}
+	}break;
 	case enStep_Error:
 		delete m_onlineTwoPlayerMatchEngine;
 		m_onlineTwoPlayerMatchEngine = nullptr;
@@ -62,7 +69,8 @@ void Game::Update()
 void Game::OnAllPlayerJoined(void* pData, int size)
 {
 	// すべてのプレイヤーが揃った。
-	m_modelRender->Init("Assets/modelData/unityChan.tkm");
+	m_modelRender[0].Init("Assets/modelData/unityChan.tkm");
+	m_modelRender[1].Init("Assets/modelData/unityChan.tkm");
 	// ロードが終わってゲーム開始可能になったことを通知する。
 	m_onlineTwoPlayerMatchEngine->NotifyPossibleStartPlayGame();
 	// ほかのプレイヤーがゲーム開始可能になるまで待つ。
@@ -87,7 +95,9 @@ void Game::Render(RenderContext& rc)
 	m_fontRender.Draw(rc);
 	switch (m_step) {
 	case enStep_InGame:
-		m_modelRender->Draw(rc);
+		for (int i = 0; i < 2; i++) {
+			m_modelRender[i].Draw(rc);
+		}
 		break;
 	}
 }
