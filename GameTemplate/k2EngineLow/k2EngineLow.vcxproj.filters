@@ -199,7 +199,7 @@
     </ClCompile>
     <ClCompile Include="graphics\FrameBuffer.cpp" />
     <ClCompile Include="k2EngineLow.cpp" />
-    <ClCompile Include="online\LobbyManager.cpp">
+    <ClCompile Include="..\..\..\GameTemplate\k2EngineLow\online\SyncOnlineTwoPlayerMatchEngine.cpp">
       <Filter>online</Filter>
     </ClCompile>
   </ItemGroup>
@@ -444,7 +444,10 @@
     </ClInclude>
     <ClInclude Include="graphics\FrameBuffer.h" />
     <ClInclude Include="k2EngineLow.h" />
-    <ClInclude Include="online\LobbyManager.h">
+    <ClInclude Include="dbg\MyLog.h">
+      <Filter>dbg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\online\SyncOnlineTwoPlayerMatchEngine.h">
       <Filter>online</Filter>
     </ClInclude>
   </ItemGroup>

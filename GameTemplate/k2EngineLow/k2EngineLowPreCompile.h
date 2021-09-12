@@ -39,7 +39,7 @@ using namespace Microsoft::WRL;
 
 #include "util/Noncopyable.h"
 #include "dbg/MyAssert.h"
-
+#include "dbg/MyLog.h"
 #include "time/GameTime.h"
 #include "math/Math.h"
 #include "math/Vector.h"
