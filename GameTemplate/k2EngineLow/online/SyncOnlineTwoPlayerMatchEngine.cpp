@@ -105,8 +105,9 @@ namespace nsK2EngineLow {
 			ExitGames::LoadBalancing::ConnectOptions connectOption;
 			connectOption.setAuthenticationValues(ExitGames::LoadBalancing::AuthenticationValues().setUserID(ExitGames::Common::JString() + GETTIMEMS())).setUsername(PLAYER_NAME + GETTIMEMS());
 			connectOption.setTryUseDatagramEncryption(true);
+			connectOption.setServerType(ExitGames::LoadBalancing::ServerType::MASTER_SERVER);
 			//connectOption.set
-			m_loadBalancingClient->connect(connectOption	);
+			m_loadBalancingClient->connect(connectOption);
 			m_state = State::CONNECTING;
 		}break;
 		case State::CONNECTED: {
@@ -266,7 +267,10 @@ namespace nsK2EngineLow {
 		// 接続済みにする。
 		m_state = State::DISCONNECTED;
 	}
-	
+	void SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn(int errorCode)
+	{
+		int hoge = 0;
+	}
 	void SyncOnlineTwoPlayerMatchEngine::joinOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString)
 	{
 		if (errorCode) {
