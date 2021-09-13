@@ -133,7 +133,6 @@ namespace nsK2EngineLow {
 		case State::WAIT_START_GAME:
 			if (m_isPossibleGameStartOtherPlayer 
 				&& m_isPossibleGameStart) {
-				m_frameNo++;
 				m_allPlayerNotifyPossibleGameStartFunc();
 				m_state = State::IN_GAME_BUFFERING_PAD_DATA;
 			}
@@ -257,9 +256,9 @@ namespace nsK2EngineLow {
 	{
 		if (errorCode)
 		{
-			// 入れなかった。
-		//	EGLOG(ExitGames::Common::DebugLevel::ERRORS, L"%ls", errorString.cstr());
-			Disconnect();
+			// サーバーへの接続エラー。
+			// 再接続。
+			m_state = State::INITIALIZED;
 			return;
 		}
 		// 部屋に入れた。
@@ -273,7 +272,8 @@ namespace nsK2EngineLow {
 	void SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn(int errorCode)
 	{
 		MY_LOG("SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn\n errorCode = %d\n", errorCode);
-		Disconnect();
+		// 再接続。
+		m_state = State::INITIALIZED;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::joinOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString)
 	{
