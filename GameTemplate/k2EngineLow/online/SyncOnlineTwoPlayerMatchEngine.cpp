@@ -42,7 +42,7 @@ namespace nsK2EngineLow {
 		m_isInited = true;
 
 	}
-	void SyncOnlineTwoPlayerMatchEngine::SendJoined()
+	void SyncOnlineTwoPlayerMatchEngine::SendInitDataOtherPlayer()
 	{
 		// ルームにジョインしたことを通知。
 		ExitGames::LoadBalancing::RaiseEventOptions eventOpt;
@@ -50,7 +50,7 @@ namespace nsK2EngineLow {
 		m_loadBalancingClient->opRaiseEvent(
 			true,
 			event,
-			Event_JoinedOtherPalyer,
+			Event_SendInitDataForOtherPlayer,
 			eventOpt
 		);
 	}
@@ -120,18 +120,19 @@ namespace nsK2EngineLow {
 		}break;
 		case State::JOINED:
 			// ルームに入ったことを他プレイヤーに通知。
-			
 			if (m_isJoinedOtherPlayer) {
-				// すべてのプレイヤーがルームにそろったこと。
-				SendJoined();
+				// すべてのプレイヤーがルームにそろった。
+				// プレイヤーを初期化するための情報を送る。
+				SendInitDataOtherPlayer();
 				
 				m_timer = 0.0f;
-				m_state = State::WAIT_START_GAME;
+				// 他プレイヤーの初期化情報受け取り待ち。
+				m_state = State::WAIT_RECV_INIT_DATA_OTHER_PLAYER;
 			}
 			break;
 		case State::WAIT_START_GAME:
-			if (m_isPossibleGameStart
-				&& m_isPossibleGameStartOtherPlayer) {
+			if (m_isPossibleGameStartOtherPlayer 
+				&& m_isPossibleGameStarts) {
 				m_frameNo++;
 				m_allPlayerNotifyPossibleGameStartFunc();
 				m_state = State::IN_GAME_BUFFERING_PAD_DATA;
@@ -241,7 +242,7 @@ namespace nsK2EngineLow {
 	{
 		ExitGames::Common::Hashtable eventContent = ExitGames::Common::ValueObject<ExitGames::Common::Hashtable>(eventContentObj).getDataCopy();
 		switch (eventCode) {
-		case Event_JoinedOtherPalyer:
+		case Event_SendInitDataForOtherPlayer:
 
 			m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
 			m_state = WAIT_START_GAME;
@@ -272,6 +273,7 @@ namespace nsK2EngineLow {
 	void SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn(int errorCode)
 	{
 		MY_LOG("SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn\n errorCode = %d\n", errorCode);
+		Disconnect();
 	}
 	void SyncOnlineTwoPlayerMatchEngine::joinOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString)
 	{

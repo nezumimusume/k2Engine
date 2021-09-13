@@ -120,9 +120,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void SendPossibleGameStart();
 		/// <summary>
-		/// ルームに入ったことを他プレイヤーに通知。
+		/// 他プレイヤーを初期化するための情報を送る。
 		/// </summary>
-		void SendJoined();
+		void SendInitDataOtherPlayer();
 		/// <summary>
 		/// パッド情報を送信。
 		/// </summary>
@@ -145,7 +145,7 @@ namespace nsK2EngineLow {
 			CONNECTED,				// サーバーに接続済み
 			JOINING,				// ルームにジョイン中
 			JOINED,					// ルームにジョイン済み。
-			WAIT_RECV_START_DATA,	// 開始データの受け取り待ち。
+			WAIT_RECV_INIT_DATA_OTHER_PLAYER,	// 開始データの受け取り待ち。
 			WAIT_START_GAME,		// ゲームの開始待ち
 			IN_GAME_BUFFERING_PAD_DATA,	// パッドデータのバッファリング中
 			IN_GAME,				// ゲームプレイ中。
@@ -158,7 +158,7 @@ namespace nsK2EngineLow {
 		/// イベント
 		/// </summary>
 		enum Event {
-			Event_JoinedOtherPalyer,			// 他プレイヤーがルームにジョインした。
+			Event_SendInitDataForOtherPlayer,	// 他プレイヤーの初期化情報を送る。
 			Event_PossibleGameStartOtherPlayer, // 他プレイヤーがゲーム開始可能になったことを通知・
 		};
 		/// <summary>
