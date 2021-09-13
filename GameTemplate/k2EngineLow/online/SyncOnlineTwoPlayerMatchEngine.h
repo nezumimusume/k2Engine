@@ -140,19 +140,19 @@ namespace nsK2EngineLow {
 
 		enum State
 		{
-			INITIALIZED = 0,		// 初期化
-			CONNECTING,				// サーバー接続中
-			CONNECTED,				// サーバーに接続済み
-			JOINING,				// ルームにジョイン中
-			JOINED,					// ルームにジョイン済み。
+			INITIALIZED = 0,					// 初期化
+			CONNECTING,							// サーバー接続中
+			CONNECTED,							// サーバーに接続済み
+			JOINING,							// ルームにジョイン中
+			JOINED,								// ルームにジョイン済み。
 			WAIT_RECV_INIT_DATA_OTHER_PLAYER,	// 開始データの受け取り待ち。
-			WAIT_START_GAME,		// ゲームの開始待ち
-			IN_GAME_BUFFERING_PAD_DATA,	// パッドデータのバッファリング中
-			IN_GAME,				// ゲームプレイ中。
-			LEAVING,				// ルームから退出中。
-			LEFT,					// ルームから退出。
-			DISCONNECTING,			// サーバーから切断中。
-			DISCONNECTED			// サーバーから切断済み。
+			WAIT_START_GAME,					// ゲームの開始待ち
+			IN_GAME_BUFFERING_PAD_DATA,			// パッドデータのバッファリング中
+			IN_GAME,							// ゲームプレイ中。
+			LEAVING,							// ルームから退出中。
+			LEFT,								// ルームから退出。
+			DISCONNECTING,						// サーバーから切断中。
+			DISCONNECTED						// サーバーから切断済み。
 		};
 		/// <summary>
 		/// イベント

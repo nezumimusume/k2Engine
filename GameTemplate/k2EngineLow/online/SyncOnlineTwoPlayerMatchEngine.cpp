@@ -132,7 +132,7 @@ namespace nsK2EngineLow {
 			break;
 		case State::WAIT_START_GAME:
 			if (m_isPossibleGameStartOtherPlayer 
-				&& m_isPossibleGameStarts) {
+				&& m_isPossibleGameStart) {
 				m_frameNo++;
 				m_allPlayerNotifyPossibleGameStartFunc();
 				m_state = State::IN_GAME_BUFFERING_PAD_DATA;
