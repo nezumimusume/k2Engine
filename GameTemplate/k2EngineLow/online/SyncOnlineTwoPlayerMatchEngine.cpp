@@ -169,11 +169,12 @@ namespace nsK2EngineLow {
 					// UDPなのでパケットロストしている可能性があるので、再送リクエストを送る。
 					RequestResendPadData(m_playFrameNo);
 					loopCount++;
-					Sleep(100);
+					Sleep(3);
 					m_loadBalancingClient->service();
 					if (loopCount == 100) {
 						// 接続エラー。
 						m_errorFunc(); 
+						m_loadBalancingClient->disconnect();
 						break;
 					}
 				}
@@ -233,6 +234,7 @@ namespace nsK2EngineLow {
 	{
 		// 部屋からプレイヤーが抜けたので、ゲーム終了。
 		m_errorFunc();
+		m_loadBalancingClient->disconnect();
 	}
 	
 	void SyncOnlineTwoPlayerMatchEngine::customEventAction(int playerNr, nByte eventCode, const ExitGames::Common::Object& eventContentObj)
