@@ -173,7 +173,7 @@ namespace nsK2EngineLow {
 					m_loadBalancingClient->service();
 					if (loopCount == 100) {
 						// 接続エラー。
-						Disconnect();
+						m_errorFunc(); 
 						break;
 					}
 				}
@@ -184,18 +184,16 @@ namespace nsK2EngineLow {
 		}break;
 		case State::DISCONNECTING:
 			break;
+		case State::DISCONNECTED:
+			m_state = State::INITIALIZED;
+			break;
 		default:
 			break;
 		}
 
 		m_loadBalancingClient->service();
 	}
-	void SyncOnlineTwoPlayerMatchEngine::Disconnect()
-	{
-		m_errorFunc();
-		m_loadBalancingClient->disconnect();
-		m_state = State::DISCONNECTING;
-	}
+	
 	void SyncOnlineTwoPlayerMatchEngine::onDirectMessage(const ExitGames::Common::Object& msg, int remoteID, bool relay)
 	{
 		auto valueObj = (ExitGames::Common::ValueObject<std::uint8_t*>*)&msg;
@@ -234,7 +232,7 @@ namespace nsK2EngineLow {
 	void SyncOnlineTwoPlayerMatchEngine::leaveRoomEventAction(int playerNr, bool isInactive)
 	{
 		// 部屋からプレイヤーが抜けたので、ゲーム終了。
-		Disconnect();
+		m_errorFunc();
 	}
 	
 	void SyncOnlineTwoPlayerMatchEngine::customEventAction(int playerNr, nByte eventCode, const ExitGames::Common::Object& eventContentObj)
@@ -256,9 +254,8 @@ namespace nsK2EngineLow {
 	{
 		if (errorCode)
 		{
-			// サーバーへの接続エラー。
-			// 再接続。
-			m_state = State::INITIALIZED;
+			// サーバーへの接続エラーが発生したので、切断済みにする。
+			m_state = State::DISCONNECTED;
 			return;
 		}
 		// 部屋に入れた。
@@ -266,14 +263,13 @@ namespace nsK2EngineLow {
 	}
 	void SyncOnlineTwoPlayerMatchEngine::disconnectReturn(void)
 	{
-		// 接続済みにする。
+		// 切断済み
 		m_state = State::DISCONNECTED;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn(int errorCode)
 	{
-		MY_LOG("SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn\n errorCode = %d\n", errorCode);
-		// 再接続。
-		m_state = State::INITIALIZED;
+		// 接続に失敗したので、切断済みにする。
+		m_state = State::DISCONNECTED;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::joinOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString)
 	{

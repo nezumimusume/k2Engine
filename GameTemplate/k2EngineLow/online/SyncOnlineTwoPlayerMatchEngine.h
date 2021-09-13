@@ -127,10 +127,7 @@ namespace nsK2EngineLow {
 		/// パッド情報を送信。
 		/// </summary>
 		void SendPadData();
-		/// <summary>
-		/// サーバーから切断。
-		/// </summary>
-		void Disconnect();
+		
 		/// <summary>
 		/// パッドデータの再送リクエスト
 		/// </summary>
