@@ -63,9 +63,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
-		InitStandardIOConsole();
 		K2Engine::GetInstance()->Execute();
-		CloseStandardIOConsole();
 	}
 	K2Engine::DeleteInstance();
 
