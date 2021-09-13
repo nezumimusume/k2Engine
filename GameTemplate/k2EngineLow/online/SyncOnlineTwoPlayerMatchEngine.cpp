@@ -257,6 +257,7 @@ namespace nsK2EngineLow {
 		if (errorCode)
 		{
 			// サーバーへの接続エラーが発生したので、切断済みにする。
+			MY_LOG_W(errorString.toString());
 			m_state = State::DISCONNECTED;
 			return;
 		}

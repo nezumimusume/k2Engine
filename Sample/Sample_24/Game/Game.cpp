@@ -84,6 +84,7 @@ void Game::OnAllPlayerStartGame()
 	// すべてのプレイヤーがゲーム開始可能になったので、ゲームスタート！
 	m_fontRender.SetText(L"InGame!!");
 	m_step = enStep_InGame;
+
 }
 void Game::OnError()
 {

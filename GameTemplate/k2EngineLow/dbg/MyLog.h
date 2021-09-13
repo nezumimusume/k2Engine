@@ -17,10 +17,21 @@ namespace nsK2EngineLow {
 		OutputDebugStringA( log );
 		va_end( va );
 	}
+	static inline void LogW(const wchar_t* format, ...)
+	{
+		static wchar_t log[1024 * 10];
+		va_list va;
+		va_start(va, format);
+		vswprintf(log, format, va);
+		OutputDebugStringW(log);
+		va_end(va);
+	}
 }
 
 #ifdef _DEBUG
 	#define MY_LOG( format, ... )	Log(format, __VA_ARGS__)
+	#define MY_LOG_W( format, ... )	LogW(format, __VA_ARGS__)
 #else // _DEBUG
 #define MY_LOG( format, ... )
+#define MY_LOG_W( format, ... )
 #endif // _DEBUG
