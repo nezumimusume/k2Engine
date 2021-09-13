@@ -1,6 +1,6 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
-
+#define _CRT_NON_CONFORMING_SWPRINTFS
 #pragma comment( lib, "xinput.lib")
 #pragma comment(lib, "dxcompiler.lib")
 

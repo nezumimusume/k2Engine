@@ -29,7 +29,7 @@ namespace nsK2EngineLow {
 			*this,
 			appID,
 			appVersion,
-			ExitGames::Photon::ConnectionProtocol::DEFAULT,
+			ExitGames::Photon::ConnectionProtocol::TCP,
 			true
 		);
 		m_loadBalancingClient.reset(p);
@@ -169,9 +169,9 @@ namespace nsK2EngineLow {
 					// UDPなのでパケットロストしている可能性があるので、再送リクエストを送る。
 					RequestResendPadData(m_playFrameNo);
 					loopCount++;
-					Sleep(3);
+					Sleep(10);
 					m_loadBalancingClient->service();
-					if (loopCount == 100) {
+					if (loopCount == 1000) {
 						// 接続エラー。
 						m_errorFunc(); 
 						m_loadBalancingClient->disconnect();

@@ -52,8 +52,8 @@ void Game::Update()
 	case enStep_InGame: {
 		for (int i = 0; i < 2; i++) {
 			auto& pad = m_onlineTwoPlayerMatchEngine->GetGamePad(i);
-			pos[i].x += pad.GetLStickXF();
-			pos[i].y += pad.GetRStickXF();
+			pos[i].x += pad.GetLStickXF() * 4.0f;
+			pos[i].y += pad.GetLStickYF() * 4.0f;
 			m_modelRender[i].SetPosition(pos[i]);
 			m_modelRender[i].Update();
 		}
