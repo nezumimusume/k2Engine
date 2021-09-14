@@ -2,20 +2,23 @@
 #include "online/SyncOnlineTwoPlayerMatchEngine.h"
 
 #define ENABLE_ONLINE_DEBUG
-#ifdef ENABLE_ONLINE_DEBUG
-#define ONLINE_LOG K2_LOG
-#define ONLINE_LOG_W K2_LOG_W
 
+
+#ifdef ENABLE_ONLINE_DEBUG
+	#define ONLINE_LOG K2_LOG
+	#define ONLINE_LOG_W K2_LOG_W
+	// 有効でパッドのログを出力。
+	//#define ENABLE_ONLINE_PAD_LOG
 #else
-#define ONLINE_LOG
-#define ONLINE_LOG_W
+	#define ONLINE_LOG
+	#define ONLINE_LOG_W
 #endif
 
 namespace nsK2EngineLow {
 	namespace {
 		const ExitGames::Common::JString PLAYER_NAME = L"user";
 	}
-#ifdef ENABLE_ONLINE_DEBUG
+#ifdef ENABLE_ONLINE_PAD_LOG
 	FILE* fp = nullptr;
 #endif
 	SyncOnlineTwoPlayerMatchEngine::~SyncOnlineTwoPlayerMatchEngine()
@@ -23,7 +26,7 @@ namespace nsK2EngineLow {
 		m_loadBalancingClient->opLeaveRoom();
 		m_loadBalancingClient->opLeaveLobby();
 		m_loadBalancingClient->disconnect();
-#ifdef ENABLE_ONLINE_DEBUG
+#ifdef ENABLE_ONLINE_PAD_LOG
 		fclose(fp);
 #endif
 	}
@@ -37,8 +40,8 @@ namespace nsK2EngineLow {
 		std::function<void()> onError
 	)
 	{
-#ifdef ENABLE_ONLINE_DEBUG
-		fp = fopen("c:/log.txt\n", "w");
+#ifdef ENABLE_ONLINE_PAD_LOG
+		fp = fopen("log.txt", "w");
 #endif
 		m_allPlayerNotifyPossibleGameStartFunc = onAllPlayerPossibleGameStart;
 		m_allPlayerJoinedRoomFunc = onAllPlayerJoinedRoom;
@@ -101,7 +104,12 @@ namespace nsK2EngineLow {
 		for (int i = 0; i < size; i++) {
 			padData.checksum += p[i] + i;
 		}
-		m_padData[0].insert({ m_frameNo, padData });
+		std::pair<int, SPadData> insertData;
+		insertData.first = m_frameNo;
+		insertData.second = padData;
+		m_padData[0].insert(insertData);
+		const auto& data = m_padData[0][m_frameNo];
+
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
 			sizeof(padData)
@@ -192,31 +200,35 @@ namespace nsK2EngineLow {
 				}
 				auto it = m_padData[1].find(m_playFrameNo);
 				if (it != m_padData[1].end()) {
+#ifdef ENABLE_ONLINE_PAD_LOG
+					char text[256];
+					if (m_playerType == PlayerType_Host) {
+						if (m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLX == 0) {
+							printf("hoge");
+						}
+						// ホストは送信データを出力する。
+						sprintf(text, "frameNo = %d, %x, %x\n",
+							m_playFrameNo,
+							(int)m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLX,
+							(int)m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLY);
+					}
+					else {
+						// クライアントは受信データを出力する。
+						sprintf(text, "frameNo = %d, %x, %x\n",
+							m_playFrameNo,
+							(int)m_padData[1][m_playFrameNo].xInputState.Gamepad.sThumbLX,
+							(int)m_padData[1][m_playFrameNo].xInputState.Gamepad.sThumbLY);
+					}
+
+					fwrite(text, strlen(text), 1, fp);
+#endif
 					// 再生フレームのパッド情報を受け取っている。
 					m_pad[0].Update(m_padData[0][m_playFrameNo].xInputState);
 					m_pad[1].Update(it->second.xInputState);
 					// 再生済みのパッド情報を削除。
 					m_padData[0].erase(m_playFrameNo);
 					m_padData[1].erase(m_playFrameNo);
-#ifdef ENABLE_ONLINE_DEBUG
-					char text[256];
-					if (m_playerType == PlayerType_Host) {
-						// ホストは送信データを出力する。
-						sprintf(text, "frameNo = %d, %x, %x",
-							m_playFrameNo,
-							m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLX,
-							m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLY);
-					}
-					else {
-						// クライアントは受信データを出力する。
-						sprintf(text, "frameNo = %d, %x, %x",
-							m_playFrameNo,
-							m_padData[1][m_playFrameNo].xInputState.Gamepad.sThumbLX,
-							m_padData[1][m_playFrameNo].xInputState.Gamepad.sThumbLY);
-					}
 
-					fwrite(text, strlen(text), 1, fp);
-#endif
 					break;
 				}
 				else {
@@ -276,7 +288,10 @@ namespace nsK2EngineLow {
 				auto it = m_padData[1].find(padData.frameNo);
 				if (it == m_padData[1].end()) {
 					// 
-					m_padData[1].insert({ padData.frameNo, padData });
+					std::pair<int, SPadData> insertData;
+					insertData.first = padData.frameNo;
+					insertData.second = padData;
+					m_padData[1].insert(insertData);
 				}
 			}
 			
