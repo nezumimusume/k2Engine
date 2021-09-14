@@ -86,13 +86,13 @@ namespace nsK2EngineLow {
 		padData.xInputState = g_pad[0]->GetXInputState();
 		padData.frameNo = m_frameNo;
 		padData.checksum = 0;
-		m_padData[0].insert({ m_frameNo, padData });
 		// チェックサム用のデータを追加する。
 		int size = sizeof(SPadData) - 4;
 		std::uint8_t* p = reinterpret_cast<std::uint8_t*>(&padData);
 		for (int i = 0; i < size; i++) {
 			padData.checksum += p[i] + i;
 		}
+		m_padData[0].insert({ m_frameNo, padData });
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
 			sizeof(padData)
@@ -242,7 +242,7 @@ namespace nsK2EngineLow {
 			std::uint8_t* p = reinterpret_cast<std::uint8_t*>(&padData);
 			unsigned int checksum = 0;
 			for (int i = 0; i < size; i++) {
-				checksum += p[i] + 1;
+				checksum += p[i] + i;
 			}
 			if (checksum == padData.checksum) {
 				// チェックサム通過。
@@ -253,11 +253,7 @@ namespace nsK2EngineLow {
 					m_padData[1].insert({ padData.frameNo, padData });
 				}
 			}
-			else {
-				ONLINE_LOG("チェックサム失敗。再送リクエストを送る\n");
-				// データに不整合が起きているので、再送リクエストを投げる。
-				RequestResendPadData(m_playFrameNo);
-			}
+			
 			
 		}break;
 		case 1: {
@@ -271,7 +267,7 @@ namespace nsK2EngineLow {
 			padData.dataType = 0;
 			padData.xInputState = m_padData[0][reqResendPadData.frameNo].xInputState;
 			padData.frameNo = m_padData[0][reqResendPadData.frameNo].frameNo;
-
+			padData.checksum = m_padData[0][reqResendPadData.frameNo].checksum;
 			ONLINE_LOG("RECV : RESEND_PAD_DATA frameno = %d\n", padData.frameNo);
 
 			m_loadBalancingClient->sendDirect(
