@@ -131,6 +131,13 @@ namespace nsK2EngineLow {
 			}
 			break;
 		case State::WAIT_START_GAME:
+			m_timer += g_gameTime->GetFrameDeltaTime();
+			if (m_timer > 1.0f) {
+				// 相手方にこのデータが届いておらず、ずっとここで待つことがあったので、
+				// 1秒ごとにプレイヤーを初期化するためのデータを再送する。
+				SendInitDataOtherPlayer();
+				m_timer = 0.0f;
+			}
 			if (m_otherPlayerState == OtherPlayerState_PossibleGameStart
 				&& m_isPossibleGameStart) {
 				m_allPlayerNotifyPossibleGameStartFunc();
@@ -251,9 +258,10 @@ namespace nsK2EngineLow {
 		ExitGames::Common::Hashtable eventContent = ExitGames::Common::ValueObject<ExitGames::Common::Hashtable>(eventContentObj).getDataCopy();
 		switch (eventCode) {
 		case Event_SendInitDataForOtherPlayer:
-
-			m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
-			m_state = WAIT_START_GAME;
+			if (m_state == WAIT_RECV_INIT_DATA_OTHER_PLAYER) {
+				m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
+				m_state = WAIT_START_GAME;
+			}
 			break;
 		case Event_PossibleGameStartOtherPlayer:
 			m_otherPlayerState = OtherPlayerState_PossibleGameStart;
