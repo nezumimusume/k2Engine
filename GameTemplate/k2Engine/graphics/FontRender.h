@@ -107,6 +107,15 @@ namespace nsK2Engine {
 		/// <summary>
 		/// ピボットを設定。
 		/// </summary>
+		/// <remark>
+		/// <param name="pivot">
+		/// ピボット。
+		/// x = 0.5, y = 0.5で画像の中心が基点。
+		/// x = 0.0, y = 0.0で画像の左下。
+		/// x = 1.0, y = 1.0で画像の右上。
+		/// UnityのuGUIに準拠。
+		/// </param>
+		/// </remark>
 		/// <param name="x">ピボットのx座標</param>
 		/// <param name="y">ピボットのy座標</param>
 		void SetPivot(float x, float y)

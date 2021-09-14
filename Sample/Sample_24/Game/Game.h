@@ -38,6 +38,7 @@ private:
 		enStep_Error,					// ÉGÉâÅ[ÅB
 	};
 	FontRender m_fontRender;
+	FontRender m_positionRender;
 	EnStep m_step = enStep_CharacterSelect;
 	ModelRender m_modelRender[2];
 	Vector3 pos[2];
