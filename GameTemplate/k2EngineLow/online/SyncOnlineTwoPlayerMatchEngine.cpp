@@ -104,12 +104,16 @@ namespace nsK2EngineLow {
 		for (int i = 0; i < size; i++) {
 			padData.checksum += p[i] + i;
 		}
-		std::pair<int, SPadData> insertData;
-		insertData.first = m_frameNo;
-		insertData.second = padData;
-		m_padData[0].insert(insertData);
+		
+		auto itFind = m_padData[0].find(m_frameNo);
+		if (itFind != m_padData[0].end()) {
+			printf("hoge\n");
+		}
+		m_padData[0].insert({ m_frameNo , padData});
 		const auto& data = m_padData[0][m_frameNo];
-
+		if (data.xInputState.Gamepad.sThumbLX == 0) {
+			printf("hoge\n");
+		}
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
 			sizeof(padData)
@@ -288,10 +292,7 @@ namespace nsK2EngineLow {
 				auto it = m_padData[1].find(padData.frameNo);
 				if (it == m_padData[1].end()) {
 					// 
-					std::pair<int, SPadData> insertData;
-					insertData.first = padData.frameNo;
-					insertData.second = padData;
-					m_padData[1].insert(insertData);
+					m_padData[1].insert({ padData.frameNo , padData});
 				}
 			}
 			
@@ -303,11 +304,15 @@ namespace nsK2EngineLow {
 			SRequestResendPadData reqResendPadData;
 			memcpy(&reqResendPadData, pData, sizes[0]);
 
+			auto it = m_padData[0].find(reqResendPadData.frameNo);
+			if (it != m_padData[0].end()) {
+				// パッドデータができている。
+				m_loadBalancingClient->sendDirect(
+					(std::uint8_t*)&m_padData[0][reqResendPadData.frameNo],
+					sizeof(m_padData[0][reqResendPadData.frameNo])
+				);
+			}
 			
-			m_loadBalancingClient->sendDirect(
-				(std::uint8_t*)&m_padData[0][reqResendPadData.frameNo],
-				sizeof(m_padData[0][reqResendPadData.frameNo])
-			);
 
 		}break;
 		}
