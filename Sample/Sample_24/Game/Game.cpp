@@ -17,7 +17,8 @@ bool Game::Start()
 	float half_y = FRAME_BUFFER_H * 0.45f;
 	m_fontRender.SetText(L"Aボタン : キャラA、Bボタン: キャラB\n");
 	m_fontRender.SetPosition({ -half_x , half_y, 0.0f});
-	m_positionRender.SetPosition({ -half_x, half_y - 100.0f, 0.0f });
+	m_positionRender[0].SetPosition({ -half_x, half_y - 50.0f, 0.0f });
+	m_positionRender[1].SetPosition({ -half_x, half_y - 100.0f, 0.0f });
 	return true;
 }
 
@@ -63,8 +64,10 @@ void Game::Update()
 			
 		}
 		wchar_t text[256];
-		swprintf_s(text, L"x : %f, y : %f, z : %f\n", pos[0].x, pos[0].y, pos[0].z);
-		m_positionRender.SetText(text);
+		swprintf_s(text, L"1P x : %f, y : %f, z : %f\n", pos[0].x, pos[0].y, pos[0].z);
+		m_positionRender[0].SetText(text);
+		swprintf_s(text, L"2P x : %f, y : %f, z : %f\n", pos[1].x, pos[1].y, pos[1].z);
+		m_positionRender[1].SetText(text);
 	}break;
 	case enStep_Error:
 		delete m_onlineTwoPlayerMatchEngine;
@@ -108,8 +111,8 @@ void Game::Render(RenderContext& rc)
 	case enStep_InGame:
 		for (int i = 0; i < 2; i++) {
 			m_modelRender[i].Draw(rc);
+			m_positionRender[i].Draw(rc);
 		}
-		m_positionRender.Draw(rc);
 		break;
 	}
 }
