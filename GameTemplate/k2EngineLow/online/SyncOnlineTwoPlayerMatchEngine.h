@@ -181,6 +181,14 @@ namespace nsK2EngineLow {
 			PlayerType_Client,		// クライアント
 			PlayerType_Undef,		// 
 		};
+		// 他プレイヤーの状態。
+		enum OtherPlayerState {
+			OtherPlayerState_Undef,				// 不明
+			OtherPlayerState_JoinedRoom,		// 部屋に入ってきた。
+			OtherPlayerState_PossibleGameStart,	// ゲーム開始可能状態
+			OtherPlayerState_LeftRoom,			// 部屋から抜けた。
+
+		};
 		using OnAllPlayerJoinedRoom = std::function<void(void* pRecvData, int dataSize)>;
 		using OnErrorFunc = std::function<void()>;
 		using OnAllPlayerNotifyPossibleGameStart = std::function<void()>;
@@ -189,9 +197,8 @@ namespace nsK2EngineLow {
 		State m_state = INITIALIZED;			// 状態。
 		int m_frameNo = 0;						// フレーム番号。
 		int m_playFrameNo = 0;
-		bool m_isJoinedOtherPlayer = false;		// 他プレイヤーがルームにジョインした。
-		bool m_isPossibleGameStartOtherPlayer = false;	// 他プレイヤーもゲーム開始リクエストを受けた？
-		bool m_isPossibleGameStart = false;		//ゲーム開始可能
+		bool m_isPossibleGameStart = false;				//ゲーム開始可能
+		OtherPlayerState m_otherPlayerState = OtherPlayerState_Undef;	// 他プレイヤーの状態。
 		std::map< int, SPadData> m_padData[2];	// パッドデータ。	
 		GamePad m_pad[2];						// ゲームパッド。
 		OnAllPlayerJoinedRoom m_allPlayerJoinedRoomFunc = nullptr;	// すべてのプレイヤーがルームに参加した。

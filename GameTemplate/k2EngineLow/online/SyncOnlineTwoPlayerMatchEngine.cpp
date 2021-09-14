@@ -119,8 +119,7 @@ namespace nsK2EngineLow {
 			m_state = State::JOINING;
 		}break;
 		case State::JOINED:
-			// ルームに入ったことを他プレイヤーに通知。
-			if (m_isJoinedOtherPlayer) {
+			if (m_otherPlayerState == OtherPlayerState_JoinedRoom) {
 				// すべてのプレイヤーがルームにそろった。
 				// プレイヤーを初期化するための情報を送る。
 				SendInitDataOtherPlayer();
@@ -131,7 +130,7 @@ namespace nsK2EngineLow {
 			}
 			break;
 		case State::WAIT_START_GAME:
-			if (m_isPossibleGameStartOtherPlayer 
+			if (m_otherPlayerState == OtherPlayerState_PossibleGameStart
 				&& m_isPossibleGameStart) {
 				m_allPlayerNotifyPossibleGameStartFunc();
 				m_state = State::IN_GAME_BUFFERING_PAD_DATA;
@@ -153,7 +152,13 @@ namespace nsK2EngineLow {
 			break;
 		case State::IN_GAME: {
 			int loopCount = 0;
-			while(true) {	
+			while(true) {
+				if (m_otherPlayerState == OtherPlayerState_LeftRoom) {
+					// 他プレイヤーが部屋から抜けた。
+					m_errorFunc();
+					m_loadBalancingClient->disconnect();
+					break;
+				}
 				auto it = m_padData[1].find(m_playFrameNo);
 				if (it != m_padData[1].end()) {
 					// 再生フレームのパッド情報を受け取っている。
@@ -233,8 +238,7 @@ namespace nsK2EngineLow {
 	void SyncOnlineTwoPlayerMatchEngine::leaveRoomEventAction(int playerNr, bool isInactive)
 	{
 		// 部屋からプレイヤーが抜けたので、ゲーム終了。
-		m_errorFunc();
-		m_loadBalancingClient->disconnect();
+		m_otherPlayerState = OtherPlayerState_LeftRoom;
 	}
 	
 	void SyncOnlineTwoPlayerMatchEngine::customEventAction(int playerNr, nByte eventCode, const ExitGames::Common::Object& eventContentObj)
@@ -247,7 +251,7 @@ namespace nsK2EngineLow {
 			m_state = WAIT_START_GAME;
 			break;
 		case Event_PossibleGameStartOtherPlayer:
-			m_isPossibleGameStartOtherPlayer = true;
+			m_otherPlayerState = OtherPlayerState_PossibleGameStart;
 			break;
 		}
 	}
@@ -288,7 +292,7 @@ namespace nsK2EngineLow {
 		}
 		else {
 			// クライアント。
-			m_isJoinedOtherPlayer = true;
+			m_otherPlayerState = OtherPlayerState_JoinedRoom;
 			m_playerType = PlayerType_Client;
 		}
 		// ルームに入った。
@@ -299,7 +303,7 @@ namespace nsK2EngineLow {
 		if (m_playerType == PlayerType_Host
 			&& playerNr == 2
 		) {
-			m_isJoinedOtherPlayer = true;
+			m_otherPlayerState = OtherPlayerState_JoinedRoom;
 		}
 	}
 }
