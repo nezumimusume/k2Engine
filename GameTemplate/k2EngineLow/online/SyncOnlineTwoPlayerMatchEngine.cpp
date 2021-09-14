@@ -10,16 +10,22 @@
 #define ONLINE_LOG
 #define ONLINE_LOG_W
 #endif
+
 namespace nsK2EngineLow {
 	namespace {
 		const ExitGames::Common::JString PLAYER_NAME = L"user";
 	}
-
+#ifdef ENABLE_ONLINE_DEBUG
+	FILE* fp = nullptr;
+#endif
 	SyncOnlineTwoPlayerMatchEngine::~SyncOnlineTwoPlayerMatchEngine()
 	{
 		m_loadBalancingClient->opLeaveRoom();
 		m_loadBalancingClient->opLeaveLobby();
 		m_loadBalancingClient->disconnect();
+#ifdef ENABLE_ONLINE_DEBUG
+		fclose(fp);
+#endif
 	}
 	void SyncOnlineTwoPlayerMatchEngine::Init(
 		const wchar_t* appID,
@@ -31,6 +37,9 @@ namespace nsK2EngineLow {
 		std::function<void()> onError
 	)
 	{
+#ifdef ENABLE_ONLINE_DEBUG
+		fp = fopen("c:/log.txt\n", "w");
+#endif
 		m_allPlayerNotifyPossibleGameStartFunc = onAllPlayerPossibleGameStart;
 		m_allPlayerJoinedRoomFunc = onAllPlayerJoinedRoom;
 		m_errorFunc = onError;
@@ -122,8 +131,6 @@ namespace nsK2EngineLow {
 			ExitGames::LoadBalancing::ConnectOptions connectOption;
 			connectOption.setAuthenticationValues(ExitGames::LoadBalancing::AuthenticationValues().setUserID(ExitGames::Common::JString() + GETTIMEMS())).setUsername(PLAYER_NAME + GETTIMEMS());
 			connectOption.setTryUseDatagramEncryption(true);
-			//connectOption.setServerType(ExitGames::LoadBalancing::ServerType::MASTER_SERVER);
-			//connectOption.set
 			m_loadBalancingClient->connect(connectOption);
 			m_state = State::CONNECTING;
 		}break;
@@ -191,6 +198,25 @@ namespace nsK2EngineLow {
 					// 再生済みのパッド情報を削除。
 					m_padData[0].erase(m_playFrameNo);
 					m_padData[1].erase(m_playFrameNo);
+#ifdef ENABLE_ONLINE_DEBUG
+					char text[256];
+					if (m_playerType == PlayerType_Host) {
+						// ホストは送信データを出力する。
+						sprintf(text, "frameNo = %d, %x, %x",
+							m_playFrameNo,
+							m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLX,
+							m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLY);
+					}
+					else {
+						// クライアントは受信データを出力する。
+						sprintf(text, "frameNo = %d, %x, %x",
+							m_playFrameNo,
+							m_padData[1][m_playFrameNo].xInputState.Gamepad.sThumbLX,
+							m_padData[1][m_playFrameNo].xInputState.Gamepad.sThumbLY);
+					}
+
+					fwrite(text, strlen(text), 1, fp);
+#endif
 					break;
 				}
 				else {
@@ -249,7 +275,7 @@ namespace nsK2EngineLow {
 				// 誤りは起きていない可能性が高い
 				auto it = m_padData[1].find(padData.frameNo);
 				if (it == m_padData[1].end()) {
-					// 新規
+					// 
 					m_padData[1].insert({ padData.frameNo, padData });
 				}
 			}
@@ -258,21 +284,14 @@ namespace nsK2EngineLow {
 		}break;
 		case 1: {
 			
-			// パッドデータの再送リクエスト
+			// パッドデータの再送リクエストを受けたので、過去のパッドデータを再送する。
 			SRequestResendPadData reqResendPadData;
 			memcpy(&reqResendPadData, pData, sizes[0]);
-			
-			// 送るパッドデータを構築する。
-			SPadData padData;
-			padData.dataType = 0;
-			padData.xInputState = m_padData[0][reqResendPadData.frameNo].xInputState;
-			padData.frameNo = m_padData[0][reqResendPadData.frameNo].frameNo;
-			padData.checksum = m_padData[0][reqResendPadData.frameNo].checksum;
-			ONLINE_LOG("RECV : RESEND_PAD_DATA frameno = %d\n", padData.frameNo);
 
+			
 			m_loadBalancingClient->sendDirect(
-				(std::uint8_t*)&padData,
-				sizeof(padData)
+				(std::uint8_t*)&m_padData[0][reqResendPadData.frameNo],
+				sizeof(m_padData[0][reqResendPadData.frameNo])
 			);
 
 		}break;
