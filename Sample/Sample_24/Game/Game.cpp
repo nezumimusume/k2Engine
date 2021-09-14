@@ -63,6 +63,8 @@ void Game::Update()
 		m_onlineTwoPlayerMatchEngine = nullptr;
 		m_step = enStep_CharacterSelect;
 		m_fontRender.SetText(L"Aボタン : キャラA、Bボタン: キャラB\n");
+		pos[0] = g_vec3Zero;
+		pos[1] = g_vec3Zero;
 		break;
 	}
 }
