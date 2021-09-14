@@ -84,6 +84,7 @@ namespace nsK2EngineLow {
 	}
 	void SyncOnlineTwoPlayerMatchEngine::RequestResendPadData(int frameNo)
 	{
+		MY_LOG("RequestResendPadData : frameNo = %d\n", frameNo);
 		SRequestResendPadData reqResendPadData;
 		reqResendPadData.dataType = 1;
 		reqResendPadData.frameNo = frameNo;
@@ -174,6 +175,7 @@ namespace nsK2EngineLow {
 					// UDPなのでパケットロストしている可能性があるので、再送リクエストを送る。
 					RequestResendPadData(m_playFrameNo);
 					loopCount++;
+					
 					Sleep(10);
 					m_loadBalancingClient->service();
 					if (loopCount == 1000) {
@@ -211,7 +213,11 @@ namespace nsK2EngineLow {
 			// パッド情報
 			SPadData padData;
 			memcpy(&padData, pData, sizes[0]);
-			m_padData[1].insert({ padData.frameNo, padData });
+			auto it = m_padData[1].find(padData.frameNo);
+			if (it == m_padData[1].end()) {
+				// 新規
+				m_padData[1].insert({ padData.frameNo, padData });
+			}
 		}break;
 		case 1: {
 			// パッドデータの再送リクエスト
@@ -223,7 +229,6 @@ namespace nsK2EngineLow {
 			padData.dataType = 0;
 			padData.xInputState = m_padData[0][reqResendPadData.frameNo].xInputState;
 			padData.frameNo = m_padData[0][reqResendPadData.frameNo].frameNo;
-			m_padData[0].insert({ padData.frameNo, padData });
 
 			m_loadBalancingClient->sendDirect(
 				(std::uint8_t*)&padData,
