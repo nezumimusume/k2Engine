@@ -7,7 +7,7 @@ namespace nsK2EngineLow {
 
 	EffectEngine::EffectEngine()
 	{
-		MY_ASSERT(
+		K2_ASSERT(
 			m_instance == nullptr,
 			"EffectEngineのインスタンスを複数作ることはできません。"
 		);

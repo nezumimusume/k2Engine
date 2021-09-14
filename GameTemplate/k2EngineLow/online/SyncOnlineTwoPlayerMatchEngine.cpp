@@ -84,7 +84,7 @@ namespace nsK2EngineLow {
 	}
 	void SyncOnlineTwoPlayerMatchEngine::RequestResendPadData(int frameNo)
 	{
-		MY_LOG("RequestResendPadData : frameNo = %d\n", frameNo);
+		K2_LOG("RequestResendPadData : frameNo = %d\n", frameNo);
 		SRequestResendPadData reqResendPadData;
 		reqResendPadData.dataType = 1;
 		reqResendPadData.frameNo = frameNo;
@@ -274,7 +274,7 @@ namespace nsK2EngineLow {
 		if (errorCode)
 		{
 			// サーバーへの接続エラーが発生したので、切断済みにする。
-			MY_LOG_W(errorString.toString());
+			K2_LOG_W(errorString.toString());
 			m_state = State::DISCONNECTED;
 			return;
 		}

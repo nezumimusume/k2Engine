@@ -84,13 +84,13 @@ namespace nsK2EngineLow {
 		HRESULT hr;
 		if (FAILED(hr = XAudio2Create(&m_xAudio2, flags)))
 		{
-			MY_ASSERT(false, "Faild XAudio2Create");
+			K2_ASSERT(false, "Faild XAudio2Create");
 		}
 		//マスターボリュームの作成。
 		if (FAILED(hr = m_xAudio2->CreateMasteringVoice(&m_masteringVoice)))
 		{
 			Release();
-			MY_ASSERT(false, "Faild CreateMasteringVoice");
+			K2_ASSERT(false, "Faild CreateMasteringVoice");
 			return;
 		}
 
@@ -105,7 +105,7 @@ namespace nsK2EngineLow {
 
 		if (FAILED(hr = XAudio2CreateReverb(&m_reverbEffect, flags))) {
 			Release();
-			MY_ASSERT(false, "Faild XAudio2CreateReverb");
+			K2_ASSERT(false, "Faild XAudio2CreateReverb");
 			return;
 		}
 		//サブミックスボイスを作成。
@@ -117,7 +117,7 @@ namespace nsK2EngineLow {
 			NULL, &effectChain)))
 		{
 			Release();
-			MY_ASSERT(false, "Faild CreateSubmixVoice");
+			K2_ASSERT(false, "Faild CreateSubmixVoice");
 			return;
 		}
 		//デフォルトのFXパラメータを設定。
@@ -165,7 +165,7 @@ namespace nsK2EngineLow {
 	}
 	IXAudio2SourceVoice* SoundEngine::CreateXAudio2SourceVoice(WaveFile* waveFile, bool is3DSound)
 	{
-		MY_ASSERT(waveFile->GetFormat()->nChannels <= INPUTCHANNELS, "Channel over");
+		K2_ASSERT(waveFile->GetFormat()->nChannels <= INPUTCHANNELS, "Channel over");
 		IXAudio2SourceVoice* pSourceVoice;
 		if (is3DSound == false) {
 			//2Dサウンド。

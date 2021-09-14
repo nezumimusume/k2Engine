@@ -29,8 +29,8 @@ namespace nsK2EngineLow {
 	}
 }
 
-#ifdef _DEBUG
-#define 	MY_ASSERT( flg, format, ... )	nsK2EngineLow::MyAssert( flg, format, __FILE__, __LINE__, __VA_ARGS__)
+#ifdef K2_DEBUG
+#define 	K2_ASSERT( flg, format, ... )	nsK2EngineLow::MyAssert( flg, format, __FILE__, __LINE__, __VA_ARGS__)
 #else
-#define 	MY_ASSERT( flg, format, ... )
+#define 	K2_ASSERT( flg, format, ... )
 #endif

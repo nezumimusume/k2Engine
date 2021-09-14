@@ -22,7 +22,7 @@ namespace nsK2EngineLow {
 
 	PhysicsWorld::PhysicsWorld()
 	{
-		MY_ASSERT(
+		K2_ASSERT(
 			m_instance == nullptr,
 			"PhysisWorldのインスタンスを複数作ることはできません。"
 		);

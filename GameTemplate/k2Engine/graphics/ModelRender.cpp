@@ -329,7 +329,7 @@ namespace nsK2Engine {
 	}
 	void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 	{
-		MY_ASSERT(m_numInstance < m_maxInstance, "インスタンスの数が多すぎです。");
+		K2_ASSERT(m_numInstance < m_maxInstance, "インスタンスの数が多すぎです。");
 		if (!m_isEnableInstancingDraw) {
 			return;
 		}

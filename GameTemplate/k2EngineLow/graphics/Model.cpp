@@ -11,7 +11,7 @@ namespace nsK2EngineLow {
 			"error : initData.m_fxFilePathが指定されていません。"
 		);
 		*/
-		MY_ASSERT(
+		K2_ASSERT(
 			initData.m_tkmFilePath,
 			"error : initData.m_tkmFilePathが指定されていません。"
 		);

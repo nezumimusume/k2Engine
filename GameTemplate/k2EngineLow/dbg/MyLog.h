@@ -28,9 +28,9 @@ namespace nsK2EngineLow {
 	}
 }
 
-#ifdef _DEBUG
-	#define MY_LOG( format, ... )	Log(format, __VA_ARGS__)
-	#define MY_LOG_W( format, ... )	LogW(format, __VA_ARGS__)
+#ifdef K2_DEBUG
+	#define K2_LOG( format, ... )	Log(format, __VA_ARGS__)
+	#define K2_LOG_W( format, ... )	LogW(format, __VA_ARGS__)
 #else // _DEBUG
 #define MY_LOG( format, ... )
 #define MY_LOG_W( format, ... )
