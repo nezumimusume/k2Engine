@@ -165,6 +165,7 @@ namespace nsK2EngineLow {
 			int dataType;				// データの種類。
 			XINPUT_STATE xInputState;	// XInputステート
 			int frameNo;				// フレーム番号
+			unsigned int checksum;		// チェックサム用のデータ。
 		};
 		/// <summary>
 		/// パッドデータの再送リクエスト
@@ -195,8 +196,8 @@ namespace nsK2EngineLow {
 		std::unique_ptr<ExitGames::LoadBalancing::Client> m_loadBalancingClient;	// ロードバランサ―。
 		ExitGames::Common::Logger m_logger;		// ログ出力処理。
 		State m_state = INITIALIZED;			// 状態。
-		int m_frameNo = 0;						// フレーム番号。
-		int m_playFrameNo = 0;
+		int m_frameNo = 0;						// 現在のパッドのフレーム番号。
+		int m_playFrameNo = 0;					// 現在のゲーム進行フレーム番号。
 		bool m_isPossibleGameStart = false;				//ゲーム開始可能
 		OtherPlayerState m_otherPlayerState = OtherPlayerState_Undef;	// 他プレイヤーの状態。
 		std::map< int, SPadData> m_padData[2];	// パッドデータ。	

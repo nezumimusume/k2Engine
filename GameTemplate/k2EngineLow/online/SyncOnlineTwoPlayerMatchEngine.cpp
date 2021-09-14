@@ -1,6 +1,15 @@
 ﻿#include "k2EngineLowPreCompile.h"
 #include "online/SyncOnlineTwoPlayerMatchEngine.h"
 
+#define ENABLE_ONLINE_DEBUG
+#ifdef ENABLE_ONLINE_DEBUG
+#define ONLINE_LOG K2_LOG
+#define ONLINE_LOG_W K2_LOG_W
+
+#else
+#define ONLINE_LOG
+#define ONLINE_LOG_W
+#endif
 namespace nsK2EngineLow {
 	namespace {
 		const ExitGames::Common::JString PLAYER_NAME = L"user";
@@ -70,13 +79,20 @@ namespace nsK2EngineLow {
 	}
 	void SyncOnlineTwoPlayerMatchEngine::SendPadData()
 	{
+		ONLINE_LOG("SendPadData:frameNo = %d\n", m_frameNo);
 		// 送るパッドデータを構築する。
 		SPadData padData;
 		padData.dataType = 0;
 		padData.xInputState = g_pad[0]->GetXInputState();
 		padData.frameNo = m_frameNo;
+		padData.checksum = 0;
 		m_padData[0].insert({ m_frameNo, padData });
-
+		// チェックサム用のデータを追加する。
+		int size = sizeof(SPadData) - 4;
+		std::uint8_t* p = reinterpret_cast<std::uint8_t*>(&padData);
+		for (int i = 0; i < size; i++) {
+			padData.checksum += p[i];
+		}
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
 			sizeof(padData)
@@ -84,7 +100,7 @@ namespace nsK2EngineLow {
 	}
 	void SyncOnlineTwoPlayerMatchEngine::RequestResendPadData(int frameNo)
 	{
-		K2_LOG("RequestResendPadData : frameNo = %d\n", frameNo);
+		ONLINE_LOG("RequestResendPadData : frameNo = %d\n", frameNo);
 		SRequestResendPadData reqResendPadData;
 		reqResendPadData.dataType = 1;
 		reqResendPadData.frameNo = frameNo;
@@ -183,9 +199,9 @@ namespace nsK2EngineLow {
 					RequestResendPadData(m_playFrameNo);
 					loopCount++;
 					
-					Sleep(10);
+					Sleep(100);
 					m_loadBalancingClient->service();
-					if (loopCount == 1000) {
+					if (loopCount == 100) {
 						// 接続エラー。
 						m_errorFunc(); 
 						m_loadBalancingClient->disconnect();
@@ -220,13 +236,32 @@ namespace nsK2EngineLow {
 			// パッド情報
 			SPadData padData;
 			memcpy(&padData, pData, sizes[0]);
-			auto it = m_padData[1].find(padData.frameNo);
-			if (it == m_padData[1].end()) {
-				// 新規
-				m_padData[1].insert({ padData.frameNo, padData });
+			// チェックサムを利用した誤り検出
+			// チェックサム用のデータを追加する。
+			int size = sizeof(SPadData) - 4;
+			std::uint8_t* p = reinterpret_cast<std::uint8_t*>(&padData);
+			unsigned int checksum = 0;
+			for (int i = 0; i < size; i++) {
+				checksum += p[i];
 			}
+			if (checksum == padData.checksum) {
+				// チェックサム通過。
+				// 誤りは起きていない可能性が高い
+				auto it = m_padData[1].find(padData.frameNo);
+				if (it == m_padData[1].end()) {
+					// 新規
+					m_padData[1].insert({ padData.frameNo, padData });
+				}
+			}
+			else {
+				ONLINE_LOG("チェックサム失敗。再送リクエストを送る\n");
+				// データに不整合が起きているので、再送リクエストを投げる。
+				RequestResendPadData(m_playFrameNo);
+			}
+			
 		}break;
 		case 1: {
+			
 			// パッドデータの再送リクエスト
 			SRequestResendPadData reqResendPadData;
 			memcpy(&reqResendPadData, pData, sizes[0]);
@@ -236,6 +271,8 @@ namespace nsK2EngineLow {
 			padData.dataType = 0;
 			padData.xInputState = m_padData[0][reqResendPadData.frameNo].xInputState;
 			padData.frameNo = m_padData[0][reqResendPadData.frameNo].frameNo;
+
+			ONLINE_LOG("RECV : RESEND_PAD_DATA frameno = %d\n", padData.frameNo);
 
 			m_loadBalancingClient->sendDirect(
 				(std::uint8_t*)&padData,
@@ -274,7 +311,7 @@ namespace nsK2EngineLow {
 		if (errorCode)
 		{
 			// サーバーへの接続エラーが発生したので、切断済みにする。
-			K2_LOG_W(errorString.toString());
+			ONLINE_LOG_W(errorString.toString());
 			m_state = State::DISCONNECTED;
 			return;
 		}
