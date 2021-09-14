@@ -91,7 +91,7 @@ namespace nsK2EngineLow {
 		int size = sizeof(SPadData) - 4;
 		std::uint8_t* p = reinterpret_cast<std::uint8_t*>(&padData);
 		for (int i = 0; i < size; i++) {
-			padData.checksum += p[i];
+			padData.checksum += p[i] + i;
 		}
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
@@ -242,7 +242,7 @@ namespace nsK2EngineLow {
 			std::uint8_t* p = reinterpret_cast<std::uint8_t*>(&padData);
 			unsigned int checksum = 0;
 			for (int i = 0; i < size; i++) {
-				checksum += p[i];
+				checksum += p[i] + 1;
 			}
 			if (checksum == padData.checksum) {
 				// チェックサム通過。
