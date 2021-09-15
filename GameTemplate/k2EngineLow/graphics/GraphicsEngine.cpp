@@ -366,7 +366,7 @@ namespace nsK2EngineLow {
 
 		if (m_isExecuteCommandList)
 		{
-			m_frameBuffer.Present(3);
+			m_frameBuffer.Present(2);
 			// •`‰æŠ®—¹‘Ò‚¿B
 			WaitDraw();
 		}

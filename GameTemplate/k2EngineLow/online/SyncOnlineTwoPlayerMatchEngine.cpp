@@ -89,31 +89,30 @@ namespace nsK2EngineLow {
 			eventOpt
 		);
 	}
+	unsigned int SyncOnlineTwoPlayerMatchEngine::CalcCheckSum(void* pData, int size)
+	{
+		std::uint8_t* p = reinterpret_cast<std::uint8_t*>(pData);
+		unsigned int checkSum = 0;
+		for (int i = 0; i < size; i++) {
+			checkSum += p[i] + i;
+		}
+
+		return checkSum;
+
+	}
 	void SyncOnlineTwoPlayerMatchEngine::SendPadData()
 	{
 		ONLINE_LOG("SendPadData:frameNo = %d\n", m_frameNo);
 		// 送るパッドデータを構築する。
 		SPadData padData;
-		padData.dataType = 0;
+		padData.dataType = DirectMessageType_PadData;
 		padData.xInputState = g_pad[0]->GetXInputState();
 		padData.frameNo = m_frameNo;
-		padData.checksum = 0;
 		// チェックサム用のデータを追加する。
-		int size = sizeof(SPadData) - 4;
-		std::uint8_t* p = reinterpret_cast<std::uint8_t*>(&padData);
-		for (int i = 0; i < size; i++) {
-			padData.checksum += p[i] + i;
-		}
+		padData.checksum = CalcCheckSum(&padData, sizeof(SPadData) - 4);
 		
 		auto itFind = m_padData[0].find(m_frameNo);
-		if (itFind != m_padData[0].end()) {
-			printf("hoge\n");
-		}
 		m_padData[0].insert({ m_frameNo , padData});
-		const auto& data = m_padData[0][m_frameNo];
-		if (data.xInputState.Gamepad.sThumbLX == 0) {
-			printf("hoge\n");
-		}
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
 			sizeof(padData)
@@ -123,7 +122,7 @@ namespace nsK2EngineLow {
 	{
 		ONLINE_LOG("RequestResendPadData : frameNo = %d\n", frameNo);
 		SRequestResendPadData reqResendPadData;
-		reqResendPadData.dataType = 1;
+		reqResendPadData.dataType = DirectMessageType_RequestResendPadData;
 		reqResendPadData.frameNo = frameNo;
 
 		m_loadBalancingClient->sendDirect(
@@ -267,57 +266,7 @@ namespace nsK2EngineLow {
 		m_loadBalancingClient->service();
 	}
 	
-	void SyncOnlineTwoPlayerMatchEngine::onDirectMessage(const ExitGames::Common::Object& msg, int remoteID, bool relay)
-	{
-		auto valueObj = (ExitGames::Common::ValueObject<std::uint8_t*>*)&msg;
-		const int* sizes = valueObj->getSizes();
-		std::uint8_t* pData = (std::uint8_t*)valueObj->getDataCopy();
-		int dataType = (int)(*pData);
-		switch (dataType) {
-		case 0: {
-			// パッド情報
-			SPadData padData;
-			memcpy(&padData, pData, sizes[0]);
-			// チェックサムを利用した誤り検出
-			// チェックサム用のデータを追加する。
-			int size = sizeof(SPadData) - 4;
-			std::uint8_t* p = reinterpret_cast<std::uint8_t*>(&padData);
-			unsigned int checksum = 0;
-			for (int i = 0; i < size; i++) {
-				checksum += p[i] + i;
-			}
-			if (checksum == padData.checksum) {
-				// チェックサム通過。
-				// 誤りは起きていない可能性が高い
-				auto it = m_padData[1].find(padData.frameNo);
-				if (it == m_padData[1].end()) {
-					// 
-					m_padData[1].insert({ padData.frameNo , padData});
-				}
-			}
-			
-			
-		}break;
-		case 1: {
-			
-			// パッドデータの再送リクエストを受けたので、過去のパッドデータを再送する。
-			SRequestResendPadData reqResendPadData;
-			memcpy(&reqResendPadData, pData, sizes[0]);
-
-			auto it = m_padData[0].find(reqResendPadData.frameNo);
-			if (it != m_padData[0].end()) {
-				// パッドデータができている。
-				m_loadBalancingClient->sendDirect(
-					(std::uint8_t*)&m_padData[0][reqResendPadData.frameNo],
-					sizeof(m_padData[0][reqResendPadData.frameNo])
-				);
-			}
-			
-
-		}break;
-		}
-		
-	}
+	
 
 	void SyncOnlineTwoPlayerMatchEngine::leaveRoomEventAction(int playerNr, bool isInactive)
 	{
@@ -339,6 +288,48 @@ namespace nsK2EngineLow {
 			m_otherPlayerState = OtherPlayerState_PossibleGameStart;
 			break;
 		}
+	}
+	void SyncOnlineTwoPlayerMatchEngine::onDirectMessage(const ExitGames::Common::Object& msg, int remoteID, bool relay)
+	{
+		auto valueObj = (ExitGames::Common::ValueObject<std::uint8_t*>*) & msg;
+		const int* sizes = valueObj->getSizes();
+		std::uint8_t* pData = (std::uint8_t*)valueObj->getDataCopy();
+		int dataType = (int)(*pData);
+		switch (dataType) {
+		case DirectMessageType_PadData: {
+			// パッド情報
+			SPadData padData;
+			memcpy(&padData, pData, sizes[0]);
+			// チェックサムを利用した誤り検出を行う。
+			// 送られてきたデータのチェックサム用のデータを計算。
+			unsigned int checksum = CalcCheckSum(&padData, sizeof(padData)-4);
+			// 計算した値と送られてきた値が同じか調べる。
+			if (checksum == padData.checksum) {
+				// チェックサム通過。
+				// 誤りは起きていない可能性が高い。
+				auto it = m_padData[1].find(padData.frameNo);
+				if (it == m_padData[1].end()) {
+					// 
+					m_padData[1].insert({ padData.frameNo , padData });
+				}
+			}
+		}break;
+		case DirectMessageType_RequestResendPadData: {
+			// パッドデータの再送リクエストを受けたので、過去のパッドデータを再送する。
+			SRequestResendPadData reqResendPadData;
+			memcpy(&reqResendPadData, pData, sizes[0]);
+
+			auto it = m_padData[0].find(reqResendPadData.frameNo);
+			if (it != m_padData[0].end()) {
+				// パッドデータができている。
+				m_loadBalancingClient->sendDirect(
+					(std::uint8_t*)&m_padData[0][reqResendPadData.frameNo],
+					sizeof(m_padData[0][reqResendPadData.frameNo])
+				);
+			}
+		}break;
+		}
+
 	}
 	// callbacks for operations on PhotonLoadBalancing server
 	void SyncOnlineTwoPlayerMatchEngine::connectReturn(int errorCode, const ExitGames::Common::JString& errorString, const ExitGames::Common::JString& region, const ExitGames::Common::JString& cluster)

@@ -74,13 +74,7 @@ namespace nsK2EngineLow {
 		/// <param name="playerNr"></param>
 		/// <param name="isInactive"></param>
 		void leaveRoomEventAction(int playerNr, bool isInactive) override;
-		/// <summary>
-		/// ユーザー定義のイベントを受け取ったときに呼ばれる処理。
-		/// </summary>
-		/// <param name="playerNr"></param>
-		/// <param name="eventCode"></param>
-		/// <param name="eventContent"></param>
-		void customEventAction(int playerNr, nByte eventCode, const ExitGames::Common::Object& eventContent) override;
+		
 		/// <summary>
 		/// photonサーバーへの接続リクエストを実行した場合に呼び出されるコールバック関数。
 		/// </summary>
@@ -90,14 +84,26 @@ namespace nsK2EngineLow {
 		/// <param name="cluster">クラスター</param>
 		void connectReturn(int errorCode, const ExitGames::Common::JString& errorString, const ExitGames::Common::JString& region, const ExitGames::Common::JString& cluster) override;
 		/// <summary>
-		/// sendDirectで送られメッセージを受信した場合に呼び出されるコールバック関数。
+		/// opRaiseEvent()関数で送られたメッセージを受信した場合に、呼び出されるコールバック関数。
+		/// onRaiseEvent()関数はゲームサーバー経由でメッセージが送られます。
+		/// メッセージの通信プロトコルはTCPです。
+		/// </summary>
+		/// <param name="playerNr"></param>
+		/// <param name="eventCode"></param>
+		/// <param name="eventContent"></param>
+		void customEventAction(int playerNr, nByte eventCode, const ExitGames::Common::Object& eventContent) override;
+		/// <summary>
+		/// sendDirect()関数(P2P通信)で送られたメッセージを受信した場合に、呼び出されるコールバック関数。
+		/// メッセージの通信プロトコルはUDPです。
+		/// インゲーム中の高いレスポンスが必要な通信はsendDirect()関数を利用して、そのメッセージの受信の処理を
+		/// この関数の中に記述してください。
 		/// </summary>
 		/// <param name="msg"></param>
 		/// <param name="remoteID"></param>
 		/// <param name="relay"></param>
 		void onDirectMessage(const ExitGames::Common::Object& msg, int remoteID, bool relay) override;
-
-		void disconnectReturn(void) override;
+		
+		
 		/// <summary>
 		/// ルームを作成 or 入室したときに呼ばれる処理。
 		/// </summary>
@@ -114,6 +120,7 @@ namespace nsK2EngineLow {
 		void debugReturn(int debugLevel, const ExitGames::Common::JString& string) override {}
 		void joinRoomEventAction(int playerNr, const ExitGames::Common::JVector<int>& playernrs, const ExitGames::LoadBalancing::Player& player) override;
 		void leaveRoomReturn(int errorCode, const ExitGames::Common::JString& errorString) override {}
+		void disconnectReturn(void) override;
 	private:
 		/// <summary>
 		/// ゲーム開始可能になったことを他プレイヤーに通知。
@@ -133,6 +140,12 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="frameNo">再送リクエストを行うフレーム番号</param>
 		void RequestResendPadData( int frameNo );
+		/// <summary>
+		/// チェックサムを計算
+		/// </summary>
+		/// <param name="pData">チェックサムを計算するデータの先頭アドレス</param>
+		/// <param name="size">データのサイズ</param>
+		unsigned int CalcCheckSum(void* pData, int size);
 	private:
 
 		enum State
@@ -157,6 +170,13 @@ namespace nsK2EngineLow {
 		enum Event {
 			Event_SendInitDataForOtherPlayer,	// 他プレイヤーの初期化情報を送る。
 			Event_PossibleGameStartOtherPlayer, // 他プレイヤーがゲーム開始可能になったことを通知・
+		};
+		/// <summary>
+		/// sendDirect()関数で送られてくるメッセージの種類。
+		/// </summary>
+		enum DirectMessageType {
+			DirectMessageType_PadData,				// パッドデータ
+			DirectMessageType_RequestResendPadData,	// パッドデータの再送リクエスト
 		};
 		/// <summary>
 		/// パッドデータ
