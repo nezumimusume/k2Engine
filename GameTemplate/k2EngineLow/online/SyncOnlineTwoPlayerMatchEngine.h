@@ -4,17 +4,47 @@
 #include "LoadBalancing-cpp/inc/Client.h"
 #include <functional>
 
+#define ENABLE_ONLINE_DEBUG
+
+
+#ifdef ENABLE_ONLINE_DEBUG
+#define ONLINE_LOG K2_LOG
+#define ONLINE_LOG_W K2_LOG_W
+// 有効でパッドのログを出力。
+//#define ENABLE_ONLINE_PAD_LOG
+#else
+#define ONLINE_LOG
+#define ONLINE_LOG_W
+#endif
+
 namespace nsK2EngineLow {
 	/// <summary>
 	/// 完全同期二人対戦オンラインマッチの機能を提供するエンジン。
 	/// </summary>
 	/// <remark>
-	/// PhotonCloudSDKを利用したロビークラス。
 	/// 本クラスを利用するためには、PhotonCloudにてユーザーアカウントを作成して、
 	/// 作成するアプリを登録する必要があります。
 	/// ユーザーアカウントの作成、アプリの登録がまだの場合は、下記URLにジャンプして
 	/// 登録を行ってください。
 	/// https://www.photonengine.com/ja/
+	/// このエンジンを利用すると完全に同期がとれた、２人対戦用のパッド情報を取得することができます。
+	/// このパッド情報を使って、２人対戦の処理を記述することで、オンライン対戦のゲームを作成することができます。
+	/// 以下、本エンジンの処理のフローとなります。
+	/// 1. Init()関数を使用して、初期化を行う。
+	/// 2. 毎フレームUpdate()関数を呼び出す。
+	///		以下、Updateの処理を記述
+	///		2.1 Photonクラウドサーバーへの接続
+	///		2.2 ルームが存在していたら、ルームにジョイン、なければ新規作成
+	///		2.3 ルームにユーザーが２人揃ったら、キャラの初期化に必要な情報を他プレイヤーに送信
+	///		2.4 初期化情報が届いたら、ゲーム側に通知。Init()関数で指定されたonAllPlayerJoinedRoom()関数が呼ばれます。
+	///			2.4.1 ゲーム側はゲームを始めるための初期化処理を行い、初期化完了後にNotifyPossibleStartPlayGame()関数を
+	///				　呼び出して、ゲーム開始可能になったことをエンジンに通知
+	///		2.5 全てのプレイヤーがゲーム可能になるまでポーリング
+	///			2.5.1 全てのプレイヤーがゲーム開始可能になると、Init()関数で指定されたonAllPlayerPossibleGameStart()関数を呼び出します。
+	///		2.5 パッド情報を3フレーム分バッファリング
+	///		2.6 バッファリング完了後、ゲームパッドの更新を毎フレーム行う。
+	///	
+	/// 本クラスの利用のサンプルとしてSample_24が提供されています。
 	/// </remark>
 	class SyncOnlineTwoPlayerMatchEngine : ExitGames::LoadBalancing::Listener, Noncopyable{
 	public:
@@ -67,7 +97,68 @@ namespace nsK2EngineLow {
 			m_isPossibleGameStart = true;
 			SendPossibleGameStart();
 		}
+		/// <summary>
+		/// プレイヤー番号を取得。
+		/// ホストなら0、クライアントなら1を返します。
+		/// </summary>
+		/// <returns></returns>
+		int GetPlayerNo() const
+		{
+			if (m_playerType == enPlayerType_Host) {
+				return 0;
+			}
+			// クライアント。
+			return 1;
+		}
 	private:
+		/// <summary>
+		/// 初期化ステップの更新処理。
+		/// Photonサーバーへの接続リクエストを送信します。
+		/// </summary>
+		void Update_Initialized();
+		/// <summary>
+		/// Photonサーバーに接続済みの時の更新処理。
+		/// Photonサーバーに部屋を作成するリクエストを送信します。
+		/// </summary>
+		void Update_Connected();
+		/// <summary>
+		/// 部屋に入っているときの処理。
+		/// 部屋にすべてのプレイヤーが揃うと、キャラクターの初期化情報を送信します。
+		/// </summary>
+		void Update_Joined();
+		/// <summary>
+		/// ゲームの開始待ち中の更新処理。
+		/// キャラクターのロードが終わるのを待ちます。
+		/// ゲーム側からNotifyPossibleStartPlayGame()関数が呼ばれるまで、
+		/// Updateの処理はこのステップで止まります。
+		/// ゲーム側はキャラクターのロードなどが完了して、
+		/// ゲームを開始できるようになったら、NotifyPossibleStartPlayGame()関数を呼び出してください。
+		/// </summary>
+		void Update_WaitStartGame();
+		/// <summary>
+		/// インゲーム(パッドデータのバッファリング中)
+		/// </summary>
+		void Update_InGameBufferingPadData();
+		/// <summary>
+		/// インゲーム中の更新処理。
+		/// パッドデータから該当するフレームのパッド情報を取得して、
+		/// ゲームパッドの情報を更新します。
+		/// 対戦プレイヤーの該当フレームのパッド情報が、まだ届いていない場合は、
+		/// 再送リクエストを送ります。
+		/// 再送リクエストを送ってもパッド情報が来ない場合は、通信エラーが発生していると判断して、
+		/// エラー処理を実行します。
+		/// </summary>
+		void Update_InGame();
+		/// <summary>
+		/// P2P通信でenDirectMessageType_PadDataのメッセージが送られてきたときの処理。
+		/// </summary>
+		void OnDirectMessageType_PadData(std::uint8_t* pData, int size);
+		/// <summary>
+		/// P2P通信でenDirectMessageType_RequestResendPadDataのメッセージが送られてきたときの処理。
+		/// </summary>
+		/// <param name="pData"></param>
+		/// <param name="size"></param>
+		void OnDirectMessageType_RequestResendPadData(std::uint8_t* pData, int size);
 		/// <summary>
 		/// ユーザーが部屋から抜けたときに呼ばれる処理。
 		/// </summary>
@@ -102,8 +193,6 @@ namespace nsK2EngineLow {
 		/// <param name="remoteID"></param>
 		/// <param name="relay"></param>
 		void onDirectMessage(const ExitGames::Common::Object& msg, int remoteID, bool relay) override;
-		
-		
 		/// <summary>
 		/// ルームを作成 or 入室したときに呼ばれる処理。
 		/// </summary>
@@ -131,21 +220,27 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void SendInitDataOtherPlayer();
 		/// <summary>
-		/// パッド情報を送信。
+		/// パッド情報をP2Pで直接送信。
 		/// </summary>
-		void SendPadData();
+		void SendPadDataDirect();
 		
 		/// <summary>
-		/// パッドデータの再送リクエスト
+		/// パッドデータの再送リクエストをP2Pで送信
 		/// </summary>
 		/// <param name="frameNo">再送リクエストを行うフレーム番号</param>
-		void RequestResendPadData( int frameNo );
+		void SendRequestResendPadDataDirect( int frameNo );
 		/// <summary>
 		/// チェックサムを計算
 		/// </summary>
 		/// <param name="pData">チェックサムを計算するデータの先頭アドレス</param>
 		/// <param name="size">データのサイズ</param>
 		unsigned int CalcCheckSum(void* pData, int size);
+#ifdef ENABLE_ONLINE_PAD_LOG
+		/// <summary>
+		/// 再生中のパッドデータのログをファイルに出力
+		/// </summary>
+		void OutputPlayPadDataLog();
+#endif
 	private:
 
 		enum State
@@ -159,24 +254,22 @@ namespace nsK2EngineLow {
 			WAIT_START_GAME,					// ゲームの開始待ち
 			IN_GAME_BUFFERING_PAD_DATA,			// パッドデータのバッファリング中
 			IN_GAME,							// ゲームプレイ中。
-			LEAVING,							// ルームから退出中。
-			LEFT,								// ルームから退出。
 			DISCONNECTING,						// サーバーから切断中。
 			DISCONNECTED						// サーバーから切断済み。
 		};
 		/// <summary>
 		/// イベント
 		/// </summary>
-		enum Event {
-			Event_SendInitDataForOtherPlayer,	// 他プレイヤーの初期化情報を送る。
-			Event_PossibleGameStartOtherPlayer, // 他プレイヤーがゲーム開始可能になったことを通知・
+		enum EnEvent {
+			enEvent_SendInitDataForOtherPlayer,	  // 他プレイヤーの初期化情報を送る。
+			enEvent_PossibleGameStartOtherPlayer, // 他プレイヤーがゲーム開始可能になったことを通知・
 		};
 		/// <summary>
 		/// sendDirect()関数で送られてくるメッセージの種類。
 		/// </summary>
-		enum DirectMessageType {
-			DirectMessageType_PadData,				// パッドデータ
-			DirectMessageType_RequestResendPadData,	// パッドデータの再送リクエスト
+		enum EnDirectMessageType {
+			enDirectMessageType_PadData,				// パッドデータ
+			enDirectMessageType_RequestResendPadData,	// パッドデータの再送リクエスト
 		};
 		/// <summary>
 		/// パッドデータ
@@ -197,38 +290,42 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// プレイヤータイプ
 		/// </summary>
-		enum PlayerType {
-			PlayerType_Host,		// ホスト
-			PlayerType_Client,		// クライアント
-			PlayerType_Undef,		// 
+		enum EnPlayerType {
+			enPlayerType_Host,		// ホスト(部屋を作った)
+			enPlayerType_Client,	// クライアント(既存の部屋に入った)
+			enPlayerType_Undef,		// 不明
 		};
 		// 他プレイヤーの状態。
-		enum OtherPlayerState {
-			OtherPlayerState_Undef,				// 不明
-			OtherPlayerState_JoinedRoom,		// 部屋に入ってきた。
-			OtherPlayerState_PossibleGameStart,	// ゲーム開始可能状態
-			OtherPlayerState_LeftRoom,			// 部屋から抜けた。
+		enum EnOtherPlayerState {
+			enOtherPlayerState_Undef,				// 不明
+			enOtherPlayerState_JoinedRoom,			// 部屋に入ってきた。
+			enOtherPlayerState_PossibleGameStart,	// ゲーム開始可能状態
+			enOtherPlayerState_LeftRoom,			// 部屋から抜けた。
 
 		};
 		using OnAllPlayerJoinedRoom = std::function<void(void* pRecvData, int dataSize)>;
 		using OnErrorFunc = std::function<void()>;
 		using OnAllPlayerNotifyPossibleGameStart = std::function<void()>;
-		std::unique_ptr<ExitGames::LoadBalancing::Client> m_loadBalancingClient;	// ロードバランサ―。
-		ExitGames::Common::Logger m_logger;		// ログ出力処理。
-		State m_state = INITIALIZED;			// 状態。
-		int m_frameNo = 0;						// 現在のパッドのフレーム番号。
-		int m_playFrameNo = 0;					// 現在のゲーム進行フレーム番号。
-		bool m_isPossibleGameStart = false;				//ゲーム開始可能
-		OtherPlayerState m_otherPlayerState = OtherPlayerState_Undef;	// 他プレイヤーの状態。
-		std::map< int, SPadData> m_padData[2];	// パッドデータ。	
-		GamePad m_pad[2];						// ゲームパッド。
-		OnAllPlayerJoinedRoom m_allPlayerJoinedRoomFunc = nullptr;	// すべてのプレイヤーがルームに参加した。
+		using LoadBalancingClientPtr = std::unique_ptr<ExitGames::LoadBalancing::Client>;
+
+		LoadBalancingClientPtr m_loadBalancingClient;						// ロードバランサ―。
+		State m_state = INITIALIZED;										// 状態。
+		int m_frameNo = 0;													// 現在のパッドのフレーム番号。
+		int m_playFrameNo = 0;												// 現在のゲーム進行フレーム番号。
+		bool m_isPossibleGameStart = false;									// ゲーム開始可能フラグ。
+		std::map< int, SPadData> m_padData[2];								// パッドデータ。	
+		GamePad m_pad[2];													// ゲームパッド。
+		OnAllPlayerJoinedRoom m_allPlayerJoinedRoomFunc = nullptr;			// すべてのプレイヤーがルームに参加した。
 		OnAllPlayerNotifyPossibleGameStart m_allPlayerNotifyPossibleGameStartFunc = nullptr;	// すべてのプレイヤーがゲーム開始可能であることを通知した。
-		OnErrorFunc m_errorFunc = nullptr;							// 通信エラーが起きた時に呼ばれる関数。
-		std::unique_ptr<std::uint8_t[]> m_recieveDataOnGameStart;	// ゲーム開始のために受け取ったデータ。
-		int m_recieveDataSize = 0;									// ゲーム開始のために受け取ったデータのサイズ。
-		bool m_isInited = false;									// 初期化済み？
-		float m_timer = 0.0f;										// タイマー
-		PlayerType m_playerType = PlayerType_Undef;
+		OnErrorFunc m_errorFunc = nullptr;									// 通信エラーが起きた時に呼ばれる関数。
+		std::unique_ptr<std::uint8_t[]> m_recieveDataOnGameStart;			// ゲーム開始のために受け取ったデータ。
+		int m_recieveDataSize = 0;											// ゲーム開始のために受け取ったデータのサイズ。
+		bool m_isInited = false;											// 初期化済み？
+		float m_timer = 0.0f;												// タイマー
+		EnPlayerType m_playerType = enPlayerType_Undef;						// プレイヤーのタイプ。
+		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
+#ifdef ENABLE_ONLINE_PAD_LOG
+		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。
+#endif
 	};
 }

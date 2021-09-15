@@ -55,6 +55,12 @@ void Game::Update()
 		}
 	}break;
 		break;
+	case enStep_WaitAllPlayerJoined:
+		// 全てのプレイヤーがルームにジョインするのを待っている。
+		break;
+	case enStep_WaitAllPlayerStartGame:
+		// 全てのプレイヤーがゲーム開始可能になるのを待っている。
+		break;
 	case enStep_InGame: {
 		for (int i = 0; i < 2; i++) {
 			auto& pad = m_onlineTwoPlayerMatchEngine->GetGamePad(i);
