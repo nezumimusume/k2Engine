@@ -112,7 +112,7 @@ namespace nsK2EngineLow {
 		/// <param name="playerProperties"></param>
 		/// <param name="errorCode"></param>
 		/// <param name="errorString"></param>
-		void joinOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString) override;
+		void joinRandomOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString) override;
 		void connectionErrorReturn(int errorCode) override;
 		void clientErrorReturn(int errorCode) override {}
 		void warningReturn(int warningCode) override {}

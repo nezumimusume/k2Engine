@@ -135,8 +135,6 @@ namespace nsK2EngineLow {
 		if (!m_isInited) {
 			return;
 		}
-		
-
 		switch (m_state) {
 		case State::INITIALIZED: {
 			ExitGames::LoadBalancing::ConnectOptions connectOption;
@@ -146,11 +144,19 @@ namespace nsK2EngineLow {
 			m_state = State::CONNECTING;
 		}break;
 		case State::CONNECTED: {
+			// サーバーに接続できたので、部屋を作る。
 			ExitGames::LoadBalancing::RoomOptions roomOption;
+			// 部屋の最大人数は二人
 			roomOption.setMaxPlayers(2);
+			// sendDirect()関数(P2P)の動作は誰とでも自由に通信できるモード。
 			roomOption.setDirectMode(ExitGames::LoadBalancing::DirectMode::ALL_TO_ALL);
-			m_loadBalancingClient->opJoinOrCreateRoom(L"Test", roomOption);
-			m_timer = 0.0f;
+			m_loadBalancingClient->opJoinRandomOrCreateRoom(
+				ExitGames::Common::JString(),
+				roomOption,
+				ExitGames::Common::Hashtable(),
+				2
+			);
+			//m_loadBalancingClient->opJoinOrCreateRoom(L"Test", roomOption);
 			m_state = State::JOINING;
 		}break;
 		case State::JOINED:
@@ -354,7 +360,7 @@ namespace nsK2EngineLow {
 		// 接続に失敗したので、切断済みにする。
 		m_state = State::DISCONNECTED;
 	}
-	void SyncOnlineTwoPlayerMatchEngine::joinOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString)
+	void SyncOnlineTwoPlayerMatchEngine::joinRandomOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString)
 	{
 		if (errorCode) {
 			// 部屋を作れなかった。
