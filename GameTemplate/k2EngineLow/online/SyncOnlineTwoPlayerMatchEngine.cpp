@@ -52,6 +52,9 @@ namespace nsK2EngineLow {
 		// ルームにジョインしたことを通知。
 		ExitGames::LoadBalancing::RaiseEventOptions eventOpt;
 		ExitGames::Common::Hashtable event;
+		int hoge = 0;
+		short size = 4;
+		event.put(0, &hoge, &size);
 		m_loadBalancingClient->opRaiseEvent(
 			true,
 			event,
@@ -267,10 +270,14 @@ namespace nsK2EngineLow {
 	}
 	void SyncOnlineTwoPlayerMatchEngine::customEventAction(int playerNr, nByte eventCode, const ExitGames::Common::Object& eventContentObj)
 	{
-		ExitGames::Common::Hashtable eventContent = ExitGames::Common::ValueObject<ExitGames::Common::Hashtable>(eventContentObj).getDataCopy();
+		auto eventContent = ExitGames::Common::ValueObject<ExitGames::Common::Hashtable>(eventContentObj).getDataCopy();
 		switch (eventCode) {
 		case enEvent_SendInitDataForOtherPlayer:
 			if (m_state == WAIT_RECV_INIT_DATA_OTHER_PLAYER) {
+				auto valuObj = (ExitGames::Common::ValueObject<int>*)(eventContent.getValue(0));
+				m_recieveDataSize = valuObj->getSizes()[0];
+				m_recieveDataOnGameStart = std::make_unique<std::uint8_t[]>(m_recieveDataSize);
+				memcpy(m_recieveDataOnGameStart.get(), valuObj->getDataAddress(), m_recieveDataSize);
 				m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
 				m_state = WAIT_START_GAME;
 			}

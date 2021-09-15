@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Game.h"
-
+#include "Actor.h"
 
 Game::Game()
 {
@@ -30,20 +30,20 @@ void Game::Update()
 	}
 	switch (m_step) {
 	case enStep_CharacterSelect: {
-		int charaNo = -1;
+		
 		if (g_pad[0]->IsPress(enButtonA)) {
-			charaNo = 0;
+			m_charaNo = 0;
 		}
 		else if (g_pad[0]->IsPress(enButtonB)) {
-			charaNo = 1;
+			m_charaNo = 1;
 		}
-		if (charaNo != -1) {
+		if (m_charaNo != -1) {
 			// キャラが選ばれたのオンラインマッチをスタートする。
 			m_onlineTwoPlayerMatchEngine = new SyncOnlineTwoPlayerMatchEngine;
 			m_onlineTwoPlayerMatchEngine->Init(
 				L"41b72c35-96cd-4cab-ab81-cc1313e36213",
 				L"1.0",
-				&charaNo,
+				&m_charaNo,
 				sizeof(int),
 				[&](void* pData, int size) { OnAllPlayerJoined(pData, size); },
 				[&]() { OnAllPlayerStartGame(); },
@@ -61,36 +61,44 @@ void Game::Update()
 	case enStep_WaitAllPlayerStartGame:
 		// 全てのプレイヤーがゲーム開始可能になるのを待っている。
 		break;
-	case enStep_InGame: {
-		for (int i = 0; i < 2; i++) {
-			auto& pad = m_onlineTwoPlayerMatchEngine->GetGamePad(i);
-			pos[i].x += pad.GetLStickXF() * 4.0f;
-			pos[i].y += pad.GetLStickYF() * 4.0f;
-			m_modelRender[i].SetPosition(pos[i]);
-			m_modelRender[i].Update();
-			
-		}
-		wchar_t text[256];
-		swprintf_s(text, L"1P x : %f, y : %f, z : %f\n", pos[0].x, pos[0].y, pos[0].z);
-		m_positionRender[0].SetText(text);
-		swprintf_s(text, L"2P x : %f, y : %f, z : %f\n", pos[1].x, pos[1].y, pos[1].z);
-		m_positionRender[1].SetText(text);
-	}break;
+	case enStep_InGame: 
+		// インゲーム
+		break;
 	case enStep_Error:
 		delete m_onlineTwoPlayerMatchEngine;
 		m_onlineTwoPlayerMatchEngine = nullptr;
 		m_step = enStep_CharacterSelect;
 		m_fontRender.SetText(L"Aボタン : キャラA、Bボタン: キャラB\n");
-		pos[0] = g_vec3Zero;
-		pos[1] = g_vec3Zero;
+		DeleteGO(m_actor[0]);
+		DeleteGO(m_actor[1]);
+		
+		
 		break;
 	}
 }
 void Game::OnAllPlayerJoined(void* pData, int size)
 {
 	// すべてのプレイヤーが揃った。
-	m_modelRender[0].Init("Assets/modelData/unityChan.tkm");
-	m_modelRender[1].Init("Assets/modelData/unityChan.tkm");
+	m_actor[0] = NewGO<Actor>(0, "Actor");
+	m_actor[1] = NewGO<Actor>(0, "Actor");
+	const char* modelPath[] = {
+		"Assets/modelData/human/human.tkm",
+		"Assets/modelData/enemy/enemy.tkm",
+	};
+	// 自分
+	m_actor[0]->Init(
+		&m_onlineTwoPlayerMatchEngine->GetGamePad(0),
+		modelPath[m_charaNo],
+		g_vec3Zero
+	);
+	// 対戦相手
+	m_actor[1]->Init(
+		&m_onlineTwoPlayerMatchEngine->GetGamePad(1),
+		modelPath[*(int*)pData],
+		g_vec3Zero
+	);
+
+	
 	// ロードが終わってゲーム開始可能になったことを通知する。
 	m_onlineTwoPlayerMatchEngine->NotifyPossibleStartPlayGame();
 	// ほかのプレイヤーがゲーム開始可能になるまで待つ。
@@ -114,12 +122,4 @@ void Game::OnError()
 void Game::Render(RenderContext& rc)
 {
 	m_fontRender.Draw(rc);
-	switch (m_step) {
-	case enStep_InGame:
-		for (int i = 0; i < 2; i++) {
-			m_modelRender[i].Draw(rc);
-			m_positionRender[i].Draw(rc);
-		}
-		break;
-	}
 }

@@ -1,5 +1,7 @@
 #pragma once
 #include "online/SyncOnlineTwoPlayerMatchEngine.h"
+
+class Actor;
 class Game : public IGameObject
 {
 public:
@@ -39,10 +41,9 @@ private:
 	};
 	FontRender m_fontRender;
 	FontRender m_positionRender[2];
-	
+	int m_charaNo = -1;
 	EnStep m_step = enStep_CharacterSelect;
-	ModelRender m_modelRender[2];
-	Vector3 pos[2];
+	Actor* m_actor[2];
 	SyncOnlineTwoPlayerMatchEngine* m_onlineTwoPlayerMatchEngine = nullptr; // 完全同期二人対戦用エンジン。
 };
 

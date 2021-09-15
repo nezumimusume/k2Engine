@@ -130,7 +130,7 @@ namespace nsK2EngineLow {
 			}
 			for (auto goList : m_gameObjectListArray) {
 				for (auto go : goList) {
-					if (strcmp(go->m_name.cstr(), objectName) == 0) {
+					if (go->IsMatchName(objectName)) {
 						//見つけた。
 						T* p = dynamic_cast<T*>(go);
 						if (func(p) == false) {
@@ -233,10 +233,10 @@ namespace nsK2EngineLow {
 	}
 
 	/*!
-		*@brief	ゲームオブジェクト削除のヘルパー関数。
-		* NewGOを使用して作成したオブジェクトは必ずDeleteGOを実行するように。
-		*@param[in]	go		削除するゲームオブジェクト。
-		*/
+	*@brief	ゲームオブジェクト削除のヘルパー関数。
+	* NewGOを使用して作成したオブジェクトは必ずDeleteGOを実行するように。
+	*@param[in]	go		削除するゲームオブジェクト。
+	*/
 	static inline void DeleteGO(IGameObject* go)
 	{
 		GameObjectManager::GetInstance()->DeleteGameObject(go);
