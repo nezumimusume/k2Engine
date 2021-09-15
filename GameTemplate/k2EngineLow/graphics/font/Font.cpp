@@ -73,7 +73,7 @@ namespace nsK2EngineLow {
 			pos,
 			color,
 			rotation,
-			scale * (static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()) / 1920),
+			scale,
 			pivot
 		);
 	}

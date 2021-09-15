@@ -38,8 +38,8 @@ namespace nsK2EngineLow {
 		D3D12_VIEWPORT viewport;
 		viewport.TopLeftX = 0.0f;
 		viewport.TopLeftY = 0.0f;
-		viewport.Width = static_cast<FLOAT>(g_graphicsEngine->GetFrameBufferWidth());
-		viewport.Height = static_cast<FLOAT>(g_graphicsEngine->GetFrameBufferHeight());
+		viewport.Width = static_cast<FLOAT>(1920);
+		viewport.Height = static_cast<FLOAT>(1080);
 		//Spriteバッチを作成。
 		m_spriteBatch = make_unique<SpriteBatch>(
 			d3dDevice,
