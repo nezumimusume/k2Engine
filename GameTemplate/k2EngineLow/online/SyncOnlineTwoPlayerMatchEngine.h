@@ -334,10 +334,11 @@ namespace nsK2EngineLow {
 		int m_recieveDataSize = 0;											// ゲーム開始のために受け取ったデータのサイズ。
 		bool m_isInited = false;											// 初期化済み？
 		float m_timer = 0.0f;												// タイマー
+		float m_waitLimitTime = 0.0f;										// 待ちの最大秒数。
 		EnPlayerType m_playerType = enPlayerType_Undef;						// プレイヤーのタイプ。
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
 		K2EngineLow::FrameRateInfo m_frameRateInfoBackup;								// フレームレートに関する情報のバックアップ。
-
+		
 		bool m_isHoge = false;
 #ifdef ENABLE_ONLINE_PAD_LOG
 		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。

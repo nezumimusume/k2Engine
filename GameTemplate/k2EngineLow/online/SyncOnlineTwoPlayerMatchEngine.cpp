@@ -1,6 +1,6 @@
 ﻿#include "k2EngineLowPreCompile.h"
 #include "online/SyncOnlineTwoPlayerMatchEngine.h"
-
+#include <random>
 
 
 namespace nsK2EngineLow {
@@ -156,14 +156,16 @@ namespace nsK2EngineLow {
 			2
 		);
 		m_timer = 0.0f;
+		std::random_device rnd;
+		m_waitLimitTime = 10.0f + rnd() % 10;
 		m_state = State::JOINING;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::Update_Joined()
 	{
 		ONLINE_LOG("Update_Joined()\n");
 		m_timer += g_gameTime->GetFrameDeltaTime();
-		if (m_timer > 10.0f) {
-			// 10秒経過したので、一旦サーバーから切断して、再接続。
+		if (m_timer > m_waitLimitTime) {
+			// 10秒+α秒経過したので、一旦サーバーから切断して、再接続。
 			m_state = State::DISCONNECTING;
 			m_loadBalancingClient->disconnect();
 		}
@@ -172,6 +174,8 @@ namespace nsK2EngineLow {
 			// プレイヤーを初期化するための情報を送る。
 			SendInitDataOtherPlayer();
 			m_timer = 0.0f;
+			std::random_device rnd;
+			m_waitLimitTime = 10.0f + rnd() % 10;
 			// 他プレイヤーの初期化情報受け取り待ちへ遷移する。
 			m_state = State::WAIT_RECV_INIT_DATA_OTHER_PLAYER;
 		}
@@ -187,8 +191,8 @@ namespace nsK2EngineLow {
 			m_timer = 0.0f;
 		}
 		
-		if (m_timer > 10.0f) {
-			// 10秒待ってもパケットが届かなかったので、一旦切断して、再接続。
+		if (m_timer > m_waitLimitTime) {
+			// 10秒+α秒待ってもパケットが届かなかったので、一旦切断して、再接続。
 			m_state = State::DISCONNECTING;
 			m_loadBalancingClient->disconnect();
 		}
