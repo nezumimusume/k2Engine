@@ -89,6 +89,9 @@ void Game::OnAllPlayerJoined(void* pData, int size)
 		{100.0f, 0.0f, 0.0f},		// 1Pの初期座標
 		{-100.0f, 0.0f, 0.0f},		// 2Pの初期座標。
 	};
+	Quaternion rot[2];
+	rot[0].SetRotationDegY(-90.0f);
+	rot[1].SetRotationDegY(90.0f);
 	// 自分のプレイヤー番号を取得。
 	int playerNo = m_onlineTwoPlayerMatchEngine->GetPlayerNo();
 	int otherPlayerNo = m_onlineTwoPlayerMatchEngine->GetOtherPlayerNo();
@@ -96,13 +99,15 @@ void Game::OnAllPlayerJoined(void* pData, int size)
 	m_actor[playerNo]->Init(
 		m_onlineTwoPlayerMatchEngine->GetGamePad(playerNo),
 		modelPath[m_charaNo],
-		pos[playerNo]
+		pos[playerNo],
+		rot[playerNo]
 	);
 	// 対戦相手
 	m_actor[otherPlayerNo]->Init(
 		m_onlineTwoPlayerMatchEngine->GetGamePad(otherPlayerNo),
 		modelPath[*(int*)pData],
-		pos[otherPlayerNo]
+		pos[otherPlayerNo],
+		rot[otherPlayerNo]
 	);
 
 	

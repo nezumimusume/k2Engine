@@ -280,6 +280,9 @@ namespace nsK2EngineLow {
 		switch (eventCode) {
 		case enEvent_SendInitDataForOtherPlayer:
 			if (m_state == WAIT_RECV_INIT_DATA_OTHER_PLAYER) {
+				K2_ASSERT(!m_isHoge, "二回呼ばれている");
+				m_isHoge = true;
+				ONLINE_LOG("enEvent_SendInitDataForOtherPlayer\n");
 				auto valuObj = (ExitGames::Common::ValueObject<std::uint8_t*>*)(eventContent.getValue(0));
 				m_recieveDataSize = valuObj->getSizes()[0];
 				m_recieveDataOnGameStart = std::make_unique<std::uint8_t[]>(m_recieveDataSize);

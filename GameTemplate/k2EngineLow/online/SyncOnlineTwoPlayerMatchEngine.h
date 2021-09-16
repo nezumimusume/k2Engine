@@ -336,6 +336,7 @@ namespace nsK2EngineLow {
 		float m_timer = 0.0f;												// タイマー
 		EnPlayerType m_playerType = enPlayerType_Undef;						// プレイヤーのタイプ。
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
+		bool m_isHoge = false;
 #ifdef ENABLE_ONLINE_PAD_LOG
 		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。
 #endif
