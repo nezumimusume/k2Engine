@@ -336,9 +336,9 @@ namespace nsK2EngineLow {
 		float m_timer = 0.0f;												// タイマー
 		EnPlayerType m_playerType = enPlayerType_Undef;						// プレイヤーのタイプ。
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
+		K2EngineLow::FrameRateInfo m_frameRateInfoBackup;								// フレームレートに関する情報のバックアップ。
+
 		bool m_isHoge = false;
-		GameTime m_gameTimeBackup;
-		int m_maxFPSBackup = 0;												// 元々の最大FPS
 #ifdef ENABLE_ONLINE_PAD_LOG
 		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。
 #endif

@@ -14,6 +14,20 @@ namespace nsK2EngineLow {
 	class K2EngineLow {
 	public:
 		/// <summary>
+		/// フレームレートモード
+		/// </summary>
+		enum EnFrameRateMode {
+			enFrameRateMode_Fix,		// 固定フレームレートモード。
+			enFrameRateMode_Variable,	// 可変フレームレートモード。
+		};
+		/// <summary>
+		/// フレームレートに関する情報
+		/// </summary>
+		struct FrameRateInfo {
+			EnFrameRateMode frameRateMode;	// フレームレートモード
+			int maxFPS;						// 最大FPS
+		};
+		/// <summary>
 		/// デストラクタ。
 		/// </summary>
 		~K2EngineLow();
@@ -98,21 +112,35 @@ namespace nsK2EngineLow {
 			m_shaderBank.Regist(programName.c_str(), shader);
 		}
 		/// <summary>
-		/// 現在設定されている最大FPSを取得。
+		/// 現在のフレームレートに関する情報を取得
 		/// </summary>
 		/// <returns></returns>
-		int GetMaxFPS() const
+		const FrameRateInfo& GetFrameRateInfo() const
 		{
-			return m_fpsLimitter.GetMaxFPS();
+			return m_frameRateInfo;
 		}
 		/// <summary>
-		/// 最大FPSを設定。
+		/// フレームレートモードを設定する。
 		/// </summary>
-		/// <param name="maxFps"></param>
-		void SetMaxFPS(int maxFPS)
+		/// <param name="frameRateMode">EnFrameRateModeを参照</param>
+		/// <param name="maxFPS">最大FPS</param>
+		void SetFrameRateMode(EnFrameRateMode frameRateMode, int maxFPS)
 		{
+			if (frameRateMode == enFrameRateMode_Fix) {
+				// 固定フレームレート
+				// 1フレームの経過時間の値を固定にする。
+				m_gameTime.EnableFixedFrameDeltaTime(1.0f / maxFPS);
+			}
+			else {
+				// 可変フレームレート
+				m_gameTime.DisableFixedFrameDeltaTime();
+			}
 			m_fpsLimitter.SetMaxFPS(maxFPS);
+			// フレームレートに関する情報を記憶。
+			m_frameRateInfo.frameRateMode = frameRateMode;
+			m_frameRateInfo.maxFPS = maxFPS;
 		}
+		
 	private:
 		GraphicsEngine* m_graphicsEngine = nullptr;		// グラフィックエンジン。
 		TResourceBank<TkmFile> m_tkmFileBank;			// tkmファイルバンク。
@@ -121,6 +149,7 @@ namespace nsK2EngineLow {
 		GamePad m_pad[GamePad::CONNECT_PAD_MAX];		// ゲームパッド。
 		GameTime m_gameTime;
 		FPSLimitter m_fpsLimitter;						// FPSに制限をかける処理。
+		FrameRateInfo m_frameRateInfo = { enFrameRateMode_Variable , 60};
 	};
 
 	extern K2EngineLow* g_engine;	// 低レベルK2エンジン。

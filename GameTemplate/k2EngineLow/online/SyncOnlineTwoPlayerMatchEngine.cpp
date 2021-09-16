@@ -6,12 +6,15 @@
 namespace nsK2EngineLow {
 	namespace {
 		const ExitGames::Common::JString PLAYER_NAME = L"user";
+		const float MAX_FPS = 30.0f;	// オンライン対戦時の最大FPS
 	}
 
 	SyncOnlineTwoPlayerMatchEngine::~SyncOnlineTwoPlayerMatchEngine()
 	{
-		*g_gameTime = m_gameTimeBackup;
-		g_engine->SetMaxFPS(m_maxFPSBackup);
+		g_engine->SetFrameRateMode(
+			m_frameRateInfoBackup.frameRateMode, 
+			m_frameRateInfoBackup.maxFPS
+		);
 
 		m_loadBalancingClient->opLeaveRoom();
 		m_loadBalancingClient->opLeaveLobby();
@@ -51,13 +54,11 @@ namespace nsK2EngineLow {
 		memcpy(m_sendDataOnGameStart.get(), pSendData, sendDataSize);
 		m_sendDataSizeOnGameStart = sendDataSize;
 		m_isInited = true;
-		// 1フレームの経過時間を30fpsで固定化させる
-		m_gameTimeBackup = *g_gameTime;
-		// 元々の最大FPSを記憶しておく。
-		m_maxFPSBackup = g_engine->GetMaxFPS();
-
-		g_gameTime->EnableFixedFrameDeltaTime(1.0f / 30.0f );
-		g_engine->SetMaxFPS(30);
+		
+		// 固定フレームの最大FPS30に設定する。
+		m_frameRateInfoBackup = g_engine->GetFrameRateInfo();
+		g_engine->SetFrameRateMode(K2EngineLow::enFrameRateMode_Fix, MAX_FPS);
+		
 	}
 	void SyncOnlineTwoPlayerMatchEngine::SendInitDataOtherPlayer()
 	{
