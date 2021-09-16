@@ -70,6 +70,7 @@ private:
 	float m_attackTimer = 0.0f;
 	float m_currentRotAngle = 0.0f;
 	float m_targetRotAngle = 0.0f;
+	float m_fukitobashiPower = 0;
 	int m_hp = 3;
 };
 

@@ -54,6 +54,10 @@ bool Actor::ApplyDamage()
 		else {
 			m_state = enState_RecieveDamage;
 			m_modelRender.PlayAnimation(enAnimClip_ReceiveDamage, 0.2f);
+			m_fukitobashiPower = m_position.x - m_otherActor->GetPosition().x;
+			// ê≥ãKâª
+			m_fukitobashiPower /= fabs(m_fukitobashiPower);
+			m_fukitobashiPower *= 10.0f;
 		}
 		return true;
 	}
@@ -144,6 +148,9 @@ void Actor::Update()
 	}break;
 		
 	case enState_RecieveDamage:
+		m_fukitobashiPower *= 0.9f;
+		m_position.x += m_fukitobashiPower;
+		m_modelRender.SetPosition(m_position);
 		if (m_modelRender.IsPlayingAnimation() == false) {
 			m_modelRender.PlayAnimation(enAnimClip_Idle, 0.2f);
 			m_state = enState_Idle;
