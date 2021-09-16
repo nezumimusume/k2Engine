@@ -318,6 +318,8 @@ namespace nsK2EngineLow {
 		OnAllPlayerJoinedRoom m_allPlayerJoinedRoomFunc = nullptr;			// すべてのプレイヤーがルームに参加した。
 		OnAllPlayerNotifyPossibleGameStart m_allPlayerNotifyPossibleGameStartFunc = nullptr;	// すべてのプレイヤーがゲーム開始可能であることを通知した。
 		OnErrorFunc m_errorFunc = nullptr;									// 通信エラーが起きた時に呼ばれる関数。
+		std::unique_ptr<std::uint8_t[]> m_sendDataOnGameStart;				// ゲーム開始時に転送するデータ。
+		int m_sendDataSizeOnGameStart;										// ゲーム開始時に転送するデータのサイズ。
 		std::unique_ptr<std::uint8_t[]> m_recieveDataOnGameStart;			// ゲーム開始のために受け取ったデータ。
 		int m_recieveDataSize = 0;											// ゲーム開始のために受け取ったデータのサイズ。
 		bool m_isInited = false;											// 初期化済み？

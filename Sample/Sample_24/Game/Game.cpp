@@ -87,13 +87,13 @@ void Game::OnAllPlayerJoined(void* pData, int size)
 	};
 	// Ž©•ª
 	m_actor[0]->Init(
-		&m_onlineTwoPlayerMatchEngine->GetGamePad(0),
+		m_onlineTwoPlayerMatchEngine->GetGamePad(0),
 		modelPath[m_charaNo],
 		g_vec3Zero
 	);
 	// ‘Îí‘ŠŽè
 	m_actor[1]->Init(
-		&m_onlineTwoPlayerMatchEngine->GetGamePad(1),
+		m_onlineTwoPlayerMatchEngine->GetGamePad(1),
 		modelPath[*(int*)pData],
 		g_vec3Zero
 	);
