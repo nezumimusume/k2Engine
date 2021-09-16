@@ -338,6 +338,7 @@ namespace nsK2EngineLow {
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
 		bool m_isHoge = false;
 		GameTime m_gameTimeBackup;
+		int m_maxFPSBackup = 0;												// 元々の最大FPS
 #ifdef ENABLE_ONLINE_PAD_LOG
 		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。
 #endif

@@ -10,6 +10,8 @@ namespace nsK2EngineLow {
 
 	SyncOnlineTwoPlayerMatchEngine::~SyncOnlineTwoPlayerMatchEngine()
 	{
+		*g_gameTime = m_gameTimeBackup;
+		g_engine->SetMaxFPS(m_maxFPSBackup);
 
 		m_loadBalancingClient->opLeaveRoom();
 		m_loadBalancingClient->opLeaveLobby();
@@ -51,7 +53,11 @@ namespace nsK2EngineLow {
 		m_isInited = true;
 		// 1フレームの経過時間を30fpsで固定化させる
 		m_gameTimeBackup = *g_gameTime;
+		// 元々の最大FPSを記憶しておく。
+		m_maxFPSBackup = g_engine->GetMaxFPS();
+
 		g_gameTime->EnableFixedFrameDeltaTime(1.0f / 30.0f );
+		g_engine->SetMaxFPS(30);
 	}
 	void SyncOnlineTwoPlayerMatchEngine::SendInitDataOtherPlayer()
 	{

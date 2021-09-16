@@ -322,6 +322,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\online\SyncOnlineTwoPlayerMatchEngine.h" />
+    <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\time\FPSLimitter.h" />
     <ClInclude Include="dbg\MyAssert.h" />
     <ClInclude Include="dbg\MyLog.h" />
     <ClInclude Include="gameObject\GameObjectManager.h" />

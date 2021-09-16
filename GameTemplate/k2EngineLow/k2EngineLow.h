@@ -4,6 +4,7 @@
 #include "util/TResourceBank.h"
 #include "tkFile/TkmFile.h"
 #include "graphics/Shader.h"
+#include "time/FPSLimitter.h"
 
 namespace nsK2EngineLow {
 	class GraphicsEngine;
@@ -96,15 +97,30 @@ namespace nsK2EngineLow {
 			programName += entryPointFuncName;
 			m_shaderBank.Regist(programName.c_str(), shader);
 		}
-	
-		
+		/// <summary>
+		/// 現在設定されている最大FPSを取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetMaxFPS() const
+		{
+			return m_fpsLimitter.GetMaxFPS();
+		}
+		/// <summary>
+		/// 最大FPSを設定。
+		/// </summary>
+		/// <param name="maxFps"></param>
+		void SetMaxFPS(int maxFPS)
+		{
+			m_fpsLimitter.SetMaxFPS(maxFPS);
+		}
 	private:
-		GraphicsEngine* m_graphicsEngine = nullptr;		//グラフィックエンジン。
-		TResourceBank<TkmFile> m_tkmFileBank;			//tkmファイルバンク。
-		TResourceBank<Shader> m_shaderBank;				//シェーダーバンク
-		TResourceBank<Texture>	m_textureBank;			//テクスチャバンク。
-		GamePad m_pad[GamePad::CONNECT_PAD_MAX];		//ゲームパッド。
+		GraphicsEngine* m_graphicsEngine = nullptr;		// グラフィックエンジン。
+		TResourceBank<TkmFile> m_tkmFileBank;			// tkmファイルバンク。
+		TResourceBank<Shader> m_shaderBank;				// シェーダーバンク
+		TResourceBank<Texture>	m_textureBank;			// テクスチャバンク。
+		GamePad m_pad[GamePad::CONNECT_PAD_MAX];		// ゲームパッド。
 		GameTime m_gameTime;
+		FPSLimitter m_fpsLimitter;						// FPSに制限をかける処理。
 	};
 
 	extern K2EngineLow* g_engine;	// 低レベルK2エンジン。

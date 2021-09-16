@@ -61,9 +61,15 @@ void Game::Update()
 	case enStep_WaitAllPlayerStartGame:
 		// 全てのプレイヤーがゲーム開始可能になるのを待っている。
 		break;
-	case enStep_InGame: 
+	case enStep_InGame: {
 		// インゲーム
-		break;
+		for (int i = 0; i < 2; i++) {
+			const Vector3& actorPos = m_actor[i]->GetPosition();
+			wchar_t text[256];
+			swprintf_s(text, L"1P x : %f, y : %f, z : %f\n", actorPos.x, actorPos.y, actorPos.z);
+			m_positionRender[i].SetText(text);
+		}
+	}break;
 	case enStep_Error:
 		delete m_onlineTwoPlayerMatchEngine;
 		m_onlineTwoPlayerMatchEngine = nullptr;
@@ -136,4 +142,11 @@ void Game::OnError()
 void Game::Render(RenderContext& rc)
 {
 	m_fontRender.Draw(rc);
+	switch (m_step) {
+	case enStep_InGame:
+		for (auto& fontRender : m_positionRender) {
+			fontRender.Draw(rc);
+		}
+		break;
+	}
 }
