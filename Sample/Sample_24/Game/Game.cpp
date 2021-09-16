@@ -100,14 +100,16 @@ void Game::OnAllPlayerJoined(void* pData, int size)
 		m_onlineTwoPlayerMatchEngine->GetGamePad(playerNo),
 		modelPath[m_charaNo],
 		pos[playerNo],
-		rot[playerNo]
+		rot[playerNo],
+		m_actor[otherPlayerNo]
 	);
 	// ‘Îí‘ŠŽè
 	m_actor[otherPlayerNo]->Init(
 		m_onlineTwoPlayerMatchEngine->GetGamePad(otherPlayerNo),
 		modelPath[*(int*)pData],
 		pos[otherPlayerNo],
-		rot[otherPlayerNo]
+		rot[otherPlayerNo],
+		m_actor[playerNo]
 	);
 
 	
