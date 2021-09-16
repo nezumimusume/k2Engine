@@ -71,11 +71,11 @@ void Game::Update()
 		}
 		int playerNo = m_onlineTwoPlayerMatchEngine->GetPlayerNo();
 		int otherPlayerNo = m_onlineTwoPlayerMatchEngine->GetOtherPlayerNo();
-		if (m_actor[playerNo]->GetHP() == 0) {
+		if (m_actor[playerNo]->IsDowned()) {
 			MessageBoxA(nullptr, "‚ ‚È‚½‚Ì•‰‚¯", "Œ‹‰Ê", MB_OK);
 			ReturnCharacterSelect();
 		}
-		if (m_actor[otherPlayerNo]->GetHP() == 0) {
+		if (m_actor[otherPlayerNo]->IsDowned()) {
 			MessageBoxA(nullptr, "‚ ‚È‚½‚ÌŸ‚¿", "Œ‹‰Ê", MB_OK);
 			ReturnCharacterSelect();
 		}

@@ -28,7 +28,14 @@ public:
 	/// アクターの回転処理。
 	/// </summary>
 	void Rotate();
-	
+	/// <summary>
+	/// 倒れた？
+	/// </summary>
+	/// <returns></returns>
+	bool IsDowned()const
+	{
+		return m_state == enState_Downed;
+	}
 private:
 	enum EnAnimClip{
 		enAnimClip_Attack,
@@ -44,6 +51,7 @@ private:
 		enState_Attack,
 		enState_Down,
 		enState_RecieveDamage,
+		enState_Downed,
 		enState_Num,
 	};
 	enum EnAttackCollisionState {

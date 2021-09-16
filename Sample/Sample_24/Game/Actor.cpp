@@ -43,10 +43,18 @@ bool Actor::ApplyDamage()
 	if (m_state != enState_RecieveDamage
 		|| m_state != enState_Down
 	) {
-		m_modelRender.PlayAnimation(enAnimClip_ReceiveDamage, 0.2f);
-		m_state = enState_RecieveDamage;
+		
+		
 		// “–‚½‚Á‚½
-		m_hp -= 1;
+		m_hp = max( m_hp - 1, 0 );
+		if (m_hp == 0) {
+			m_state = enState_Down;
+			m_modelRender.PlayAnimation(enAnimClip_Down, 0.2f);
+		}
+		else {
+			m_state = enState_RecieveDamage;
+			m_modelRender.PlayAnimation(enAnimClip_ReceiveDamage, 0.2f);
+		}
 		return true;
 	}
 	return false;
@@ -139,6 +147,11 @@ void Actor::Update()
 		if (m_modelRender.IsPlayingAnimation() == false) {
 			m_modelRender.PlayAnimation(enAnimClip_Idle, 0.2f);
 			m_state = enState_Idle;
+		}
+		break;
+	case enState_Down:
+		if (m_modelRender.IsPlayingAnimation() == false) {
+			m_state = enState_Downed;
 		}
 		break;
 	}
