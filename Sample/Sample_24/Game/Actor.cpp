@@ -135,6 +135,11 @@ void Actor::Update()
 				m_attackCollisionState = enAttackCollisionState_Invoke;
 			}
 		}
+		if (m_attackCollisionState == enAttackCollisionState_Invoke) {
+			if (m_attackTimer > 1.0f) {
+				m_attackCollisionState = enAttackCollisionState_Disappearance;
+			}
+		}
 		// ‚ß‚¿‚á‚­‚¿‚á“K“–‚È‚ ‚½‚è”»’è
 		if (m_attackCollisionState == enAttackCollisionState_Invoke) {
 			Vector3 diff = m_position - m_otherActor->GetPosition();
