@@ -45,6 +45,7 @@ namespace nsK2EngineLow {
 		ExitGames::Common::Base::setListener(this);
 		ExitGames::Common::Base::setDebugOutputLevel(DEBUG_RELEASE(ExitGames::Common::DebugLevel::INFO, ExitGames::Common::DebugLevel::WARNINGS)); // all classes that inherit from Base
 		m_sendDataOnGameStart = std::make_unique<std::uint8_t[]>(sendDataSize);
+		memcpy(m_sendDataOnGameStart.get(), pSendData, sendDataSize);
 		m_sendDataSizeOnGameStart = sendDataSize;
 		m_isInited = true;
 
@@ -276,10 +277,11 @@ namespace nsK2EngineLow {
 		switch (eventCode) {
 		case enEvent_SendInitDataForOtherPlayer:
 			if (m_state == WAIT_RECV_INIT_DATA_OTHER_PLAYER) {
-				auto valuObj = (ExitGames::Common::ValueObject<std::uint8_t>*)(eventContent.getValue(0));
+				auto valuObj = (ExitGames::Common::ValueObject<std::uint8_t*>*)(eventContent.getValue(0));
 				m_recieveDataSize = valuObj->getSizes()[0];
 				m_recieveDataOnGameStart = std::make_unique<std::uint8_t[]>(m_recieveDataSize);
-				memcpy(m_recieveDataOnGameStart.get(), valuObj->getDataAddress(), m_recieveDataSize);
+				auto pSrcData = valuObj->getDataCopy();
+				memcpy(m_recieveDataOnGameStart.get(), pSrcData, m_recieveDataSize);
 				m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
 				m_state = WAIT_START_GAME;
 			}
