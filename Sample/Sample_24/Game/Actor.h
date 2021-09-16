@@ -6,7 +6,7 @@ public:
 		GamePad& gamePad, 
 		const char* filePath, 
 		const Vector3& initPos, 
-		const Quaternion& initRot,
+		float initRotAngle,
 		Actor* pOtherActor
 	);
 	void Update() override;
@@ -16,7 +16,19 @@ public:
 		return m_position;
 	}
 	bool ApplyDamage();
-
+	/// <summary>
+	/// HPを取得。
+	/// </summary>
+	/// <returns></returns>
+	int GetHP() const
+	{
+		return m_hp;
+	}
+	/// <summary>
+	/// アクターの回転処理。
+	/// </summary>
+	void Rotate();
+	
 private:
 	enum EnAnimClip{
 		enAnimClip_Attack,
@@ -48,5 +60,8 @@ private:
 	Actor* m_otherActor = nullptr;			// 対戦相手。
 	EnAttackCollisionState m_attackCollisionState = enAttackCollisionState_BeforeInvoke;
 	float m_attackTimer = 0.0f;
+	float m_currentRotAngle = 0.0f;
+	float m_targetRotAngle = 0.0f;
+	int m_hp = 3;
 };
 

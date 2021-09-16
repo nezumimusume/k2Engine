@@ -5,7 +5,7 @@ void Actor::Init(
 	GamePad& gamePad, 
 	const char* filePath, 
 	const Vector3& initPos,
-	const Quaternion& initRot,
+	float initRotAngle,
 	Actor* pOtherActor
 )
 {
@@ -31,7 +31,9 @@ void Actor::Init(
 	m_modelRender.Init(filePath, m_animClip, enAnimClip_Num);
 	m_modelRender.PlayAnimation(enAnimClip_Idle);
 	m_position = initPos;
-	m_rotation = initRot;
+	m_currentRotAngle = initRotAngle;
+	m_targetRotAngle = initRotAngle;
+	m_rotation.SetRotationDegY(m_currentRotAngle);
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_rotation);
 	m_otherActor = pOtherActor;
@@ -44,14 +46,38 @@ bool Actor::ApplyDamage()
 		m_modelRender.PlayAnimation(enAnimClip_ReceiveDamage, 0.2f);
 		m_state = enState_RecieveDamage;
 		// “–‚½‚Á‚½
+		m_hp -= 1;
 		return true;
 	}
 	return false;
+}
+void Actor::Rotate()
+{
+	const auto& otherActorPos = m_otherActor->GetPosition();
+	
+	if (otherActorPos.x < m_position.x) {
+		m_targetRotAngle = -90.0f;
+	}
+	else {
+		m_targetRotAngle = 90.0f;
+	}
+	if (m_targetRotAngle < 0.0f) {
+		m_currentRotAngle -= 45.0f;
+		m_currentRotAngle = max(m_currentRotAngle, m_targetRotAngle);
+	}
+	else
+	{
+		m_currentRotAngle += 45.0f;
+		m_currentRotAngle = min(m_currentRotAngle, m_targetRotAngle);
+	}
+	m_rotation.SetRotationDegY(m_currentRotAngle);
+	m_modelRender.SetRotation(m_rotation);
 }
 void Actor::Update()
 {
 	switch (m_state) {
 	case enState_Idle:
+		//Rotate();
 		if (m_gamePad->IsPress(enButtonA)) {
 			// UŒ‚ó‘Ô‚É‘JˆÚB
 			m_attackTimer = 0.0f;
@@ -68,6 +94,7 @@ void Actor::Update()
 		}
 		break;
 	case enState_Walk:
+		Rotate();
 		if (m_gamePad->IsPress(enButtonA)) {
 			// UŒ‚ó‘Ô‚É‘JˆÚB
 			m_attackTimer = 0.0f;

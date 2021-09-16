@@ -69,18 +69,32 @@ void Game::Update()
 			swprintf_s(text, L"1P x : %f, y : %f, z : %f\n", actorPos.x, actorPos.y, actorPos.z);
 			m_positionRender[i].SetText(text);
 		}
+		int playerNo = m_onlineTwoPlayerMatchEngine->GetPlayerNo();
+		int otherPlayerNo = m_onlineTwoPlayerMatchEngine->GetOtherPlayerNo();
+		if (m_actor[playerNo]->GetHP() == 0) {
+			MessageBoxA(nullptr, "あなたの負け", "結果", MB_OK);
+			ReturnCharacterSelect();
+		}
+		if (m_actor[otherPlayerNo]->GetHP() == 0) {
+			MessageBoxA(nullptr, "あなたの勝ち", "結果", MB_OK);
+			ReturnCharacterSelect();
+		}
 	}break;
 	case enStep_Error:
-		delete m_onlineTwoPlayerMatchEngine;
-		m_onlineTwoPlayerMatchEngine = nullptr;
-		m_step = enStep_CharacterSelect;
-		m_fontRender.SetText(L"Aボタン : キャラA、Bボタン: キャラB\n");
-		DeleteGO(m_actor[0]);
-		DeleteGO(m_actor[1]);
-		m_charaNo = -1;
+		ReturnCharacterSelect();
 		
 		break;
 	}
+}
+void Game::ReturnCharacterSelect()
+{
+	delete m_onlineTwoPlayerMatchEngine;
+	m_onlineTwoPlayerMatchEngine = nullptr;
+	m_step = enStep_CharacterSelect;
+	m_fontRender.SetText(L"Aボタン : キャラA、Bボタン: キャラB\n");
+	DeleteGO(m_actor[0]);
+	DeleteGO(m_actor[1]);
+	m_charaNo = -1;
 }
 void Game::OnAllPlayerJoined(void* pData, int size)
 {
@@ -95,9 +109,11 @@ void Game::OnAllPlayerJoined(void* pData, int size)
 		{100.0f, 0.0f, 0.0f},		// 1Pの初期座標
 		{-100.0f, 0.0f, 0.0f},		// 2Pの初期座標。
 	};
-	Quaternion rot[2];
-	rot[0].SetRotationDegY(-90.0f);
-	rot[1].SetRotationDegY(90.0f);
+	float rotAngle[] = {
+		-90.0f,
+		90.0f
+	};
+	
 	// 自分のプレイヤー番号を取得。
 	int playerNo = m_onlineTwoPlayerMatchEngine->GetPlayerNo();
 	int otherPlayerNo = m_onlineTwoPlayerMatchEngine->GetOtherPlayerNo();
@@ -106,7 +122,7 @@ void Game::OnAllPlayerJoined(void* pData, int size)
 		m_onlineTwoPlayerMatchEngine->GetGamePad(playerNo),
 		modelPath[m_charaNo],
 		pos[playerNo],
-		rot[playerNo],
+		rotAngle[playerNo],
 		m_actor[otherPlayerNo]
 	);
 	// 対戦相手
@@ -114,7 +130,7 @@ void Game::OnAllPlayerJoined(void* pData, int size)
 		m_onlineTwoPlayerMatchEngine->GetGamePad(otherPlayerNo),
 		modelPath[*(int*)pData],
 		pos[otherPlayerNo],
-		rot[otherPlayerNo],
+		rotAngle[otherPlayerNo],
 		m_actor[playerNo]
 	);
 
