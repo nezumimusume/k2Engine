@@ -10,6 +10,7 @@ namespace nsK2EngineLow {
 
 	SyncOnlineTwoPlayerMatchEngine::~SyncOnlineTwoPlayerMatchEngine()
 	{
+
 		m_loadBalancingClient->opLeaveRoom();
 		m_loadBalancingClient->opLeaveLobby();
 		m_loadBalancingClient->disconnect();
@@ -48,7 +49,9 @@ namespace nsK2EngineLow {
 		memcpy(m_sendDataOnGameStart.get(), pSendData, sendDataSize);
 		m_sendDataSizeOnGameStart = sendDataSize;
 		m_isInited = true;
-
+		// 1フレームの経過時間を30fpsで固定化させる
+		m_gameTimeBackup = *g_gameTime;
+		g_gameTime->EnableFixedFrameDeltaTime(1.0f / 30.0f );
 	}
 	void SyncOnlineTwoPlayerMatchEngine::SendInitDataOtherPlayer()
 	{

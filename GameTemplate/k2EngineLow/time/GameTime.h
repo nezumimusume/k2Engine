@@ -14,21 +14,49 @@ namespace nsK2EngineLow {
 	/*!
 	 *@brief	ゲーム時間。
 	 */
-	class GameTime : public Noncopyable {
+	class GameTime  {
+		
+	public:
 		GameTime()
 		{
 		}
 		~GameTime()
 		{
 		}
-	public:
+		/// <summary>
+		/// 1フレームの経過時間を固定化させます。
+		/// </summary>
+		/// <remark>
+		/// どんな時にこれを使うのか？
+		/// 例えば、完全同期型のオンラインマルチプレイなど。
+		/// 完全同期型のオンラインゲームでは、各クライアント間でゲームの進行速度を一致させる必要があります。
+		/// ですので、可変フレームレートでなく、固定フレームレートでゲームを作ります。
+		/// そのような場合にゲーム時間を固定化させてください。
+		/// </remark>
+		/// <param name="fixedFrameDeltaTime"></param>
+		void EnableFixedFrameDeltaTime(float fixedFrameDeltaTime)
+		{
+			m_fixedFrameDeltaTime = fixedFrameDeltaTime;
+			m_isFixedFrameDeltaTime = true;
+		}
+		/// <summary>
+		/// 1フレームの経過時間の固定化を解除します。
+		/// </summary>
+		void DisableFixedFrameDeltaTime()
+		{
+			m_isFixedFrameDeltaTime = false;
+		}
+		
 		/*!
 		 *@brief	1フレームの経過時間を取得(単位・秒)。
 		 */
 		const float GetFrameDeltaTime() const
 		{
-			//固定FPSにする。可変は要検討。
-			//return 1.0f / 30.0f;
+			if (m_isFixedFrameDeltaTime) {
+				// 1フレームの経過時間が固定化されている。
+				return m_fixedFrameDeltaTime;
+			}
+			
 			return m_frameDeltaTime;
 		}
 		void PushFrameDeltaTime(float deltaTime)
@@ -72,6 +100,8 @@ namespace nsK2EngineLow {
 		friend class K2EngineLow;
 		Stopwatch m_sw;
 		std::list<float> m_frameDeltaTimeQue;
-		float		m_frameDeltaTime = 1.0f / 60.0f;		//1フレームの経過時間。
+		float		m_frameDeltaTime = 1.0f / 60.0f;	// 1フレームの経過時間。
+		bool		m_isFixedFrameDeltaTime = false;		// 1フレームの経過時間を固定化する。
+		float		m_fixedFrameDeltaTime = 1.0f / 60.0f;	// 固定経過時間。
 	};
 }

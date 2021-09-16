@@ -18,7 +18,7 @@ namespace nsK2EngineLow {
 	 *@endcode
 	 *
 	 */
-	class Stopwatch : public Noncopyable {
+	class Stopwatch {
 	public:
 		/*!
 		 *@brief	コンストラクタ。

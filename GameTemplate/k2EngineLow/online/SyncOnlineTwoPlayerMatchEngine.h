@@ -337,6 +337,7 @@ namespace nsK2EngineLow {
 		EnPlayerType m_playerType = enPlayerType_Undef;						// プレイヤーのタイプ。
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
 		bool m_isHoge = false;
+		GameTime m_gameTimeBackup;
 #ifdef ENABLE_ONLINE_PAD_LOG
 		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。
 #endif
