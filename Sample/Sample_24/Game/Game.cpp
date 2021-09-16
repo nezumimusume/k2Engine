@@ -71,7 +71,7 @@ void Game::Update()
 		m_fontRender.SetText(L"Aボタン : キャラA、Bボタン: キャラB\n");
 		DeleteGO(m_actor[0]);
 		DeleteGO(m_actor[1]);
-		
+		m_charaNo = -1;
 		
 		break;
 	}
@@ -85,17 +85,24 @@ void Game::OnAllPlayerJoined(void* pData, int size)
 		"Assets/modelData/human/human.tkm",
 		"Assets/modelData/enemy/enemy.tkm",
 	};
+	const Vector3 pos[] = {
+		{100.0f, 0.0f, 0.0f},		// 1Pの初期座標
+		{-100.0f, 0.0f, 0.0f},		// 2Pの初期座標。
+	};
+	// 自分のプレイヤー番号を取得。
+	int playerNo = m_onlineTwoPlayerMatchEngine->GetPlayerNo();
+	int otherPlayerNo = m_onlineTwoPlayerMatchEngine->GetOtherPlayerNo();
 	// 自分
-	m_actor[0]->Init(
-		m_onlineTwoPlayerMatchEngine->GetGamePad(0),
+	m_actor[playerNo]->Init(
+		m_onlineTwoPlayerMatchEngine->GetGamePad(playerNo),
 		modelPath[m_charaNo],
-		g_vec3Zero
+		pos[playerNo]
 	);
 	// 対戦相手
-	m_actor[1]->Init(
-		m_onlineTwoPlayerMatchEngine->GetGamePad(1),
+	m_actor[otherPlayerNo]->Init(
+		m_onlineTwoPlayerMatchEngine->GetGamePad(otherPlayerNo),
 		modelPath[*(int*)pData],
-		g_vec3Zero
+		pos[otherPlayerNo]
 	);
 
 	

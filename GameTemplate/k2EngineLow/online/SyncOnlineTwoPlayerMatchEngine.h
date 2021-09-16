@@ -110,6 +110,16 @@ namespace nsK2EngineLow {
 			// クライアント。
 			return 1;
 		}
+		/// <summary>
+		/// 対戦相手のプレイヤー番号を取得。
+		/// ホストなら1、クライアントなら1を返します。
+		/// </summary>
+		/// <returns></returns>
+		int GetOtherPlayerNo() const
+		{
+			// 対戦相手のプレイヤー番号は、自分の番号の反対。
+			return !GetPlayerNo();
+		}
 	private:
 		/// <summary>
 		/// 初期化ステップの更新処理。

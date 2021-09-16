@@ -100,9 +100,10 @@ namespace nsK2EngineLow {
 		padData.frameNo = m_frameNo;
 		// チェックサム用のデータを追加する。
 		padData.checksum = CalcCheckSum(&padData, sizeof(SPadData) - 4);
-		
-		auto itFind = m_padData[0].find(m_frameNo);
-		m_padData[0].insert({ m_frameNo , padData});
+
+		int plNo = GetPlayerNo();
+		auto itFind = m_padData[plNo].find(m_frameNo);
+		m_padData[plNo].insert({ m_frameNo , padData});
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
 			sizeof(padData)
@@ -192,6 +193,8 @@ namespace nsK2EngineLow {
 	{
 		ONLINE_LOG("Update_InGame()\n");
 		int loopCount = 0;
+		int plNo = GetPlayerNo();
+		int otherPlNo = GetOtherPlayerNo();
 		while(true) {
 			if (m_otherPlayerState == enOtherPlayerState_LeftRoom) {
 				// 他プレイヤーが部屋から抜けた。
@@ -199,18 +202,18 @@ namespace nsK2EngineLow {
 				m_loadBalancingClient->disconnect();
 				break;
 			}
-			auto it = m_padData[1].find(m_playFrameNo);
-			if (it != m_padData[1].end()) {
+			auto it = m_padData[otherPlNo].find(m_playFrameNo);
+			if (it != m_padData[otherPlNo].end()) {
 #ifdef ENABLE_ONLINE_PAD_LOG
 				// 再生したパッドのログを出力。
 				OutputPlayPadDataLog();
 #endif
 				// 再生フレームのパッド情報を受け取っている。
-				m_pad[0].Update(m_padData[0][m_playFrameNo].xInputState);
-				m_pad[1].Update(it->second.xInputState);
+				m_pad[plNo].Update(m_padData[plNo][m_playFrameNo].xInputState);
+				m_pad[otherPlNo].Update(it->second.xInputState);
 				// 再生済みのパッド情報を削除。
-				m_padData[0].erase(m_playFrameNo);
-				m_padData[1].erase(m_playFrameNo);
+				m_padData[plNo].erase(m_playFrameNo);
+				m_padData[otherPlNo].erase(m_playFrameNo);
 				break;
 			}
 			else {
@@ -299,14 +302,16 @@ namespace nsK2EngineLow {
 		// チェックサムを利用した誤り検出を行う。
 		// 送られてきたデータのチェックサム用のデータを計算。
 		unsigned int checksum = CalcCheckSum(&padData, sizeof(padData) - 4);
+		
+		int otherPlNo = GetOtherPlayerNo();
 		// 計算した値と送られてきた値が同じか調べる。
 		if (checksum == padData.checksum) {
 			// チェックサム通過。
 			// 誤りは起きていない可能性が高い。
-			auto it = m_padData[1].find(padData.frameNo);
-			if (it == m_padData[1].end()) {
+			auto it = m_padData[otherPlNo].find(padData.frameNo);
+			if (it == m_padData[otherPlNo].end()) {
 				// 
-				m_padData[1].insert({ padData.frameNo , padData });
+				m_padData[otherPlNo].insert({ padData.frameNo , padData });
 			}
 		}
 	}
@@ -316,12 +321,13 @@ namespace nsK2EngineLow {
 		SRequestResendPadData reqResendPadData;
 		memcpy(&reqResendPadData, pData, size);
 
-		auto it = m_padData[0].find(reqResendPadData.frameNo);
-		if (it != m_padData[0].end()) {
+		int plNo = GetPlayerNo();
+		auto it = m_padData[plNo].find(reqResendPadData.frameNo);
+		if (it != m_padData[plNo].end()) {
 			// パッドデータができている。
 			m_loadBalancingClient->sendDirect(
-				(std::uint8_t*)&m_padData[0][reqResendPadData.frameNo],
-				sizeof(m_padData[0][reqResendPadData.frameNo])
+				(std::uint8_t*)&m_padData[plNo][reqResendPadData.frameNo],
+				sizeof(m_padData[plNo][reqResendPadData.frameNo])
 			);
 		}
 	}
