@@ -157,7 +157,7 @@ namespace nsK2EngineLow {
 		);
 		m_timer = 0.0f;
 		std::random_device rnd;
-		m_waitLimitTime = 10.0f + rnd() % 10;
+		m_waitLimitTime = 10.0f + rnd() % 30;
 		m_state = State::JOINING;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::Update_Joined()
@@ -175,7 +175,7 @@ namespace nsK2EngineLow {
 			SendInitDataOtherPlayer();
 			m_timer = 0.0f;
 			std::random_device rnd;
-			m_waitLimitTime = 10.0f + rnd() % 10;
+			m_waitLimitTime = 10.0f + rnd() % 30;
 			// 他プレイヤーの初期化情報受け取り待ちへ遷移する。
 			m_state = State::WAIT_RECV_INIT_DATA_OTHER_PLAYER;
 		}
