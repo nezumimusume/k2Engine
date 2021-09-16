@@ -155,11 +155,18 @@ namespace nsK2EngineLow {
 			ExitGames::Common::Hashtable(),
 			2
 		);
+		m_timer = 0.0f;
 		m_state = State::JOINING;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::Update_Joined()
 	{
 		ONLINE_LOG("Update_Joined()\n");
+		m_timer += g_gameTime->GetFrameDeltaTime();
+		if (m_timer > 10.0f) {
+			// 10秒経過したので、一旦サーバーから切断して、再接続。
+			m_state = State::DISCONNECTING;
+			m_loadBalancingClient->disconnect();
+		}
 		if (m_otherPlayerState == enOtherPlayerState_JoinedRoom) {
 			// すべてのプレイヤーがルームにそろった。
 			// プレイヤーを初期化するための情報を送る。
@@ -178,6 +185,12 @@ namespace nsK2EngineLow {
 			// 1秒ごとにプレイヤーを初期化するためのデータを再送する。
 			SendInitDataOtherPlayer();
 			m_timer = 0.0f;
+		}
+		
+		if (m_timer > 10.0f) {
+			// 10秒待ってもパケットが届かなかったので、一旦切断して、再接続。
+			m_state = State::DISCONNECTING;
+			m_loadBalancingClient->disconnect();
 		}
 		if (m_otherPlayerState == enOtherPlayerState_PossibleGameStart
 			&& m_isPossibleGameStart) {
@@ -344,6 +357,11 @@ namespace nsK2EngineLow {
 			);
 		}
 	}
+	void SyncOnlineTwoPlayerMatchEngine::disconnectReturn(void) 
+	{
+		// 切断済みにする。
+		m_state = State::DISCONNECTED;
+	}
 	void SyncOnlineTwoPlayerMatchEngine::onDirectMessage(const ExitGames::Common::Object& msg, int remoteID, bool relay)
 	{
 		// 送られてきたデータをコピー。
@@ -375,11 +393,6 @@ namespace nsK2EngineLow {
 		}
 		// 部屋に入れた。
 		m_state = State::CONNECTED;
-	}
-	void SyncOnlineTwoPlayerMatchEngine::disconnectReturn(void)
-	{
-		// 切断済み
-		m_state = State::DISCONNECTED;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn(int errorCode)
 	{
