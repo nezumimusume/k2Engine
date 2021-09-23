@@ -38,7 +38,7 @@ struct ModelData(
 	meshParts = #()		--メッシュパーツ。
 )
 
-struct TkmExporter(
+struct TkmExporterForScript(
 private
 	outputFolder,		--出力先のフォルダ。
 	md = ModelData,		--メッシュデータ。

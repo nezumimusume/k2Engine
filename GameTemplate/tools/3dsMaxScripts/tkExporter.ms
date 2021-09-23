@@ -356,7 +356,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 		on btn_save_fbx pressed do
 		(
 			--全オブジェクトをtkmファイルとして出力する。
-			expoter = TkmExporter()
+			expoter = TkmExporterForScript()
 			expoter.SaveTkm objects filepath flat_shading.checked
 		)
 		
@@ -366,7 +366,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 		on btn_save_selected_fbx pressed do
 		(
 			--選択されているオブジェクトをtkmファイルとして出力する。
-			expoter = TkmExporter()
+			expoter = TkmExporterForScript()
 			expoter.SaveTkm selection filepath flat_shading.checked
 		)
 	)
