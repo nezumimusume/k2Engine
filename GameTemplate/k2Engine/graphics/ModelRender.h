@@ -130,7 +130,16 @@ namespace nsK2Engine {
 		{
 			m_position = pos;
 		}
-
+		/// <summary>
+		/// 座標を設定。
+		/// </summary>
+		/// <param name="x">x座標</param>
+		/// <param name="y">y座標</param>
+		/// <param name="z">z座標</param>
+		void SetPosition(float x, float y, float z)
+		{
+			SetPosition({ x, y, z });
+		}
 		/// <summary>
 		/// 回転を設定。
 		/// </summary>
