@@ -450,6 +450,9 @@
     <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\online\SyncOnlineTwoPlayerMatchEngine.h">
       <Filter>online</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\time\FPSLimitter.h">
+      <Filter>time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

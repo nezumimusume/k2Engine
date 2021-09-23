@@ -40,6 +40,7 @@ namespace nsK2EngineLow {
 	}
 	void K2EngineLow::BeginFrame()
 	{
+		m_fpsLimitter.BeginFrame();
 		m_gameTime.BeginMeasurement();
 		m_graphicsEngine->BeginRender();
 		for (auto& pad : m_pad) {
@@ -50,7 +51,9 @@ namespace nsK2EngineLow {
 	void K2EngineLow::EndFrame()
 	{
 		m_graphicsEngine->EndRender();
+		m_fpsLimitter.Wait();
 		m_gameTime.EndMeasurement();
+
 	}
 
 	void K2EngineLow::ExecuteUpdate()

@@ -28,6 +28,10 @@ private:
 	/// 通信エラーが起きた。
 	/// </summary>
 	void OnError();
+	/// <summary>
+	/// キャラクターセレクトにもどる。
+	/// </summary>
+	void ReturnCharacterSelect();
 private:
 	//////////////////////////////////////
 	// メンバ変数。

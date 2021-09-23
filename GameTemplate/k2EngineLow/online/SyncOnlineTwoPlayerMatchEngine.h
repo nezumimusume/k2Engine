@@ -110,6 +110,16 @@ namespace nsK2EngineLow {
 			// クライアント。
 			return 1;
 		}
+		/// <summary>
+		/// 対戦相手のプレイヤー番号を取得。
+		/// ホストなら1、クライアントなら1を返します。
+		/// </summary>
+		/// <returns></returns>
+		int GetOtherPlayerNo() const
+		{
+			// 対戦相手のプレイヤー番号は、自分の番号の反対。
+			return !GetPlayerNo();
+		}
 	private:
 		/// <summary>
 		/// 初期化ステップの更新処理。
@@ -318,12 +328,18 @@ namespace nsK2EngineLow {
 		OnAllPlayerJoinedRoom m_allPlayerJoinedRoomFunc = nullptr;			// すべてのプレイヤーがルームに参加した。
 		OnAllPlayerNotifyPossibleGameStart m_allPlayerNotifyPossibleGameStartFunc = nullptr;	// すべてのプレイヤーがゲーム開始可能であることを通知した。
 		OnErrorFunc m_errorFunc = nullptr;									// 通信エラーが起きた時に呼ばれる関数。
+		std::unique_ptr<std::uint8_t[]> m_sendDataOnGameStart;				// ゲーム開始時に転送するデータ。
+		int m_sendDataSizeOnGameStart;										// ゲーム開始時に転送するデータのサイズ。
 		std::unique_ptr<std::uint8_t[]> m_recieveDataOnGameStart;			// ゲーム開始のために受け取ったデータ。
 		int m_recieveDataSize = 0;											// ゲーム開始のために受け取ったデータのサイズ。
 		bool m_isInited = false;											// 初期化済み？
 		float m_timer = 0.0f;												// タイマー
+		float m_waitLimitTime = 0.0f;										// 待ちの最大秒数。
 		EnPlayerType m_playerType = enPlayerType_Undef;						// プレイヤーのタイプ。
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
+		K2EngineLow::FrameRateInfo m_frameRateInfoBackup;								// フレームレートに関する情報のバックアップ。
+		
+		bool m_isHoge = false;
 #ifdef ENABLE_ONLINE_PAD_LOG
 		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。
 #endif

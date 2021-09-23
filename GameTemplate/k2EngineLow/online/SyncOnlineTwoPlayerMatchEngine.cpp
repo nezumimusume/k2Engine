@@ -1,15 +1,21 @@
 ﻿#include "k2EngineLowPreCompile.h"
 #include "online/SyncOnlineTwoPlayerMatchEngine.h"
-
+#include <random>
 
 
 namespace nsK2EngineLow {
 	namespace {
 		const ExitGames::Common::JString PLAYER_NAME = L"user";
+		const float MAX_FPS = 30.0f;	// オンライン対戦時の最大FPS
 	}
 
 	SyncOnlineTwoPlayerMatchEngine::~SyncOnlineTwoPlayerMatchEngine()
 	{
+		g_engine->SetFrameRateMode(
+			m_frameRateInfoBackup.frameRateMode, 
+			m_frameRateInfoBackup.maxFPS
+		);
+
 		m_loadBalancingClient->opLeaveRoom();
 		m_loadBalancingClient->opLeaveLobby();
 		m_loadBalancingClient->disconnect();
@@ -44,17 +50,24 @@ namespace nsK2EngineLow {
 		m_loadBalancingClient->setDebugOutputLevel(DEBUG_RELEASE(ExitGames::Common::DebugLevel::INFO, ExitGames::Common::DebugLevel::WARNINGS)); // that instance of LoadBalancingClient and its implementation details
 		ExitGames::Common::Base::setListener(this);
 		ExitGames::Common::Base::setDebugOutputLevel(DEBUG_RELEASE(ExitGames::Common::DebugLevel::INFO, ExitGames::Common::DebugLevel::WARNINGS)); // all classes that inherit from Base
+		m_sendDataOnGameStart = std::make_unique<std::uint8_t[]>(sendDataSize);
+		memcpy(m_sendDataOnGameStart.get(), pSendData, sendDataSize);
+		m_sendDataSizeOnGameStart = sendDataSize;
 		m_isInited = true;
-
+		
+		// 固定フレームの最大FPS30に設定する。
+		m_frameRateInfoBackup = g_engine->GetFrameRateInfo();
+		g_engine->SetFrameRateMode(K2EngineLow::enFrameRateMode_Fix, MAX_FPS);
+		
 	}
 	void SyncOnlineTwoPlayerMatchEngine::SendInitDataOtherPlayer()
 	{
 		// ルームにジョインしたことを通知。
 		ExitGames::LoadBalancing::RaiseEventOptions eventOpt;
 		ExitGames::Common::Hashtable event;
-		int hoge = 0;
-		short size = 4;
-		event.put(0, &hoge, &size);
+
+		event.put(0, m_sendDataOnGameStart.get(), m_sendDataSizeOnGameStart);
+
 		m_loadBalancingClient->opRaiseEvent(
 			true,
 			event,
@@ -97,9 +110,10 @@ namespace nsK2EngineLow {
 		padData.frameNo = m_frameNo;
 		// チェックサム用のデータを追加する。
 		padData.checksum = CalcCheckSum(&padData, sizeof(SPadData) - 4);
-		
-		auto itFind = m_padData[0].find(m_frameNo);
-		m_padData[0].insert({ m_frameNo , padData});
+
+		int plNo = GetPlayerNo();
+		auto itFind = m_padData[plNo].find(m_frameNo);
+		m_padData[plNo].insert({ m_frameNo , padData});
 		m_loadBalancingClient->sendDirect(
 			(std::uint8_t*)&padData,
 			sizeof(padData)
@@ -141,16 +155,27 @@ namespace nsK2EngineLow {
 			ExitGames::Common::Hashtable(),
 			2
 		);
+		m_timer = 0.0f;
+		std::random_device rnd;
+		m_waitLimitTime = 10.0f + rnd() % 30;
 		m_state = State::JOINING;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::Update_Joined()
 	{
 		ONLINE_LOG("Update_Joined()\n");
+		m_timer += g_gameTime->GetFrameDeltaTime();
+		if (m_timer > m_waitLimitTime) {
+			// 10秒+α秒経過したので、一旦サーバーから切断して、再接続。
+			m_state = State::DISCONNECTING;
+			m_loadBalancingClient->disconnect();
+		}
 		if (m_otherPlayerState == enOtherPlayerState_JoinedRoom) {
 			// すべてのプレイヤーがルームにそろった。
 			// プレイヤーを初期化するための情報を送る。
 			SendInitDataOtherPlayer();
 			m_timer = 0.0f;
+			std::random_device rnd;
+			m_waitLimitTime = 10.0f + rnd() % 30;
 			// 他プレイヤーの初期化情報受け取り待ちへ遷移する。
 			m_state = State::WAIT_RECV_INIT_DATA_OTHER_PLAYER;
 		}
@@ -164,6 +189,12 @@ namespace nsK2EngineLow {
 			// 1秒ごとにプレイヤーを初期化するためのデータを再送する。
 			SendInitDataOtherPlayer();
 			m_timer = 0.0f;
+		}
+		
+		if (m_timer > m_waitLimitTime) {
+			// 10秒+α秒待ってもパケットが届かなかったので、一旦切断して、再接続。
+			m_state = State::DISCONNECTING;
+			m_loadBalancingClient->disconnect();
 		}
 		if (m_otherPlayerState == enOtherPlayerState_PossibleGameStart
 			&& m_isPossibleGameStart) {
@@ -189,6 +220,8 @@ namespace nsK2EngineLow {
 	{
 		ONLINE_LOG("Update_InGame()\n");
 		int loopCount = 0;
+		int plNo = GetPlayerNo();
+		int otherPlNo = GetOtherPlayerNo();
 		while(true) {
 			if (m_otherPlayerState == enOtherPlayerState_LeftRoom) {
 				// 他プレイヤーが部屋から抜けた。
@@ -196,18 +229,18 @@ namespace nsK2EngineLow {
 				m_loadBalancingClient->disconnect();
 				break;
 			}
-			auto it = m_padData[1].find(m_playFrameNo);
-			if (it != m_padData[1].end()) {
+			auto it = m_padData[otherPlNo].find(m_playFrameNo);
+			if (it != m_padData[otherPlNo].end()) {
 #ifdef ENABLE_ONLINE_PAD_LOG
 				// 再生したパッドのログを出力。
 				OutputPlayPadDataLog();
 #endif
 				// 再生フレームのパッド情報を受け取っている。
-				m_pad[0].Update(m_padData[0][m_playFrameNo].xInputState);
-				m_pad[1].Update(it->second.xInputState);
+				m_pad[plNo].Update(m_padData[plNo][m_playFrameNo].xInputState);
+				m_pad[otherPlNo].Update(it->second.xInputState);
 				// 再生済みのパッド情報を削除。
-				m_padData[0].erase(m_playFrameNo);
-				m_padData[1].erase(m_playFrameNo);
+				m_padData[plNo].erase(m_playFrameNo);
+				m_padData[otherPlNo].erase(m_playFrameNo);
 				break;
 			}
 			else {
@@ -274,10 +307,14 @@ namespace nsK2EngineLow {
 		switch (eventCode) {
 		case enEvent_SendInitDataForOtherPlayer:
 			if (m_state == WAIT_RECV_INIT_DATA_OTHER_PLAYER) {
-				auto valuObj = (ExitGames::Common::ValueObject<int>*)(eventContent.getValue(0));
+				K2_ASSERT(!m_isHoge, "二回呼ばれている");
+				m_isHoge = true;
+				ONLINE_LOG("enEvent_SendInitDataForOtherPlayer\n");
+				auto valuObj = (ExitGames::Common::ValueObject<std::uint8_t*>*)(eventContent.getValue(0));
 				m_recieveDataSize = valuObj->getSizes()[0];
 				m_recieveDataOnGameStart = std::make_unique<std::uint8_t[]>(m_recieveDataSize);
-				memcpy(m_recieveDataOnGameStart.get(), valuObj->getDataAddress(), m_recieveDataSize);
+				auto pSrcData = valuObj->getDataCopy();
+				memcpy(m_recieveDataOnGameStart.get(), pSrcData, m_recieveDataSize);
 				m_allPlayerJoinedRoomFunc(m_recieveDataOnGameStart.get(), m_recieveDataSize);
 				m_state = WAIT_START_GAME;
 			}
@@ -295,14 +332,16 @@ namespace nsK2EngineLow {
 		// チェックサムを利用した誤り検出を行う。
 		// 送られてきたデータのチェックサム用のデータを計算。
 		unsigned int checksum = CalcCheckSum(&padData, sizeof(padData) - 4);
+		
+		int otherPlNo = GetOtherPlayerNo();
 		// 計算した値と送られてきた値が同じか調べる。
 		if (checksum == padData.checksum) {
 			// チェックサム通過。
 			// 誤りは起きていない可能性が高い。
-			auto it = m_padData[1].find(padData.frameNo);
-			if (it == m_padData[1].end()) {
+			auto it = m_padData[otherPlNo].find(padData.frameNo);
+			if (it == m_padData[otherPlNo].end()) {
 				// 
-				m_padData[1].insert({ padData.frameNo , padData });
+				m_padData[otherPlNo].insert({ padData.frameNo , padData });
 			}
 		}
 	}
@@ -312,14 +351,20 @@ namespace nsK2EngineLow {
 		SRequestResendPadData reqResendPadData;
 		memcpy(&reqResendPadData, pData, size);
 
-		auto it = m_padData[0].find(reqResendPadData.frameNo);
-		if (it != m_padData[0].end()) {
+		int plNo = GetPlayerNo();
+		auto it = m_padData[plNo].find(reqResendPadData.frameNo);
+		if (it != m_padData[plNo].end()) {
 			// パッドデータができている。
 			m_loadBalancingClient->sendDirect(
-				(std::uint8_t*)&m_padData[0][reqResendPadData.frameNo],
-				sizeof(m_padData[0][reqResendPadData.frameNo])
+				(std::uint8_t*)&m_padData[plNo][reqResendPadData.frameNo],
+				sizeof(m_padData[plNo][reqResendPadData.frameNo])
 			);
 		}
+	}
+	void SyncOnlineTwoPlayerMatchEngine::disconnectReturn(void) 
+	{
+		// 切断済みにする。
+		m_state = State::DISCONNECTED;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::onDirectMessage(const ExitGames::Common::Object& msg, int remoteID, bool relay)
 	{
@@ -352,11 +397,6 @@ namespace nsK2EngineLow {
 		}
 		// 部屋に入れた。
 		m_state = State::CONNECTED;
-	}
-	void SyncOnlineTwoPlayerMatchEngine::disconnectReturn(void)
-	{
-		// 切断済み
-		m_state = State::DISCONNECTED;
 	}
 	void SyncOnlineTwoPlayerMatchEngine::connectionErrorReturn(int errorCode)
 	{
