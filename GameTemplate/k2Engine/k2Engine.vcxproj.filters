@@ -28,6 +28,9 @@
     <Filter Include="graphics\preRender">
       <UniqueIdentifier>{143cc97d-283c-4f50-a159-430f487221d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dbg">
+      <UniqueIdentifier>{da4adfd3-066d-493e-8ff5-83d0147f941e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics\ModelRender.cpp">
@@ -114,6 +117,9 @@
       <Filter>geometry</Filter>
     </ClCompile>
     <ClCompile Include="graphics\preRender\CalcAnimatedVertex.cpp" />
+    <ClCompile Include="dbg\dbgVectorRenderer.cpp">
+      <Filter>dbg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -206,5 +212,8 @@
       <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="graphics\preRender\CalcAnimatedVertex.h" />
+    <ClInclude Include="dbg\dbgVectorRenderer.h">
+      <Filter>dbg</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
