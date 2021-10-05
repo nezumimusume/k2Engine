@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: IVoiceTransport Class Reference</title>
+    <title>Photon C++ Client API: Member List</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,75 +83,32 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="a10622.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10684.html">Voice</a></li><li class="navelem"><a class="el" href="a11958.html">IVoiceTransport</a></li>  </ul>
+<li class="navelem"><a class="el" href="a10625.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10687.html">Voice</a></li><li class="navelem"><a class="el" href="a11961.html">IVoiceTransport</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="a11955.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">IVoiceTransport Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">IVoiceTransport Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for IVoiceTransport:</div>
-<div class="dyncontent">
-<div class="center"><img src="a11957.gif" border="0" usemap="#_i_voice_transport_inherit__map" alt="Inheritance graph"/></div>
-<map name="_i_voice_transport_inherit__map" id="_i_voice_transport_inherit__map">
-<area shape="rect" title=" " alt="" coords="26,77,125,101"/>
-<area shape="rect" href="a11914.html" title="Provides transport for VoiceClient based on given LoadBalancing Client Creates and maintains VoiceCli..." alt="" coords="5,149,145,173"/>
-<area shape="rect" href="a11878.html" title=" " alt="" coords="46,5,105,29"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for IVoiceTransport:</div>
-<div class="dyncontent">
-<div class="center"><img src="a11956.gif" border="0" usemap="#_i_voice_transport_coll__map" alt="Collaboration graph"/></div>
-<map name="_i_voice_transport_coll__map" id="_i_voice_transport_coll__map">
-<area shape="rect" title=" " alt="" coords="5,77,104,101"/>
-<area shape="rect" href="a11878.html" title=" " alt="" coords="25,5,84,29"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a034f849e0714c3e2ea8e0bf609d8a2b4"><td class="memItemLeft" align="right" valign="top"><a id="a034f849e0714c3e2ea8e0bf609d8a2b4"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isChannelJoined</b> (int channelId)=0</td></tr>
-<tr class="separator:a034f849e0714c3e2ea8e0bf609d8a2b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae76e9fa8e5f89c2c5a9eec63c1405485"><td class="memItemLeft" align="right" valign="top"><a id="ae76e9fa8e5f89c2c5a9eec63c1405485"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>sendVoicesInfo</b> (const <a class="el" href="a10810.html">Common::JVector</a>&lt; const <a class="el" href="a11926.html">LocalVoice</a> * &gt; &amp;voices, int channelId, int targetPlayerId)=0</td></tr>
-<tr class="separator:ae76e9fa8e5f89c2c5a9eec63c1405485"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb06c1c0b93eb1ff5faf13838d87e3d8"><td class="memItemLeft" align="right" valign="top"><a id="abb06c1c0b93eb1ff5faf13838d87e3d8"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>sendVoiceRemove</b> (const <a class="el" href="a11926.html">LocalVoice</a> &amp;voice, int channelId, int targetPlayerId)=0</td></tr>
-<tr class="separator:abb06c1c0b93eb1ff5faf13838d87e3d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca3b4506a6e899db40165a68b1068350"><td class="memItemLeft" align="right" valign="top"><a id="aca3b4506a6e899db40165a68b1068350"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>sendFrame</b> (<a class="el" href="a11874.html">Buffer</a>&lt; nByte &gt; data, nByte evNumber, nByte voiceId, int channelId, const <a class="el" href="a11926.html">LocalVoice</a> &amp;localVoice)=0</td></tr>
-<tr class="separator:aca3b4506a6e899db40165a68b1068350"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96fd35bb706a4684533b82e9cd894015"><td class="memItemLeft" align="right" valign="top"><a id="a96fd35bb706a4684533b82e9cd894015"></a>
-virtual <a class="el" href="a11510.html">Common::JString</a>&#160;</td><td class="memItemRight" valign="bottom"><b>channelIdStr</b> (int channelId)=0</td></tr>
-<tr class="separator:a96fd35bb706a4684533b82e9cd894015"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab15988e28295d2c52f966f627fa7d32f"><td class="memItemLeft" align="right" valign="top"><a id="ab15988e28295d2c52f966f627fa7d32f"></a>
-virtual <a class="el" href="a11510.html">Common::JString</a>&#160;</td><td class="memItemRight" valign="bottom"><b>playerIdStr</b> (int playerId)=0</td></tr>
-<tr class="separator:ab15988e28295d2c52f966f627fa7d32f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab759ea94c874ab08e2369e6be97a8f09"><td class="memItemLeft" align="right" valign="top"><a id="ab759ea94c874ab08e2369e6be97a8f09"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setDebugEchoMode</b> (const <a class="el" href="a11926.html">LocalVoice</a> &amp;voice)=0</td></tr>
-<tr class="separator:ab759ea94c874ab08e2369e6be97a8f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_a11878"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a11878')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="a11878.html">ILogger</a></td></tr>
-<tr class="memitem:a992ddb9266dc12f352a5f6a4ddf6df09 inherit pub_methods_a11878"><td class="memItemLeft" align="right" valign="top"><a id="a992ddb9266dc12f352a5f6a4ddf6df09"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>logError</b> (const <a class="el" href="a11510.html">Common::JString</a> &amp;msg) const =0</td></tr>
-<tr class="separator:a992ddb9266dc12f352a5f6a4ddf6df09 inherit pub_methods_a11878"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37b279cfab9e13dc04d844e6e4202b88 inherit pub_methods_a11878"><td class="memItemLeft" align="right" valign="top"><a id="a37b279cfab9e13dc04d844e6e4202b88"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>logWarning</b> (const <a class="el" href="a11510.html">Common::JString</a> &amp;msg) const =0</td></tr>
-<tr class="separator:a37b279cfab9e13dc04d844e6e4202b88 inherit pub_methods_a11878"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86cec603e611d28eb827483b059b9d1c inherit pub_methods_a11878"><td class="memItemLeft" align="right" valign="top"><a id="a86cec603e611d28eb827483b059b9d1c"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>logInfo</b> (const <a class="el" href="a11510.html">Common::JString</a> &amp;msg) const =0</td></tr>
-<tr class="separator:a86cec603e611d28eb827483b059b9d1c inherit pub_methods_a11878"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00f33c401f1300d73b142415b564ef97 inherit pub_methods_a11878"><td class="memItemLeft" align="right" valign="top"><a id="a00f33c401f1300d73b142415b564ef97"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>logDebug</b> (const <a class="el" href="a11510.html">Common::JString</a> &amp;msg) const =0</td></tr>
-<tr class="separator:a00f33c401f1300d73b142415b564ef97 inherit pub_methods_a11878"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-</div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="a11961.html">IVoiceTransport</a>, including all inherited members.</p>
+<table class="directory">
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>channelIdStr</b>(int channelId)=0 (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>isChannelJoined</b>(int channelId)=0 (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>IVoiceTransport</b>(void) (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>logDebug</b>(const Common::JString &amp;msg) const =0 (defined in <a class="el" href="a11881.html">ILogger</a>)</td><td class="entry"><a class="el" href="a11881.html">ILogger</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>logError</b>(const Common::JString &amp;msg) const =0 (defined in <a class="el" href="a11881.html">ILogger</a>)</td><td class="entry"><a class="el" href="a11881.html">ILogger</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>logInfo</b>(const Common::JString &amp;msg) const =0 (defined in <a class="el" href="a11881.html">ILogger</a>)</td><td class="entry"><a class="el" href="a11881.html">ILogger</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>logWarning</b>(const Common::JString &amp;msg) const =0 (defined in <a class="el" href="a11881.html">ILogger</a>)</td><td class="entry"><a class="el" href="a11881.html">ILogger</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>playerIdStr</b>(int playerId)=0 (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sendFrame</b>(Buffer&lt; nByte &gt; data, nByte evNumber, nByte voiceId, int channelId, const LocalVoice &amp;localVoice)=0 (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>sendVoiceRemove</b>(const LocalVoice &amp;voice, int channelId, int targetPlayerId)=0 (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sendVoicesInfo</b>(const Common::JVector&lt; const LocalVoice * &gt; &amp;voices, int channelId, int targetPlayerId)=0 (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>setDebugEchoMode</b>(const LocalVoice &amp;voice)=0 (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~ILogger</b>(void) (defined in <a class="el" href="a11881.html">ILogger</a>)</td><td class="entry"><a class="el" href="a11881.html">ILogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~IVoiceTransport</b>(void) (defined in <a class="el" href="a11961.html">IVoiceTransport</a>)</td><td class="entry"><a class="el" href="a11961.html">IVoiceTransport</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+</table></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.10-->
 <!-- start footer part -->
 <footer style="border-top: 1px solid #444; margin-top: 1em; padding: 1em;">

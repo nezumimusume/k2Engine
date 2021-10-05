@@ -25,8 +25,6 @@ static JString gameName = L"VoiceBasics";
 static const JString PLAYER_NAME = L"user";
 static const int MAX_SENDCOUNT = 100;
 
-
-
 Echo::Echo(LocalVoiceAudio<float>* localVoice, ILogger* logger, const VoiceInfo& voiceInfo)
 	: mpLocalVoice(localVoice)
 	, mpLogger(logger)
@@ -46,8 +44,6 @@ void Echo::frameDataCallback(const Buffer<float>& frame)
 	mpLocalVoice->pushDataAsync(frame);
 }
 
-
-
 static void echoFrameDataCallback(void* opaque, const Buffer<float>& frame)
 {
 	static_cast<Echo*>(opaque)->frameDataCallback(frame);
@@ -64,11 +60,10 @@ static void frameDataCallback(void* opaque, const Buffer<float>& frame)
 	audioOut->push(frame);
 }
 
-
-
-RemoteVoiceData::RemoteVoiceData(ISyncAudioOut<float>* out, AudioStreamPlayer<float>* player)
+RemoteVoiceData::RemoteVoiceData(ISyncAudioOut<float>* out, AudioStreamPlayer<float>* player, JVector<RemoteVoiceData*>* container)
 	: out(out)
 	, player(player)
+	, container(container)
 {
 }
 
@@ -84,23 +79,17 @@ void del(const T* e)
 	delete e;
 }
 
-static JVector<RemoteVoiceData*> gAudioPlayers;
-
-
-
-static void remoteVoiceRemoveCallback(void* opaque)
+void PhotonLib::remoteVoiceRemoveCallback(void* opaque)
 {
 	RemoteVoiceData* d = static_cast<RemoteVoiceData*>(opaque);
-	while(gAudioPlayers.removeElement(d));
+	while(d->container->removeElement(d));
 	delete d;
 }
 
-static void remoteVoiceInfoCallback(void* opaque, int channelId, int playerId, nByte voiceId, const VoiceInfo& voiceInfo, RemoteVoiceOptions& options)
+void PhotonLib::remoteVoiceInfoCallback(void* opaque, int channelId, int playerId, nByte voiceId, const VoiceInfo& voiceInfo, RemoteVoiceOptions& options)
 {
 	static_cast<PhotonLib*>(opaque)->remoteVoiceInfoCallback(channelId, playerId, voiceId, voiceInfo, options);
 }
-
-
 
 void PhotonLib::remoteVoiceInfoCallback(int channelId, int playerId, nByte voiceId, const VoiceInfo& voiceInfo, RemoteVoiceOptions& options)
 {
@@ -118,8 +107,8 @@ void PhotonLib::remoteVoiceInfoCallback(int channelId, int playerId, nByte voice
 		AudioStreamPlayer<float>* pPlayer = new AudioStreamPlayer<float>(*mpTransport, *pOut, L"AudioStreamPlayer", true);
 
 		pPlayer->start(voiceInfo.getSamplingRate(), voiceInfo.getChannels(), voiceInfo.getFrameDurationSamples(), 200);
-		RemoteVoiceData* pRVD = new RemoteVoiceData(pOut, pPlayer);
-		gAudioPlayers.addElement(pRVD);
+		RemoteVoiceData* pRVD = new RemoteVoiceData(pOut, pPlayer, &mAudioPlayers);
+		mAudioPlayers.addElement(pRVD);
 		options.setRemoteVoiceRemoveAction(pRVD, remoteVoiceRemoveCallback);
 
 		// either setOutput or setDecoder
@@ -145,7 +134,7 @@ PhotonLib::PhotonLib(UIListener* uiListener)
 {
 	mpTransport = new LoadBalancingTransport(mLoadBalancingClient, *this, DIRECT);
 	mpVoiceClient = new VoiceClient(mpTransport);
-	mpVoiceClient->setOnRemoteVoiceInfoAction(this, ::remoteVoiceInfoCallback);
+	mpVoiceClient->setOnRemoteVoiceInfoAction(this, PhotonLib::remoteVoiceInfoCallback);
 
 	mpTransport->setDebugOutputLevel(DEBUG_RELEASE(DebugLevel::INFO, DebugLevel::WARNINGS)); // all instances of VoiceClient that use mpTransport
 	mLoadBalancingClient.setDebugOutputLevel(DEBUG_RELEASE(DebugLevel::INFO, DebugLevel::WARNINGS)); // that instance of LoadBalancingClient and its implementation details
@@ -206,8 +195,8 @@ void PhotonLib::update(void)
 	mLoadBalancingClient.service();
 	mpTransport->service();
 	mpVoiceClient->service();
-	for(unsigned int i = 0; i<gAudioPlayers.getSize(); i++)
-		gAudioPlayers[i]->player->service();
+	for(unsigned int i = 0; i<mAudioPlayers.getSize(); i++)
+		mAudioPlayers[i]->player->service();
 }
 
 void PhotonLib::onKeyPressed(int key)

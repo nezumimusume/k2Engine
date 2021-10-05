@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Fragmentation and Channels</title>
+    <title>Photon C++ Client API: The Photon Server</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,28 +83,23 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Fragmentation and Channels </div>  </div>
+<div class="title">The Photon Server </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="FragmentationAndChannels_Fragmentation"></a>
-Fragmentation</h1>
-<p>Bigger chunks of data (more than about 1kB) are not fitting into a single packet, so they are fragmented and reassembled automatically. Depending on the data size, this takes up multiple packages.</p>
-<p>Be aware that this might stall other commands. Call <a class="el" href="a11658.html#ac66e8bb0fdc525c5e250092c35343a2d">service()</a> or <a class="el" href="a11658.html#a5f8607574c36273d920ff3c859d65b5b">sendOutgoingCommands()</a> more often than absolutely necessary. You can also check the debug output for <b>"WARNING! There are x outgoing messages waiting in the local sendQueue !"</b>, which is triggered, if a sendqueue contains an unusual big amount of elements and means, that you probably do not call <a class="el" href="a11658.html#ac66e8bb0fdc525c5e250092c35343a2d">service()</a> or <a class="el" href="a11658.html#a5f8607574c36273d920ff3c859d65b5b">sendOutgoingCommands()</a> often enough to let Photon send all the packets out, which you are creating by triggering operations.</p>
-<h1><a class="anchor" id="FragmentationAndChannels_Sequencing"></a>
-Sequencing</h1>
-<p>The sequencing of the protocol makes sure that any receiving client will dispatch your actions in the order, in which you have sent them. Unreliable data is considered replaceable and can be lost. Reliable events and operations will be repeated several times if needed, but they will all be dispatched in order without gaps. Unreliable actions are also related to the last reliable action in the same channel and do not get dispatched before that reliable data has been dispatched first. This can be useful, if the actions are related to each other.</p>
-<p>Example: Your FPS sends out unreliable movement updates and reliable chat messages. A lost package with movement updates would be left out as the next movement update is coming fast. On the receiving end, this would maybe show as a small jump. If a package with a chat message is lost, it would be resent and would introduce lag, even to all movement updates, created after that chat-message. In this case, the data is unrelated and should be put into different channels, to avoid that a needed resent of a chat message introduces lag into the movement updates.</p>
-<h1><a class="anchor" id="FragmentationAndChannels_Channels"></a>
-Channels</h1>
-<p>Photon is supporting "channels". This allows you to separate information into multiple channels, each being sequenced independently. This means, that operations and events of one channel will not be stalled because events of another channel are not available yet.</p>
-<p>By default a PhotonPeer has an amount of <a class="el" href="a11658.html#a1b8dacd122e7d5ebaeee1f309a2858b8">getChannelCountUserChannels()</a> user channels and channel zero is the default channel, which will be used, when not explicitly specifying a channel. Operations join and leave are always sent in channel zero. There is a "system" channel 255 used internally for connect and disconnect messages. This channel is ignored for the user channel count.</p>
-<p>Channels are prioritized: Data, to be send on the lowest channel number is put into an UDP package first. Data, which will be sent through a channel with a higher number might be sent later when an UDP package is already full.</p>
-<p>Example: The chat messages could be sent in channel one, while movement is sent in channel zero. They are not related to the movement and if a chat message is delayed, it will no longer affect movement in channel zero. Also, channel zero has higher priority and is more likely to be sent immediately (in case packages get filled up). </p>
+<div class="textblock"><p>The Photon Server is the central hub for communication for all your clients. It is a service that can be run on any Windows machine, handling UDP and TCP (TCP can be used by clients on platforms, that are not fully supporting UDP, and as for server-setups, that do not support UDP (like some cloud services) and in case of some paranoid firewall settings - use UDP (which can be sent reliable with Photon!) whenever you can and only use TCP as a fallback, as we can't guarentee feature completeness for TCP.</p>
+<p>The Photon Server SDK includes a pre-built version that can be run out of the box. It also allows you to extend the server-side easily.</p>
+<p>Get the Photon Server SDK at: <a href="https://www.photonengine.com/en/OnPremise/Download">https://www.photonengine.com/en/OnPremise/Download</a></p>
+<h1><a class="anchor" id="Server_Lite"></a>
+The Lite Application</h1>
+<p>The Lite Application is the default implementation for room-based games on Photon and (hopefully) a flexible base for your own, more game-specific, extensions. It offers rooms, joining and leaving them, sending events to the other players in a room and handles properties.</p>
+<p>It basically does everything you came to expect of Photon.</p>
+<p>So why is this done in a separate project? Because this way we can could sperate the low level C++ server core and the high level C# server API, which comes in multiple so called Applications, that can be used for different needs.</p>
+<p>On the client-side LitePeer is the counterpart for the server-side Lite Application. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- HTML footer for doxygen 1.8.10-->

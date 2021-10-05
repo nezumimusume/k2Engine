@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: ExitGames::LoadBalancing::LobbyType Namespace Reference</title>
+    <title>Photon C++ Client API: ExitGames::LoadBalancing::DirectMode Namespace Reference</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,35 +83,34 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="a10622.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10652.html">LoadBalancing</a></li><li class="navelem"><a class="el" href="a10658.html">LobbyType</a></li>  </ul>
+<li class="navelem"><a class="el" href="a10625.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10655.html">LoadBalancing</a></li><li class="navelem"><a class="el" href="a10658.html">DirectMode</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">ExitGames::LoadBalancing::LobbyType Namespace Reference</div>  </div>
+<div class="title">ExitGames::LoadBalancing::DirectMode Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a30c451d8c36cb067661cbe71e62eb2d6"><td class="memItemLeft" align="right" valign="top"><a id="a30c451d8c36cb067661cbe71e62eb2d6"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10658.html#a30c451d8c36cb067661cbe71e62eb2d6">DEFAULT</a></td></tr>
-<tr class="memdesc:a30c451d8c36cb067661cbe71e62eb2d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This lobby type is used unless another lobby type is specified. <a class="el" href="a11774.html">Room</a> lists will be sent and <a class="el" href="a11686.html#a432926928eab7d79e3d362aa30dd2059">Client::opJoinRandomRoom()</a> can filter by matching properties. <br /></td></tr>
-<tr class="separator:a30c451d8c36cb067661cbe71e62eb2d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac886f0e0011a225062d0e23fc69627f4"><td class="memItemLeft" align="right" valign="top"><a id="ac886f0e0011a225062d0e23fc69627f4"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10658.html#ac886f0e0011a225062d0e23fc69627f4">SQL_LOBBY</a></td></tr>
-<tr class="memdesc:ac886f0e0011a225062d0e23fc69627f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This lobby type lists rooms like type DEFAULT but SQL-like "where" clauses for filtering can be used with <a class="el" href="a11686.html#a432926928eab7d79e3d362aa30dd2059">Client::opJoinRandomRoom()</a>. This allows 'bigger', 'less', 'or' and 'and' combinations. <br /></td></tr>
-<tr class="separator:ac886f0e0011a225062d0e23fc69627f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e10e796270911c7c916cc20c00b3008"><td class="memItemLeft" align="right" valign="top"><a id="a6e10e796270911c7c916cc20c00b3008"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10658.html#a6e10e796270911c7c916cc20c00b3008">ASYNC_RANDOM_LOBBY</a></td></tr>
-<tr class="memdesc:a6e10e796270911c7c916cc20c00b3008"><td class="mdescLeft">&#160;</td><td class="mdescRight">This lobby does not send room lists. It is only used for <a class="el" href="a11686.html#a432926928eab7d79e3d362aa30dd2059">Client::opJoinRandomRoom()</a>. It keeps rooms available for matchmaking for a while even when there are only inactive users left. <br /></td></tr>
-<tr class="separator:a6e10e796270911c7c916cc20c00b3008"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61bd59940b5821ab1a4696f539a05b5c"><td class="memItemLeft" align="right" valign="top"><a id="a61bd59940b5821ab1a4696f539a05b5c"></a>
+static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10658.html#a61bd59940b5821ab1a4696f539a05b5c">NONE</a></td></tr>
+<tr class="memdesc:a61bd59940b5821ab1a4696f539a05b5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do not create any 2p2 connections between the clients. This is the default. <br /></td></tr>
+<tr class="separator:a61bd59940b5821ab1a4696f539a05b5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3ada93a6a53e60b55e3c36a88f54160"><td class="memItemLeft" align="right" valign="top"><a id="ad3ada93a6a53e60b55e3c36a88f54160"></a>
+static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10658.html#ad3ada93a6a53e60b55e3c36a88f54160">ALL_TO_ALL</a></td></tr>
+<tr class="memdesc:ad3ada93a6a53e60b55e3c36a88f54160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Each client establishes a direct connection with every other client inside the room. <br /></td></tr>
+<tr class="separator:ad3ada93a6a53e60b55e3c36a88f54160"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26c9d78b11a8bd1ef9f12dd93f5429b7"><td class="memItemLeft" align="right" valign="top"><a id="a26c9d78b11a8bd1ef9f12dd93f5429b7"></a>
+static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10658.html#a26c9d78b11a8bd1ef9f12dd93f5429b7">MASTER_TO_ALL</a></td></tr>
+<tr class="memdesc:a26c9d78b11a8bd1ef9f12dd93f5429b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The master client establishes a direct connection with every other client inside the room. All other clients only establish a direct connection with the master client but not with each other. <br /></td></tr>
+<tr class="separator:a26c9d78b11a8bd1ef9f12dd93f5429b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Options of lobby types available. Lobby types might be implemented in certain <a class="el" href="a10635.html">Photon</a> versions and won't be available on older servers.</p>
-<p><a class="el" href="a10658.html">LobbyType</a> </p>
+<div class="textblock"><p>Options for optional client to client direct connections - set in <a class="el" href="a11781.html">RoomOptions</a> during room creation. </p>
 </div></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.10-->
 <!-- start footer part -->

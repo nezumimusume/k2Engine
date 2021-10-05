@@ -27,7 +27,7 @@ namespace ExitGames
 		using namespace Photon;
 		using namespace Internal;
 
-		const JString Client::M_NAMESERVER = L"ns.exitgames.com"; // default name server address
+		const JString Client::M_NAMESERVER = L"ns.photonengine.io"; // default name server address
 		const EG_CHAR* const REGION = L"EU"; // default region
 
 		/**

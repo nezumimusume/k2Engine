@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Workflow</title>
+    <title>Photon C++ Client API: Android NDK</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,56 +83,24 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li><li class="navelem"><a class="el" href="a12683.html">How to set up your application</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Workflow </div>  </div>
+<div class="title">Android NDK </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>To get an impression of how to work on the client, we will use the server's Lite logic. This application defines rooms which are created when users try to join them. Each user in a room becomes an actor with its own number.</p>
-<p>A simplified workflow looks like this:</p><ul>
-<li>create a LitePeer instance</li>
-<li>from now on: regularly call <a class="el" href="a11658.html#ac66e8bb0fdc525c5e250092c35343a2d">service()</a> to get events and operation responses and to send operations (e.g. ten times a second)</li>
-<li>call <a class="el" href="a11658.html#a350712dc9e140a7368a950d46f16ea56">connect()</a> to connect to the server</li>
-<li>wait until the library calls <a class="el" href="a11654.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a></li>
-<li>the return code should equal StatusCode::CONNECT</li>
-<li>call <a class="el" href="a11642.html#aa3c67ad2f68b154c4fe37ef12737b6f9">opJoin()</a> to get into a room</li>
-<li>wait until the library calls <a class="el" href="a11654.html#a03ff8cb4a6f605668586756cb6a113c7">onOperationResponse()</a> with operation code OPC_RT_JOIN</li>
-<li>send data in the game by calling <a class="el" href="a11642.html#a81f266d477bb1ae7f50abbc5d9641b2f">opRaiseEvent()</a></li>
-<li>receive events in <a class="el" href="a11654.html#aebac55de19a14f226016bee9dc2125b1">onEvent()</a></li>
-<li>when you are done: call <a class="el" href="a11642.html#ab895dbaac2028a5551b02a8fcbcf662a">opLeave()</a> to quit/leave the game room</li>
-<li>wait for a response to "leave" in <a class="el" href="a11654.html#a03ff8cb4a6f605668586756cb6a113c7">onOperationResponse()</a> with operation code: OPC_RT_LEAVE</li>
-<li>disconnect with <a class="el" href="a11658.html#a888a5acf1fe3a8902f7cb2f5039cb334">disconnect()</a></li>
-<li>wait for status code StatusCode::DISCONNECT in <a class="el" href="a11654.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a></li>
-</ul>
-<p>Combined with the server's Lite application, this simple workflow would allow you to use rooms and send your game's events. The functions used could be broken down into three layers:</p>
-<ul>
-<li>Low Level: <a class="el" href="a11658.html#ac66e8bb0fdc525c5e250092c35343a2d">service()</a>, <a class="el" href="a11658.html#a350712dc9e140a7368a950d46f16ea56">connect()</a>, <a class="el" href="a11658.html#a888a5acf1fe3a8902f7cb2f5039cb334">disconnect()</a> and <a class="el" href="a11654.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a> are directly referring to the connection to the server. This level works with UDP/TCP packets which transport commands (which in turn carry your operations). It keeps your connection alive and organizes your RPC calls and events into packages.</li>
-<li>Logic Level: operations, results and events make up the logical level in Photon. Any operation is defined on the server (think RPC call) and can have a result. Events are incoming from the server and update the client with some data.</li>
-<li>Application Level: Made up by a specific application and its features. In this case we use the operations and logic of the Lite application. In this specific case, we have rooms and actors and more. The LitePeer is matching the server side implementation and wraps it up for you.</li>
-</ul>
-<p>You don't have to manage the low level communication in most cases. However, it makes sense to know that everything that goes from client to server (and the other way round) is put into "commands". Internally, commands are also used to establish and keep the connection between client and server alive (without carrying additional data).</p>
-<p>All functions that are operations (RPC calls) are prefixed with "Op" to tell them apart from anything else. Other server-side applications (like for example MMO or your own) will define different operations. These will have different parameters and return values. These operations are not part of the client library but can be implemented by calling <a class="el" href="a11658.html#a3c1268775eba0cfe2b6f7e309a27e2fd">opCustom()</a>.</p>
-<p>Aside from operations, there is a separate communication layer to make UDP reliable. Everything that goes from client to server (and the other way round) is put into "commands" and some commands establish and keep the connection between client and server (without carrying additional data).</p>
-<h1><a class="anchor" id="Workflow_Callbacks"></a>
-Callbacks</h1>
-<p>PhotonPeer uses the virtual functions of the class <a class="el" href="a11654.html">PhotonListener</a> to do callbacks. Each function is called in separate cases:</p><ul>
-<li><a class="el" href="a11654.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a> is for peer state changes (connect, disconnect, errors)</li>
-<li><a class="el" href="a11654.html#a03ff8cb4a6f605668586756cb6a113c7">onOperationResponse()</a> is for operation responses (join, leave, raiseEvent and custom operations, etc.)</li>
-<li><a class="el" href="a11654.html#aebac55de19a14f226016bee9dc2125b1">onEvent()</a> gets called for events coming in</li>
-<li><a class="el" href="a10714.html#a6fcf1232530518193479d1c38c916843">debugReturn()</a> is called to pass debug output to you (not used by release builds)</li>
-</ul>
-<p>The calls to <a class="el" href="a11654.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a> are of special interest, as they denote connection status changes and errors.</p>
-<h1><a class="anchor" id="Workflow_GettersAndSetters"></a>
-Getters/Setters</h1>
-<p>The following getter- and setter-functions in PhotonPeer are of special interest:</p><ul>
-<li><a class="el" href="a11658.html#aa7f6b25436dc87fe34f53c2eec8df65a">setTimePingInterval()</a> sets the time between ping operations</li>
-<li><a class="el" href="a11658.html#a85101f9ea38bc642cb74ec4ae571b9fb">getRoundTripTime()</a> returns the ping between the Photon client and the server</li>
-<li><a class="el" href="a11658.html#ace25d38b4d458e3dfb0b670ecd317682">getRoundTripTimeVariance()</a> shows the jitter (variability of the roundtrip time)</li>
-<li><a class="el" href="a11658.html#aa108814e82124d5f4af471ea4ffb610a">getServerTime()</a> is the continuously approximated server's time in milliseconds </li>
-</ul>
+<div class="textblock"><p>For Android NDK Photon supports Visual Studio with WinGDB plugin on Windows as IDE, but you can also use makefiles, which will work on Windows and OS X. Linux is currently not supported.</p>
+<p>1. Add <b>common-cpp-static-prebuilt</b> and <b>photon-cpp-static-prebuilt</b> to "APP_CPPFLAGS" in your applications Android.mk file.</p>
+<p>2. In your Projects Android.mk file add the following lines:<br  />
+ <b>$(call import-add-path-optional, $(shell pwd)/../../../../Photon-cpp/src/android)</b><br  />
+ <b>$(call import-add-path-optional, $(shell pwd)/../../../../Photon-cpp)</b><br  />
+ <b>$(call import-module,photon-cpp-prebuilt)</b></p>
+<p>3. Add <b>-frtti</b> to "LOCAL_STATIC_LIBRARIES" in your applications Application.mk file.</p>
+<p>4. Set "APP_STL" in your applications Application.mk file to <b>stlport_static</b>, <b>stlport_shared</b>, <b>gnustl_static</b> or <b>gnustl_shared</b>.</p>
+<p>5. Add the following #include directive to your source-code:<br  />
+ <b>#include "Photon-cpp/inc/PhotonPeer.h"</b> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- HTML footer for doxygen 1.8.10-->

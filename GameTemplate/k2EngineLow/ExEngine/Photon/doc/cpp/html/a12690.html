@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Events</title>
+    <title>Photon C++ Client API: Linux</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,17 +83,22 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li><li class="navelem"><a class="el" href="a12683.html">How to set up your application</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Events </div>  </div>
+<div class="title">Linux </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Unlike operations, events are "messages" that are rarely triggered by the client that receives them. Events usually come from outside: the server or other clients.</p>
-<p>They are created as a side effect of operations (e.g. when you join a room) or raised as main purpose of the operation (like done by <a class="el" href="a11642.html#a81f266d477bb1ae7f50abbc5d9641b2f">opRaiseEvent()</a>). Most events carry some form of data, but in rare cases the type of the event itself is the only message.</p>
-<p>Events are instances of <a class="el" href="a11638.html">EventData</a> with arbitrary content. </p>
+<div class="textblock"><p>Use IDE of your choice or makefiles.</p>
+<p>1. In Code::Blocks IDE right-click on your project, go to "Build Options" and go to "Search directories".</p>
+<p>2. In the "Compiler" tab add paths to the parent-folder(s) of the <b>Common-cpp/inc</b> and <b>Photon-cpp/inc</b> directories.</p>
+<p>3. In the "Linker" tab add paths to <b>Common-cpp</b> and <b>Photon-cpp</b> directories.</p>
+<p>4. For each target of your project go to its "Linker settings" tab left to "Search directories". Add <b>PhotonDebug64</b> and <b>CommonDebug64</b> libraries for the debug or <b>PhotonRelease64</b> and <b>CommonRelease64</b> for the release configuration for 64 bit builds, or replace the "64" by "32" for 32bit builds. The order of the libraries is important for a successful build. The prefix 'lib' and the extension 'a' are added automatically.</p>
+<p>5. In the projects "Linker settings" tab add <b>-pthread</b> to "Other linker options".</p>
+<p>6. Add the following #include directive to your source-code:<br  />
+ <b>#include "Photon-cpp/inc/PhotonPeer.h"</b> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- HTML footer for doxygen 1.8.10-->

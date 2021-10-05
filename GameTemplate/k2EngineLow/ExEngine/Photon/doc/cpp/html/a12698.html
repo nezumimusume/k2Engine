@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Troubleshooting</title>
+    <title>Photon C++ Client API: Basics</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,29 +83,44 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Troubleshooting </div>  </div>
+<div class="title">Basics </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This section contains suggestions for common problems developers using Photon might come across. As always: if the solution at hand is not fitting your needs, please contact us: <a href="#" onclick="location.href='mai'+'lto:'+'dev'+'el'+'ope'+'r@'+'pho'+'to'+'nen'+'gi'+'ne.'+'co'+'m'; return false;">devel<span style="display: none;">.nosp@m.</span>oper<span style="display: none;">.nosp@m.</span>@phot<span style="display: none;">.nosp@m.</span>onen<span style="display: none;">.nosp@m.</span>gine.<span style="display: none;">.nosp@m.</span>com</a>.</p>
-<p><b>I get a message "WARNING! There are x outgoing messages waiting in the local sendQueue !" What is the problem ?</b></p>
-<p>This message means that you are generating more Photon operations/events than you are sending. Photon can only send reliable operations one after another<em>, </em>and will wait for the response from the Photon server before the next operation will be sent. Of course, Photon only can send operations at all, if you call service(). If you do not call it often enough, it will not be able to send all the operations, which you are generating.</p>
-<p>Solutions:<br  />
- 1. Make sure to call <a class="el" href="a11658.html#ac66e8bb0fdc525c5e250092c35343a2d">service()</a> in a sufficiently high frequency (like ten times a second).</p>
-<p>2. If you call call <a class="el" href="a11658.html#ac66e8bb0fdc525c5e250092c35343a2d">service()</a> frequently enough, the problem lies in the underlying Network not being able to transmit the information quickly enough. Especially mobile networks are not able to transfer something like 50 or even more operations per second. The only solution for this is to create fewer operations over the same period of time. Try to sum up your ingame data and send it in bigger time intervals.</p>
-<p>Note: There is no certain limit for the size of a queue. Photon will fail as soon as there is no more memory available for new messages.</p>
-<h1><a class="anchor" id="Troubleshooting_Windows"></a>
-Troubleshooting Windows</h1>
-<p><b>Including multiple versions of WinSock</b> It is common for developers using multiple libraries to have a conflict around multiple versions of WinSock. For instance, a developer may use a game engine that uses WinSock and Photon which uses WinSock2. By adding <b>_WINSOCK_</b> to the preprocessor definitions the conflict is resolved, but the system will throw a warning which can be ignored.</p>
-<p>You can also try re-arranging the order in which you're including the header files. You can see a good example of this in someone's application using a library called Allegro. Including the files in this order solved their compilation problems: </p><div class="fragment"><div class="line">\#include &lt;allegro.h&gt;</div>
-<div class="line"><span class="preprocessor">#define _WINSOCKAPI_</span></div>
-<div class="line">\#include &lt;winalleg.h&gt;</div>
-<div class="line">\#include &lt;winsock2.h&gt;</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+<div class="textblock"><h1><a class="anchor" id="Basics_Connect"></a>
+Creating a PhotonPeer instance and connecting</h1>
+<p>When a PhotonPeer instance is created, the PhotonPeer is ready to connect to a Photon Server. To do that, call the function <a class="el" href="a11661.html#a350712dc9e140a7368a950d46f16ea56">connect()</a></p>
+<p>After initializing the connection, the application should wait for the <a class="el" href="a11657.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a> callback function. If its returnCode is StatusCode::CONNECT, the connection has been established.</p>
+<h1><a class="anchor" id="Basics_Join"></a>
+Joining a game</h1>
+<p>As soon as the client application is connected to Photon, use the function <a class="el" href="a11645.html#aa3c67ad2f68b154c4fe37ef12737b6f9">opJoin()</a> to join or create a game. If there is no game with the given identifier, a new game will be created. If the call succeeds, the <a class="el" href="a11657.html#a03ff8cb4a6f605668586756cb6a113c7">onOperationResponse()</a> callback will be called with operation code OPC_RT_JOIN, and also an event will be raised, resulting in a call to <a class="el" href="a11657.html#aebac55de19a14f226016bee9dc2125b1">onEvent()</a> callback with event code EV_RT_JOIN .</p>
+<h1><a class="anchor" id="Basics_RaiseEvent"></a>
+Raising custom events in game</h1>
+<p>In addition to the events raised by Photon you can also define and raise events needed for your game. E.g. you could define a event named "EV_SHOOT" to broadcast the information that the local actor has just fired a weapon at the position stored in the variables pMe-&gt;fireX, pMe-&gt;fireY. First pick and define an operation code for your "shoot" event. Make sure it won't collide with the Event codes #defined in PhotonConstants.h</p>
+<p>To keep your code more readable and maintainable, you should also define key codes for your corresponding Hashtable entries, as shown below:</p>
+<div class="fragment"><div class="line"><span class="keyword">const</span> nByte EV_SHOOT = 101;</div>
+<div class="line"><span class="keyword">const</span> nByte KEY_FIRE_X = 1;</div>
+<div class="line"><span class="keyword">const</span> nByte KEY_FIRE_Y = 2;</div>
+</div><!-- fragment --><p>In the game we can now create an Hashtable for the shoot event and include the fire-coordinates as Key/Value pairs. </p><div class="fragment"><div class="line">HashTable event;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">event</span>.put(KEY_FIE_X, pMe-&gt;fireX);</div>
+<div class="line"><span class="keyword">event</span>.put(KEY_FIE_Y, pMe-&gt;fireY);</div>
+<div class="line"> </div>
+<div class="line">mPeer.opRaiseEvent(TRUE, event, EV_SHOOT);</div>
+</div><!-- fragment --><p>As soon as Photon has delivered this operation, the <a class="el" href="a11657.html#aebac55de19a14f226016bee9dc2125b1">onEvent()</a> callback will be called at all the other players inside the same room, with event code beeing EV_SHOOT. Use a switch case on the event code to handle the different events accordingly.</p>
+<h1><a class="anchor" id="Basics_Leave"></a>
+Leaving a room</h1>
+<p>Use the <a class="el" href="a11645.html#ab895dbaac2028a5551b02a8fcbcf662a">opLeave()</a> function to leave the currently joined room.</p>
+<p>It sends an operation to the server and other players will receive the event EV_RT_LEAVE. When the operation is completed successfully, the <a class="el" href="a11657.html#a03ff8cb4a6f605668586756cb6a113c7">ExitGames::Photon::PhotonListener::onOperationResponse()</a> callback will be called at the local peer with the opCode OPC_RT_LEAVE.</p>
+<h1><a class="anchor" id="Basics_Disconnect"></a>
+Disconnecting from the server</h1>
+<p>Disconnecting should be done using <a class="el" href="a11661.html#a888a5acf1fe3a8902f7cb2f5039cb334">disconnect()</a>.</p>
+<p>When disconnecting is finished, the <a class="el" href="a11657.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a> callback will be called and the status code should be StatusCode::DISCONNECT. </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- HTML footer for doxygen 1.8.10-->
 <!-- start footer part -->

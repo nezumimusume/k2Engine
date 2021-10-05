@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: IDecoder Class Reference</title>
+    <title>Photon C++ Client API: Member List</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,144 +83,22 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="a10622.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10684.html">Voice</a></li><li class="navelem"><a class="el" href="a11974.html">IDecoder</a></li>  </ul>
+<li class="navelem"><a class="el" href="a10625.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10687.html">Voice</a></li><li class="navelem"><a class="el" href="a11977.html">IDecoder</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="a11971.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">IDecoder Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">IDecoder Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Generic decoder interface.  
- <a href="a11974.html#details">More...</a></p>
-<div class="dynheader">
-Inheritance diagram for IDecoder:</div>
-<div class="dyncontent">
-<div class="center"><img src="a11973.gif" border="0" usemap="#_i_decoder_inherit__map" alt="Inheritance graph"/></div>
-<map name="_i_decoder_inherit__map" id="_i_decoder_inherit__map">
-<area shape="rect" title="Generic decoder interface." alt="" coords="203,5,269,29"/>
-<area shape="rect" href="a11986.html" title=" " alt="" coords="5,77,168,101"/>
-<area shape="rect" href="a11890.html" title=" " alt="" coords="193,77,279,101"/>
-<area shape="rect" href="a11990.html" title=" " alt="" coords="304,77,443,101"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:acec87e8d0491daa45d7ec69f7d512e4a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a11974.html#acec87e8d0491daa45d7ec69f7d512e4a">open</a> (const <a class="el" href="a12002.html">VoiceInfo</a> &amp;info)=0</td></tr>
-<tr class="memdesc:acec87e8d0491daa45d7ec69f7d512e4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open (initialize) the decoder.  <a href="a11974.html#acec87e8d0491daa45d7ec69f7d512e4a">More...</a><br /></td></tr>
-<tr class="separator:acec87e8d0491daa45d7ec69f7d512e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab501c536a9cee66e12d743614a098811"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="a11510.html">Common::JString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a11974.html#ab501c536a9cee66e12d743614a098811">getError</a> (void) const =0</td></tr>
-<tr class="memdesc:ab501c536a9cee66e12d743614a098811"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not null, the object is in invalid state.  <a href="a11974.html#ab501c536a9cee66e12d743614a098811">More...</a><br /></td></tr>
-<tr class="separator:ab501c536a9cee66e12d743614a098811"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c1d1992abcec08417491c6505ac6f1b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a11974.html#a6c1d1992abcec08417491c6505ac6f1b">input</a> (const <a class="el" href="a11874.html">Buffer</a>&lt; nByte &gt; &amp;buf)=0</td></tr>
-<tr class="memdesc:a6c1d1992abcec08417491c6505ac6f1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Consumes the given encoded data.  <a href="a11974.html#a6c1d1992abcec08417491c6505ac6f1b">More...</a><br /></td></tr>
-<tr class="separator:a6c1d1992abcec08417491c6505ac6f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Generic decoder interface. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="acec87e8d0491daa45d7ec69f7d512e4a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acec87e8d0491daa45d7ec69f7d512e4a">&#9670;&nbsp;</a></span>open()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void open </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="a12002.html">VoiceInfo</a> &amp;&#160;</td>
-          <td class="paramname"><em>info</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Open (initialize) the decoder. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">info</td><td>Properties of the data stream to decode.</td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implemented in <a class="el" href="a11990.html#aa5adea8221f4ada0a0c7f4505220b4ec">UnsupportedCodecError</a>, and <a class="el" href="a11890.html#a133df0452dfae429dfa4d77d60a9e05b">Decoder&lt; T &gt;</a>.</p>
-
-</div>
-</div>
-<a id="ab501c536a9cee66e12d743614a098811"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab501c536a9cee66e12d743614a098811">&#9670;&nbsp;</a></span>getError()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="a11510.html">Common::JString</a> getError </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>If not null, the object is in invalid state. </p>
-
-<p>Implemented in <a class="el" href="a11990.html#a2f3f6d2698cf539f8939ee1158846803">UnsupportedCodecError</a>, and <a class="el" href="a11890.html#a2f3f6d2698cf539f8939ee1158846803">Decoder&lt; T &gt;</a>.</p>
-
-</div>
-</div>
-<a id="a6c1d1992abcec08417491c6505ac6f1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c1d1992abcec08417491c6505ac6f1b">&#9670;&nbsp;</a></span>input()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void input </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="a11874.html">Buffer</a>&lt; nByte &gt; &amp;&#160;</td>
-          <td class="paramname"><em>buf</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Consumes the given encoded data. </p>
-
-<p>Implemented in <a class="el" href="a11990.html#a7517da27f5e8cbe9536435fd212df9b0">UnsupportedCodecError</a>, and <a class="el" href="a11890.html#a7517da27f5e8cbe9536435fd212df9b0">Decoder&lt; T &gt;</a>.</p>
-
-</div>
-</div>
-</div><!-- contents -->
+<p>This is the complete list of members for <a class="el" href="a11977.html">IDecoder</a>, including all inherited members.</p>
+<table class="directory">
+  <tr class="even"><td class="entry"><a class="el" href="a11977.html#ab501c536a9cee66e12d743614a098811">getError</a>(void) const =0</td><td class="entry"><a class="el" href="a11977.html">IDecoder</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="a11977.html#a6c1d1992abcec08417491c6505ac6f1b">input</a>(const Buffer&lt; nByte &gt; &amp;buf)=0</td><td class="entry"><a class="el" href="a11977.html">IDecoder</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="a11977.html#acec87e8d0491daa45d7ec69f7d512e4a">open</a>(const VoiceInfo &amp;info)=0</td><td class="entry"><a class="el" href="a11977.html">IDecoder</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~IDecoder</b>(void) (defined in <a class="el" href="a11977.html">IDecoder</a>)</td><td class="entry"><a class="el" href="a11977.html">IDecoder</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+</table></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.10-->
 <!-- start footer part -->
 <footer style="border-top: 1px solid #444; margin-top: 1em; padding: 1em;">

@@ -27,10 +27,11 @@ private:
 struct RemoteVoiceData : public ExitGames::Common::ToStringDefaultImplementation
 {
 public:
-	RemoteVoiceData(ExitGames::Voice::ISyncAudioOut<float>* out, ExitGames::Voice::AudioStreamPlayer<float>* player);
+	RemoteVoiceData(ExitGames::Voice::ISyncAudioOut<float>* out, ExitGames::Voice::AudioStreamPlayer<float>* player, ExitGames::Common::JVector<RemoteVoiceData*>* container);
 	~RemoteVoiceData(void);
 	ExitGames::Voice::ISyncAudioOut<float>* out;
 	ExitGames::Voice::AudioStreamPlayer<float>* player;
+	ExitGames::Common::JVector<RemoteVoiceData*>* container;
 };
 
 
@@ -75,7 +76,8 @@ private:
 	virtual void onAvailableRegions(const ExitGames::Common::JVector<ExitGames::Common::JString>& availableRegions, const ExitGames::Common::JVector<ExitGames::Common::JString>& availableRegionServers);
 
 	void sendData(void);
-	friend static void remoteVoiceInfoCallback(void* opaque, int channelId, int playerId, nByte voiceId, const ExitGames::Voice::VoiceInfo& voiceInfo, ExitGames::Voice::RemoteVoiceOptions& options);
+	static void remoteVoiceRemoveCallback(void* opaque);
+	static void remoteVoiceInfoCallback(void* opaque, int channelId, int playerId, nByte voiceId, const ExitGames::Voice::VoiceInfo& voiceInfo, ExitGames::Voice::RemoteVoiceOptions& options);
 	void remoteVoiceInfoCallback(int channelId, int playerId, nByte voiceId, const ExitGames::Voice::VoiceInfo& voiceInfo, ExitGames::Voice::RemoteVoiceOptions& options);
 
 	class State
@@ -108,4 +110,5 @@ private:
 	bool mVoicesCreated;
 	ExitGames::Common::JVector<ExitGames::Voice::LocalVoice*> mLocalVoices;
 	ExitGames::Common::JVector<ExitGames::Voice::IAudioPusher<float>*> mAudioSources;
+	ExitGames::Common::JVector<RemoteVoiceData*> mAudioPlayers;
 };

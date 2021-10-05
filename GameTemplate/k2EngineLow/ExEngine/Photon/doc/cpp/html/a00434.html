@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -98,14 +98,14 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a11526.html">Logger</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a11529.html">Logger</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:a10622"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10622.html">ExitGames</a></td></tr>
+<tr class="memitem:a10625"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10625.html">ExitGames</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10623"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10623.html">ExitGames::Common</a></td></tr>
+<tr class="memitem:a10626"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10626.html">ExitGames::Common</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -139,15 +139,15 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>With debug builds of the Photon client this macro will call <a class="el" href="a10714.html#a6fcf1232530518193479d1c38c916843">debugReturn()</a>, if the passed debug level is of the same or a higher priority than the one returned by <a class="el" href="a11526.html#acee10207cc62f0fa06f3b8853621295a">getDebugOutputLevel()</a>. In case of a call to <a class="el" href="a10714.html#a6fcf1232530518193479d1c38c916843">debugReturn()</a> it will pass a nicely formatted string consisting of the debug message, a timestamp of the calling time and the filename, function name and line number of the code, from which it has been called. With release builds this macro won't add any code to the resulting binary and therefor not do anything at all. </p><dl class="section remark"><dt>Remarks</dt><dd><a class="el" href="a00434.html#ad9e8d854c88fa84e3f0b65388d72ab21">EGLOG()</a> always operates on a variable of type <a class="el" href="a11526.html">Logger</a>, named <b>mLogger</b>. If no such variable is available in the scope of the call, then calling this macro won't succeed. Until a listener is specified for a logger instance, <a class="el" href="a00434.html#ad9e8d854c88fa84e3f0b65388d72ab21">EGLOG()</a> calls, that operate on that instance, won't log anything. What actually gets printed and to which output device (for example stdout/stderr or a certain file or stream) is up to the implementation of the specified listener. </dd></dl>
+<p>With debug builds of the Photon client this macro will call <a class="el" href="a10717.html#a6fcf1232530518193479d1c38c916843">debugReturn()</a>, if the passed debug level is of the same or a higher priority than the one returned by <a class="el" href="a11529.html#acee10207cc62f0fa06f3b8853621295a">getDebugOutputLevel()</a>. In case of a call to <a class="el" href="a10717.html#a6fcf1232530518193479d1c38c916843">debugReturn()</a> it will pass a nicely formatted string consisting of the debug message, a timestamp of the calling time and the filename, function name and line number of the code, from which it has been called. With release builds this macro won't add any code to the resulting binary and therefor not do anything at all. </p><dl class="section remark"><dt>Remarks</dt><dd><a class="el" href="a00434.html#ad9e8d854c88fa84e3f0b65388d72ab21">EGLOG()</a> always operates on a variable of type <a class="el" href="a11529.html">Logger</a>, named <b>mLogger</b>. If no such variable is available in the scope of the call, then calling this macro won't succeed. Until a listener is specified for a logger instance, <a class="el" href="a00434.html#ad9e8d854c88fa84e3f0b65388d72ab21">EGLOG()</a> calls, that operate on that instance, won't log anything. What actually gets printed and to which output device (for example stdout/stderr or a certain file or stream) is up to the implementation of the specified listener. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">debugLevel</td><td>the debug output level of the message, which in combination with the level, which is passed to <a class="el" href="a11526.html#a163e299695ce92d2f02eb4b78b29ab2b">setDebugOutputLevel()</a> will determine, if the message will be passed to <a class="el" href="a10714.html#a6fcf1232530518193479d1c38c916843">debugReturn()</a> or not </td></tr>
+    <tr><td class="paramname">debugLevel</td><td>the debug output level of the message, which in combination with the level, which is passed to <a class="el" href="a11529.html#a163e299695ce92d2f02eb4b78b29ab2b">setDebugOutputLevel()</a> will determine, if the message will be passed to <a class="el" href="a10717.html#a6fcf1232530518193479d1c38c916843">debugReturn()</a> or not </td></tr>
     <tr><td class="paramname">...</td><td>the debug format string + optional arguments (format specifiers for optional arguments work the same way like in the printf family of functions) </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="a11526.html#acee10207cc62f0fa06f3b8853621295a">getDebugOutputLevel()</a>, <a class="el" href="a11526.html#a163e299695ce92d2f02eb4b78b29ab2b">setDebugOutputLevel()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="a11529.html#acee10207cc62f0fa06f3b8853621295a">getDebugOutputLevel()</a>, <a class="el" href="a11529.html#a163e299695ce92d2f02eb4b78b29ab2b">setDebugOutputLevel()</a> </dd></dl>
 
 </div>
 </div>

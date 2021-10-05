@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Blackberry NDK</title>
+    <title>Photon C++ Client API: Marmalade</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,28 +83,19 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li><li class="navelem"><a class="el" href="a12680.html">How to set up your application</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li><li class="navelem"><a class="el" href="a12683.html">How to set up your application</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Blackberry NDK </div>  </div>
+<div class="title">Marmalade </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Photon supports Blackberry NDK version 10 and newer. Photons IDE of choice for Blackberry currently is QNX Momentics.</p>
-<p>1. Right-click on your project, go to "Configure" -&gt; "Add Library", choose "Standard BlackBerry Platform Library" and add the following libraries to your project:<br  />
- a) <b>Common Services -&gt; Math - libm</b><br  />
- b) <b>Localization -&gt; Iconv - libiconv</b><br  />
- c) <b>Networking -&gt; Socket - libsocket</b></p>
-<p>2. Right-click on your project, go to "Configure" -&gt; "Add Library", choose "External Library" and add the Common C++ library to your project:<br  />
- Device Library: <b>../../Common-cpp/libcommon-cpp-debug_blackberry.a</b> or <b>../../Common-cpp/libcommon-cpp-release_blackberry.a</b><br  />
- Simulator Library: <b>../../Common-cpp/libcommon-cpp-debug_blackberry_simulator.a</b> or <b>../../Common-cpp/libcommon-cpp-release_blackberry_simulator.a</b><br  />
- Include folders: <b>../..</b></p>
-<p>3. Right-click on your project, go to "Configure" -&gt; "Add Library", choose "External Library" and add the Photon C++ library to your project:<br  />
- Device Library: <b>../../Photon-cpp/libphoton-cpp-debug_blackberry.a</b> or <b>../../Photon-cpp/libphoton-cpp-release_blackberry.a</b><br  />
- Simulator Library: <b>../../Photon-cpp/libphoton-cpp-debug_blackberry_simulator.a</b> or <b>../../Photon-cpp/libphoton-cpp-release_blackberry_simulator.a</b><br  />
- Include folders: <b>../..</b></p>
-<p>4. Right-click on your project, go to "Properties" -&gt; "C/C++ General" -&gt; "Paths and Symbols" -&gt; "Libraries" and make sure, that the Photon lib is listed above the Common lib and the Common lib above all standard blackberry platform libs</p>
+<div class="textblock"><p>For Marmelade Photon supports Visual Studio and Xcode as IDEs and Windows and OS X as development platforms.</p>
+<p>1. Add the entries <b>Photon-cpp</b> and <b>Common-cpp</b> to category <b>subprojects</b> in your project's .mkb-file</p>
+<p>2. Add the entries <b>"../../Common-cpp,Common-cpp"</b> and <b>"../../Photon-cpp,Photon-cpp"</b> (including the "")to category <b>librarys</b> in your projects' .mkb-file</p>
+<p>3. Add the entries <b>../../Common-cpp</b> and <b>../../Photon-cpp</b> to category <b>librarypaths</b> in your projects' .mkb-file</p>
+<p>4. Add the entry <b>module_path="../../"</b> to category <b>options</b> in you project's .mkb-file</p>
 <p>5. Add the following #include directive to your source-code:<br  />
  <b>#include "Photon-cpp/inc/PhotonPeer.h"</b> </p>
 </div></div><!-- contents -->

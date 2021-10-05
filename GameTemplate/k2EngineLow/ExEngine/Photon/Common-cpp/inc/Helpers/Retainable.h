@@ -20,15 +20,14 @@ namespace ExitGames
 			public:
 				Retainable(void);
 				virtual Retainable<T>* retain(void);
-				virtual void release(void);
+				virtual const Retainable<T>* retain(void) const;
+				virtual void release(void) const;
 
-				virtual unsigned char getRefCount(void);
+				virtual unsigned char getRefCount(void) const;
 			protected:
 				virtual ~Retainable(void);
 			private:
-				virtual void dealloc(void);
-
-				unsigned char mRefCount;
+				mutable unsigned char mRefCount;
 			};
 
 
@@ -53,22 +52,23 @@ namespace ExitGames
 			}
 
 			template<typename T>
-			void Retainable<T>::release(void)
+			const Retainable<T>* Retainable<T>::retain(void) const
+			{
+				++mRefCount;
+				return this;
+			}
+
+			template<typename T>
+			void Retainable<T>::release(void) const
 			{
 				if(!--mRefCount)
-					dealloc();
+					DEALLOCATE(Retainable<T>, this);
 			}
 
 			template<typename T>
-			unsigned char Retainable<T>::getRefCount(void)
+			unsigned char Retainable<T>::getRefCount(void) const
 			{
 				return mRefCount;
-			}
-
-			template<typename T>
-			void Retainable<T>::dealloc(void)
-			{
-				DEALLOCATE(Retainable<T>, this);
 			}
 		}
 	}

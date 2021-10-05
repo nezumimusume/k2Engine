@@ -31,11 +31,11 @@ namespace ExitGames
 				template<typename Ftype> SharedPointerBase<typename EnableIf<IsDerivedFrom<Ftype, Etype>::is, Etype>::type>& operator=(const SharedPointerBase<Ftype>& toCopy);
 
 #ifdef EG_PLATFORM_SUPPORTS_ATOMICS
-				typedef std::atomic<unsigned long long> atomicUll;
+				typedef std::atomic<unsigned int> atomicUInt;
 #else
-				typedef unsigned long long atomicUll;
+				typedef unsigned int atomicUInt;
 #endif
-				atomicUll* mpRefCount;
+				atomicUInt* mpRefCount;
 			private:
 				template<typename Ftype> SharedPointerBase& assign(const SharedPointerBase<Ftype>& toCopy);
 
@@ -48,13 +48,13 @@ namespace ExitGames
 			template<typename Etype>
 			SharedPointerBase<Etype>::SharedPointerBase(void (*pDeleter)(const Etype*)) : SmartPointerInterface<Etype>(pDeleter)
 			{
-				mpRefCount = MemoryManagement::allocate<atomicUll>(1);
+				mpRefCount = MemoryManagement::allocate<atomicUInt>(1);
 			}
 
 			template<typename Etype>
 			SharedPointerBase<Etype>::SharedPointerBase(Etype* pData, void (*pDeleter)(const Etype*)) : SmartPointerInterface<Etype>(pData, pDeleter)
 			{
-				mpRefCount = MemoryManagement::allocate<atomicUll>(1);
+				mpRefCount = MemoryManagement::allocate<atomicUInt>(1);
 			}
 
 			template<typename Etype>

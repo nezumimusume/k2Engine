@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Basics</title>
+    <title>Photon C++ Client API: Sending and receiving data</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,43 +83,24 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Basics </div>  </div>
+<div class="title">Sending and receiving data </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="Basics_Connect"></a>
-Creating a PhotonPeer instance and connecting</h1>
-<p>When a PhotonPeer instance is created, the PhotonPeer is ready to connect to a Photon Server. To do that, call the function <a class="el" href="a11658.html#a350712dc9e140a7368a950d46f16ea56">connect()</a></p>
-<p>After initializing the connection, the application should wait for the <a class="el" href="a11654.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a> callback function. If its returnCode is StatusCode::CONNECT, the connection has been established.</p>
-<h1><a class="anchor" id="Basics_Join"></a>
-Joining a game</h1>
-<p>As soon as the client application is connected to Photon, use the function <a class="el" href="a11642.html#aa3c67ad2f68b154c4fe37ef12737b6f9">opJoin()</a> to join or create a game. If there is no game with the given identifier, a new game will be created. If the call succeeds, the <a class="el" href="a11654.html#a03ff8cb4a6f605668586756cb6a113c7">onOperationResponse()</a> callback will be called with operation code OPC_RT_JOIN, and also an event will be raised, resulting in a call to <a class="el" href="a11654.html#aebac55de19a14f226016bee9dc2125b1">onEvent()</a> callback with event code EV_RT_JOIN .</p>
-<h1><a class="anchor" id="Basics_RaiseEvent"></a>
-Raising custom events in game</h1>
-<p>In addition to the events raised by Photon you can also define and raise events needed for your game. E.g. you could define a event named "EV_SHOOT" to broadcast the information that the local actor has just fired a weapon at the position stored in the variables pMe-&gt;fireX, pMe-&gt;fireY. First pick and define an operation code for your "shoot" event. Make sure it won't collide with the Event codes #defined in PhotonConstants.h</p>
-<p>To keep your code more readable and maintainable, you should also define key codes for your corresponding Hashtable entries, as shown below:</p>
-<div class="fragment"><div class="line"><span class="keyword">const</span> nByte EV_SHOOT = 101;</div>
-<div class="line"><span class="keyword">const</span> nByte KEY_FIRE_X = 1;</div>
-<div class="line"><span class="keyword">const</span> nByte KEY_FIRE_Y = 2;</div>
-</div><!-- fragment --><p>In the game we can now create an Hashtable for the shoot event and include the fire-coordinates as Key/Value pairs. </p><div class="fragment"><div class="line">HashTable event;</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">event</span>.put(KEY_FIE_X, pMe-&gt;fireX);</div>
-<div class="line"><span class="keyword">event</span>.put(KEY_FIE_Y, pMe-&gt;fireY);</div>
-<div class="line"> </div>
-<div class="line">mPeer.opRaiseEvent(TRUE, event, EV_SHOOT);</div>
-</div><!-- fragment --><p>As soon as Photon has delivered this operation, the <a class="el" href="a11654.html#aebac55de19a14f226016bee9dc2125b1">onEvent()</a> callback will be called at all the other players inside the same room, with event code beeing EV_SHOOT. Use a switch case on the event code to handle the different events accordingly.</p>
-<h1><a class="anchor" id="Basics_Leave"></a>
-Leaving a room</h1>
-<p>Use the <a class="el" href="a11642.html#ab895dbaac2028a5551b02a8fcbcf662a">opLeave()</a> function to leave the currently joined room.</p>
-<p>It sends an operation to the server and other players will receive the event EV_RT_LEAVE. When the operation is completed successfully, the <a class="el" href="a11654.html#a03ff8cb4a6f605668586756cb6a113c7">ExitGames::Photon::PhotonListener::onOperationResponse()</a> callback will be called at the local peer with the opCode OPC_RT_LEAVE.</p>
-<h1><a class="anchor" id="Basics_Disconnect"></a>
-Disconnecting from the server</h1>
-<p>Disconnecting should be done using <a class="el" href="a11658.html#a888a5acf1fe3a8902f7cb2f5039cb334">disconnect()</a>.</p>
-<p>When disconnecting is finished, the <a class="el" href="a11654.html#a762c08d3437006f3da1165e296bb52b3">onStatusChanged()</a> callback will be called and the status code should be StatusCode::DISCONNECT. </p>
+<div class="textblock"><h1><a class="anchor" id="SendingAndReceivingData_Send"></a>
+How to send data to other players</h1>
+<p>In Photon you exchange data with other players by sending and receiving "Operations" and "Events". Please refer to <a class="el" href="a12692.html">Operations</a> for more information about this concept.</p>
+<p>The cross-platform communication ability of Photon implies the need for common data structures across all the different client versions. Please refer to <a class="el" href="a12697.html">Datatypes</a> for a table of supported types and their equivalents on the server side.</p>
+<p>When your Hashtable is complete, use <a class="el" href="a11645.html#a81f266d477bb1ae7f50abbc5d9641b2f">opRaiseEvent()</a> (or <a class="el" href="a11661.html#a3c1268775eba0cfe2b6f7e309a27e2fd">opCustom()</a>, if you implemented custom types of operations on the server) to initiate the transmission.</p>
+<h1><a class="anchor" id="SendingAndReceivingData_Receive"></a>
+Receiving Data</h1>
+<p>Photon will interact with your application by calling the callback functions you implemented, thereby passing data structures as arguments. All these data structures belong to Photon, which means that Photon is responsible for deleting them. This will happen as soon as the callback function has returned.</p>
+<p>So your application is responsible A) for <b><em>extracting and copying any data needed from the arguments within the callback function</em></b>, and of course</p>
+<p>B) for later freeing up the memory needed for those copies, as usual. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- HTML footer for doxygen 1.8.10-->

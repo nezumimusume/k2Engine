@@ -1,4 +1,7 @@
-<map id="IEncoderDirect&lt; B &gt;" name="IEncoderDirect&lt; B &gt;">
-<area shape="rect" id="node1" title="Interface for an encoder which consumes input data via explicit call." alt="" coords="5,77,123,101"/>
-<area shape="rect" id="node2" href="$a11966.html" title="Generic encoder interface." alt="" coords="32,5,96,29"/>
+<map id="IEncoder" name="IEncoder">
+<area shape="rect" id="node1" title="Generic encoder interface." alt="" coords="129,5,193,29"/>
+<area shape="rect" id="node2" href="$a11973.html" title="Interface for an encoder which consumes input data via explicit call." alt="" coords="5,79,123,103"/>
+<area shape="rect" id="node3" href="$a11973.html" title=" " alt="" coords="46,163,178,199"/>
+<area shape="rect" id="node5" href="$a11993.html" title=" " alt="" coords="199,79,337,103"/>
+<area shape="rect" id="node4" href="$a11889.html" title=" " alt="" coords="69,248,155,272"/>
 </map>

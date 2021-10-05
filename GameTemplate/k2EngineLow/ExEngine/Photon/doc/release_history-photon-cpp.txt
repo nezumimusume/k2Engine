@@ -7,6 +7,19 @@ Questions? Write to developer@photonengine.com or visit forum.photonengine.com
 Please do also look into Common release history.
 
 
+*** version 5.0.0.3
+	Date: 09-30-2021
+	- fixed: NAT-PunchThrough for direct p2p connections now uses URLs for the STUN-servers, instead of hard-coded IPs
+	- fixed: NAT-PunchThrough for direct p2p connections now actually attempts to use the next STUN-server address in the list, if using the previous one fails
+	- fixed: a crash issue on GameCore which happened on client side timeout disconnects when using WSS as connection protocol
+	- fixed: version 5.0.0.0 introduced duplicate symbol linker errors related to OpenSSL when building an Unreal project for Android
+
+
+*** version 5.0.0.1
+	Date: 08-30-2021
+	- fixed: a crash issue on GameCore which could happen on entering and leaving rooms when using WSS as connection protocol
+
+
 *** version 5.0.0.0
 	Date: 08-03-2021
 	- fixed: the channelID parameter does no longer get effectively ignored for unreliable UDP messages

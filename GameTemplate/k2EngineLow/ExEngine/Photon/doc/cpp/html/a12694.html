@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Table of data types</title>
+    <title>Photon C++ Client API: Properties</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,79 +83,33 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12675.html">Common-cpp</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Table of data types </div>  </div>
+<div class="title">Properties </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Photon defines a common set of serializable data types across all supported platforms, as listed in the table below.</p>
-<p> 
-<table border="1">
-<thead>
-<tr><th>Client (C++)</th><th>Server (C#)</th></tr>
-</thead>
-<tbody>
-<tr><td>nByte</td>     <td>Byte / byte</td></tr>
-<tr><td>short</td>     <td>Int16 / short</td></tr>
-<tr><td>int</td>       <td>Int32 / int</td></tr>
-<tr><td>int64</td>     <td>Int64 / long</td></tr>
-<tr><td>bool</td>      <td>Boolean /  bool</td></tr>
-<tr><td>float</td>     <td>Single / float</td></tr>
-<tr><td>double</td>    <td>Double / double</td></tr>
-<tr><td>JString</td>   <td>String / string</td></tr>
-<tr><td>Hashtable</td> <td>Hashtable</td></tr>
-<tr><td>Dictionary</td> <td>Dictionary</td></tr>
-</tbody>
-</table>
-</p>
-<p>We also support arrays for <b>all</b> the above types:</p>
-<p> 
-<table border="1">
-<thead>
-<tr><th>Client (C++)</th><th>Server (C#)</th></tr>
-</thead>
-<tbody>
-<tr><td>type*</td>     <td>type[]</td></tr>
-</tbody>
-</table>
-</p>
-<p>Multidimensional arrays are supported (however on the server side they will be interpreted as jagged array with all subarrays in the same dimension having the same size). Jagged arrays are not supported.</p>
-<p>Example: int* - one dimension int** - two dimensions</p>
-<p>Moreover we support object-arrays, which means arrays of elements of different types, as long as the element-types themselves are supported. For example the first element of the array can be an int, the second one a string.</p>
-<p> 
-<table border="1">
-<thead>
-<tr><th>Client (C++)</th><th>Server (C#)</th></tr>
-</thead>
-<tbody>
-<tr><td>Object*</td>     <td>Object[]</td></tr>
-</tbody>
-</table>
-</p>
-<p>Object is not supported for non-array data. <br  />
-<br  />
-<br  />
- Finally we support custom types.</p>
-<p>This means, if your need to send some custom data, which can not be represented easily by the Photon-builtin data-types, like for example a game specific container class, then you can simply implement Photon's custom type interface for it and this way supply Photon with the needed abilities to handle your type and then you can just send and receive your custom type with Photon.</p>
-<p>All custom types are automatically supported as (multi-dimensional) arrays, too.</p>
-<p>Please refer to the API doc for class <a class="el" href="a10818.html">CustomType</a> for details.</p>
-<p>All of the above types are supported as values in <a class="el" href="a10770.html">Hashtable</a> and <a class="el" href="a10726.html">Dictionary</a> instances.</p>
-<p>As keys both these containers accept the following types:  
-<table border="1">
-<tbody>
-<tr><td>nByte</td></tr>
-<tr><td>short</td></tr>
-<tr><td>int</td></tr>
-<tr><td>int64</td></tr>
-<tr><td>float</td></tr>
-<tr><td>double</td></tr>
-<tr><td>JString</td></tr>
-</tbody>
-</table>
- </p>
+<div class="textblock"><p>Properties can be set by these functions:</p><ul>
+<li><a class="el" href="a11645.html#a9c8292c06d60a6550f62f001771f0b93">opSetPropertiesOfActor()</a> sets a player's properties</li>
+<li><a class="el" href="a11645.html#ad01fbf8515131d8f9734fa8f3e10b96e">opSetPropertiesOfGame()</a> sets a room's properties</li>
+<li><a class="el" href="a11645.html#aa3c67ad2f68b154c4fe37ef12737b6f9">opJoin()</a> also allows you to set properties on room creation</li>
+</ul>
+<p>They can be fetched with these functions:</p><ul>
+<li><a class="el" href="a11645.html#a31456fbb3ccb78af5ad978463a8ee26c">opGetProperties()</a></li>
+<li><a class="el" href="a11645.html#a92ec606531695dfb66ff731c552615ea">opGetPropertiesOfActor()</a></li>
+<li><a class="el" href="a11645.html#acd5ad9547496e8b7d6ff81de4e83f8bf">opGetPropertiesOfGame()</a></li>
+</ul>
+<h1><a class="anchor" id="Properties_Broadcast"></a>
+Broadcast Events</h1>
+<p>Any change that uses the broadcast option will trigger a property update event EV_RT_SETPROPERTIES. This event carries the properties as value of key EV_RT_KEY_PROPERTIES.</p>
+<p>Additionally, there is information about who changed the properties in key EV_RT_KEY_ACTORNR.</p>
+<h1><a class="anchor" id="Properties_Notes"></a>
+Notes</h1>
+<p>You can delete properties by sending them with <em>NULL</em> as value. This also means, that you can't use <em>NULL</em> as a normal value for them. Lite currently does not support wildcard characters in string keys to fetch properties.</p>
+<p>Other types of keys could be used, but to keep things simple, we decided against adding those. If needed, we would help you with the implementation.</p>
+<p>The property handling is likely to be updated and extended in the future. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- HTML footer for doxygen 1.8.10-->

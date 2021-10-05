@@ -6,6 +6,14 @@ Copyright (C) 2004-2021 Exit Games GmbH, http://www.photonengine.com
 Questions? Write to developer@photonengine.com or visit forum.photonengine.com
 
 
+*** version 5.0.0.3
+	Date: 09-30-2021
+	- fixed: undefined references for AudioUtil::LevelMeter<float>
+	- fixed: undefined references for AudioUtil::LevelMeter<short>
+	- fixed: undefined references for AudioUtil::VoiceDetector<float>
+	- fixed: undefined references for AudioUtil::VoiceDetector<short>
+
+
 *** version 5.0.0.0
 	Date: 08-03-2021
 	- initial version of the Photon Voice C++ Library

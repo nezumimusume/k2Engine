@@ -19,8 +19,11 @@ namespace ExitGames
 				struct RawStorage
 				{
 					RawStorage* mpNext;
-#ifdef _EG_EMSCRIPTEN_PLATFORM
-					nByte mPadding[4]; // Emscripten requires arrays of objects that have member variables of type double to be 8 byte aligned, which when storing such arrays in memory that was allocated by MemoryPool is only the case when we add padding bytes to RawStorage
+#if defined _EG_EMSCRIPTEN_PLATFORM || defined __arm___ || defined _M_ARM
+					// Emscripten requires arrays of objects that have member variables of type double to be 8 byte aligned
+					// 32bit ARM architectures require 64bit std::atomic types to be 8 byte aligned for access to them to actually be atomic
+					// both is only the case for data that is stored in memory that was allocated by MemoryPool, when we add padding bytes to RawStorage
+					nByte mPadding[4];
 #endif
 				};
 			}

@@ -14,8 +14,11 @@
 #	undef new
 #endif
 
-#ifdef _EG_EMSCRIPTEN_PLATFORM
-#	define EG_SIZE_T unsigned long long // Emscripten requires arrays of objects that have member variables of type double to be 8 byte aligned, which when storing such arrays in memory that was allocated through allocateArray()/ALLOCATE_ARRAY is only the case when we use 8 bytes instead of 4 to store the element count
+#if defined _EG_EMSCRIPTEN_PLATFORM || defined __arm___ || defined _M_ARM
+// Emscripten requires arrays of objects that have member variables of type double to be 8 byte aligned
+// 32bit ARM architectures require 64bit std::atomic types to be 8 byte aligned for access to them to actually be atomic
+// both is only the case when storing such data in memory that was allocated through allocateArray()/ALLOCATE_ARRAY, when we use 8 bytes instead of 4 to store the element count
+#	define EG_SIZE_T unsigned long long
 #else
 #	define EG_SIZE_T size_t
 #endif

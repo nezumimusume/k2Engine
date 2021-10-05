@@ -492,6 +492,10 @@ namespace ExitGames
 			template class VoiceDetectorCalibration<short>;
 			template class VoiceLevelDetectCalibrate<float>;
 			template class VoiceLevelDetectCalibrate<short>;
+			template class LevelMeter<float>;
+			template class LevelMeter<short>;
+			template class VoiceDetector<float>;
+			template class VoiceDetector<short>;
 		}
 	}
 }

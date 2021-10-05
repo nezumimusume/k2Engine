@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Android NDK</title>
+    <title>Photon C++ Client API: iOS</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,23 +83,21 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li><li class="navelem"><a class="el" href="a12680.html">How to set up your application</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li><li class="navelem"><a class="el" href="a12683.html">How to set up your application</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Android NDK </div>  </div>
+<div class="title">iOS </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>For Android NDK Photon supports Visual Studio with WinGDB plugin on Windows as IDE, but you can also use makefiles, which will work on Windows and OS X. Linux is currently not supported.</p>
-<p>1. Add <b>common-cpp-static-prebuilt</b> and <b>photon-cpp-static-prebuilt</b> to "APP_CPPFLAGS" in your applications Android.mk file.</p>
-<p>2. In your Projects Android.mk file add the following lines:<br  />
- <b>$(call import-add-path-optional, $(shell pwd)/../../../../Photon-cpp/src/android)</b><br  />
- <b>$(call import-add-path-optional, $(shell pwd)/../../../../Photon-cpp)</b><br  />
- <b>$(call import-module,photon-cpp-prebuilt)</b></p>
-<p>3. Add <b>-frtti</b> to "LOCAL_STATIC_LIBRARIES" in your applications Application.mk file.</p>
-<p>4. Set "APP_STL" in your applications Application.mk file to <b>stlport_static</b>, <b>stlport_shared</b>, <b>gnustl_static</b> or <b>gnustl_shared</b>.</p>
-<p>5. Add the following #include directive to your source-code:<br  />
+<div class="textblock"><p>For iPhone Photon supports Xcode on Mac OS X as IDE.</p>
+<p>1. Add the parent-folder(s) of the folders <b>Photon-cpp/inc</b> and <b>Common-cpp/inc</b> to "Header Search Paths" in category "Search Paths" in your applications Project Settings</p>
+<p>2. In your Project Settings at category "Linking" add to "Other Linker Flags" the following both entries:<br  />
+ <b>-lCommon-cpp_$(CONFIGURATION)_$(PLATFORM_NAME)</b><br  />
+ <b>-lPhoton-cpp_$(CONFIGURATION)_$(PLATFORM_NAME)</b></p>
+<p>3. Add the folders <b>Photon-cpp/lib</b> and <b>Common-cpp/lib</b> to "Library Search Paths" in category "Search Paths" in your applications Project Settings</p>
+<p>4. Add the following #include directive to your source-code:<br  />
  <b>#include "Photon-cpp/inc/PhotonPeer.h"</b> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

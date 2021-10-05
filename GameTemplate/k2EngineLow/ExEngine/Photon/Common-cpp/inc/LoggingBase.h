@@ -33,6 +33,8 @@ namespace ExitGames
 
 
 
+		/** @file */
+
 		/**
 		   Destructor. */
 		template<typename T>

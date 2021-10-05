@@ -1,7 +1,5 @@
-<map id="LocalVoiceAudioDummy" name="LocalVoiceAudioDummy">
-<area shape="rect" id="node1" title="Dummy LocalVoiceAudio" alt="" coords="91,163,230,187"/>
-<area shape="rect" id="node2" href="$a11926.html" title="Represents outgoing data stream." alt="" coords="36,89,112,113"/>
-<area shape="rect" id="node3" href="$a11578.html" title=" " alt="" coords="5,5,68,29"/>
-<area shape="rect" id="node4" title=" " alt="" coords="92,5,131,29"/>
-<area shape="rect" id="node5" href="$a11942.html" title="Interface for an outgoing audio stream." alt="" coords="137,89,243,113"/>
+<map id="LocalVoiceAudio&lt; T &gt;" name="LocalVoiceAudio&lt; T &gt;">
+<area shape="rect" id="node1" title="Outgoing audio stream." alt="" coords="81,77,209,101"/>
+<area shape="rect" id="node2" href="$a11957.html" title="Typed re&#45;framing LocalVoice" alt="" coords="5,5,141,29"/>
+<area shape="rect" id="node3" href="$a11945.html" title="Interface for an outgoing audio stream." alt="" coords="165,5,272,29"/>
 </map>

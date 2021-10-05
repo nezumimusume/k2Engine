@@ -6,6 +6,16 @@ Copyright (C) 2004-2021 Exit Games GmbH, http://www.photonengine.com
 Questions? Write to developer@photonengine.com or visit forum.photonengine.com
 
 
+*** version 5.0.0.3
+	Date: 09-30-2021
+	- fixed: version 5.0.0.0 introduced a crash in class SharedPointer on Android, when running on armv7-a devices
+
+
+*** version 5.0.0.2
+	Date: 09-07-2021
+	- fixed: class ToStringDefaultImplementation was undefined on all platforms except Emscripten, PS5 and Windows
+
+
 *** version 5.0.0.0
 	Date: 08-03-2021
 	- added: Microsoft Gamecore as new supported platform

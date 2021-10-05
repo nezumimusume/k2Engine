@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Puncher Class Reference</title>
+    <title>Photon C++ Client API: Member List</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,46 +83,27 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="a10622.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10635.html">Photon</a></li><li class="navelem"><a class="el" href="a10651.html">Punchthrough</a></li><li class="navelem"><a class="el" href="a11662.html">Puncher</a></li>  </ul>
+<li class="navelem"><a class="el" href="a10625.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10638.html">Photon</a></li><li class="navelem"><a class="el" href="a10654.html">Punchthrough</a></li><li class="navelem"><a class="el" href="a11665.html">Puncher</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="a11659.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Puncher Class Reference</div>  </div>
+<div class="title">Puncher Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:ac8fcbaa18ddce302405b5b3642a67ec3"><td class="memItemLeft" align="right" valign="top"><a id="ac8fcbaa18ddce302405b5b3642a67ec3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Puncher</b> (<a class="el" href="a11670.html">RelayClient</a> *pRelayClient, const <a class="el" href="a11526.html">Common::Logger</a> &amp;logger)</td></tr>
-<tr class="separator:ac8fcbaa18ddce302405b5b3642a67ec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41c7ece6c99e1466e431c5d8f3970c46"><td class="memItemLeft" align="right" valign="top"><a id="a41c7ece6c99e1466e431c5d8f3970c46"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="a11666.html">PunchListener</a> *pPunchListener)</td></tr>
-<tr class="separator:a41c7ece6c99e1466e431c5d8f3970c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae683fe63c33c388e9ba1c6392dd477eb"><td class="memItemLeft" align="right" valign="top"><a id="ae683fe63c33c388e9ba1c6392dd477eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> (void)</td></tr>
-<tr class="separator:ae683fe63c33c388e9ba1c6392dd477eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37a748ce91f4ff82ba3cd86a56f12a63"><td class="memItemLeft" align="right" valign="top"><a id="a37a748ce91f4ff82ba3cd86a56f12a63"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>startPunch</b> (int remoteID)</td></tr>
-<tr class="separator:a37a748ce91f4ff82ba3cd86a56f12a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d796a99ad664acf3223844318076cb8"><td class="memItemLeft" align="right" valign="top"><a id="a9d796a99ad664acf3223844318076cb8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sendDirect</b> (const <a class="el" href="a10810.html">Common::JVector</a>&lt; nByte &gt; &amp;buffer, int targetID, bool fallbackRelay)</td></tr>
-<tr class="separator:a9d796a99ad664acf3223844318076cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8035604e2d69df2a13e7d194d7224cb3"><td class="memItemLeft" align="right" valign="top"><a id="a8035604e2d69df2a13e7d194d7224cb3"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>sendDirect</b> (const <a class="el" href="a10810.html">Common::JVector</a>&lt; nByte &gt; &amp;buffer, const <a class="el" href="a10810.html">Common::JVector</a>&lt; int &gt; &amp;targetIDs, bool fallbackRelay)</td></tr>
-<tr class="separator:a8035604e2d69df2a13e7d194d7224cb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbc45555ff171eba68a494629372637a"><td class="memItemLeft" align="right" valign="top"><a id="adbc45555ff171eba68a494629372637a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>processRelayPackage</b> (const <a class="el" href="a10810.html">Common::JVector</a>&lt; nByte &gt; &amp;packet, int relayRemoteID)</td></tr>
-<tr class="separator:adbc45555ff171eba68a494629372637a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52bdd3a0225aedf25a80cfe7c7dc8207"><td class="memItemLeft" align="right" valign="top"><a id="a52bdd3a0225aedf25a80cfe7c7dc8207"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>service</b> (void)</td></tr>
-<tr class="separator:a52bdd3a0225aedf25a80cfe7c7dc8207"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-</div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="a11665.html">Puncher</a>, including all inherited members.</p>
+<table class="directory">
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>clear</b>(void) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>init</b>(PunchListener *pPunchListener) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>processRelayPackage</b>(const Common::JVector&lt; nByte &gt; &amp;packet, int relayRemoteID) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>Puncher</b>(RelayClient *pRelayClient, const Common::Logger &amp;logger) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sendDirect</b>(const Common::JVector&lt; nByte &gt; &amp;buffer, int targetID, bool fallbackRelay) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>sendDirect</b>(const Common::JVector&lt; nByte &gt; &amp;buffer, const Common::JVector&lt; int &gt; &amp;targetIDs, bool fallbackRelay) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>service</b>(void) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>startPunch</b>(int remoteID) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Puncher</b>(void) (defined in <a class="el" href="a11665.html">Puncher</a>)</td><td class="entry"><a class="el" href="a11665.html">Puncher</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+</table></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.10-->
 <!-- start footer part -->
 <footer style="border-top: 1px solid #444; margin-top: 1em; padding: 1em;">

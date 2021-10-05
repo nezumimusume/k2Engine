@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: The Photon Server</title>
+    <title>Photon C++ Client API: Events</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,23 +83,17 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">The Photon Server </div>  </div>
+<div class="title">Events </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The Photon Server is the central hub for communication for all your clients. It is a service that can be run on any Windows machine, handling UDP and TCP (TCP can be used by clients on platforms, that are not fully supporting UDP, and as for server-setups, that do not support UDP (like some cloud services) and in case of some paranoid firewall settings - use UDP (which can be sent reliable with Photon!) whenever you can and only use TCP as a fallback, as we can't guarentee feature completeness for TCP.</p>
-<p>The Photon Server SDK includes a pre-built version that can be run out of the box. It also allows you to extend the server-side easily.</p>
-<p>Get the Photon Server SDK at: <a href="https://www.photonengine.com/en/OnPremise/Download">https://www.photonengine.com/en/OnPremise/Download</a></p>
-<h1><a class="anchor" id="Server_Lite"></a>
-The Lite Application</h1>
-<p>The Lite Application is the default implementation for room-based games on Photon and (hopefully) a flexible base for your own, more game-specific, extensions. It offers rooms, joining and leaving them, sending events to the other players in a room and handles properties.</p>
-<p>It basically does everything you came to expect of Photon.</p>
-<p>So why is this done in a separate project? Because this way we can could sperate the low level C++ server core and the high level C# server API, which comes in multiple so called Applications, that can be used for different needs.</p>
-<p>On the client-side LitePeer is the counterpart for the server-side Lite Application. </p>
+<div class="textblock"><p>Unlike operations, events are "messages" that are rarely triggered by the client that receives them. Events usually come from outside: the server or other clients.</p>
+<p>They are created as a side effect of operations (e.g. when you join a room) or raised as main purpose of the operation (like done by <a class="el" href="a11645.html#a81f266d477bb1ae7f50abbc5d9641b2f">opRaiseEvent()</a>). Most events carry some form of data, but in rare cases the type of the event itself is the only message.</p>
+<p>Events are instances of <a class="el" href="a11641.html">EventData</a> with arbitrary content. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- HTML footer for doxygen 1.8.10-->

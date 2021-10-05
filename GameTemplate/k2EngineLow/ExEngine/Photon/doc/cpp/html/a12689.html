@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: Operations</title>
+    <title>Photon C++ Client API: Blackberry NDK</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,27 +83,30 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12676.html">Photon-cpp</a></li>  </ul>
+<li class="navelem"><a class="el" href="index.html">Overview</a></li><li class="navelem"><a class="el" href="a12679.html">Photon-cpp</a></li><li class="navelem"><a class="el" href="a12683.html">How to set up your application</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Operations </div>  </div>
+<div class="title">Blackberry NDK </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Operation is our term for remote procedure calls (RPC) on Photon. This in turn can be described as functions that are implemented on the server-side and called by clients. As any function, they have parameters and return values. The Photon development framework takes care of getting your RPC calls from clients to server (and results back).</p>
-<p>Server-side, operations are part of an application running on top of Photon. The default application provided by Exit Games is called "Lite Application" or simply Lite. The LitePeer class extends the PhotonPeer by functions for each of the Lite Operations.</p>
-<p>Examples for Lite Operations are "join" and "raise event". On the client-side, they can be found in the LitePeer class as functions: <a class="el" href="a11642.html#aa3c67ad2f68b154c4fe37ef12737b6f9">opJoin()</a> and <a class="el" href="a11642.html#a81f266d477bb1ae7f50abbc5d9641b2f">opRaiseEvent()</a>. They can be used right away with the default implementation of Photon and the Lite Application.</p>
-<h1><a class="anchor" id="Operations_CustomOperations"></a>
-Custom Operations</h1>
-<p>Photon is about being extendable with features that are specific to your game. You could persist states in a database or double check information from the clients on the server by implementing functions. If your new functions can be called from the client-side, we call them Custom Operation. Creating those is primarily a server-side task, of course, but the clients have to use new functions / operations of the server.</p>
-<p>So Operations are functions that can be called from the client-side. They can have any number of parameters and any name. As you will be calling operations a lot, we avoid using strings and instead assign byte-codes for every operation and each parameter.</p>
-<p>This is done server side. Each Operation has its own, unique number to identify it, known as the operation code (opCode). An operation class defines the expected parameters and assigns a parameter code for each. With this definition, the client-side only has to fill in the values and let the server know the opCode of the Operation.</p>
-<p>Photon uses instances of <a class="el" href="a11646.html">OperationRequest</a> and <a class="el" href="a11650.html">OperationResponse</a> to aggregate the opCode and all parameters. Use <a class="el" href="a11658.html#a3c1268775eba0cfe2b6f7e309a27e2fd">opCustom()</a> to send your Hashtable and call any operation.</p>
-<p>Client-side, operation codes and parameter codes are of type byte (to minimize overhead). They need to match the definition of the server-side to successfully call your operation.</p>
-<h1><a class="anchor" id="Operations_OperationCode"></a>
-Operation Codes: byte versus short</h1>
-<p>Currently, the server-side uses the short-type to define opCodes and parameter keys while the client-side uses bytes only. This is a remainder of Neutron, essentially, where we implemented more values of opCodes. But using short for each opCode and parameter is a lot of overhead in a realtime environment, so we decided to revert this in the protocol and just send bytes. This simply saves lots of bandwidth. </p>
+<div class="textblock"><p>Photon supports Blackberry NDK version 10 and newer. Photons IDE of choice for Blackberry currently is QNX Momentics.</p>
+<p>1. Right-click on your project, go to "Configure" -&gt; "Add Library", choose "Standard BlackBerry Platform Library" and add the following libraries to your project:<br  />
+ a) <b>Common Services -&gt; Math - libm</b><br  />
+ b) <b>Localization -&gt; Iconv - libiconv</b><br  />
+ c) <b>Networking -&gt; Socket - libsocket</b></p>
+<p>2. Right-click on your project, go to "Configure" -&gt; "Add Library", choose "External Library" and add the Common C++ library to your project:<br  />
+ Device Library: <b>../../Common-cpp/libcommon-cpp-debug_blackberry.a</b> or <b>../../Common-cpp/libcommon-cpp-release_blackberry.a</b><br  />
+ Simulator Library: <b>../../Common-cpp/libcommon-cpp-debug_blackberry_simulator.a</b> or <b>../../Common-cpp/libcommon-cpp-release_blackberry_simulator.a</b><br  />
+ Include folders: <b>../..</b></p>
+<p>3. Right-click on your project, go to "Configure" -&gt; "Add Library", choose "External Library" and add the Photon C++ library to your project:<br  />
+ Device Library: <b>../../Photon-cpp/libphoton-cpp-debug_blackberry.a</b> or <b>../../Photon-cpp/libphoton-cpp-release_blackberry.a</b><br  />
+ Simulator Library: <b>../../Photon-cpp/libphoton-cpp-debug_blackberry_simulator.a</b> or <b>../../Photon-cpp/libphoton-cpp-release_blackberry_simulator.a</b><br  />
+ Include folders: <b>../..</b></p>
+<p>4. Right-click on your project, go to "Properties" -&gt; "C/C++ General" -&gt; "Paths and Symbols" -&gt; "Libraries" and make sure, that the Photon lib is listed above the Common lib and the Common lib above all standard blackberry platform libs</p>
+<p>5. Add the following #include directive to your source-code:<br  />
+ <b>#include "Photon-cpp/inc/PhotonPeer.h"</b> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- HTML footer for doxygen 1.8.10-->

@@ -9,7 +9,7 @@
     <meta name="addsearch-custom-field" content="product=realtime"/>
     <meta name="addsearch-custom-field" content="version=current"/>
     <meta name="addsearch-category" content="realtime/current" />
-    <title>Photon C++ Client API: ExitGames::Lite::EventCache Namespace Reference</title>
+    <title>Photon C++ Client API: ExitGames::Photon::ConnectionProtocol Namespace Reference</title>
     <link href="tabs.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@
                     <div id="projectname">
                         <img alt="" src="logo.png">
                         Photon C++ Client API
-                    &#160;<span id="projectnumber">5.0.0.0</span>
+                    &#160;<span id="projectnumber">5.0.0.3</span>
                     </div>
                 </td>
                 <td style="width: 50%;"><gcse:search linktarget="_parent"></gcse:search></td>
@@ -83,59 +83,156 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="a10622.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10638.html">Lite</a></li><li class="navelem"><a class="el" href="a10639.html">EventCache</a></li>  </ul>
+<li class="navelem"><a class="el" href="a10625.html">ExitGames</a></li><li class="navelem"><a class="el" href="a10638.html">Photon</a></li><li class="navelem"><a class="el" href="a10639.html">ConnectionProtocol</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">ExitGames::Lite::EventCache Namespace Reference</div>  </div>
+<div class="title">ExitGames::Photon::ConnectionProtocol Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a1e794e495735d76d7e11678c09d1a8a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10639.html#a1e794e495735d76d7e11678c09d1a8a3">getIsUDP</a> (nByte connectionProtocol)</td></tr>
+<tr class="separator:a1e794e495735d76d7e11678c09d1a8a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec21bb1523ab7e3d291006105cbdd4f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10639.html#aec21bb1523ab7e3d291006105cbdd4f8">getIsTCP</a> (nByte connectionProtocol)</td></tr>
+<tr class="separator:aec21bb1523ab7e3d291006105cbdd4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a111d1c4fb7390f9ec99fe55699f69158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10639.html#a111d1c4fb7390f9ec99fe55699f69158">getIsWebSocket</a> (nByte connectionProtocol)</td></tr>
+<tr class="separator:a111d1c4fb7390f9ec99fe55699f69158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5da3732c687623d79b1fc05121795e85"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10639.html#a5da3732c687623d79b1fc05121795e85">getIsSecure</a> (nByte connectionProtocol)</td></tr>
+<tr class="separator:a5da3732c687623d79b1fc05121795e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a01a80db07951f091c16bff4e5f845ac6"><td class="memItemLeft" align="right" valign="top"><a id="a01a80db07951f091c16bff4e5f845ac6"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>DO_NOT_CACHE</b></td></tr>
-<tr class="separator:a01a80db07951f091c16bff4e5f845ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4009eae1749c8e69c26d598d61df09e7"><td class="memItemLeft" align="right" valign="top"><a id="a4009eae1749c8e69c26d598d61df09e7"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>MERGE_CACHE</b></td></tr>
-<tr class="separator:a4009eae1749c8e69c26d598d61df09e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada4980d0d32ce2b1e6d64f3c020c72c5"><td class="memItemLeft" align="right" valign="top"><a id="ada4980d0d32ce2b1e6d64f3c020c72c5"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>REPLACE_CACHE</b></td></tr>
-<tr class="separator:ada4980d0d32ce2b1e6d64f3c020c72c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5195def47bb973b47c1e7fadf87eaec9"><td class="memItemLeft" align="right" valign="top"><a id="a5195def47bb973b47c1e7fadf87eaec9"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>REMOVE_CACHE</b></td></tr>
-<tr class="separator:a5195def47bb973b47c1e7fadf87eaec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d6729eb62a12833c2f85beace8bd790"><td class="memItemLeft" align="right" valign="top"><a id="a2d6729eb62a12833c2f85beace8bd790"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>ADD_TO_ROOM_CACHE</b></td></tr>
-<tr class="separator:a2d6729eb62a12833c2f85beace8bd790"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe8041daa9c24cbccef0c3503e1aa187"><td class="memItemLeft" align="right" valign="top"><a id="abe8041daa9c24cbccef0c3503e1aa187"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>ADD_TO_ROOM_CACHE_GLOBAL</b></td></tr>
-<tr class="separator:abe8041daa9c24cbccef0c3503e1aa187"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bc9f6680ca6ff42e64f872158165dff"><td class="memItemLeft" align="right" valign="top"><a id="a7bc9f6680ca6ff42e64f872158165dff"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>REMOVE_FROM_ROOM_CACHE</b></td></tr>
-<tr class="separator:a7bc9f6680ca6ff42e64f872158165dff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6702cc2dfc4d4ed737aee67937fc526"><td class="memItemLeft" align="right" valign="top"><a id="ac6702cc2dfc4d4ed737aee67937fc526"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>REMOVE_FROM_ROOM_CACHE_FOR_ACTORS_LEFT</b></td></tr>
-<tr class="separator:ac6702cc2dfc4d4ed737aee67937fc526"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66458ee0e46869b4747988e4a9a4ba55"><td class="memItemLeft" align="right" valign="top"><a id="a66458ee0e46869b4747988e4a9a4ba55"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>SLICE_INC_INDEX</b></td></tr>
-<tr class="separator:a66458ee0e46869b4747988e4a9a4ba55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75c807362237fa11e261151b6240e591"><td class="memItemLeft" align="right" valign="top"><a id="a75c807362237fa11e261151b6240e591"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>SLICE_SET_INDEX</b></td></tr>
-<tr class="separator:a75c807362237fa11e261151b6240e591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cb5dd4437080b163db1357b04b0327b"><td class="memItemLeft" align="right" valign="top"><a id="a3cb5dd4437080b163db1357b04b0327b"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>SLICE_PURGE_INDEX</b></td></tr>
-<tr class="separator:a3cb5dd4437080b163db1357b04b0327b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab367bc90845f50a28bc00597b7bf2e46"><td class="memItemLeft" align="right" valign="top"><a id="ab367bc90845f50a28bc00597b7bf2e46"></a>
-static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>SLICE_PURGE_UP_TO_INDEX</b></td></tr>
-<tr class="separator:ab367bc90845f50a28bc00597b7bf2e46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5a575be93d07e0419c8842cb2b1f8f4"><td class="memItemLeft" align="right" valign="top"><a id="ac5a575be93d07e0419c8842cb2b1f8f4"></a>
+static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10639.html#ac5a575be93d07e0419c8842cb2b1f8f4">UDP</a></td></tr>
+<tr class="memdesc:ac5a575be93d07e0419c8842cb2b1f8f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use UDP to connect to <a class="el" href="a10638.html">Photon</a>, which allows you to send operations reliable or unreliable on demand. <br /></td></tr>
+<tr class="separator:ac5a575be93d07e0419c8842cb2b1f8f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44f22f1a4defc03613bf72232675da20"><td class="memItemLeft" align="right" valign="top"><a id="a44f22f1a4defc03613bf72232675da20"></a>
+static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10639.html#a44f22f1a4defc03613bf72232675da20">TCP</a></td></tr>
+<tr class="memdesc:a44f22f1a4defc03613bf72232675da20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use TCP to connect to <a class="el" href="a10638.html">Photon</a>. <br /></td></tr>
+<tr class="separator:a44f22f1a4defc03613bf72232675da20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a9b6371271ebecc9a063bd62151369b"><td class="memItemLeft" align="right" valign="top"><a id="a7a9b6371271ebecc9a063bd62151369b"></a>
+static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10639.html#a7a9b6371271ebecc9a063bd62151369b">WS</a></td></tr>
+<tr class="memdesc:a7a9b6371271ebecc9a063bd62151369b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use websockets to connect to <a class="el" href="a10638.html">Photon</a>. <br /></td></tr>
+<tr class="separator:a7a9b6371271ebecc9a063bd62151369b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a89973784327d6c97afb3bb3b90d96b"><td class="memItemLeft" align="right" valign="top"><a id="a7a89973784327d6c97afb3bb3b90d96b"></a>
+static const nByte&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a10639.html#a7a89973784327d6c97afb3bb3b90d96b">WSS</a></td></tr>
+<tr class="memdesc:a7a89973784327d6c97afb3bb3b90d96b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use secure websockets to connect to <a class="el" href="a10638.html">Photon</a>. <br /></td></tr>
+<tr class="separator:a7a89973784327d6c97afb3bb3b90d96b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30c451d8c36cb067661cbe71e62eb2d6"><td class="memItemLeft" align="right" valign="top"><a id="a30c451d8c36cb067661cbe71e62eb2d6"></a>
+static const nByte&#160;</td><td class="memItemRight" valign="bottom"><b>DEFAULT</b></td></tr>
+<tr class="separator:a30c451d8c36cb067661cbe71e62eb2d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="a10639.html">EventCache</a> </p>
-</div></div><!-- contents -->
+<div class="textblock"><p>These are the options that can be used as underlying transport protocol.</p>
+<p><a class="el" href="a10639.html">ConnectionProtocol</a> </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a1e794e495735d76d7e11678c09d1a8a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e794e495735d76d7e11678c09d1a8a3">&#9670;&nbsp;</a></span>getIsUDP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool getIsUDP </td>
+          <td>(</td>
+          <td class="paramtype">nByte&#160;</td>
+          <td class="paramname"><em>connectionProtocol</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">connectionProtocol</td><td>one of the constants in <a class="el" href="a10639.html">ConnectionProtocol</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the passed in value matches <a class="el" href="a10639.html#ac5a575be93d07e0419c8842cb2b1f8f4" title="Use UDP to connect to Photon, which allows you to send operations reliable or unreliable on demand.">ConnectionProtocol::UDP</a>, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="aec21bb1523ab7e3d291006105cbdd4f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec21bb1523ab7e3d291006105cbdd4f8">&#9670;&nbsp;</a></span>getIsTCP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool getIsTCP </td>
+          <td>(</td>
+          <td class="paramtype">nByte&#160;</td>
+          <td class="paramname"><em>connectionProtocol</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">connectionProtocol</td><td>one of the constants in <a class="el" href="a10639.html">ConnectionProtocol</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the passed in value matches <a class="el" href="a10639.html#a44f22f1a4defc03613bf72232675da20" title="Use TCP to connect to Photon.">ConnectionProtocol::TCP</a>, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a111d1c4fb7390f9ec99fe55699f69158"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a111d1c4fb7390f9ec99fe55699f69158">&#9670;&nbsp;</a></span>getIsWebSocket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool getIsWebSocket </td>
+          <td>(</td>
+          <td class="paramtype">nByte&#160;</td>
+          <td class="paramname"><em>connectionProtocol</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">connectionProtocol</td><td>one of the constants in <a class="el" href="a10639.html">ConnectionProtocol</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the passed in value matches either <a class="el" href="a10639.html#a7a9b6371271ebecc9a063bd62151369b" title="Use websockets to connect to Photon.">ConnectionProtocol::WS</a> or <a class="el" href="a10639.html#a7a89973784327d6c97afb3bb3b90d96b" title="Use secure websockets to connect to Photon.">ConnectionProtocol::WSS</a>, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a5da3732c687623d79b1fc05121795e85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5da3732c687623d79b1fc05121795e85">&#9670;&nbsp;</a></span>getIsSecure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool getIsSecure </td>
+          <td>(</td>
+          <td class="paramtype">nByte&#160;</td>
+          <td class="paramname"><em>connectionProtocol</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">connectionProtocol</td><td>one of the constants in <a class="el" href="a10639.html">ConnectionProtocol</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the passed in value matches a connection protocol that uses secure sockets (like HTTPS or WSS), false otherwise. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.10-->
 <!-- start footer part -->
 <footer style="border-top: 1px solid #444; margin-top: 1em; padding: 1em;">

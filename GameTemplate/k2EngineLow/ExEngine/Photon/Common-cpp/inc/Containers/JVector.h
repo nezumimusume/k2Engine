@@ -22,7 +22,7 @@ namespace ExitGames
 		   C++ allows template instantiation of types at compile time.
 		   In addition to the Java public member functions, some
 		   operators were also added in order to take advantage of the
-		   operator overloading feature available in C++.     */
+		   operator overloading feature available in C++. */
 		template<typename Etype>
 		class JVector : public SequenceContainer<JVector, Etype>
 		{

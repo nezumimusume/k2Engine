@@ -155,7 +155,12 @@ void NetworkLogic::connect(void)
 #elif defined _EG_SWITCH_NX_PLATFORM
 	authValues.setType(ExitGames::LoadBalancing::CustomAuthenticationType::NINTENDO_SWITCH).setParameters(L"token=" + mIDToken);
 #elif defined _EG_PS4_OR_NEWER_PLATFORM
-	authValues.setType(ExitGames::LoadBalancing::CustomAuthenticationType::PLAYSTATION_4).setParameters(L"token=" + AuthenticationParameters::get().authCode + L"&env=" + AuthenticationParameters::get().env + L"&userName=" + AuthenticationParameters::get().userID);
+#	if defined _EG_PS4_PLATFORM
+		authValues.setType(ExitGames::LoadBalancing::CustomAuthenticationType::PLAYSTATION_4);
+#	elif defined _EG_PS5_PLATFORM
+		authValues.setType(ExitGames::LoadBalancing::CustomAuthenticationType::PLAYSTATION_5);
+#	endif
+	authValues.setParameters(L"token=" + AuthenticationParameters::get().authCode + L"&env=" + AuthenticationParameters::get().env + L"&userName=" + AuthenticationParameters::get().userID);
 #else // we could still set the userID when doing console authentication, but it would be pointless, as the server would override it with the userID that is set by the auth-provider, anyway. Hence we only set it in the #else case
 	if(mUserID.length()) // if we don't have a user ID yet, let the server assign one for us, afterwards store the assigned value in mUserID in connectReturn() and re-use it in subsequent connects, so that Photon recognizes us as the same user
 		authValues.setUserID(mUserID);
@@ -255,7 +260,7 @@ void NetworkLogic::run(void)
 				break;
 			case STATE_JOINING:
 				break; // wait for callback
-			case STATE_JOINED:				
+			case STATE_JOINED:
 				if(mLastSendTime+sendInterval < t)
 				{
 					mLastSendTime = t;
