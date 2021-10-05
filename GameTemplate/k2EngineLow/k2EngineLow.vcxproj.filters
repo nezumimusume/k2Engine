@@ -202,6 +202,9 @@
     <ClCompile Include="online\SyncOnlineTwoPlayerMatchEngine.cpp">
       <Filter>online</Filter>
     </ClCompile>
+    <ClCompile Include="geometry\AABB.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -453,6 +456,9 @@
     <ClInclude Include="online\SyncOnlineTwoPlayerMatchEngine.h">
       <Filter>online</Filter>
     </ClInclude>
+    <ClInclude Include="geometry\AABB.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -502,6 +508,9 @@
     </Filter>
     <Filter Include="online">
       <UniqueIdentifier>{077f7c0d-1513-4644-b409-09887e0cfb01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{8c4c7591-c46f-4829-beb3-2a2988bd47ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

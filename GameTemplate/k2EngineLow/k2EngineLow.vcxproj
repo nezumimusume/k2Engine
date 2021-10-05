@@ -248,6 +248,7 @@
   <ItemGroup>
     <ClCompile Include="gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
+    <ClCompile Include="geometry\AABB.cpp" />
     <ClCompile Include="graphics\Animation.cpp" />
     <ClCompile Include="graphics\AnimationClip.cpp" />
     <ClCompile Include="graphics\AnimationPlayController.cpp" />
@@ -326,6 +327,7 @@
     <ClInclude Include="dbg\MyLog.h" />
     <ClInclude Include="gameObject\GameObjectManager.h" />
     <ClInclude Include="gameObject\IGameobject.h" />
+    <ClInclude Include="geometry\AABB.h" />
     <ClInclude Include="graphics\Animation.h" />
     <ClInclude Include="graphics\AnimationClip.h" />
     <ClInclude Include="graphics\AnimationPlayController.h" />

@@ -31,7 +31,6 @@
     <ClCompile Include="camera\SpringCamera.cpp" />
     <ClCompile Include="collision\CollisionObject.cpp" />
     <ClCompile Include="dbg\dbgVectorRenderer.cpp" />
-    <ClCompile Include="geometry\AABB.cpp" />
     <ClCompile Include="geometry\GeometryData.cpp" />
     <ClCompile Include="geometry\SceneGeometryData.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
@@ -68,7 +67,6 @@
     <ClInclude Include="camera\SpringCamera.h" />
     <ClInclude Include="collision\CollisionObject.h" />
     <ClInclude Include="dbg\dbgVectorRenderer.h" />
-    <ClInclude Include="geometry\AABB.h" />
     <ClInclude Include="geometry\GeometryData.h" />
     <ClInclude Include="geometry\SceneGeometryData.h" />
     <ClInclude Include="graphics\FontRender.h" />

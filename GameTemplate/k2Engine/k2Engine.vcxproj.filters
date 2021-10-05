@@ -70,9 +70,6 @@
     <ClCompile Include="collision\CollisionObject.cpp">
       <Filter>collision</Filter>
     </ClCompile>
-    <ClCompile Include="geometry\AABB.cpp">
-      <Filter>geometry</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\SceneLight.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
@@ -164,9 +161,6 @@
     </ClInclude>
     <ClInclude Include="collision\CollisionObject.h">
       <Filter>collision</Filter>
-    </ClInclude>
-    <ClInclude Include="geometry\AABB.h">
-      <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="graphics\SceneLight.h">
       <Filter>graphics</Filter>
