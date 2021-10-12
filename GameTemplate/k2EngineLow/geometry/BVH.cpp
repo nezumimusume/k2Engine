@@ -19,9 +19,7 @@ namespace nsK2EngineLow {
 		}
 		// ノードのAABBを初期化する。
 		m_rootNode->aabb.Init(vMax, vMin);
-		// 主成分分析を行って、分割平面の法線を決定する。
-		// 分割平面を決定する。
-		Vector3 t = vMax - vMin;
-
+		
+		
 	}
 }

@@ -205,6 +205,9 @@
     <ClCompile Include="geometry\AABB.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
+    <ClCompile Include="geometry\BVH.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -457,6 +460,9 @@
       <Filter>online</Filter>
     </ClInclude>
     <ClInclude Include="geometry\AABB.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\BVH.h">
       <Filter>geometry</Filter>
     </ClInclude>
   </ItemGroup>
