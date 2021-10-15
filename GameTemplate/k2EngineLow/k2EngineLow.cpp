@@ -74,6 +74,16 @@ namespace nsK2EngineLow {
 		auto& renderContext = g_graphicsEngine->GetRenderContext();
 		// ゲームオブジェクトマネージャーの描画処理を実行。
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
+		
+	}
+
+	/// <summary>
+	/// 当たり判定描画処理を実行。
+	/// </summary>
+	void K2EngineLow::DebubDrawWorld()
+	{
+		auto& renderContext = g_graphicsEngine->GetRenderContext();
+		//当たり判定描画処理を実行。
 		PhysicsWorld::GetInstance()->DebubDrawWorld(renderContext);
 	}
 }
