@@ -39,7 +39,10 @@ namespace nsK2EngineLow {
 		/// 描画処理を実行。
 		/// </summary>
 		void ExecuteRender();
-		
+		/// <summary>
+		/// 当たり判定描画処理を実行。
+		/// </summary>
+		void DebubDrawWorld();
 		/// <summary>
 		/// フレームの開始時に呼ばれる処理。
 		/// </summary>
