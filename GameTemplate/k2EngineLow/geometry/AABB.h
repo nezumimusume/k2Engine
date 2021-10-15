@@ -8,6 +8,7 @@ namespace nsK2EngineLow {
 	private:
 		Vector3 m_max;					// AABBを構成するボックスの最大座標。
 		Vector3 m_min;					// AABBを構成するボックスの最小座標。
+		Vector3 m_centerPos;			// 中心座標。
 		Vector3 m_vertexPosition[8];	// AABBを構成する8頂点の座標。
 	public:
 		/// <summary>
@@ -36,6 +37,14 @@ namespace nsK2EngineLow {
 		const Vector3& GetMin() const
 		{
 			return m_min;
+		}
+		/// <summary>
+		/// 中心座標を取得。
+		/// </summary>
+		/// <returns>中心座標</returns>
+		const Vector3& GetCenter() const
+		{
+			return m_centerPos;
 		}
 	};
 }

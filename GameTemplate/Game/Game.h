@@ -14,6 +14,6 @@ public:
 	void Render(RenderContext& rc);
 
 private:
-	ModelRender m_modelRender;
+	static ModelRender m_modelRender;
 };
 

@@ -2,6 +2,8 @@
 #include "Game.h"
 #include "geometry/BVH.h"
 
+ModelRender Game::m_modelRender;
+
 bool Game::Start()
 {
 	BVH bvh;

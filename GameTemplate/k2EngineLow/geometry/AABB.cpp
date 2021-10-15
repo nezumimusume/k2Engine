@@ -8,6 +8,7 @@ namespace nsK2EngineLow {
 		m_min = vMin;
 		Vector3 halfSize = (m_max - m_min) * 0.5f;
 		Vector3 centerPos = (vMax + vMin) * 0.5f;
+		m_centerPos = centerPos;
 
 		m_vertexPosition[0] = centerPos;
 		m_vertexPosition[0].x -= halfSize.x;

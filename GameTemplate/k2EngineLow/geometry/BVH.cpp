@@ -20,6 +20,17 @@ namespace nsK2EngineLow {
 		// ノードのAABBを初期化する。
 		m_rootNode->aabb.Init(vMax, vMin);
 		
-		
+		// 主成分分析を行って、分割平面を求める。
+		// まずは、AABBの中心座標を求める。
+		Vector3 centerPos;
+		for (auto& node : m_leafNodeArray) {
+			centerPos += node->aabb.GetCenter();
+		}
+		centerPos /= m_leafNodeArray.size();
+		// 続いて共分散行列を計算する
+		Matrix covarianceMatrix;
+		for (auto& node : m_leafNodeArray) {
+			covarianceMatrix[0][0] += node->aabb.GetCenter();
+		}
 	}
 }
