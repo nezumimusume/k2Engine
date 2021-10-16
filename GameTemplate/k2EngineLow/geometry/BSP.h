@@ -6,9 +6,8 @@
 namespace nsK2EngineLow {
 
 	/// <summary>
-	/// BSP
+	/// BSPƒcƒŠ[
 	/// </summary>
-	
 	class BSP {
 	private:
 		/// <summary>

@@ -128,7 +128,9 @@ namespace nsK2EngineLow {
     {
         // 0で初期化する。
         memset(covarianceMatrix, 0, sizeof(float[3][3]));
-        
+        // 共分散行列を計算する。
+        // 共分散とはXとYとZの要素がどれくらい関連づいて分散しているかを表すもの。
+        // 共分散行列は、それを行列としてまとめたもの。
         for (const auto& leafPtr : leafNodeArray) {
             auto leaf = static_cast<SLeaf*>(leafPtr.get());
             const auto& aabbCenterPos = leaf->position;
@@ -162,9 +164,9 @@ namespace nsK2EngineLow {
         EigenJacobiMethod<3>(
             reinterpret_cast<float*>(covarianceMatrix),
             reinterpret_cast<float*>(&eigenVector)
-            );
-        // 1番目大きな固有値の固有ベクトルを分割平面の法線とする。
+        );
 
+        // 1番目大きな固有値の固有ベクトルを分割平面の法線とする。
         float eigenScalar_0 = covarianceMatrix[0][0];
         float eigenScalar_1 = covarianceMatrix[1][1];
         float eigenScalar_2 = covarianceMatrix[2][2];
@@ -220,7 +222,7 @@ namespace nsK2EngineLow {
         }
 
         // 主成分分析を行って、分割平面を求める。
-        // まずは
+        // まずは、リーフノードの中心座標を計算する。
         Vector3 centerPos = CalcCenterPositionFromLeafList(leafArray);
 
         // 続いて共分散行列を計算する

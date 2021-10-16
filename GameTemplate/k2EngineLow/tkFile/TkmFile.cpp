@@ -63,10 +63,12 @@ namespace nsK2EngineLow {
 				BSP bsp;
 				std::vector<SSmoothVertex> smoothVertex;
 				smoothVertex.reserve(mesh.vertexBuffer.size());
-				for (auto& v : mesh.vertexBuffer) {			
+				for (auto& v : mesh.vertexBuffer) {		
+					// BSPツリーのリーフを追加
 					bsp.AddLeaf(v.pos, &v.normal);
 					smoothVertex.push_back({ v.normal, &v });
 				}
+				//BSPツリーを構築。
 				bsp.Build();
 #if 0 // こっちの計算量は頂点数をNとしたときに、O(N^2)
 				
