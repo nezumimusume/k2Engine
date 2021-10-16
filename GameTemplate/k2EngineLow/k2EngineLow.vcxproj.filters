@@ -205,7 +205,7 @@
     <ClCompile Include="geometry\AABB.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
-    <ClCompile Include="geometry\BVH.cpp">
+    <ClCompile Include="geometry\BSP.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
   </ItemGroup>
@@ -453,17 +453,17 @@
     <ClInclude Include="dbg\MyLog.h">
       <Filter>dbg</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\time\FPSLimitter.h">
-      <Filter>time</Filter>
-    </ClInclude>
     <ClInclude Include="online\SyncOnlineTwoPlayerMatchEngine.h">
       <Filter>online</Filter>
     </ClInclude>
     <ClInclude Include="geometry\AABB.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="geometry\BVH.h">
+    <ClInclude Include="geometry\BSP.h">
       <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="time\FPSLimitter.h">
+      <Filter>time</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

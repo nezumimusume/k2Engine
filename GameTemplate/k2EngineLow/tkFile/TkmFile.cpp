@@ -287,6 +287,53 @@ namespace nsK2EngineLow {
 		loadTexture(tkmMat.reflectionMapFileName, tkmMat.reflectionMap, tkmMat.reflectionMapSize, tkmMat.reflectionMapFilePath);
 		loadTexture(tkmMat.refractionMapFileName, tkmMat.refractionMap, tkmMat.refractionMapSize, tkmMat.refractionMapFilePath);
 	}
+	template< class IndexBuffer>
+	void BuildBVHOnPolygonAABBImp(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer)
+	{
+		
+		auto numPolygon = indexBuffer.indices.size() / 3;
+		for (auto polyNo = 0; polyNo < numPolygon; polyNo++) {
+			AABB aabb;
+			Vector3 vMax, vMin;
+			vMax.x = -FLT_MAX;
+			vMax.y = -FLT_MAX;
+			vMax.z = -FLT_MAX;
+
+			vMin.x =  FLT_MAX;
+			vMin.y =  FLT_MAX;
+			vMin.z =  FLT_MAX;
+
+			auto no = polyNo * 3;
+			auto vertNo_0 = indexBuffer.indices[no];
+			auto vertNo_1 = indexBuffer.indices[no + 1];
+			auto vertNo_2 = indexBuffer.indices[no + 2];
+
+			auto& vert_0 = mesh.vertexBuffer[vertNo_0];
+			auto& vert_1 = mesh.vertexBuffer[vertNo_1];
+			auto& vert_2 = mesh.vertexBuffer[vertNo_2];
+
+			// BVHのリーフノードを追加する。
+			mesh.bspOnVertex.AddLeaf(vert_0.pos);
+			mesh.bspOnVertex.AddLeaf(vert_1.pos);
+			mesh.bspOnVertex.AddLeaf(vert_2.pos);
+		}
+	}
+	void TkmFile::BuildBVHOnPolygonAABB()
+	{
+		for (auto& mesh : m_meshParts) {
+			// 32bitインデックスバッファ
+			for (auto& indexBuffer : mesh.indexBuffer16Array) {
+				BuildBVHOnPolygonAABBImp(mesh, indexBuffer);
+			}
+			// 16bitインデックスバッファ
+			for (auto& indexBuffer : mesh.indexBuffer32Array) {
+				BuildBVHOnPolygonAABBImp(mesh, indexBuffer);
+			}
+			// BVHを構築する。
+			mesh.bspOnVertex.Build();
+		}
+		
+	}
 	void TkmFile::BuildTangentAndBiNormal()
 	{
 		NormalSmoothing normalSmoothing;
@@ -381,10 +428,12 @@ namespace nsK2EngineLow {
 						fp
 					);
 				}
-
 			}
 		}
-		//接ベクトルと従ベクトルを構築する。
+
+		// ポリゴンを内包するAABBでのBVHを構築する。
+		BuildBVHOnPolygonAABB();
+		// 接ベクトルと従ベクトルを構築する。
 		BuildTangentAndBiNormal();
 
 		fclose(fp);

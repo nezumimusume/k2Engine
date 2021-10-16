@@ -158,7 +158,8 @@
       <AdditionalDependencies>DXGI.lib;dxguid.lib;DirectXTK12.lib;d3d12.lib;d3dcompiler.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dxguid.lib;d3d12.lib;DirectXTK12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;xaudio2.lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX12d.lib;LLGId.lib;Photon-cpp_vc16_debug_windows_mt_x64.lib;LoadBalancing-cpp_vc16_debug_windows_mt_x64.lib;Common-cpp_vc16_debug_windows_mt_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3d12.lib;xaudio2.lib;DirectXTK12.lib;BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;LinearMath_$(Configuration).lib;winmm.lib;Effekseerd.lib;EffekseerRendererDX12d.lib;LLGId.lib;Photon-cpp_vc16_debug_windows_mt_x64.lib;LoadBalancing-cpp_vc16_debug_windows_mt_x64.lib;Common-cpp_vc16_debug_windows_mt_x64.lib</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -249,7 +250,7 @@
     <ClCompile Include="gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
     <ClCompile Include="geometry\AABB.cpp" />
-    <ClCompile Include="geometry\BVH.cpp" />
+    <ClCompile Include="geometry\BSP.cpp" />
     <ClCompile Include="graphics\Animation.cpp" />
     <ClCompile Include="graphics\AnimationClip.cpp" />
     <ClCompile Include="graphics\AnimationPlayController.cpp" />
@@ -323,13 +324,12 @@
     <ClCompile Include="tkFile\TksFile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\time\FPSLimitter.h" />
     <ClInclude Include="dbg\MyAssert.h" />
     <ClInclude Include="dbg\MyLog.h" />
     <ClInclude Include="gameObject\GameObjectManager.h" />
     <ClInclude Include="gameObject\IGameobject.h" />
     <ClInclude Include="geometry\AABB.h" />
-    <ClInclude Include="geometry\BVH.h" />
+    <ClInclude Include="geometry\BSP.h" />
     <ClInclude Include="graphics\Animation.h" />
     <ClInclude Include="graphics\AnimationClip.h" />
     <ClInclude Include="graphics\AnimationPlayController.h" />
@@ -404,6 +404,7 @@
     <ClInclude Include="sound\SoundSource.h" />
     <ClInclude Include="sound\WaveFile.h" />
     <ClInclude Include="sound\WaveFileBank.h" />
+    <ClInclude Include="time\FPSLimitter.h" />
     <ClInclude Include="time\GameTime.h" />
     <ClInclude Include="time\Stopwatch.h" />
     <ClInclude Include="tkFile\TkaFile.h" />
