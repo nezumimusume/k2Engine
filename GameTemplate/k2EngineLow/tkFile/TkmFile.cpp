@@ -89,30 +89,16 @@ namespace nsK2EngineLow {
 				}
 				
 #else // こっちの計算量は頂点数をNとした時に、O(NlogN)
-				auto onLeaf = [&](BSP::SLeaf* leaf, SSmoothVertex& va) {
-					if (va.vertex->pos.x == leaf->position.x
-						&& va.vertex->pos.y == leaf->position.y
-						&& va.vertex->pos.z == leaf->position.z) {
-						//同じ座標。
-						auto* normal = static_cast<Vector3*>(leaf->extraData);
-						if (va.vertex->normal.Dot(*normal) > 0.0f) {
-							//同じ向き。
-							va.newNormal += *normal;
-						}
-					}
-				};
 				for (auto& va : smoothVertex) {
-					bsp.WalkTree(va.vertex->pos, [&](BSP::IComposite* leaf) {
-						if (leaf->type == BSP::enCompositeType_Leaf) {
-							// リーフ
-							auto* leafDerived = static_cast<BSP::SLeaf*>(leaf);
-							onLeaf(leafDerived, va);
-						}
-						else if (leaf->type == BSP::enCompositeType_LeafList) {
-							// リーフのリスト
-							auto* leafList = static_cast<BSP::SLeafList*>(leaf);
-							for (auto& l : leafList->leafList) {
-								onLeaf(static_cast<BSP::SLeaf*>(l.get()), va);
+					bsp.WalkTree(va.vertex->pos, [&](BSP::SLeaf* leaf) {
+						if (va.vertex->pos.x == leaf->position.x
+							&& va.vertex->pos.y == leaf->position.y
+							&& va.vertex->pos.z == leaf->position.z) {
+							//同じ座標。
+							auto* normal = static_cast<Vector3*>(leaf->extraData);
+							if (va.vertex->normal.Dot(*normal) > 0.0f) {
+								//同じ向き。
+								va.newNormal += *normal;
 							}
 						}
 					});

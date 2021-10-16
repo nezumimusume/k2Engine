@@ -27,7 +27,8 @@ namespace nsK2EngineLow {
 
         int cnt = 0;
         for (;;) {
-            int i, j;
+            int i = 0;
+            int j = 0;
 
             float x = 0.0;
             for (int ia = 0; ia < n; ++ia) {
@@ -108,20 +109,20 @@ namespace nsK2EngineLow {
 
         return cnt;
     }
-    Vector3 BSP::CalcCenterPositionFromLeafList(const std::vector<ICompositePtr>& leafNodeArray)
+    Vector3 BSP::CalcCenterPositionFromLeafList(const std::vector<SEntityPtr>& leafArray)
     {
         // まずは、AABBの中心座標を求める。
         Vector3 centerPos;
-        for (const auto& leafPtr : leafNodeArray) {
+        for (const auto& leafPtr : leafArray) {
             auto leaf = static_cast<SLeaf*>(leafPtr.get());
             centerPos += leaf->position;
         }
-        centerPos /= static_cast<float>(leafNodeArray.size());
+        centerPos /= static_cast<float>(leafArray.size());
         return centerPos;
     }
     void BSP::CalcCovarianceMatrixFromLeafNodeList(
         float covarianceMatrix[3][3],
-        const std::vector<ICompositePtr>& leafNodeArray,
+        const std::vector<SEntityPtr>& leafNodeArray,
         const Vector3& centerPos
     )
     {
@@ -146,7 +147,7 @@ namespace nsK2EngineLow {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                covarianceMatrix[i][j] /= static_cast<float>(m_leafNodeArray.size());
+                covarianceMatrix[i][j] /= static_cast<float>(m_leafArray.size());
             }
         }
     }
@@ -182,41 +183,49 @@ namespace nsK2EngineLow {
         plane.distance = Dot(plane.normal, centerPos);
     }
     void BSP::SplitLeafArray(
-        std::vector<ICompositePtr>& leftLeafNodeArray,
-        std::vector<ICompositePtr>& rightLeafNodeArray,
+        std::vector<SEntityPtr>& leftLeafArray,
+        std::vector<SEntityPtr>& rightLeafArray,
         const SPlane& plane,
-        const std::vector<ICompositePtr>& leafNodeArray
+        const std::vector<SEntityPtr>& leafArray
     )
     {
-        for (const auto& leafPtr : leafNodeArray) {
+        for (const auto& leafPtr : leafArray) {
             auto leaf = static_cast<SLeaf*>(leafPtr.get());
             float t = Dot(leaf->position, plane.normal);
 
             if (t < plane.distance) {
                 // 左側に割り振る。
-                leftLeafNodeArray.emplace_back(leafPtr);
+                leftLeafArray.emplace_back(leafPtr);
             }
             else {
                 // 右側に割り振る。
-                rightLeafNodeArray.emplace_back(leafPtr);
+                rightLeafArray.emplace_back(leafPtr);
             }
 
         }
     }
-    BSP::ICompositePtr BSP::BuildInternal(const std::vector<ICompositePtr>& leafNodeArray)
+    BSP::SEntityPtr BSP::CreateBSPTreeEntity_LeafList(const std::vector<SEntityPtr>& leafArray)
     {
-        if (leafNodeArray.size() == 1) {
-            // リーフノード
-            return leafNodeArray.front();
+        auto newNodePtr = std::make_shared<SLeafList>();
+        auto leafList = static_cast<SLeafList*>(newNodePtr.get());
+        leafList->type = enEntityType_LeafList;
+        leafList->leafList = leafArray;
+        return newNodePtr;
+    }
+    BSP::SEntityPtr BSP::CreateBSPTreeEntity(const std::vector<SEntityPtr>& leafArray)
+    {
+        if (leafArray.size() == 1) {
+            // リーフエンティティを返す。
+            return leafArray.front();
         }
 
         // 主成分分析を行って、分割平面を求める。
         // まずは
-        Vector3 centerPos = CalcCenterPositionFromLeafList(leafNodeArray);
+        Vector3 centerPos = CalcCenterPositionFromLeafList(leafArray);
 
         // 続いて共分散行列を計算する
         float covarianceMatrix[3][3];
-        CalcCovarianceMatrixFromLeafNodeList(covarianceMatrix, leafNodeArray, centerPos);
+        CalcCovarianceMatrixFromLeafNodeList(covarianceMatrix, leafArray, centerPos);
         
         // 各共分散の要素を引っ張ってくる。
         Vector3* v_0 = (Vector3*)covarianceMatrix[0];
@@ -227,78 +236,76 @@ namespace nsK2EngineLow {
             // 分散していないということは、ほとんどのリーフが非常に近い場所にあるということなので、
             // これ以上の分割は行わない。
             // BSPの末端ノードとして、リーフの配列ノードを作成する。
-            auto newNodePtr = std::make_shared<SLeafList>();
-            auto leafList = static_cast<SLeafList*>(newNodePtr.get());
-            leafList->type = enCompositeType_LeafList;
-            leafList->leafList = leafNodeArray;
-            return newNodePtr;
+            return CreateBSPTreeEntity_LeafList(leafArray);
         }
         
         // 新しいノードを作る。
-        ICompositePtr newNodePtr;
-        newNodePtr = std::make_shared<SNode>();
-        newNodePtr->type = enCompositeType_Node;
+        auto newNodePtr = std::make_shared<SNode>();
+        newNodePtr->type = enEntityType_Node;
         auto newNode = static_cast<SNode*>(newNodePtr.get());
 
         // 分散しているので、共分散行列を利用して
         // 分割平面を計算する。
         CalcSplitPlaneFromCovarianceMatrix(newNode->plane, covarianceMatrix, centerPos);
        
-        // 分割平面が求まったので、リーフノードを平面で振り分けしていく。
-        std::vector<ICompositePtr> leftLeafNodeArray;
-        std::vector<ICompositePtr> rightLeafNodeArray;
-        SplitLeafArray(leftLeafNodeArray, rightLeafNodeArray, newNode->plane, leafNodeArray);
+        // 分割平面が求まったので、リーフを平面で振り分けしていく。
+        std::vector<SEntityPtr> leftLeafArray;
+        std::vector<SEntityPtr> rightLeafArray;
+        SplitLeafArray(leftLeafArray, rightLeafArray, newNode->plane, leafArray);
         
         
-        if (leftLeafNodeArray.empty() || rightLeafNodeArray.empty()) {
+        if (leftLeafArray.empty() || rightLeafArray.empty()) {
             // 片方の枝が空になった。
             // 分散しているので、こには来ないはずなんだけど、万が一来てしまうと、再起呼び出しが終わらずに
             // スタックオーバーフローしてしまうので、保険として。
             // 分散していないのでリーフのリストノードを作成する。
-            newNodePtr = std::make_shared<SLeafList>();
-            auto leafList = static_cast<SLeafList*>(newNodePtr.get());
-            leafList->type = enCompositeType_LeafList;
-            leafList->leafList = leafNodeArray;
-            return newNodePtr;
+            return CreateBSPTreeEntity_LeafList(leafArray);
         }
         
         // 左の枝を構築
-        newNode->leftNode = BuildInternal(leftLeafNodeArray);
+        newNode->leftEntity = CreateBSPTreeEntity(leftLeafArray);
         
         // 右の枝を構築。
-        newNode->rightNode = BuildInternal(rightLeafNodeArray);
+        newNode->rightEntity = CreateBSPTreeEntity(rightLeafArray);
         
         
         return newNodePtr;
     }
-    void BSP::WalkTree(ICompositePtr nodePtr, const Vector3& pos, std::function<void(IComposite* leaf)> onEndWalk)
+    void BSP::WalkTree(SEntityPtr entityPtr, const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk)
     {
-        if (nodePtr->type == enCompositeType_Node) {
+        if (entityPtr->type == enEntityType_Node) {
             // これはノードなのでさらに潜る。
             // 左に潜る？右に潜る？
-            auto node = static_cast<SNode*>(nodePtr.get());
+            auto node = static_cast<SNode*>(entityPtr.get());
             float t = Dot(pos, node->plane.normal);
             if (t < node->plane.distance) {
                 // 左に潜る。
-                WalkTree(node->leftNode, pos, onEndWalk);
+                WalkTree(node->leftEntity, pos, onEndWalk);
             }
             else {
                 // 右に潜る。
-                WalkTree(node->rightNode, pos, onEndWalk);
+                WalkTree(node->rightEntity, pos, onEndWalk);
             }
         }
-        else {
+        else if(entityPtr->type == enEntityType_Leaf ){
             // リーフに到達した。
-            onEndWalk(nodePtr.get());
+            onEndWalk(static_cast<SLeaf*>(entityPtr.get()));
+        }
+        else if (entityPtr->type == enEntityType_LeafList) {
+            // リーフのリストに到達した。
+            auto leafList = static_cast<SLeafList*>(entityPtr.get());
+            for (auto leaf : leafList->leafList) {
+                onEndWalk(static_cast<SLeaf*>(leaf.get()));
+            }
         }
     }
-    void BSP::WalkTree(const Vector3& pos, std::function<void(IComposite* leaf)> onEndWalk)
+    void BSP::WalkTree(const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk)
     {
         WalkTree(m_rootNode, pos, onEndWalk);
     }
 	void BSP::Build()
 	{
 		// ルートノードを作成。
-        m_rootNode = BuildInternal(m_leafNodeArray); std::make_shared<SNode>();
+        m_rootNode = CreateBSPTreeEntity(m_leafArray);
 	}
 }

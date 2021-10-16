@@ -19,41 +19,47 @@ namespace nsK2EngineLow {
 			float distance;		// 平面までの距離。
 		};
 	public:
-		enum EnCompositeType {
-			enCompositeType_Node,
-			enCompositeType_Leaf,
-			enCompositeType_LeafList
+		/// <summary>
+		/// BSPツリーの要素の種類
+		/// </summary>
+		enum EnEntityType {
+			enEntityType_Node,
+			enEntityType_Leaf,
+			enEntityType_LeafList
 		};
-		struct IComposite {
-			int type = enCompositeType_Node;
+		/// <summary>
+		/// BSPツリーの要素
+		/// </summary>
+		struct SEntity {
+			int type = enEntityType_Node;
 		};
 
-		using ICompositePtr = std::shared_ptr<IComposite>;
+		using SEntityPtr = std::shared_ptr<SEntity>;
 		/// <summary>
 		/// ノード
 		/// </summary>
-		struct SNode : public IComposite {
-			SPlane plane;		// 分割平面。
-			ICompositePtr rightNode;	// 右のノード。
-			ICompositePtr leftNode;	// 左のノード。
+		struct SNode : public SEntity  {
+			SPlane plane;				// 分割平面。
+			SEntityPtr rightEntity;		// 右の要素
+			SEntityPtr leftEntity;		// 左の要素。
 		};
 		/// <summary>
 		/// リーフ
 		/// </summary>
-		struct SLeaf : public IComposite {
+		struct SLeaf : public SEntity {
 			Vector3 position;
 			void* extraData;
 		};
 		/// <summary>
 		/// リーフのリスト
 		/// </summary>
-		struct SLeafList : public IComposite {
-			std::vector< ICompositePtr> leafList;
+		struct SLeafList : public SEntity {
+			std::vector< SEntityPtr > leafList;
 		};
 	private:
 		
-		ICompositePtr m_rootNode = nullptr;			// ルートノード。
-		std::vector<ICompositePtr> m_leafNodeArray;	// リーフノードの配列。
+		SEntityPtr m_rootNode = nullptr;		// ルートノード。
+		std::vector<SEntityPtr> m_leafArray;	// リーフの配列。
 	public:
 		/// <summary>
 		/// リーフを追加。
@@ -61,13 +67,13 @@ namespace nsK2EngineLow {
 		/// <param name="aabb"></param>
 		void AddLeaf(const Vector3& position, void* extraData) 
 		{
-			// リーフノードを作る。
-			ICompositePtr leafNode = std::make_shared<SLeaf>();
-			m_leafNodeArray.emplace_back(leafNode);
-			SLeaf* leaf = static_cast<SLeaf*>(leafNode.get());
+			// リーフを作る。
+			auto newEntity = std::make_shared<SLeaf>();
+			m_leafArray.emplace_back(newEntity);
+			SLeaf* leaf = static_cast<SLeaf*>(newEntity.get());
 			leaf->position = position;
 			leaf->extraData = extraData;
-			leaf->type = enCompositeType_Leaf;
+			leaf->type = enEntityType_Leaf;
 			
 		}
 		/// <summary>
@@ -79,20 +85,20 @@ namespace nsK2EngineLow {
 		/// BSPツリーを探索する
 		/// </summary>
 		/// <remark>
-		/// BSPツリーを探索して、枝に到達すると、引数で指定されたコールバック関数が呼ばれます。
+		/// BSPツリーを探索して、リーフに到達すると、引数で指定されたコールバック関数が呼ばれます。
 		/// </remark>
 		/// <param name="pos">座標</param>
 		/// <param name="onEndWalk">探索が終了した時に呼ばれる処理</param>
-		void WalkTree(const Vector3& pos, std::function<void(IComposite* leaf)> onEndWalk);
+		void WalkTree(const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk);
 	private:
 		/// <summary>
 		/// 平面でリーフノードを分割していく
 		/// </summary>
 		void SplitLeafArray(
-			std::vector<ICompositePtr>& leftLeafNodeArray,
-			std::vector<ICompositePtr>& rightLeafNodeArray,
+			std::vector<SEntityPtr>& leftLeafArray,
+			std::vector<SEntityPtr>& rightLeafArray,
 			const SPlane& plane, 
-			const std::vector<ICompositePtr>& leafNodeArray
+			const std::vector<SEntityPtr>& leafArray
 		);
 		/// <summary>
 		/// 共分散行列から分割平面を計算する。
@@ -112,7 +118,7 @@ namespace nsK2EngineLow {
 		/// <param name="centerPos">リーフノードの中心座標</param>
 		void CalcCovarianceMatrixFromLeafNodeList(
 			float covarianceMatrix[3][3], 
-			const std::vector<ICompositePtr>& leafNodeArray, 
+			const std::vector<SEntityPtr>& leafArray,
 			const Vector3& centerPos
 		);
 		/// <summary>
@@ -121,15 +127,20 @@ namespace nsK2EngineLow {
 		/// <param name="leafNodeArray"></param>
 		/// <returns></returns>
 		Vector3 CalcCenterPositionFromLeafList(
-			const std::vector<ICompositePtr>& leafNodeArray
+			const std::vector<SEntityPtr>& leafArray
 		);
 		/// <summary>
-		/// BVHを構築。
+		/// 新しいBSPツリーの要素を作成する。
 		/// </summary>
 		/// <param name="leafNodeArray"></param>
-		ICompositePtr BuildInternal(const std::vector<ICompositePtr>& leafNodeArray);
-		
+		SEntityPtr CreateBSPTreeEntity(const std::vector<SEntityPtr>& leafArray);
+		/// <summary>
+		/// BSPツリーのLeafList要素を作成する。
+		/// </summary>
+		/// <param name="leafArray"></param>
+		/// <returns></returns>
+		SEntityPtr CreateBSPTreeEntity_LeafList(const std::vector<SEntityPtr>& leafArray);
 	
-		void WalkTree(ICompositePtr node, const Vector3& pos, std::function<void(IComposite* leaf)> onEndWalk );
+		void WalkTree(SEntityPtr entity, const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk );
 	};
 }
