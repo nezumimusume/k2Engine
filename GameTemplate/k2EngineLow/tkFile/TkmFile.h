@@ -77,7 +77,6 @@ namespace nsK2EngineLow {
 			std::vector< SVertex >	vertexBuffer;				// 頂点バッファ。
 			std::vector<SIndexBuffer32> indexBuffer32Array;		// インデックスバッファの配列。マテリアルの数分だけインデックスバッファはあるよ。
 			std::vector< SIndexbuffer16> indexBuffer16Array;
-			BSP bspOnVertex;									// 頂点をリーフに持つBSP
 		};
 
 		/// <summary>
@@ -136,10 +135,7 @@ namespace nsK2EngineLow {
 		/// 3dsMaxScriptでやるべきなんだろうけど、デバッグしたいので今はこちらでやる。
 		/// </remarks>
 		void BuildTangentAndBiNormal();
-		/// <summary>
-		/// ポリゴンを内包するAABBでのBVHを構築する。
-		/// </summary>
-		void BuildBVHOnPolygonAABB();
+		
 	private:
 		std::vector< SMesh>	m_meshParts;		//メッシュパーツ。
 	};

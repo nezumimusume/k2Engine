@@ -271,10 +271,31 @@ namespace nsK2EngineLow {
         
         return newNodePtr;
     }
-	/// <summary>
-	/// BVHを構築。
-	/// </summary>
-	/// <remark></remark>
+    void BSP::WalkTree(ICompositePtr nodePtr, const Vector3& pos, std::function<void(IComposite* leaf)> onEndWalk)
+    {
+        if (nodePtr->type == enCompositeType_Node) {
+            // これはノードなのでさらに潜る。
+            // 左に潜る？右に潜る？
+            auto node = static_cast<SNode*>(nodePtr.get());
+            float t = Dot(pos, node->plane.normal);
+            if (t < node->plane.distance) {
+                // 左に潜る。
+                WalkTree(node->leftNode, pos, onEndWalk);
+            }
+            else {
+                // 右に潜る。
+                WalkTree(node->rightNode, pos, onEndWalk);
+            }
+        }
+        else {
+            // リーフに到達した。
+            onEndWalk(nodePtr.get());
+        }
+    }
+    void BSP::WalkTree(const Vector3& pos, std::function<void(IComposite* leaf)> onEndWalk)
+    {
+        WalkTree(m_rootNode, pos, onEndWalk);
+    }
 	void BSP::Build()
 	{
 		// ルートノードを作成。

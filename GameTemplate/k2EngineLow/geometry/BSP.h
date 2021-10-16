@@ -8,7 +8,7 @@ namespace nsK2EngineLow {
 	/// <summary>
 	/// BSP
 	/// </summary>
-	/// <remark></remark>
+	
 	class BSP {
 	private:
 		/// <summary>
@@ -16,9 +16,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		struct SPlane {
 			Vector3 normal;		// 平面の法線
-			float distance;		// 平面までの距離。(マイナスあり。)
+			float distance;		// 平面までの距離。
 		};
-		
+	public:
 		enum EnCompositeType {
 			enCompositeType_Node,
 			enCompositeType_Leaf,
@@ -27,7 +27,7 @@ namespace nsK2EngineLow {
 		struct IComposite {
 			int type = enCompositeType_Node;
 		};
-		
+
 		using ICompositePtr = std::shared_ptr<IComposite>;
 		/// <summary>
 		/// ノード
@@ -50,6 +50,8 @@ namespace nsK2EngineLow {
 		struct SLeafList : public IComposite {
 			std::vector< ICompositePtr> leafList;
 		};
+	private:
+		
 		ICompositePtr m_rootNode = nullptr;			// ルートノード。
 		std::vector<ICompositePtr> m_leafNodeArray;	// リーフノードの配列。
 	public:
@@ -57,13 +59,14 @@ namespace nsK2EngineLow {
 		/// リーフを追加。
 		/// </summary>
 		/// <param name="aabb"></param>
-		void AddLeaf(const Vector3& position) 
+		void AddLeaf(const Vector3& position, void* extraData) 
 		{
 			// リーフノードを作る。
 			ICompositePtr leafNode = std::make_shared<SLeaf>();
 			m_leafNodeArray.emplace_back(leafNode);
 			SLeaf* leaf = static_cast<SLeaf*>(leafNode.get());
 			leaf->position = position;
+			leaf->extraData = extraData;
 			leaf->type = enCompositeType_Leaf;
 			
 		}
@@ -72,6 +75,15 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <remark></remark>
 		void Build();
+		/// <summary>
+		/// BSPツリーを探索する
+		/// </summary>
+		/// <remark>
+		/// BSPツリーを探索して、枝に到達すると、引数で指定されたコールバック関数が呼ばれます。
+		/// </remark>
+		/// <param name="pos">座標</param>
+		/// <param name="onEndWalk">探索が終了した時に呼ばれる処理</param>
+		void WalkTree(const Vector3& pos, std::function<void(IComposite* leaf)> onEndWalk);
 	private:
 		/// <summary>
 		/// 平面でリーフノードを分割していく
@@ -116,6 +128,8 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="leafNodeArray"></param>
 		ICompositePtr BuildInternal(const std::vector<ICompositePtr>& leafNodeArray);
-
+		
+	
+		void WalkTree(ICompositePtr node, const Vector3& pos, std::function<void(IComposite* leaf)> onEndWalk );
 	};
 }
