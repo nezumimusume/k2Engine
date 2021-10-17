@@ -134,6 +134,13 @@ namespace nsK2EngineLow {
 			else {
 				m_lStickY = static_cast<float>(xInputState.Gamepad.sThumbLY) / -SHRT_MIN;
 			}
+
+			// “ü—Í—Ê‚ð³‹K‰»‚·‚éB
+			float t = sqrtf(m_lStickX * m_lStickX + m_lStickY * m_lStickY);
+			if (t > 0.001f) {
+				m_lStickX /= t;
+				m_lStickY /= t;
+			}
 		}
 
 		if ((xInputState.Gamepad.sThumbRX < INPUT_DEADZONE &&
@@ -159,6 +166,12 @@ namespace nsK2EngineLow {
 			}
 			else {
 				m_rStickY = static_cast<float>(xInputState.Gamepad.sThumbRY) / -SHRT_MIN;
+			}
+			// “ü—Í—Ê‚ð³‹K‰»‚·‚éB
+			float t = sqrtf(m_rStickX * m_rStickX + m_rStickY * m_rStickY);
+			if (t > 0.001f) {
+				m_rStickX /= t;
+				m_rStickY /= t;
 			}
 		}
 	}
