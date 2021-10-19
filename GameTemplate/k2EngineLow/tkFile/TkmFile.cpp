@@ -313,6 +313,7 @@ namespace nsK2EngineLow {
 	void TkmFile::BuildTangentAndBiNormal()
 	{
 		NormalSmoothing normalSmoothing;
+		// 頂点バッファはメッシュごとに独立しているので、スムージングを４つのスレッドで分担して行うことができる。
 		for (auto& mesh : m_meshParts) {
 			for (auto& indexBuffer : mesh.indexBuffer16Array) {
 				normalSmoothing.Execute(mesh, indexBuffer, m_bpsOnVertexPosition);

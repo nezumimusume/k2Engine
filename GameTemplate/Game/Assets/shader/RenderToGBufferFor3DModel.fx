@@ -94,6 +94,9 @@ SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
     SPSOut psOut;
     // アルベドカラーと深度値を出力
     psOut.albedo = g_albedo.Sample(g_sampler, psIn.uv);
+    
+    clip(psOut.albedo.a - 0.2f);    // ピクセルキル
+
     psOut.albedo.w = psIn.pos.z;
     // 法線を出力
     psOut.normal.xyz = GetNormalFromNormalMap( 
