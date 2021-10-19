@@ -5,7 +5,7 @@
 
 bool Game::Start()
 {
-	m_modelRender.Init("Assets/modelData/unityChan.tkm");
+	m_modelRender.Init("Assets/modelData/city3/city.tkm");
 	return true;
 }
 

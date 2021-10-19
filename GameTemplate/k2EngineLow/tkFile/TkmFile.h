@@ -137,6 +137,7 @@ namespace nsK2EngineLow {
 		void BuildTangentAndBiNormal();
 		
 	private:
-		std::vector< SMesh>	m_meshParts;		//メッシュパーツ。
+		BSP m_bpsOnVertexPosition;				// 頂点座標を使ったBSPツリー。
+		std::vector< SMesh>	m_meshParts;		// メッシュパーツ。
 	};
 }

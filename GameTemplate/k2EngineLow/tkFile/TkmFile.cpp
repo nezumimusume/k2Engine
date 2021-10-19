@@ -15,7 +15,7 @@ namespace nsK2EngineLow {
 		};
 	public:
 		template <class IndexBuffer>
-		void Execute(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer)
+		void Execute(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer, BSP& bsp)
 		{
 
 			//ステップ１面法線を計算していく。
@@ -59,17 +59,14 @@ namespace nsK2EngineLow {
 			//ステップ２　座標と向きが同じ頂点の法線を平均化していく。
 			if (mesh.isFlatShading == 0)
 			{
-				//重複している頂点の法線を平均化
-				BSP bsp;
+				
 				std::vector<SSmoothVertex> smoothVertex;
 				smoothVertex.reserve(mesh.vertexBuffer.size());
 				for (auto& v : mesh.vertexBuffer) {		
-					// BSPツリーのリーフを追加
-					bsp.AddLeaf(v.pos, &v.normal);
+				
 					smoothVertex.push_back({ v.normal, &v });
 				}
-				//BSPツリーを構築。
-				bsp.Build();
+				
 #if 0 // こっちの計算量は頂点数をNとしたときに、O(N^2)
 				
 				for (auto& va : smoothVertex) {
@@ -318,11 +315,11 @@ namespace nsK2EngineLow {
 		NormalSmoothing normalSmoothing;
 		for (auto& mesh : m_meshParts) {
 			for (auto& indexBuffer : mesh.indexBuffer16Array) {
-				normalSmoothing.Execute(mesh, indexBuffer);
+				normalSmoothing.Execute(mesh, indexBuffer, m_bpsOnVertexPosition);
 				BuildTangentAndBiNormalImp(mesh, indexBuffer);
 			}
 			for (auto& indexBuffer : mesh.indexBuffer32Array) {
-				normalSmoothing.Execute(mesh, indexBuffer);
+				normalSmoothing.Execute(mesh, indexBuffer, m_bpsOnVertexPosition);
 				BuildTangentAndBiNormalImp(mesh, indexBuffer);
 			}
 		}
@@ -374,6 +371,8 @@ namespace nsK2EngineLow {
 				vertex.indices[1] = vertexTmp.indices[1] != -1 ? vertexTmp.indices[1] : 0;
 				vertex.indices[2] = vertexTmp.indices[2] != -1 ? vertexTmp.indices[2] : 0;
 				vertex.indices[3] = vertexTmp.indices[3] != -1 ? vertexTmp.indices[3] : 0;
+
+				m_bpsOnVertexPosition.AddLeaf(vertex.pos, &vertex.normal);
 			}
 
 			//続いてインデックスバッファ。
@@ -409,6 +408,9 @@ namespace nsK2EngineLow {
 				}
 			}
 		}
+
+		// 頂点データのBSPツリーを構築する。
+		m_bpsOnVertexPosition.Build();
 
 		// 接ベクトルと従ベクトルを構築する。
 		BuildTangentAndBiNormal();

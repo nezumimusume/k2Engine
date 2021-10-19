@@ -220,7 +220,7 @@ namespace nsK2EngineLow {
 		}
 	private:
 		enum {
-			MAX_SHADER_RESOURCE = 1024 * 10,	//シェーダーリソースの最大数。
+			MAX_SHADER_RESOURCE = 1024 * 100,	//シェーダーリソースの最大数。
 			MAX_CONSTANT_BUFFER = 1024 * 10,	//定数バッファの最大数。
 			MAX_SAMPLER_STATE = 16,	//サンプラステートの最大数。
 		};
