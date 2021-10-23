@@ -45,6 +45,7 @@ namespace nsK2EngineLow {
 		if (t > 0.998f) {
 			//ほぼ同じ向きなので単位クォータニオンにする。
 			*this = Quaternion::Identity;
+			return ;
 		}
 		else if (t < -0.998f) {
 			//ほぼ逆向きなので、
