@@ -13,6 +13,7 @@
 //***************************************************************************/
 
 #include "3dsmaxsdk_preinclude.h"
+#include "Max.h"
 #include "resource.h"
 #include <istdplug.h>
 #include <iparamb2.h>

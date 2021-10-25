@@ -12,7 +12,7 @@
 
 #include "nvmExporter.h"
 
-extern ClassDesc2* GettkmExporterDesc();
+extern ClassDesc2* GetnvmExporterDesc();
 
 HINSTANCE hInstance;
 int controlsInit = FALSE;
@@ -55,7 +55,7 @@ __declspec( dllexport ) ClassDesc* LibClassDesc(int i)
 {
 	switch(i)
 	{
-		case 0: return GettkmExporterDesc();
+		case 0: return GetnvmExporterDesc();
 		default: return 0;
 	}
 }
@@ -75,7 +75,6 @@ __declspec( dllexport ) ULONG LibVersion()
 // on your DLL, and send you a message.
 __declspec( dllexport ) int LibInitialize(void)
 {
-	#pragma message(TODO("Perform initialization here."))
 	return TRUE;
 }
 
@@ -84,7 +83,6 @@ __declspec( dllexport ) int LibInitialize(void)
 // The system doesn't pay attention to a return value.
 __declspec( dllexport ) int LibShutdown(void)
 {
-	#pragma message(TODO("Perform un-initialization here."))
 	return TRUE;
 }
 
