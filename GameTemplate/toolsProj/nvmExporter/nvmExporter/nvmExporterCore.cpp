@@ -1,106 +1,46 @@
 #include "nvmExporter.h"
 #include "nvmExporterCore.h"
 
-
-namespace {
-	/// <summary>
-	/// ノードから三角形オブジェクトを取得する。
-	/// </summary>
-	/// <param name="node"></param>
-	/// <returns></returns>
-	TriObject* GetTriObjectFromNode(INode* node) 
-	{
-		Object *obj = node->EvalWorldState(0).obj;
-		return (TriObject *)(obj->ConvertToType(0, Class_ID(TRIOBJ_CLASS_ID, 0)));
-	}
-	/// <summary>
-	/// 面法線を計算する。
-	/// </summary>
-	/// <param name="normal">法線の格納先</param>
-	/// <param name="face">面</param>
-	/// <param name="mesh">メッシュ</param>
-	void CalcNormal(Point3& normal, Face& face, Mesh& mesh)
-	{
-		Point3 vertex[3];
+#include "nvmData.h"
 
 
-		for (int vertexNo = 0; vertexNo < 3; vertexNo++) {
-			DWORD vertexIndex = face.getVert(vertexNo);
-			Point3& vertexPosition = mesh.getVert(vertexIndex);
-			vertex[vertexNo] = vertexPosition;
-			vertex[vertexNo][1] = vertexPosition[2];
-			vertex[vertexNo][2] = vertexPosition[1] * -1.0f;
-		}
-
-		Point3 v0, v1;
-		v0 = vertex[1] - vertex[0];
-		v1 = vertex[2] - vertex[1];
-
-		if (v0.LengthSquared() < 0.00001f) {
-			normal = Point3(0.0f, 0.0f, 0.0f);
-			return;
-		}
-		if (v1.LengthSquared() < 0.00001f) {
-			normal = Point3(0.0f, 0.0f, 0.0f);
-			return;
-		}
-		v0 = Normalize(v0);
-		v1 = Normalize(v1);
-
-		//面の法線を計算
-		normal = Normalize(CrossProd(v0, v1));
-	}
-	/// <summary>
-	/// 引数で渡された面が壁化どうか判定
-	/// </summary>
-	/// <param name="normal"></param>
-	/// <returns></returns>
-	bool IsWall(Point3& normal)
-	{
-		// todo 未対応。
-		//f32 dot = DotProd(normal, Point3(0.0f, 1.0f, 0.0f));
-
-		//if (dot < 0.0f) {
-		//	//逆向き
-		//	return true;
-		//}
-
-		//f32 angle = fabs(acosf(dot));
-		//if (angle > Context().GetLimitAngleToWall()) {
-		//	//壁
-		//	return true;
-		//}
-		//壁ではない
-		return false;
-	}
-}
-
-void nvmExporterCore::Execute(const std::wstring& filePath)
+bool nvmExporterCore::Execute(const std::wstring& filePath)
 {
-	// ポリゴン情報を収集する。
-	auto maxInterface = GetCOREInterface();
-	const auto selectNodeCount = maxInterface->GetSelNodeCount();
+	//ファイルオープン
+	FILE* fp = _wfopen(filePath.c_str(), L"wb");
 
-	for (int nodeNo = 0; nodeNo < selectNodeCount; nodeNo++) {
-		auto node = maxInterface->GetSelNode(nodeNo);
-		Matrix3 objectMatrix = node->GetObjectTM(0);
-		TriObject *triObject = GetTriObjectFromNode(node);
-		if (!triObject) {
-			continue;
+	nvmData data;
+
+	int faceNum = data.GetFaceNum();
+	//ヘッダーの出力
+	//面(ポリゴン)数の出力。
+	fwrite(&faceNum, sizeof(int), 1, fp);
+	for (int faceNo = 0; faceNo < faceNum; faceNo++) {
+		for (int vertexNo = 0; vertexNo < 3; vertexNo++) {
+			Point3 position = data.GetVertexPosition(faceNo, vertexNo);
+			//各ポリゴンの頂点の座標を出力
+			fwrite(&position[0], sizeof(float), 1, fp);
+			fwrite(&position[1], sizeof(float), 1, fp);
+			fwrite(&position[2], sizeof(float), 1, fp);
 		}
-		auto& mesh = triObject->GetMesh();
 
-		int faceNum = mesh.getNumFaces();
-		for (int faceNo = 0; faceNo < faceNum; faceNo++) {
-			auto& face = mesh.faces[faceNo];
-			Point3 normal;
-			CalcNormal(normal, face, mesh);
+		Point3 normal = data.GetNormal(faceNo);
 
-			// 壁判定
-			if (!IsWall(normal)) {
+		//法線を出力
+		fwrite(&normal[0], sizeof(float), 1, fp);
+		fwrite(&normal[1], sizeof(float), 1, fp);
+		fwrite(&normal[2], sizeof(float), 1, fp);
 
-			}
-		}
+
 		
+		for (int linkNoListNo = 0; linkNoListNo < nvmData::LINK_NO_LIST_SIZE; linkNoListNo++) {
+			int linkNo = data.GetLinkNo(faceNo, linkNoListNo);
+			//リンクデータを出力
+			fwrite(&linkNo, sizeof(linkNo), 1, fp);
+		}
 	}
+
+	fclose(fp);
+	return true;
+	
 }

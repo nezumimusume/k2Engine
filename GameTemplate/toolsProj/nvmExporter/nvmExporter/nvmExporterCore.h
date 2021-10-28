@@ -12,6 +12,6 @@ public:
 	/// エクスポート
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
-	void Execute(const std::wstring& filePath);
+	bool Execute(const std::wstring& filePath);
 };
 

@@ -24,6 +24,9 @@
     <ClCompile Include="nvmExporterCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="nvmData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="nvmExporter.def">
@@ -41,6 +44,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="nvmExporterCore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nvmData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
