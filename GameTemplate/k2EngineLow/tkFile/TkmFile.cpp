@@ -2,13 +2,17 @@
 #include "tkFile/TkmFile.h"
 
 namespace nsK2EngineLow {
-	//法線スムージング。
-	class NormalSmoothing {
-	private:
+	
+	namespace {
 		struct SSmoothVertex {
 			Vector3 newNormal = g_vec3Zero;
 			TkmFile::SVertex* vertex = nullptr;
 		};
+	}
+	//法線スムージング。
+	class NormalSmoothing {
+	private:
+		
 		struct SFace {
 			Vector3 normal;
 			std::vector<int> vertexNos;
@@ -55,58 +59,6 @@ namespace nsK2EngineLow {
 			}
 			for (auto& vert : mesh.vertexBuffer) {
 				vert.normal.Normalize();
-			}
-			//ステップ２　座標と向きが同じ頂点の法線を平均化していく。
-			if (mesh.isFlatShading == 0)
-			{
-				
-				std::vector<SSmoothVertex> smoothVertex;
-				smoothVertex.reserve(mesh.vertexBuffer.size());
-				for (auto& v : mesh.vertexBuffer) {		
-				
-					smoothVertex.push_back({ v.normal, &v });
-				}
-				
-#if 0 // こっちの計算量は頂点数をNとしたときに、O(N^2)
-				
-				for (auto& va : smoothVertex) {
-					for (auto& vb : smoothVertex) {
-
-						if (va.vertex != vb.vertex
-							&& va.vertex->pos.x == vb.vertex->pos.x
-							&& va.vertex->pos.y == vb.vertex->pos.y
-							&& va.vertex->pos.z == vb.vertex->pos.z
-							) {
-							//同じ座標。
-							if (va.vertex->normal.Dot(vb.vertex->normal) > 0.0f) {
-								//同じ向き。
-								va.newNormal += vb.vertex->normal;
-							}
-						}
-					}
-					va.newNormal.Normalize();
-				}
-				
-#else // こっちの計算量は頂点数をNとした時に、O(NlogN)
-				for (auto& va : smoothVertex) {
-					bsp.WalkTree(va.vertex->pos, [&](BSP::SLeaf* leaf) {
-						if (va.vertex->pos.x == leaf->position.x
-							&& va.vertex->pos.y == leaf->position.y
-							&& va.vertex->pos.z == leaf->position.z) {
-							//同じ座標。
-							auto* normal = static_cast<Vector3*>(leaf->extraData);
-							if (va.vertex->normal.Dot(*normal) > 0.0f) {
-								//同じ向き。
-								va.newNormal += *normal;
-							}
-						}
-					});
-					va.newNormal.Normalize();
-				}
-#endif
-				for (auto& va : smoothVertex) {
-					va.vertex->normal = va.newNormal;
-				}
 			}
 		}
 	};
@@ -317,10 +269,95 @@ namespace nsK2EngineLow {
 		for (auto& mesh : m_meshParts) {
 			for (auto& indexBuffer : mesh.indexBuffer16Array) {
 				normalSmoothing.Execute(mesh, indexBuffer, m_bpsOnVertexPosition);
-				BuildTangentAndBiNormalImp(mesh, indexBuffer);
+				
 			}
 			for (auto& indexBuffer : mesh.indexBuffer32Array) {
 				normalSmoothing.Execute(mesh, indexBuffer, m_bpsOnVertexPosition);
+				
+			}
+		}
+
+		if (m_meshParts[0].isFlatShading == false) {
+			// フラットシェーディングでないなら、座標と向きが同じ頂点の法線を平均化していく。
+			// メッシュの全頂点数を調べる。
+			int vertNum = 0;
+			for (auto& mesh : m_meshParts) {
+				vertNum += (int)mesh.vertexBuffer.size();
+			}
+			// スムージング対象の頂点を集める。
+			std::vector<SSmoothVertex> smoothVertex;
+			smoothVertex.reserve(vertNum);
+			for (auto& mesh : m_meshParts) {
+				for (auto& v : mesh.vertexBuffer) {
+					smoothVertex.push_back({ v.normal, &v });
+				}
+			}
+
+			// 合計4スレッドを使ってスムージングを行う。
+			const int NUM_THREAD = 4;
+			int numVertexPerThread = smoothVertex.size();
+			// スムージング関数。
+			auto smoothFunc = [&](int startIndex, int endIndex)
+			{
+				// スムースしていく。
+				for (int i = startIndex; i < endIndex; i++) {
+					auto& va = smoothVertex[i];
+					m_bpsOnVertexPosition.WalkTree(va.vertex->pos, [&](BSP::SLeaf* leaf) {
+						if (va.vertex->pos.x == leaf->position.x
+							&& va.vertex->pos.y == leaf->position.y
+							&& va.vertex->pos.z == leaf->position.z) {
+							//同じ座標。
+							auto* normal = static_cast<Vector3*>(leaf->extraData);
+							if (va.vertex->normal.Dot(*normal) > 0.0f) {
+								//同じ向き。
+								va.newNormal += *normal;
+							}
+						}
+					});
+				}
+			};
+
+			// 一個のスレッドあたりに処理を行う頂点数を計算する。
+			int perVertexInOneThread = smoothVertex.size() / NUM_THREAD;
+			using namespace std;
+			using ThreadPtr = unique_ptr < thread >;
+			auto smoothingThreadArray = make_unique< ThreadPtr[] >(NUM_THREAD);
+
+
+			int startVertex = 0;
+			int endVertex = perVertexInOneThread;
+
+			// スレッドを立てる。
+			for (int i = 0; i < NUM_THREAD - 1; i++) {
+				smoothingThreadArray[i] = make_unique<thread>([&, startVertex, endVertex]() {
+					smoothFunc(startVertex, endVertex);
+				});
+				startVertex = endVertex;
+				endVertex += perVertexInOneThread;
+			}
+			endVertex = (int)smoothVertex.size();
+			smoothingThreadArray[NUM_THREAD - 1] = make_unique<thread>([&, startVertex, endVertex]() {
+				smoothFunc(startVertex, endVertex);
+			});
+			
+			// スムージングスレッドが全て完了するのを待つ。
+			for (int i = 0; i < NUM_THREAD; i++) {
+				smoothingThreadArray[i]->join();
+			}
+		
+			for (auto& va : smoothVertex) {
+				va.newNormal.Normalize();
+				va.vertex->normal = va.newNormal;
+			}
+
+		}
+
+		// 接ベクトルと従ベクトルを計算する。
+		for (auto& mesh : m_meshParts) {
+			for (auto& indexBuffer : mesh.indexBuffer16Array) {
+				BuildTangentAndBiNormalImp(mesh, indexBuffer);
+			}
+			for (auto& indexBuffer : mesh.indexBuffer32Array) {
 				BuildTangentAndBiNormalImp(mesh, indexBuffer);
 			}
 		}

@@ -247,6 +247,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\PathFinding\Cell.cpp" />
+    <ClCompile Include="AI\PathFinding\NaviMesh.cpp" />
+    <ClCompile Include="AI\PathFinding\Path.cpp" />
+    <ClCompile Include="AI\PathFinding\PathFinding.cpp" />
     <ClCompile Include="gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
     <ClCompile Include="geometry\AABB.cpp" />
@@ -321,9 +325,14 @@
     <ClCompile Include="sound\WaveFileBank.cpp" />
     <ClCompile Include="tkFile\TkaFile.cpp" />
     <ClCompile Include="tkFile\TkmFile.cpp" />
+    <ClCompile Include="tkFile\TknFile.cpp" />
     <ClCompile Include="tkFile\TksFile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\PathFinding\Cell.h" />
+    <ClInclude Include="AI\PathFinding\NaviMesh.h" />
+    <ClInclude Include="AI\PathFinding\Path.h" />
+    <ClInclude Include="AI\PathFinding\PathFinding.h" />
     <ClInclude Include="dbg\MyAssert.h" />
     <ClInclude Include="dbg\MyLog.h" />
     <ClInclude Include="gameObject\GameObjectManager.h" />
@@ -409,6 +418,7 @@
     <ClInclude Include="time\Stopwatch.h" />
     <ClInclude Include="tkFile\TkaFile.h" />
     <ClInclude Include="tkFile\TkmFile.h" />
+    <ClInclude Include="tkFile\TknFile.h" />
     <ClInclude Include="tkFile\TksFile.h" />
     <ClInclude Include="util\TResourceBank.h" />
   </ItemGroup>

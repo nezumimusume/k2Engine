@@ -208,6 +208,21 @@
     <ClCompile Include="geometry\BSP.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
+    <ClCompile Include="AI\PathFinding\PathFinding.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\Path.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\NaviMesh.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="tkFile\TknFile.cpp">
+      <Filter>tkFile</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\Cell.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -465,6 +480,21 @@
     <ClInclude Include="time\FPSLimitter.h">
       <Filter>time</Filter>
     </ClInclude>
+    <ClInclude Include="AI\PathFinding\PathFinding.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\Path.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\NaviMesh.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="tkFile\TknFile.h">
+      <Filter>tkFile</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\Cell.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -517,6 +547,12 @@
     </Filter>
     <Filter Include="geometry">
       <UniqueIdentifier>{8c4c7591-c46f-4829-beb3-2a2988bd47ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{2ab8c656-d044-458a-aa81-8981af12ef41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\PathFinding">
+      <UniqueIdentifier>{72d94fe6-e599-4523-8e54-81df808c96fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
