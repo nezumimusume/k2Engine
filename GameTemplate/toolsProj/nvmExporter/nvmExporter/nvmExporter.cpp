@@ -98,9 +98,10 @@ int nvmExporter::ExtCount()
 	return 1;
 }
 
+//Šg’£Žq‚Ítkn
 const TCHAR* nvmExporter::Ext(int /*i*/)
 {
-	return _T("nvm");
+	return _T("tkn");
 }
 
 const TCHAR* nvmExporter::LongDesc()
@@ -153,6 +154,9 @@ BOOL nvmExporter::SupportsOptions(int /*ext*/, DWORD /*options*/)
 int nvmExporter::DoExport(const TCHAR* name, ExpInterface* /*ei*/, Interface* /*ip*/, BOOL suppressPrompts, DWORD /*options*/)
 {
 	nvmExporterCore exporterCore;
-	exporterCore.Execute(name);
+	if (exporterCore.Execute(name))
+	{
+		return TRUE;
+	}
 	return FALSE;
 }
