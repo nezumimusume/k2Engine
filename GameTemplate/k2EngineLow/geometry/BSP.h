@@ -88,7 +88,7 @@ namespace nsK2EngineLow {
 		/// </remark>
 		/// <param name="pos">座標</param>
 		/// <param name="onEndWalk">探索が終了した時に呼ばれる処理</param>
-		void WalkTree(const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk);
+		void WalkTree(const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk) const;
 	private:
 		/// <summary>
 		/// 平面でリーフノードを分割していく
@@ -140,6 +140,6 @@ namespace nsK2EngineLow {
 		/// <returns></returns>
 		SEntityPtr CreateBSPTreeEntity_LeafList(const std::vector<SEntityPtr>& leafArray);
 	
-		void WalkTree(SEntityPtr entity, const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk );
+		void WalkTree(SEntityPtr entity, const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk ) const;
 	};
 }

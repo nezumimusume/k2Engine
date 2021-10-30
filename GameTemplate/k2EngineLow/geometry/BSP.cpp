@@ -273,7 +273,7 @@ namespace nsK2EngineLow {
         
         return newNodePtr;
     }
-    void BSP::WalkTree(SEntityPtr entityPtr, const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk)
+    void BSP::WalkTree(SEntityPtr entityPtr, const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk) const
     {
         if (entityPtr->type == enEntityType_Node) {
             // Ç±ÇÍÇÕÉmÅ[ÉhÇ»ÇÃÇ≈Ç≥ÇÁÇ…êˆÇÈÅB
@@ -301,7 +301,7 @@ namespace nsK2EngineLow {
             }
         }
     }
-    void BSP::WalkTree(const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk)
+    void BSP::WalkTree(const Vector3& pos, std::function<void(SLeaf* leaf)> onEndWalk) const
     {
         WalkTree(m_rootNode, pos, onEndWalk);
     }
