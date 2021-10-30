@@ -11,6 +11,7 @@ namespace nsK2EngineLow {
 
 	class TksFile : public Noncopyable {
 	public:
+		
 		/// <summary>
 		/// ƒ{[ƒ“B
 		/// </summary>

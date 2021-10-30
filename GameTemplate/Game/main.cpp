@@ -7,6 +7,7 @@
 #include "graphics/RenderingEngine.h"
 #include "sound/SoundEngine.h"
 #include "collision/CollisionObject.h"
+#include "tkFile/tknFile.h"
 
 #include "Game.h"
 
@@ -33,6 +34,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 {
 	//ƒQ[ƒ€‚Ì‰Šú‰»B
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
+
+	TknFile tknFile;
+	tknFile.Load("Assets/nvm/test.tkn");
 
 	g_camera3D->SetPosition({ 0.0f, 0.0f, 100.0f });
 	g_camera3D->SetTarget({ 0.0f, 0.0f, 0.0f });
