@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "Game.h"
-#include "geometry/BSP.h"
 
 
 bool Game::Start()
 {
-	m_modelRender.Init("Assets/modelData/city3/city.tkm");
+	m_modelRender.Init("Assets/modelData/unityChan.tkm");
 	return true;
 }
 
