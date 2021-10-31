@@ -90,7 +90,7 @@ namespace nsK2EngineLow {
 		if (FAILED(hr = m_xAudio2->CreateMasteringVoice(&m_masteringVoice)))
 		{
 			Release();
-			K2_ASSERT(false, "Faild CreateMasteringVoice");
+			K2_LOG( "Faild CreateMasteringVoice");
 			return;
 		}
 

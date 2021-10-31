@@ -26,9 +26,22 @@ namespace nsK2EngineLow {
 			);
 		private:
 			struct CellWork {
-			public:
-				const Cell* m_cell;
+			
+				void Init(const Cell* cell)
+				{
+					this->cell = cell;
+					parentCell = nullptr;
+					costFromStartCell = 0.0f;
+					cost = FLT_MAX;
+					isOpend = false;
+					isClosed = false;
+				}
+				const Cell* cell;
+				CellWork* parentCell;	// 親のセル。
 				float costFromStartCell;
+				float cost;		// 移動コスト
+				bool isOpend;	// 開かれた？
+				bool isClosed;	// 閉じられた？
 			};
 
 			std::vector< CellWork > m_cellWork;

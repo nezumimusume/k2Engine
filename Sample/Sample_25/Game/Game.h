@@ -18,9 +18,12 @@ public:
 private:
 	ModelRender m_bgModelRendedr;
 	ModelRender m_charaRender;
+	ModelRender m_targetPointRender;
 	TknFile m_tknFile;
 	nsAI::NaviMesh m_nvmMesh;
 	nsAI::Path m_path;
 	nsAI::PathFinding m_pathFiding;
+	Vector3 m_position;
+	Vector3 m_targetPointPosition;
 };
 

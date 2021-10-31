@@ -16,6 +16,36 @@ namespace nsK2EngineLow {
 				section.direction.Normalize();
 			}
 		}
+		Vector3 Path::WalkPath(Vector3 pos, float moveSpeed, bool& isEnd)
+		{
+			if (m_sectionArray.empty() 
+				|| m_sectionNo >= m_sectionArray.size() 
+			) {
+				// パスが構築されていない
+				return pos;
+			}
+			SSection& currentSection = m_sectionArray.at(m_sectionNo);
+			// セクションの終点に向かうベクトルを計算する。
+			Vector3 toEnd = currentSection.endPos - pos;
+			toEnd.Normalize();
+			pos += toEnd * moveSpeed;
+
+			Vector3 toEnd2 = currentSection.endPos - pos;
+			toEnd2.Normalize();
+
+			if (toEnd.Dot(toEnd2) < 0.0f) {
+				// 向きが変わったので終点を超えた。
+				pos = currentSection.endPos;
+				if (m_sectionNo == m_sectionArray.size() - 1) {
+					// 終点
+					isEnd = true;
+				}
+				else {
+					m_sectionNo++;
+				}
+			}
+			return pos;
+		}
 	}
 }
 

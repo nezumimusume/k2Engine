@@ -33,6 +33,7 @@ namespace nsAI {
 					m_cellArray[cellNo].SetLinkCell(linkNo, nullptr);
 				}
 			}
+			m_cellArray[cellNo].SetCellNo(cellNo);
 		}
 		// セルの中心座標を利用したBSPツリーを構築する。
 		for ( auto& cell : m_cellArray) {
@@ -46,11 +47,18 @@ namespace nsAI {
 	}
 	const Cell& NaviMesh::FindNearestCell(const Vector3& pos) const
 	{
-		Cell* nearestCell = nullptr;
-		m_cellCenterPosBSP.WalkTree(pos, [&](BSP::SLeaf* leaf) {
-			nearestCell = static_cast<Cell*>(leaf->extraData);
-		});
+		const Cell* nearestCell = nullptr;
 
+		float dist = FLT_MAX;
+		m_cellCenterPosBSP.WalkTree(pos, [&](BSP::SLeaf* leaf) {
+			Cell* cell = static_cast<Cell*>(leaf->extraData);
+			auto distTmp = (cell->GetCenterPosition() - pos).Length();
+			if (distTmp < dist) {
+				//こちらの方が近い。
+				dist = distTmp;
+				nearestCell = cell;
+			}
+		});
 		return *nearestCell;
 	}
 }

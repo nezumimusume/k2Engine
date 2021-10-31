@@ -8,11 +8,22 @@ namespace nsK2EngineLow {
 			/// <summary>
 			/// パスの移動開始。
 			/// </summary>
-			void StartWalkPath();
+			void StartWalkPath()
+			{
+				m_sectionNo = 0;
+			}
 			/// <summary>
 			/// パス移動。
 			/// </summary>
-			bool WalkPath( float moveSpeed );
+			Vector3 WalkPath( Vector3 pos, float moveSpeed, bool& isEnd);
+			/// <summary>
+			/// クリア
+			/// </summary>
+			void Clear()
+			{
+				m_pointArray.clear();
+				m_sectionArray.clear();
+			}
 			/// <summary>
 			/// ポイントの追加。
 			/// </summary>
@@ -37,6 +48,7 @@ namespace nsK2EngineLow {
 			};
 			std::vector<Vector3>	m_pointArray;	// ポイントの配列
 			std::vector< SSection >	m_sectionArray;	// セクションの配列。
+			int m_sectionNo = 0;					// セクション番号。
 		};
 	}
 }

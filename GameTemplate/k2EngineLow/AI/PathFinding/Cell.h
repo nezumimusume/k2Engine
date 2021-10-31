@@ -68,6 +68,15 @@ namespace nsK2EngineLow {
 			{
 				return m_no;
 			}
+			/// <summary>
+			/// 隣接セルを取得。
+			/// </summary>
+			/// <param name="linkCellNo"></param>
+			/// <returns></returns>
+			Cell* GetLinkCell(int linkCellNo)const
+			{
+				return m_linkCell[linkCellNo];
+			}
 		private:
 			Vector3 m_vertexPosition[3];		// セルの頂点座標
 			Vector3 m_normal;					// 法線

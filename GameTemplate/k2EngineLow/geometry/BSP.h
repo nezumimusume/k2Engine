@@ -41,6 +41,8 @@ namespace nsK2EngineLow {
 			SPlane plane;				// 分割平面。
 			SEntityPtr rightEntity;		// 右の要素
 			SEntityPtr leftEntity;		// 左の要素。
+			Vector3 centerPos;			// 中心座標。
+			std::vector<SEntityPtr> leafArray;	// ノードが内包しているリーフ。
 		};
 		/// <summary>
 		/// リーフ
@@ -107,7 +109,8 @@ namespace nsK2EngineLow {
 		void CalcSplitPlaneFromCovarianceMatrix(
 			SPlane& plane,
 			float covarianceMatrix[3][3],
-			const Vector3& centerPos
+			const Vector3& centerPos,
+			const std::vector<SEntityPtr>& leafArray
 		);
 		/// <summary>
 		/// リーフノードの配列から共分散行列を計算する。

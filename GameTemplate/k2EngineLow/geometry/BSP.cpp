@@ -12,6 +12,72 @@ namespace nsK2EngineLow {
     /// <param name="eps">収束誤差</param>
     /// <param name="iter_max">反復数の最大数</param>
     /// <returns></returns>
+#if 1
+#define   TOL     1.0e-10   
+#define   N       3
+#define   MAX     100
+    template<int n>
+    int EigenJacobiMethod(float a[], float x[])
+    {
+        int    i, j, k, m, count, status;
+        float amax, amax0, theta, co, si, co2, si2, cosi, pi = 4.0f * atan(1.0f);
+        float aii, aij, ajj, aik, ajk;
+
+        //   初期値設定
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                if (i == j)  x[n * i + j] = 1.0f; else  x[n * i + j] = 0.0f;
+            }
+        }
+
+        //   反復計算
+        count = 0;  status = 9;
+        while (count <= MAX) {
+            //  非対角要素の最大値を探索
+            amax = 0.0;
+            for (k = 0; k < n - 1; k++) {
+                for (m = k + 1; m < n; m++) {
+                    amax0 = fabs(a[n * k + m]);
+                    if (amax0 > amax) { i = k;  j = m, amax = amax0; }
+                }
+            }
+            //  収束判定
+            if (amax <= TOL) { status = 0;   break; }
+            else {
+                aii = a[n * i + i];   aij = a[n * i + j];   ajj = a[n * j + j];
+                //   回転角度計算
+                if (fabs(aii - ajj) < TOL) {
+                    theta = 0.25f * pi * aij / fabs(aij);
+                }
+                else {
+                    theta = 0.5f * atan(2.0f * aij / (aii - ajj));
+                }
+                co = cos(theta); si = sin(theta); co2 = co * co; si2 = si * si; cosi = co * si;
+
+                //   相似変換行列
+                a[n * i + i] = co2 * aii + 2.0f * cosi * aij + si2 * ajj;
+                a[n * j + j] = si2 * aii - 2.0f * cosi * aij + co2 * ajj;
+                a[n * i + j] = 0.0f;    a[n * j + i] = 0.0f;
+                for (k = 0; k < n; k++) {
+                    if (k != i && k != j) {
+                        aik = a[n * k + i];            ajk = a[n * k + j];
+                        a[n * k + i] = co * aik + si * ajk;  a[n * i + k] = a[n * k + i];
+                        a[n * k + j] = -si * aik + co * ajk;  a[n * j + k] = a[n * k + j];
+                    }
+                }
+
+                //   固有ベクトル
+                for (k = 0; k < n; k++) {
+                    aik = x[n * k + i];   ajk = x[n * k + j];
+                    x[n * k + i] = co * aik + si * ajk;
+                    x[n * k + j] = -si * aik + co * ajk;
+                }
+                count++;
+            }
+        }
+        return status;
+    }
+#else
     template<int n>
     int EigenJacobiMethod(float* a, float* v, float eps = 1e-8, int iter_max = 100)
     {
@@ -109,6 +175,7 @@ namespace nsK2EngineLow {
 
         return cnt;
     }
+#endif
     Vector3 BSP::CalcCenterPositionFromLeafList(const std::vector<SEntityPtr>& leafArray)
     {
         // まずは、AABBの中心座標を求める。
@@ -134,17 +201,17 @@ namespace nsK2EngineLow {
         for (const auto& leafPtr : leafNodeArray) {
             auto leaf = static_cast<SLeaf*>(leafPtr.get());
             const auto& aabbCenterPos = leaf->position;
-            covarianceMatrix[0][0] += (centerPos.x - aabbCenterPos.x) * (centerPos.x - aabbCenterPos.x);
-            covarianceMatrix[0][1] += (centerPos.x - aabbCenterPos.x) * (centerPos.y - aabbCenterPos.y);
+            covarianceMatrix[0][0] += (aabbCenterPos.x - centerPos.x) * (aabbCenterPos.x - centerPos.x);
+            covarianceMatrix[0][1] += (aabbCenterPos.x - centerPos.x) * (aabbCenterPos.y - centerPos.y );
             covarianceMatrix[1][0] = covarianceMatrix[0][1];
 
-            covarianceMatrix[1][1] += (centerPos.y - aabbCenterPos.y) * (centerPos.y - aabbCenterPos.y);
-            covarianceMatrix[0][2] += (centerPos.x - aabbCenterPos.x) * (centerPos.z - aabbCenterPos.z);
+            covarianceMatrix[1][1] += (aabbCenterPos.y - centerPos.y) * (aabbCenterPos.y - centerPos.y);
+            covarianceMatrix[0][2] += (aabbCenterPos.x - centerPos.x) * (aabbCenterPos.z - centerPos.z);
             covarianceMatrix[2][0] = covarianceMatrix[0][2];
 
-            covarianceMatrix[2][2] += (centerPos.z - aabbCenterPos.z) * (centerPos.z - aabbCenterPos.z);
-            covarianceMatrix[1][2] += (centerPos.y - aabbCenterPos.y) * (centerPos.z - aabbCenterPos.z);
-            covarianceMatrix[2][1] = covarianceMatrix[0][2];
+            covarianceMatrix[2][2] += (aabbCenterPos.z - centerPos.z) * (aabbCenterPos.z - centerPos.z);
+            covarianceMatrix[1][2] += (aabbCenterPos.y - centerPos.y) * (aabbCenterPos.z - centerPos.z);
+            covarianceMatrix[2][1] = covarianceMatrix[1][2];
         }
 
         for (int i = 0; i < 3; i++) {
@@ -156,9 +223,11 @@ namespace nsK2EngineLow {
     void BSP::CalcSplitPlaneFromCovarianceMatrix(
         SPlane& plane,
         float covarianceMatrix[3][3],
-        const Vector3& centerPos
+        const Vector3& centerPos,
+        const std::vector<SEntityPtr>& leafArray
     )
     {
+
         // 共分散行列が計算できたので、ヤコビ法を用いて固有値と固有ベクトルを求める。
         Vector3 eigenVector[3];
         EigenJacobiMethod<3>(
@@ -167,22 +236,41 @@ namespace nsK2EngineLow {
         );
 
         // 1番目大きな固有値の固有ベクトルを分割平面の法線とする。
-        float eigenScalar_0 = covarianceMatrix[0][0];
-        float eigenScalar_1 = covarianceMatrix[1][1];
-        float eigenScalar_2 = covarianceMatrix[2][2];
+        float eigenScalar_0 = fabsf(covarianceMatrix[0][0]);
+        float eigenScalar_1 = fabsf(covarianceMatrix[1][1]);
+        float eigenScalar_2 = fabsf(covarianceMatrix[2][2]);
 
         if (eigenScalar_0 > eigenScalar_1 && eigenScalar_0 > eigenScalar_2) {
-            plane.normal = eigenVector[0];
+            plane.normal.x = eigenVector[0].x;
+            plane.normal.y = eigenVector[1].x;
+            plane.normal.z = eigenVector[2].x;
         }
         else if (eigenScalar_1 > eigenScalar_0 && eigenScalar_1 > eigenScalar_2) {
-            plane.normal = eigenVector[1];
+            plane.normal.x = eigenVector[0].y;
+            plane.normal.y = eigenVector[1].y;
+            plane.normal.z = eigenVector[2].y;
         }
         else if (eigenScalar_2 > eigenScalar_0 && eigenScalar_2 > eigenScalar_1) {
-            plane.normal = eigenVector[2];
+            plane.normal.x = eigenVector[0].z;
+            plane.normal.y = eigenVector[1].z;
+            plane.normal.z = eigenVector[2].z;
         }
-
+        if (plane.normal.Length() < 0.1f) {
+            // ヤコビ法で法線が計算できなかった。
+            
+            SLeaf* leafFront = static_cast<SLeaf*>(leafArray.front().get());
+            SLeaf* leafBack = static_cast<SLeaf*>(leafArray.back().get());
+            
+            plane.normal = leafBack->position - leafFront->position;
+            
+            plane.normal.Normalize();
+        }
         // 分割平面までの距離は中心座標までの距離とする。
         plane.distance = Dot(plane.normal, centerPos);
+        if (plane.distance < 0.0f) {
+            plane.normal *= -1.0f;
+            plane.distance = fabsf(plane.distance);
+        }
     }
     void BSP::SplitLeafArray(
         std::vector<SEntityPtr>& leftLeafArray,
@@ -244,12 +332,14 @@ namespace nsK2EngineLow {
         // 新しいノードを作る。
         auto newNodePtr = std::make_shared<SNode>();
         newNodePtr->type = enEntityType_Node;
+        newNodePtr->centerPos = centerPos;
+        newNodePtr->leafArray = leafArray;
         auto newNode = static_cast<SNode*>(newNodePtr.get());
 
         // 分散しているので、共分散行列を利用して
         // 分割平面を計算する。
-        CalcSplitPlaneFromCovarianceMatrix(newNode->plane, covarianceMatrix, centerPos);
-       
+        CalcSplitPlaneFromCovarianceMatrix(newNode->plane, covarianceMatrix, centerPos, leafArray);
+
         // 分割平面が求まったので、リーフを平面で振り分けしていく。
         std::vector<SEntityPtr> leftLeafArray;
         std::vector<SEntityPtr> rightLeafArray;
@@ -278,9 +368,12 @@ namespace nsK2EngineLow {
         if (entityPtr->type == enEntityType_Node) {
             // これはノードなのでさらに潜る。
             // 左に潜る？右に潜る？
-            auto node = static_cast<SNode*>(entityPtr.get());
+            SNode* node = static_cast<SNode*>(entityPtr.get());
+            for (SEntityPtr& entity : node->leafArray) {
+                 
+            }
             float t = Dot(pos, node->plane.normal);
-            if (t < node->plane.distance) {
+             if (t < node->plane.distance) {
                 // 左に潜る。
                 WalkTree(node->leftEntity, pos, onEndWalk);
             }
