@@ -26,7 +26,7 @@ namespace nsK2EngineLow {
 			);
 		private:
 			struct CellWork {
-			
+
 				void Init(const Cell* cell)
 				{
 					this->cell = cell;
@@ -43,6 +43,24 @@ namespace nsK2EngineLow {
 				bool isOpend;	// 開かれた？
 				bool isClosed;	// 閉じられた？
 			};
+		private:
+			/// <summary>
+			/// 次のセルに移動するコストを計算
+			/// </summary>
+			/// <returns></returns>
+			void CalcCost(
+				float& totalCost, 
+				float& costFromStartCell, 
+				const CellWork* nextCell, 
+				const CellWork* prevCell, 
+				const Cell* endCell);
+			/// <summary>
+			/// スムージング
+			/// </summary>
+			/// <param name="cellList"></param>
+			void Smoothing(std::list<CellWork*>& cellList);
+		private:
+			
 
 			std::vector< CellWork > m_cellWork;
 		};
