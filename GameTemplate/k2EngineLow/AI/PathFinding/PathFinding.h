@@ -27,21 +27,17 @@ namespace nsK2EngineLow {
 		private:
 			struct CellWork {
 
-				void Init(const Cell* cell)
-				{
-					this->cell = cell;
-					parentCell = nullptr;
-					costFromStartCell = 0.0f;
-					cost = FLT_MAX;
-					isOpend = false;
-					isClosed = false;
-				}
+				void Init(const Cell* cell);
+				
 				const Cell* cell;
 				CellWork* parentCell;	// 親のセル。
 				float costFromStartCell;
-				float cost;		// 移動コスト
-				bool isOpend;	// 開かれた？
-				bool isClosed;	// 閉じられた？
+				Vector3 pathPoint;		// パス移動のポイント
+				Vector3 pathPointWork;	// パス移動のポイントのワーク領域
+				float cost;				// 移動コスト
+				bool isOpend;			// 開かれた？
+				bool isClosed;			// 閉じられた？
+				bool isSmooth;			// スムースされる？
 			};
 		private:
 			/// <summary>
@@ -59,6 +55,10 @@ namespace nsK2EngineLow {
 			/// </summary>
 			/// <param name="cellList"></param>
 			void Smoothing(std::list<CellWork*>& cellList);
+			/// <summary>
+			/// レイとセルの交差判定
+			/// </summary>
+			bool IsIntercetRayToCell(Vector3 rayStartPos, Vector3 rayEndPos, CellWork*) const;
 		private:
 			
 

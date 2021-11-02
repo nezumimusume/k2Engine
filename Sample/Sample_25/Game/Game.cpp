@@ -22,8 +22,8 @@ bool Game::Start()
 	m_bgModelRendedr.Init("Assets/modelData/bg/bg.tkm");
 	m_charaRender.Init("Assets/modelData/unityChan.tkm");
 	m_charaRender.SetScale(1.2f, 1.2f, 1.2f);
-	m_targetPointRender.Init("Assets/modelData/light.tkm");
-	m_targetPointRender.SetScale(5.0f, 5.0f, 5.0f);
+	m_targetPointRender.Init("Assets/modelData/unityChan.tkm");
+	m_targetPointRender.SetScale(1.2f, 1.2f, 1.2f);
 
 	// tknファイルをロード。
 	m_tknFile.Load("Assets/nvm/test.tkn");

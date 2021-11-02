@@ -77,6 +77,15 @@ namespace nsK2EngineLow {
 			{
 				return m_linkCell[linkCellNo];
 			}
+			/// <summary>
+			/// セルの頂点座標を取得する。
+			/// </summary>
+			/// <param name="vertNo">頂点番号</param>
+			/// <returns>頂点座標</returns>
+			const Vector3& GetVertexPosition(int vertNo) const
+			{
+				return m_vertexPosition[vertNo];
+			}
 		private:
 			Vector3 m_vertexPosition[3];		// セルの頂点座標
 			Vector3 m_normal;					// 法線

@@ -5,7 +5,78 @@
 
 namespace nsK2EngineLow {
 namespace nsAI {
-	
+	void PathFinding::CellWork::Init(const Cell* cell)
+	{
+		this->cell = cell;
+		parentCell = nullptr;
+		costFromStartCell = 0.0f;
+		cost = FLT_MAX;
+		isOpend = false;
+		isClosed = false;
+		isSmooth = false;
+		pathPoint = cell->GetCenterPosition();
+	}
+	bool PathFinding::IsIntercetRayToCell(Vector3 rayStartPos, Vector3 rayEndPos, CellWork* currentCellWork) const
+	{
+		// レイを計算する。
+		Vector3 ray = rayEndPos - rayStartPos;
+
+		bool isVisible = false;
+
+		// 可視ということは、rayStartPosからrayEndPosに向かって伸びる線分が、セルのどれか１つのエッジと交差しているということ。
+		const int vertNo[3][2] = {
+			{0, 1},
+			{1, 2},
+			{2, 0},
+		};
+		const Cell* currentCell = currentCellWork->cell;
+		for (int edgeNo = 0; edgeNo < 3; edgeNo++) {
+			const Vector3& p0 = currentCell->GetVertexPosition(vertNo[edgeNo][0]);
+			const Vector3& p1 = currentCell->GetVertexPosition(vertNo[edgeNo][1]);
+			// まずは無限線分として交差しているか判定。
+			Vector3 p0ToStartPos = rayStartPos - p0;
+			p0ToStartPos.y = 0.0f;
+			Vector3 p0ToEndPos = rayEndPos - p0;
+			p0ToEndPos.y = 0.0f;
+
+			// p0ToStartPosとp0ToEndPosを正規化する。
+			Vector3 p0ToStartPosNorm = p0ToStartPos;
+			p0ToStartPosNorm.Normalize();
+			Vector3 p0ToEndPosNorm = p0ToEndPos;
+			p0ToEndPosNorm.Normalize();
+
+			if (p0ToStartPosNorm.Dot(p0ToEndPosNorm) <= 0.0f) {
+				// 交差している。
+				// 続いて交点を求める。
+				// まずは、XZ平面でレイに垂直な線分を求める。
+				Vector3 rayNorm = ray;
+				rayNorm.Normalize();
+				Vector3 rayTangent;
+				rayTangent.Cross(rayNorm, g_vec3AxisY);
+				rayTangent.Normalize();
+				float t0 = fabsf(Dot(rayTangent, p0ToStartPos));
+				float t1 = fabsf(Dot(rayTangent, p0ToEndPos));
+				// 始点から交点までの比率を求める。
+				float rate = t0 / (t0 + t1);
+				Vector3 hitPos = Math::Lerp(rate, rayStartPos, rayEndPos);
+				// 続いて交点が線分上にいるか調べる。
+				Vector3 rsToHitPos = hitPos - rayStartPos;
+				Vector3 reToHitPos = hitPos - rayEndPos;
+				rsToHitPos.Normalize();
+				reToHitPos.Normalize();
+				if (rsToHitPos.Dot(reToHitPos) <= 0.0f) {
+					// 交差している場合はこのベクトルが逆向きになるはず。
+					// 交差している。
+					isVisible = true;
+					// 交点を記憶する。
+					currentCellWork->pathPointWork = hitPos;
+					break;
+				}
+			}
+		}
+
+		return isVisible;
+	}
 	void PathFinding::Smoothing(std::list<CellWork*>& cellList) 
 	{
 		// パスの可視判定を行って、不要なセルを除外していく。
@@ -13,51 +84,63 @@ namespace nsAI {
 			// セルの数が3以下ならスムージングする必要なし。
 			return;
 		}
-
-		// セルが2より大きければ、パスの可視判定を行って、不要なセルを除外していく。
-		// レイの始点となるセル。
-		auto rayStartCellIt = cellList.begin();
-		// レイの終点の手前のセル。
-		auto prevRayEndCellIt = rayStartCellIt;
-		prevRayEndCellIt++;
-		// レイの終点のセル。
-		auto rayEndCellIt = prevRayEndCellIt;
-		rayEndCellIt++;
-
-		auto endCellIt = cellList.end();
-		endCellIt--;
-		auto prevEndCellIt = endCellIt;
-		prevEndCellIt--;
-
-		while (true) {
-			// レイの終端のセルまでレイテストを行う。
-			Vector3 rayStartPos = (*rayStartCellIt)->cell->GetCenterPosition();
-			Vector3 rayEndPos = (*rayEndCellIt)->cell->GetCenterPosition();
-
-			// todo ここに可視判定を実装する。
-
-			if (false) {
-				// 可視
-				// 始点から終点が見えるということは、終点の手前のセルは削除できる。
-				cellList.erase(prevRayEndCellIt);
-				// 次。
-				prevRayEndCellIt = rayEndCellIt;
+		
+		int skipCellCount = cellList.size()-1;
+		while (skipCellCount > 2) {
+			// セルの数が３以上なら、パスの可視判定を行って、不要なセルを除外していく。
+			// レイの始点となるセル。
+			auto rayStartCellIt = cellList.begin();
+			// レイの終点のセル。
+			auto rayEndCellIt = rayStartCellIt;
+			for (int i = 0; i < skipCellCount; i++) {
 				rayEndCellIt++;
 			}
-			else {
-				// 見えないということは、終端セルまでのスムージングをこれ以上行うことはできない。
-				if (rayEndCellIt == endCellIt
-					|| rayEndCellIt == prevEndCellIt
-				) {
-					// 終わり。
-					break;
+			bool isEnd = false;
+			while (isEnd == false) {
+				// レイの終端のセルまでレイテストをXZ平面で行う。
+				Vector3 rayStartPos = (*rayStartCellIt)->cell->GetCenterPosition();
+				Vector3 rayEndPos = (*rayEndCellIt)->cell->GetCenterPosition();
+				rayStartPos.y = 0.0f;
+				rayEndPos.y = 0.0f;
+
+				bool isVisible = true;
+				auto cellIt = rayStartCellIt;
+				do {
+					cellIt++;
+					isVisible = isVisible && IsIntercetRayToCell(rayStartPos, rayEndPos, *cellIt);
+
+				} while (cellIt != rayEndCellIt);
+
+
+				if (isVisible) {
+					// 可視
+					// 始点から終点が見えるということは、始点～終点までの間のセルは削除できるのでスムースマークを付ける。。
+					//(*rayEndCellIt)->pathPoint = (*rayEndCellIt)->pathPointWork;
+					auto cellIt = rayStartCellIt;
+					cellIt++;
+					while (cellIt != rayEndCellIt) {
+						(*cellIt)->isSmooth = true;
+						cellIt++;
+					}
 				}
-				// 現在の終端セルを
+				// 次。
 				rayStartCellIt = rayEndCellIt;
-				prevRayEndCellIt = rayStartCellIt;
-				prevRayEndCellIt++;
-				rayEndCellIt = prevRayEndCellIt;
-				rayEndCellIt++;
+				rayEndCellIt = rayStartCellIt;
+				for (int i = 0; i < skipCellCount; i++) {
+					rayEndCellIt++;
+					if (rayEndCellIt == cellList.end()) {
+						isEnd = true;
+						break;
+					}
+				}
+			}
+
+			skipCellCount--;
+		}
+		// スムースフラグが立っているセルを除去していく
+		for (auto it = cellList.begin(); it != cellList.end(); it++) {
+			if ((*it)->isSmooth) {
+				it = cellList.erase(it);
 			}
 		}
 	}
@@ -102,7 +185,7 @@ namespace nsAI {
 		for (int cellNo = 0; cellNo < m_cellWork.size(); cellNo++) {
 			m_cellWork[cellNo].Init(&naviMesh.GetCell(cellNo));
 		}
-			
+		m_cellWork[endCell.GetCellNo()].pathPoint = endPos;
 			
 		using namespace std;
 		const int OPEN_CLOSE_LIST_MAX = 1024;
@@ -195,7 +278,7 @@ namespace nsAI {
 			
 			// ポイントをパスに積んでいく
 			for (auto it = cellList.begin(); it != cellList.end(); it++) {
-				path.AddPoint((*it)->cell->GetCenterPosition());
+				path.AddPoint((*it)->pathPoint);
 			}
 			// パスを構築する。
 			path.Build();
