@@ -104,7 +104,15 @@ namespace nsK2EngineLow {
 		{
 			m_dynamicWorld->convexSweepTest(castShape, convexFromWorld, convexToWorld, resultCallback, allowedCcdPenetration);
 		}
-
+		/// <summary>
+		/// 物理ワールドに対して、凸型コライダーSweepテストを行う。
+		/// </summary>
+		/// <param name="collider">コライダー</param>
+		/// <param name="convexStart">コライダーの開始座標</param>
+		/// <param name="rayEnd">コライダーの終了座標</param>
+		/// <returns>trueがかえってきたら当たっている。</returns>
+		bool ConvexSweepTest(ICollider& collider, const Vector3& rayStart, const Vector3& rayEnd);
+		
 		/*!
 		* @brief	コリジョンオブジェクトをワールドに登録。
 		*@param[in]	colliObj	コリジョンオブジェクト。

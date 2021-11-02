@@ -289,6 +289,10 @@ namespace nsK2Engine {
 		/// </summary>
 		/// <param name="rc"></param>
 		void OnTlanslucentRender(RenderContext& rc) override;
+		/// <summary>
+		/// 各種モデルのワールド行列を更新する。
+		/// </summary>
+		void UpdateWorldMatrixInModes();
 	private:
 		/// <summary>
 		/// レンダリングエンジンで発生したイベントを受け取ったときに呼ばれる処理。

@@ -77,6 +77,8 @@ namespace nsK2Engine {
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
+		// 各種ワールド行列を更新する。
+		UpdateWorldMatrixInModes();
 	}
 
 	void ModelRender::InitForwardRendering(ModelInitData& initData)
@@ -94,6 +96,8 @@ namespace nsK2Engine {
 		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(1);
+		// 各種ワールド行列を更新する。
+		UpdateWorldMatrixInModes();
 	}
 
 	void ModelRender::Init(const char* filePath,
@@ -117,6 +121,8 @@ namespace nsK2Engine {
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
+		// 各種ワールド行列を更新する。
+		UpdateWorldMatrixInModes();
 
 	}
 
@@ -349,14 +355,8 @@ namespace nsK2Engine {
 		}
 		m_numInstance++;
 	}
-
-	void ModelRender::Update()
+	void ModelRender::UpdateWorldMatrixInModes()
 	{
-		if (m_isEnableInstancingDraw) {
-			return;
-		}
-
-
 		m_zprepassModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 		if (m_renderToGBufferModel.IsInited()) {
 			m_renderToGBufferModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -372,6 +372,14 @@ namespace nsK2Engine {
 				model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 			}
 		}
+	}
+	void ModelRender::Update()
+	{
+		if (m_isEnableInstancingDraw) {
+			return;
+		}
+
+		UpdateWorldMatrixInModes();
 
 		if (m_skeleton.IsInited()) {
 			m_skeleton.Update(m_zprepassModel.GetWorldMatrix());

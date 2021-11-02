@@ -20,6 +20,7 @@ private:
 	ModelRender m_charaRender;
 	ModelRender m_targetPointRender;
 	TknFile m_tknFile;
+	PhysicsStaticObject m_bgObject;
 	nsAI::NaviMesh m_nvmMesh;
 	nsAI::Path m_path;
 	nsAI::PathFinding m_pathFiding;

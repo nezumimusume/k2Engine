@@ -18,8 +18,33 @@ namespace nsK2EngineLow {
 				return 0.0f;
 			}
 		};
+		struct ResultConvexSweepTest : public btCollisionWorld::ConvexResultCallback
+		{
+			bool isHit = false;
+			virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
+			{
+				isHit = true;
+				return 0.0f;
+			}
+		};
 	}
-
+	bool PhysicsWorld::ConvexSweepTest(ICollider& collider, const Vector3& rayStart, const Vector3& rayEnd)
+	{
+		btTransform start, end;
+		start.setIdentity();
+		end.setIdentity();
+		
+		start.setOrigin(btVector3(rayStart.x, rayStart.y, rayStart.z));
+		end.setOrigin(btVector3(rayEnd.x, rayEnd.y, rayEnd.z));
+		ResultConvexSweepTest result;
+		ConvexSweepTest(
+			(const btConvexShape*)collider.GetBody(), 
+			start, 
+			end, 
+			result
+		);
+		return result.isHit;
+	}
 	PhysicsWorld::PhysicsWorld()
 	{
 		K2_ASSERT(

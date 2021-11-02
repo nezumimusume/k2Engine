@@ -20,10 +20,12 @@ bool Game::Start()
 	g_camera3D->SetTarget(0.0f, 50.0f, -500.0f);
 	g_camera3D->SetFar(10000.0f);
 	m_bgModelRendedr.Init("Assets/modelData/bg/bg.tkm");
+	m_bgObject.CreateFromModel(m_bgModelRendedr.GetModel(), m_bgModelRendedr.GetWorldMatrix(0));
+
 	m_charaRender.Init("Assets/modelData/unityChan.tkm");
 	m_charaRender.SetScale(1.2f, 1.2f, 1.2f);
-	m_targetPointRender.Init("Assets/modelData/unityChan.tkm");
-	m_targetPointRender.SetScale(1.2f, 1.2f, 1.2f);
+	m_targetPointRender.Init("Assets/modelData/light.tkm");
+	m_targetPointRender.SetScale(4.0f, 4.0f, 4.0f);
 
 	// tknファイルをロード。
 	m_tknFile.Load("Assets/nvm/test.tkn");
@@ -35,7 +37,10 @@ bool Game::Start()
 		m_path,
 		m_nvmMesh,
 		{ 0.0f, 0.0f, 0.0f },
-		{ 200.0f, 0.0f, 0.0f }
+		{ 200.0f, 0.0f, 0.0f },
+		PhysicsWorld::GetInstance(),
+		50.0f,
+		200.0f
 	);
 	return true;
 }
@@ -49,7 +54,10 @@ void Game::Update()
 			m_path,
 			m_nvmMesh,
 			m_position,
-			m_targetPointPosition
+			m_targetPointPosition,
+			PhysicsWorld::GetInstance(),
+			50.0f,
+			200.0f
 		);
 		m_path.StartWalkPath();
 
