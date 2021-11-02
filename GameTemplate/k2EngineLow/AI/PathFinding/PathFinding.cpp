@@ -68,8 +68,6 @@ namespace nsAI {
 					// 交差している場合はこのベクトルが逆向きになるはず。
 					// 交差している。
 					isVisible = true;
-					// 交点を記憶する。
-					currentCellWork->pathPointWork = hitPos;
 					break;
 				}
 			}
@@ -115,7 +113,6 @@ namespace nsAI {
 				if (isVisible) {
 					// 可視
 					// 始点から終点が見えるということは、始点～終点までの間のセルは削除できるのでスムースマークを付ける。。
-					//(*rayEndCellIt)->pathPoint = (*rayEndCellIt)->pathPointWork;
 					auto cellIt = rayStartCellIt;
 					cellIt++;
 					while (cellIt != rayEndCellIt) {
@@ -135,7 +132,7 @@ namespace nsAI {
 				}
 			}
 
-			skipCellCount--;
+			skipCellCount /=2;
 		}
 		// スムースフラグが立っているセルを除去していく
 		for (auto it = cellList.begin(); it != cellList.end(); it++) {
@@ -185,6 +182,7 @@ namespace nsAI {
 		for (int cellNo = 0; cellNo < m_cellWork.size(); cellNo++) {
 			m_cellWork[cellNo].Init(&naviMesh.GetCell(cellNo));
 		}
+		m_cellWork[startCell.GetCellNo()].pathPoint = startPos;
 		m_cellWork[endCell.GetCellNo()].pathPoint = endPos;
 			
 		using namespace std;
@@ -280,6 +278,7 @@ namespace nsAI {
 			for (auto it = cellList.begin(); it != cellList.end(); it++) {
 				path.AddPoint((*it)->pathPoint);
 			}
+			
 			// パスを構築する。
 			path.Build();
 				

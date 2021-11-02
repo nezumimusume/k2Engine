@@ -32,8 +32,7 @@ namespace nsK2EngineLow {
 				const Cell* cell;
 				CellWork* parentCell;	// 親のセル。
 				float costFromStartCell;
-				Vector3 pathPoint;		// パス移動のポイント
-				Vector3 pathPointWork;	// パス移動のポイントのワーク領域
+				Vector3 pathPoint;
 				float cost;				// 移動コスト
 				bool isOpend;			// 開かれた？
 				bool isClosed;			// 閉じられた？
