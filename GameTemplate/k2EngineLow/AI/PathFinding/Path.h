@@ -2,32 +2,32 @@
 
 namespace nsK2EngineLow {
 	namespace nsAI {
-		
+		/// <summary>
+		/// パスを扱うクラス。
+		/// </summary>
 		class Path{
 		public:
 			/// <summary>
-			/// パスの移動開始。
+			/// パス上を移動する。
 			/// </summary>
-			void StartWalkPath()
-			{
-				m_sectionNo = 0;
-			}
-			/// <summary>
-			/// パス移動。
-			/// </summary>
-			Vector3 WalkPath( Vector3 pos, float moveSpeed, bool& isEnd);
+			/// <param name="pos">移動させる座標</param>
+			/// <param name="moveSpeed">移動速度</param>
+			/// <param name="isEnd">パス移動終了したらtrueが設定される</param>
+			/// <returns>移動後の座標</returns>
+			Vector3 Move( Vector3 pos, float moveSpeed, bool& isEnd);
 			/// <summary>
 			/// クリア
 			/// </summary>
 			void Clear()
 			{
+				m_sectionNo = 0;
 				m_pointArray.clear();
 				m_sectionArray.clear();
 			}
 			/// <summary>
 			/// ポイントの追加。
 			/// </summary>
-			/// <param name="point"></param>
+			/// <param name="point">ポイント</param>
 			void AddPoint(const Vector3& point)
 			{
 				m_pointArray.push_back(point);

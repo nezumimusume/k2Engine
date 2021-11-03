@@ -4,8 +4,10 @@
 
 namespace nsK2EngineLow {
 namespace nsAI {
-	void NaviMesh::Init(TknFile& tknFile)
+	void NaviMesh::Init(const char* tknFilePath)
 	{
+		TknFile tknFile;
+		tknFile.Load(tknFilePath);
 		// tknファイルからセル情報を構築する。
 		int numCell = tknFile.GetNumCell();
 		m_cellArray.resize(numCell);

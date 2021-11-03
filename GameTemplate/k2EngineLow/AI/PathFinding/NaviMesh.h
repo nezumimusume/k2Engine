@@ -7,13 +7,19 @@ namespace nsK2EngineLow {
 	class TknFile;
 	namespace nsAI {
 		class Cell;
+		/// <summary>
+		/// ナビゲーションメッシュクラス。
+		/// </summary>
+		/// <remark>
+		/// 3dsMaxからnvmExporterを使用して出力されたデータをもとに構築されます。
+		/// </remark>
 		class NaviMesh{
 		public:
 			/// <summary>
 			/// tknファイルからナビゲーションメッシュを構築する。
 			/// </summary>
-			/// <param name="tknFile">tknFile</param>
-			void Init(TknFile& tknFile);
+			/// <param name="tknFilePath">tknファイルのファイルパス</param>
+			void Init(const char* tknFilePath);
 			/// <summary>
 			/// 指定した座標に最も近いセルを検索する。
 			/// </summary>

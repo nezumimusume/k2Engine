@@ -27,21 +27,9 @@ bool Game::Start()
 	m_targetPointRender.Init("Assets/modelData/light.tkm");
 	m_targetPointRender.SetScale(4.0f, 4.0f, 4.0f);
 
-	// tknファイルをロード。
-	m_tknFile.Load("Assets/nvm/test.tkn");
 	// ナビメッシュを構築。
-	m_nvmMesh.Init(m_tknFile);
-	// テストで適当なパス検索を行う。
-	// 後でBSPのテストをするのでいったんコメントアウト。
-	m_pathFiding.Execute(
-		m_path,
-		m_nvmMesh,
-		{ 0.0f, 0.0f, 0.0f },
-		{ 200.0f, 0.0f, 0.0f },
-		PhysicsWorld::GetInstance(),
-		50.0f,
-		200.0f
-	);
+	m_nvmMesh.Init("Assets/nvm/test.tkn");
+	
 	return true;
 }
 
@@ -51,18 +39,21 @@ void Game::Update()
 	if (g_pad[0]->IsTrigger(enButtonA)) {
 		// パス検索
 		m_pathFiding.Execute(
-			m_path,
-			m_nvmMesh,
-			m_position,
-			m_targetPointPosition,
-			PhysicsWorld::GetInstance(),
-			50.0f,
-			200.0f
+			m_path,							// 構築されたパスの格納先
+			m_nvmMesh,						// ナビメッシュ
+			m_position,						// 開始座標
+			m_targetPointPosition,			// 移動目標座標
+			PhysicsWorld::GetInstance(),	// 物理エンジン	
+			50.0f,							// AIエージェントの半径
+			200.0f							// AIエージェントの高さ。
 		);
-		m_path.StartWalkPath();
-
 	}
-	m_position = m_path.WalkPath(m_position, 10.0f, isEnd);
+	// パス上を移動する。
+	m_position = m_path.Move(
+		m_position, 
+		10.0f, 
+		isEnd
+	);
 	m_charaRender.SetPosition(m_position);
 	m_charaRender.Update();
 
