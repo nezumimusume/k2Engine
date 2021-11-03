@@ -1,6 +1,8 @@
 ﻿
 Add-Type -Assembly System.Windows.Forms
 
+
+
 function CopyAndCreateShortCut($maxVersion)
 {
     # maxスクリプトをコピー。
@@ -23,18 +25,38 @@ function CopyAndCreateShortCut($maxVersion)
  
         #リンク先パス設定
         $lnk.TargetPath = $copyDstFolder + "\tkExporter.ms"
-        if( Test-Path $lnk.TargetPath){
-        }else{
-            [System.Windows.Forms.MessageBox]::Show('hoge')
-        }
+        
         $lnk.WorkingDirectory = $desktopFolder
  
         #ショートカットを保存
         $lnk.Save()
     }
+
+    # maxプラグインをコピー。
+    $copySrcFolder = "3dsMaxPlugin\*"
+
+
+    #コピー先のフォルダのパス
+    $copyDstFolderPrefix = "C:\Program Files (x86)\Autodesk\3ds Max "
+    $copyDstFolder = $copyDstFolderPrefix + $maxVersion + "\Plugins"
+    if( Test-path $copyDstFolder){
+        #コピー先のフォルダがあれば。
+        #フォルダの内容をコピー。
+        Copy-Item $copySrcFolder -Destination $copyDstFolder -Recurse -Force
+    }
+
+    $copyDstFolderPrefix = "C:\Autodesk\3ds Max "
+    $copyDstFolder = $copyDstFolderPrefix + $maxVersion + "\Plugins"
+    if( Test-path $copyDstFolder){
+        #コピー先のフォルダがあれば。
+        #フォルダの内容をコピー。
+        Copy-Item $copySrcFolder -Destination $copyDstFolder -Recurse -Force
+    }
 }
 
 Start-Process -FilePath make-3.81.exe -Wait
+
+
 
 #アプリケーションデータのフォルダを取得。
 $appData = [Environment]::GetFolderPath("ApplicationData")
