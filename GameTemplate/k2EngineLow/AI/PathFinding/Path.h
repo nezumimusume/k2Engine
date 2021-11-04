@@ -2,6 +2,7 @@
 
 namespace nsK2EngineLow {
 	namespace nsAI {
+		class NaviMesh;
 		/// <summary>
 		/// パスを扱うクラス。
 		/// </summary>
@@ -13,8 +14,18 @@ namespace nsK2EngineLow {
 			/// <param name="pos">移動させる座標</param>
 			/// <param name="moveSpeed">移動速度</param>
 			/// <param name="isEnd">パス移動終了したらtrueが設定される</param>
+			/// <param name="physicsWorld">
+			/// 物理ワールド。
+			/// 物理ワールドが指定されていると、パス移動後に地面にレイキャストを行い、
+			/// 座標を地面にスナップします。
+			/// </param>
 			/// <returns>移動後の座標</returns>
-			Vector3 Move( Vector3 pos, float moveSpeed, bool& isEnd);
+			Vector3 Move( 
+				Vector3 pos, 
+				float moveSpeed, 
+				bool& isEnd,
+				PhysicsWorld* physicsWorld = nullptr
+			);
 			/// <summary>
 			/// クリア
 			/// </summary>

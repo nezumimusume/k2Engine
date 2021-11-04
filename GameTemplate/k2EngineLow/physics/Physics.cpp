@@ -10,7 +10,7 @@ namespace nsK2EngineLow {
 			using ContantTestCallback = function<void(const btCollisionObject& contactCollisionObject)>;
 			ContantTestCallback  m_cb;
 			btCollisionObject* m_me = nullptr;
-			virtual	btScalar	addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap, int partId1, int index1) override
+			btScalar	addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap, int partId1, int index1) override
 			{
 				if (m_me == colObj0Wrap->getCollisionObject()) {
 					m_cb(*colObj1Wrap->getCollisionObject());
@@ -21,14 +21,31 @@ namespace nsK2EngineLow {
 		struct ResultConvexSweepTest : public btCollisionWorld::ConvexResultCallback
 		{
 			bool isHit = false;
-			virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
+			btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace) override
 			{
 				isHit = true;
 				return 0.0f;
 			}
 		};
+		struct MyRayResultCallback : public btCollisionWorld::RayResultCallback
+		{
+			Vector3 hitPos;
+			Vector3 rayStart;
+			Vector3 rayEnd;
+			bool isHit = false;
+			float hitFraction = 1.0f;
+			btScalar	addSingleResult(btCollisionWorld::LocalRayResult& rayResult, bool normalInWorldSpace) override			
+			{
+				if (rayResult.m_hitFraction < hitFraction) {
+					// ‚±‚¿‚ç‚Ì•û‚ª‹ß‚¢B
+					hitPos.Lerp(rayResult.m_hitFraction, rayStart, rayEnd);
+				}
+				isHit = true;
+				return rayResult.m_hitFraction;
+			}
+		};
 	}
-	bool PhysicsWorld::ConvexSweepTest(ICollider& collider, const Vector3& rayStart, const Vector3& rayEnd)
+	bool PhysicsWorld::ConvexSweepTest(ICollider& collider, const Vector3& rayStart, const Vector3& rayEnd) const
 	{
 		btTransform start, end;
 		start.setIdentity();
@@ -44,6 +61,20 @@ namespace nsK2EngineLow {
 			result
 		);
 		return result.isHit;
+	}
+	bool PhysicsWorld::RayTest(const Vector3& rayStart, const Vector3& rayEnd, Vector3& hitPos) const
+	{
+		btVector3 start, end;
+		start.setValue(rayStart.x, rayStart.y, rayStart.z);
+		end.setValue(rayEnd.x, rayEnd.y, rayEnd.z);
+		MyRayResultCallback cb;
+		cb.rayStart = rayStart;
+		cb.rayEnd = rayEnd;
+		m_dynamicWorld->rayTest(start, end, cb);
+		if (cb.isHit) {
+			hitPos = cb.hitPos;
+		}
+		return cb.isHit;
 	}
 	PhysicsWorld::PhysicsWorld()
 	{
