@@ -16,7 +16,7 @@ namespace nsK2EngineLow {
 				section.direction.Normalize();
 			}
 		}
-		Vector3 Path::WalkPath(Vector3 pos, float moveSpeed, bool& isEnd)
+		Vector3 Path::Move(Vector3 pos, float moveSpeed, bool& isEnd)
 		{
 			if (m_sectionArray.empty() 
 				|| m_sectionNo >= m_sectionArray.size() 
