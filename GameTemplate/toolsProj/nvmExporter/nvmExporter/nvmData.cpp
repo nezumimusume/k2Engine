@@ -37,7 +37,7 @@ void nvmData::CalcNormal(Point3& normal, Face& face, Mesh& mesh, Matrix3& matrix
 
 	for (int vertexNo = 0; vertexNo < 3; vertexNo++) {
 		DWORD vertexIndex = face.getVert(vertexNo);
-		Point3& vertexPosition = mesh.getVert(vertexIndex);
+		Point3 vertexPosition = mesh.getVert(vertexIndex);
 		vertexPosition = matrix.PointTransform(vertexPosition);
 		vertex[vertexNo] = vertexPosition;
 		vertex[vertexNo][1] = vertexPosition[2];
@@ -63,26 +63,12 @@ void nvmData::CalcNormal(Point3& normal, Face& face, Mesh& mesh, Matrix3& matrix
 	normal = Normalize(CrossProd(v0, v1));
 }
 /// <summary>
-/// ˆø”‚Å“n‚³‚ê‚½–Ê‚ª•Ç‰»‚Ç‚¤‚©”»’è
+/// ˆø”‚Å“n‚³‚ê‚½–Ê‚ª•Ç‚©‚Ç‚¤‚©”»’è
 /// </summary>
 /// <param name="normal"></param>
 /// <returns></returns>
 bool nvmData::IsWall(Point3& normal)
 {
-	// todo –¢‘Î‰B
-	float dot = DotProd(normal, Point3(0.0f, 1.0f, 0.0f));
-
-	if (dot < 0.0f) {
-		//‹tŒü‚«
-		return true;
-	}
-
-	float angle = fabs(acosf(dot));
-	if (angle > LIMIT_ANGLE_TO_WALL) {
-		//•Ç
-		return true;
-	}
-	//•Ç‚Å‚Í‚È‚¢
 	return false;
 }
 

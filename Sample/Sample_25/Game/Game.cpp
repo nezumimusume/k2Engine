@@ -15,9 +15,9 @@ Game::~Game()
 bool Game::Start()
 {
 	g_camera3D->SetViewAngle(Math::DegToRad(90.0f));
-	g_camera3D->SetPosition(0.0f, 1000.0f, -400.0f);
+	g_camera3D->SetPosition(0.0f, 500.0f, 600.0f);
 	
-	g_camera3D->SetTarget(0.0f, 50.0f, -500.0f);
+	g_camera3D->SetTarget(0.0f, 50.0f, 0.0f);
 	g_camera3D->SetFar(10000.0f);
 	m_bgModelRendedr.Init("Assets/modelData/bg/bg.tkm");
 	m_bgObject.CreateFromModel(m_bgModelRendedr.GetModel(), m_bgModelRendedr.GetWorldMatrix(0));
@@ -30,6 +30,8 @@ bool Game::Start()
 	// ナビメッシュを構築。
 	m_nvmMesh.Init("Assets/nvm/test.tkn");
 	
+	SkyCube* sky = NewGO<SkyCube>(0);
+	sky->SetLuminance(0.2f);
 	return true;
 }
 
