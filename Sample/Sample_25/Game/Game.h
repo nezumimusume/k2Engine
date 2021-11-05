@@ -16,6 +16,7 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 private:
+	CharacterController m_charaCon;
 	ModelRender m_bgModelRendedr;
 	ModelRender m_charaRender;
 	ModelRender m_targetPointRender;
@@ -26,5 +27,6 @@ private:
 	nsAI::PathFinding m_pathFiding;
 	Vector3 m_position;
 	Vector3 m_targetPointPosition;
+	PointLight* m_targetPointPointLight;
 };
 

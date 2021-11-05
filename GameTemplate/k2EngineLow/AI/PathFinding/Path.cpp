@@ -16,8 +16,12 @@ namespace nsK2EngineLow {
 				section.direction.Normalize();
 			}
 		}
-		Vector3 Path::WalkPath(Vector3 pos, float moveSpeed, bool& isEnd)
-		{
+		Vector3 Path::Move(
+			Vector3 pos, 
+			float moveSpeed, 
+			bool& isEnd,
+			PhysicsWorld* physicsWorld
+		){
 			if (m_sectionArray.empty() 
 				|| m_sectionNo >= m_sectionArray.size() 
 			) {
@@ -42,6 +46,17 @@ namespace nsK2EngineLow {
 				}
 				else {
 					m_sectionNo++;
+				}
+			}
+			if (physicsWorld) {
+				Vector3 rayStart = pos;
+				// ‚¿‚å‚Á‚ÆãB
+				rayStart.y += 1.0f;
+				Vector3 rayEnd = rayStart;
+				rayEnd.y -= 1000.0f;
+				Vector3 hitPos;
+				if (physicsWorld->RayTest(rayStart, rayEnd, hitPos)) {
+					pos = hitPos;
 				}
 			}
 			return pos;
