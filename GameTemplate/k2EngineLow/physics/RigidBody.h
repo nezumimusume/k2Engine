@@ -4,12 +4,11 @@ namespace nsK2EngineLow {
 	class ICollider;
 	//剛体初期化情報。
 	struct RigidBodyInitData {
-		Vector3 pos;					//座標。
+		Vector3 pos;						//座標。
 		Quaternion rot;					//回転。
-		Vector3 localInteria;			//慣性テンソル。回転のしやすさ的なもの。
 		ICollider* collider = nullptr;	//コライダー。
 		float mass = 0;					//質量。
-		float restitution = 0.0f;		//反発力、(数値を上げれば、物体が跳ね返るようになる)。
+		float restitution = 0.0f;			//反発力、(数値を上げれば、物体が跳ね返るようになる)。
 	};
 
 	/// <summary>
