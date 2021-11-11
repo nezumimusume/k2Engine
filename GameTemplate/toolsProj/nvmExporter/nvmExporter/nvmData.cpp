@@ -37,7 +37,7 @@ void nvmData::CalcNormal(Point3& normal, Face& face, Mesh& mesh, Matrix3& matrix
 
 	for (int vertexNo = 0; vertexNo < 3; vertexNo++) {
 		DWORD vertexIndex = face.getVert(vertexNo);
-		Point3 vertexPosition = mesh.getVert(vertexIndex);
+		Point3& vertexPosition = mesh.getVert(vertexIndex);
 		vertexPosition = matrix.PointTransform(vertexPosition);
 		vertex[vertexNo] = vertexPosition;
 		vertex[vertexNo][1] = vertexPosition[2];
@@ -63,12 +63,26 @@ void nvmData::CalcNormal(Point3& normal, Face& face, Mesh& mesh, Matrix3& matrix
 	normal = Normalize(CrossProd(v0, v1));
 }
 /// <summary>
-/// 引数で渡された面が壁かどうか判定
+/// 引数で渡された面が壁化どうか判定
 /// </summary>
 /// <param name="normal"></param>
 /// <returns></returns>
 bool nvmData::IsWall(Point3& normal)
 {
+	// todo 未対応。
+	float dot = DotProd(normal, Point3(0.0f, 1.0f, 0.0f));
+
+	if (dot < 0.0f) {
+		//逆向き
+		return true;
+	}
+
+	float angle = fabs(acosf(dot));
+	if (angle > LIMIT_ANGLE_TO_WALL) {
+		//壁
+		return true;
+	}
+	//壁ではない
 	return false;
 }
 
@@ -83,6 +97,7 @@ void nvmData::CreatePositionAndNormalData()
 	Interface *max = GetCOREInterface();
 	int selNodeCnt = max->GetSelNodeCount();
 
+	int	num = 0;
 	for (int nodeNo = 0; nodeNo < selNodeCnt; nodeNo++) {
 		INode* node = max->GetSelNode(nodeNo);
 		Matrix3 objectMatrix = node->GetObjectTM(0);
@@ -125,16 +140,29 @@ void nvmData::CreatePositionAndNormalData()
 				data->linkNoList.push_back(-1);
 				data->linkNoList.push_back(-1);
 
+				data->faceNo = num;
+				num++;
+
 				m_sDataPtrList.push_back(data);
+
+				Vector3 centerPosition;
+				centerPosition.x = data->position[0].x + data->position[1].x + data->position[2].x;
+				centerPosition.y = data->position[0].y + data->position[1].y + data->position[2].y;
+				centerPosition.z = data->position[0].z + data->position[1].z + data->position[2].z;
+
+				//BSPツリーのリーフを追加していく。
+				m_bpsOnVertexPosition.AddLeaf(centerPosition, data.get());
 			}
 		}
 	}
+	//BSPツリーを構築。
+	m_bpsOnVertexPosition.Build();
 }
 
 
 void nvmData::CreateLinkData()
 {
-	for (
+	/*for (
 		auto itSrc = m_sDataPtrList.begin();
 		itSrc != m_sDataPtrList.end();
 		itSrc++
@@ -189,5 +217,57 @@ void nvmData::CreateLinkData()
 
 			}
 		}
+	}*/
+
+	
+	for (const auto& srcData : m_sDataPtrList)
+	{
+		m_bpsOnVertexPosition.WalkTree(srcData->centerPosition, [&](BSP::SLeaf* leaf)
+		{
+			auto* dstData = static_cast<SData*>(leaf->extraData);
+			int nearVertexNum = 0;
+			int nearVertexNoTbl[2] = { 0 };
+			for (int vertexNoSrc = 0; vertexNoSrc < 3 && nearVertexNum < 2; vertexNoSrc++) 
+			{
+				Point3& srcPoint = srcData->position[vertexNoSrc];
+				for (int vertexNoDst = 0; vertexNoDst < 3; vertexNoDst++)
+				{
+					
+					Point3& dstPoint = dstData->position[vertexNoDst];
+					Point3 dist;
+					dist = srcPoint - dstPoint;
+					if (dist.Length() < 0.1f)
+					{
+						//極めて近い頂点
+						nearVertexNoTbl[nearVertexNum] = vertexNoSrc;
+						nearVertexNum++;
+						if (nearVertexNum == 2) {
+							int faceNo = dstData->faceNo;
+							//極めて近い頂点が２つ存在するので隣接しているとする
+							if ((nearVertexNoTbl[0] == 0 && nearVertexNoTbl[1] == 1)
+								|| (nearVertexNoTbl[1] == 0 && nearVertexNoTbl[0] == 1)
+								) {
+								//頂点番号0-1に隣接している面
+								srcData->linkNoList.at(0) = faceNo;
+							}
+							else if ((nearVertexNoTbl[0] == 1 && nearVertexNoTbl[1] == 2)
+								|| (nearVertexNoTbl[1] == 1 && nearVertexNoTbl[0] == 2)
+								) {
+								//頂点番号1-2に隣接している面
+								srcData->linkNoList.at(1) = faceNo;
+							}
+							else if ((nearVertexNoTbl[0] == 0 && nearVertexNoTbl[1] == 2)
+								|| (nearVertexNoTbl[1] == 0 && nearVertexNoTbl[0] == 2)
+								) {
+								//頂点番号0-2に隣接している面
+								srcData->linkNoList.at(2) = faceNo;
+							}
+							break;
+						}
+					}
+				}
+			}
+		});
 	}
+	
 }

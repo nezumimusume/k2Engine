@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "bsp/BSP.h"
 
 //1ポリゴンのデータ
 struct SData
@@ -7,6 +8,8 @@ struct SData
 	Point3				position[3];		//3つの頂点の座標
 	Point3				normal;				//法線
 	std::vector<int>	linkNoList;			//リンクのリスト
+	Vector3				centerPosition;		//3つの頂点の中心座標
+	int					faceNo;				//番号
 };
 
 class nvmData
@@ -52,5 +55,6 @@ private:
 	void CreateLinkData();
 private:
 	std::vector<std::shared_ptr<SData>>				m_sDataPtrList;
+	BSP												m_bpsOnVertexPosition;
 };
 

@@ -45,6 +45,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>C:\Autodesk\3ds Max 2022 SDK\maxsdk\lib\x64\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'">
     <LibraryPath>C:\Autodesk\3ds Max 2022 SDK\maxsdk\lib\x64\Release;$(LibraryPath)</LibraryPath>
@@ -66,6 +67,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bsp\BSP.cpp" />
+    <ClCompile Include="math\Matrix.cpp" />
+    <ClCompile Include="math\Vector.cpp" />
     <ClCompile Include="nvmData.cpp" />
     <ClCompile Include="nvmExporter.cpp" />
     <ClCompile Include="DllEntry.cpp" />
@@ -76,6 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3dsmaxsdk_preinclude.h" />
+    <ClInclude Include="bsp\BSP.h" />
+    <ClInclude Include="math\Math.h" />
+    <ClInclude Include="math\Matrix.h" />
+    <ClInclude Include="math\Vector.h" />
     <ClInclude Include="nvmData.h" />
     <ClInclude Include="nvmExporter.h" />
     <ClInclude Include="nvmExporterCore.h" />

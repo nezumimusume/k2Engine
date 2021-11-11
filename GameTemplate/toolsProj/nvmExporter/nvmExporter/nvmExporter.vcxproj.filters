@@ -13,6 +13,12 @@
       <UniqueIdentifier>{ad6e765e-4300-41dc-b185-05b019286785}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{e3043772-6054-4b07-bfc7-bade32747fe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bsp">
+      <UniqueIdentifier>{2008bba4-ef1c-411f-9bd0-0dffe725de37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nvmExporter.cpp">
@@ -26,6 +32,15 @@
     </ClCompile>
     <ClCompile Include="nvmData.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Matrix.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Vector.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp\BSP.cpp">
+      <Filter>bsp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +63,18 @@
     </ClInclude>
     <ClInclude Include="nvmData.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp\BSP.h">
+      <Filter>bsp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
