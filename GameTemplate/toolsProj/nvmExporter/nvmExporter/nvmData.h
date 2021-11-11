@@ -14,6 +14,8 @@ struct SData
 
 class nvmData
 {
+private:
+	using SDataPtr = std::shared_ptr<SData>;
 public:
 	static const int LINK_NO_LIST_SIZE = 3;
 	nvmData();
@@ -53,8 +55,10 @@ private:
 	void CreatePositionAndNormalData();
 	//リンクデータの作成
 	void CreateLinkData();
+	void CreateLinkData(std::vector<SDataPtr>& cellDataArray);
+	void CreateLinkDataOneCell(SDataPtr cellData);
 private:
-	std::vector<std::shared_ptr<SData>>				m_sDataPtrList;
-	BSP												m_bpsOnVertexPosition;
+	std::vector<SDataPtr>	m_sDataPtrList;			// セルデータの配列。
+	BSP						m_bpsOnVertexPosition;	// セルの頂点座標のBSPツリー
 };
 

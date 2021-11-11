@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Max.h"
 #include <math.h>
 #include <DirectXMath.h>
 #include "Math.h"
@@ -86,6 +87,18 @@ public:
 	static const Vector3 One;
 public:
 	/// <summary>
+	/// Point3‚Ö‚ÌˆÃ–Ù‚ÌŒ^•ÏŠ·
+	/// </summary>
+	/// <returns></returns>
+	operator Point3() const
+	{
+		Point3 pt;
+		pt.x = x;
+		pt.y = y;
+		pt.z = z;
+		return pt;
+	}
+	/// <summary>
 	/// XMVECTOR‚Ö‚ÌˆÃ–Ù‚Ì•ÏŠ·B
 	/// </summary>
 	/// <returns></returns>
@@ -122,6 +135,10 @@ public:
 	Vector3(float x, float y, float z)
 	{
 		Set(x, y, z);
+	}
+	Vector3(const Point3& pt)
+	{
+		Set(pt.x, pt.y, pt.z);
 	}
 	/// <summary>
 	/// üŒ`•âŠ®

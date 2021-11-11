@@ -1,5 +1,6 @@
 #include "nvmExporter.h"
 #include "nvmData.h"
+#include <thread>
 
 
 namespace
@@ -37,7 +38,7 @@ void nvmData::CalcNormal(Point3& normal, Face& face, Mesh& mesh, Matrix3& matrix
 
 	for (int vertexNo = 0; vertexNo < 3; vertexNo++) {
 		DWORD vertexIndex = face.getVert(vertexNo);
-		Point3& vertexPosition = mesh.getVert(vertexIndex);
+		Point3 vertexPosition = mesh.getVert(vertexIndex);
 		vertexPosition = matrix.PointTransform(vertexPosition);
 		vertex[vertexNo] = vertexPosition;
 		vertex[vertexNo][1] = vertexPosition[2];
@@ -69,19 +70,6 @@ void nvmData::CalcNormal(Point3& normal, Face& face, Mesh& mesh, Matrix3& matrix
 /// <returns></returns>
 bool nvmData::IsWall(Point3& normal)
 {
-	// todo 未対応。
-	float dot = DotProd(normal, Point3(0.0f, 1.0f, 0.0f));
-
-	if (dot < 0.0f) {
-		//逆向き
-		return true;
-	}
-
-	float angle = fabs(acosf(dot));
-	if (angle > LIMIT_ANGLE_TO_WALL) {
-		//壁
-		return true;
-	}
 	//壁ではない
 	return false;
 }
@@ -130,7 +118,8 @@ void nvmData::CreatePositionAndNormalData()
 					data->position[vertexNo] = vertexPosition;
 					data->position[vertexNo][1] = vertexPosition[2];
 					data->position[vertexNo][2] = vertexPosition[1] * -1.0f;
-
+					//BSPツリーのリーフを追加していく。
+					m_bpsOnVertexPosition.AddLeaf(data->position[vertexNo], data.get());
 				}
 				//法線
 				data->normal = normal;
@@ -150,8 +139,7 @@ void nvmData::CreatePositionAndNormalData()
 				centerPosition.y = data->position[0].y + data->position[1].y + data->position[2].y;
 				centerPosition.z = data->position[0].z + data->position[1].z + data->position[2].z;
 
-				//BSPツリーのリーフを追加していく。
-				m_bpsOnVertexPosition.AddLeaf(centerPosition, data.get());
+				
 			}
 		}
 	}
@@ -159,115 +147,111 @@ void nvmData::CreatePositionAndNormalData()
 	m_bpsOnVertexPosition.Build();
 }
 
+void nvmData::CreateLinkData(std::vector<SDataPtr>& cellDataArray)
+{
+	int numFace = m_sDataPtrList.size();
+	struct SLinkCellData {
+		int numNearVertex = 0;	// 重複頂点がいくつある？
+		int nearVertexNoTbl[2] = { 0 };
+	};
+	std::vector<SLinkCellData> linkCellData;
+	linkCellData.resize(numFace);
+
+	for (const auto& srcData : cellDataArray)
+	{
+		memset(&linkCellData.front(), 0, sizeof(SLinkCellData)*linkCellData.size());
+		int numLinkCell = 0;
+		for (int vertexNoSrc = 0; vertexNoSrc < 3; vertexNoSrc++) {
+			m_bpsOnVertexPosition.WalkTree(srcData->position[vertexNoSrc], [&](BSP::SLeaf* leaf) {
+				if (numLinkCell == 3) {
+					// すでに隣接セルの調査は終わっている。
+					return;
+				}
+				SData* dstData = static_cast<SData*>(leaf->extraData);
+				if (srcData.get() == dstData) {
+					// 自分の自身なら処理を打ち切る。
+					return;
+				}
+				int faceNo = dstData->faceNo;
+				
+				Point3 dist = leaf->position - srcData->position[vertexNoSrc];
+				int& numNearVertex = linkCellData[faceNo].numNearVertex;
+				int* nearVertexNoTbl = linkCellData[faceNo].nearVertexNoTbl;
+				if (dist.Length() > 0.01f) {
+					// 頂点が離れている。
+					return;
+				}
+				//極めて近い頂点
+				linkCellData[faceNo].nearVertexNoTbl[numNearVertex] = vertexNoSrc;
+				numNearVertex++;
+				if (numNearVertex == 2) {
+					//極めて近い頂点が２つ存在するので隣接しているとする
+					if ((nearVertexNoTbl[0] == 0 && nearVertexNoTbl[1] == 1)
+						|| (nearVertexNoTbl[1] == 0 && nearVertexNoTbl[0] == 1)
+						) {
+						//頂点番号0-1に隣接している面
+						srcData->linkNoList.at(0) = faceNo;
+						numLinkCell++;
+					}
+					else if ((nearVertexNoTbl[0] == 1 && nearVertexNoTbl[1] == 2)
+						|| (nearVertexNoTbl[1] == 1 && nearVertexNoTbl[0] == 2)
+						) {
+						//頂点番号1-2に隣接している面
+						srcData->linkNoList.at(1) = faceNo;
+						numLinkCell++;
+					}
+					else if ((nearVertexNoTbl[0] == 0 && nearVertexNoTbl[1] == 2)
+						|| (nearVertexNoTbl[1] == 0 && nearVertexNoTbl[0] == 2)
+						) {
+						//頂点番号0-2に隣接している面
+						srcData->linkNoList.at(2) = faceNo;
+						numLinkCell++;
+					}
+				}
+			});
+		}
+	}
+}
 
 void nvmData::CreateLinkData()
 {
-	/*for (
-		auto itSrc = m_sDataPtrList.begin();
-		itSrc != m_sDataPtrList.end();
-		itSrc++
-		) {
-		const auto& srcData = *itSrc;
-		int faceNo = 0;
-		for (
-			auto itDst = m_sDataPtrList.begin();
-			itDst != m_sDataPtrList.end();
-			itDst++, faceNo++
-			) {
-			const auto& dstData = *itDst;
-			if (srcData != dstData) {
-				//自分以外のデータで極めて近い頂点が２つ存在したら隣接している面とする
-				int nearVertexNum = 0;
-				int nearVertexNoTbl[2] = { 0 };
-				for (int vertexNoSrc = 0; vertexNoSrc < 3 && nearVertexNum < 2; vertexNoSrc++) {
-					Point3& srcPoint = srcData->position[vertexNoSrc];
-					for (int vertexNoDst = 0; vertexNoDst < 3; vertexNoDst++) {
-						Point3& dstPoint = dstData->position[vertexNoDst];
-						Point3 dist;
-						dist = srcPoint - dstPoint;
-						if (dist.Length() < 0.1f) {
-							//極めて近い頂点
-							nearVertexNoTbl[nearVertexNum] = vertexNoSrc;
-							nearVertexNum++;
-							if (nearVertexNum == 2) {
-								//極めて近い頂点が２つ存在するので隣接しているとする
-								if ((nearVertexNoTbl[0] == 0 && nearVertexNoTbl[1] == 1)
-									|| (nearVertexNoTbl[1] == 0 && nearVertexNoTbl[0] == 1)
-									) {
-									//頂点番号0-1に隣接している面
-									srcData->linkNoList.at(0) = faceNo;
-								}
-								else if ((nearVertexNoTbl[0] == 1 && nearVertexNoTbl[1] == 2)
-									|| (nearVertexNoTbl[1] == 1 && nearVertexNoTbl[0] == 2)
-									) {
-									//頂点番号1-2に隣接している面
-									srcData->linkNoList.at(1) = faceNo;
-								}
-								else if ((nearVertexNoTbl[0] == 0 && nearVertexNoTbl[1] == 2)
-									|| (nearVertexNoTbl[1] == 0 && nearVertexNoTbl[0] == 2)
-									) {
-									//頂点番号0-2に隣接している面
-									srcData->linkNoList.at(2) = faceNo;
-								}
-								break;
-							}
-						}
-					}
-				}
-
+	
+	// スレッド数。
+	const int NUM_THREAD = 4;
+	std::vector<SDataPtr> cellDataArrays[NUM_THREAD];
+	// 各スレッドに処理させるデータに割り振りを行っていくに割り振っていく。
+	if (m_sDataPtrList.size() < 1000) {
+		// セルの数が10000に満たない場合はシングルスレッドで行う。
+		CreateLinkData(m_sDataPtrList);
+	}
+	else {
+		// 1000以上ならNUM_THREAD数で分担していく。
+		int numCellOnThread = m_sDataPtrList.size() / NUM_THREAD;
+		int workedCellNo = 0;
+		for (int threadNo = 0; threadNo < NUM_THREAD - 1; threadNo++) {
+			for (int cellNoInThread = 0; cellNoInThread < numCellOnThread; cellNoInThread++) {
+				cellDataArrays[threadNo].push_back(m_sDataPtrList[workedCellNo]);
+				workedCellNo++;
 			}
 		}
-	}*/
-
-	
-	for (const auto& srcData : m_sDataPtrList)
-	{
-		m_bpsOnVertexPosition.WalkTree(srcData->centerPosition, [&](BSP::SLeaf* leaf)
-		{
-			auto* dstData = static_cast<SData*>(leaf->extraData);
-			int nearVertexNum = 0;
-			int nearVertexNoTbl[2] = { 0 };
-			for (int vertexNoSrc = 0; vertexNoSrc < 3 && nearVertexNum < 2; vertexNoSrc++) 
+		// 末尾のスレッドに残りのセルを全部振り分ける。
+		while (workedCellNo < m_sDataPtrList.size()) {
+			cellDataArrays[NUM_THREAD-1].push_back(m_sDataPtrList[workedCellNo]);
+			workedCellNo++;
+		}
+		// スレッドを立てる。
+		std::unique_ptr<std::thread> thread[NUM_THREAD];
+		for (int threadNo = 0; threadNo < NUM_THREAD; threadNo++) {
+			thread[threadNo] = std::make_unique<std::thread>([&]()
 			{
-				Point3& srcPoint = srcData->position[vertexNoSrc];
-				for (int vertexNoDst = 0; vertexNoDst < 3; vertexNoDst++)
-				{
-					
-					Point3& dstPoint = dstData->position[vertexNoDst];
-					Point3 dist;
-					dist = srcPoint - dstPoint;
-					if (dist.Length() < 0.1f)
-					{
-						//極めて近い頂点
-						nearVertexNoTbl[nearVertexNum] = vertexNoSrc;
-						nearVertexNum++;
-						if (nearVertexNum == 2) {
-							int faceNo = dstData->faceNo;
-							//極めて近い頂点が２つ存在するので隣接しているとする
-							if ((nearVertexNoTbl[0] == 0 && nearVertexNoTbl[1] == 1)
-								|| (nearVertexNoTbl[1] == 0 && nearVertexNoTbl[0] == 1)
-								) {
-								//頂点番号0-1に隣接している面
-								srcData->linkNoList.at(0) = faceNo;
-							}
-							else if ((nearVertexNoTbl[0] == 1 && nearVertexNoTbl[1] == 2)
-								|| (nearVertexNoTbl[1] == 1 && nearVertexNoTbl[0] == 2)
-								) {
-								//頂点番号1-2に隣接している面
-								srcData->linkNoList.at(1) = faceNo;
-							}
-							else if ((nearVertexNoTbl[0] == 0 && nearVertexNoTbl[1] == 2)
-								|| (nearVertexNoTbl[1] == 0 && nearVertexNoTbl[0] == 2)
-								) {
-								//頂点番号0-2に隣接している面
-								srcData->linkNoList.at(2) = faceNo;
-							}
-							break;
-						}
-					}
-				}
-			}
-		});
+				CreateLinkData(cellDataArrays[threadNo]);
+			});
+		}
+		// すべてのスレッドが終わるのを待つ。
+		for (int threadNo = 0; threadNo < NUM_THREAD; threadNo++) {
+			thread[threadNo]->join();
+		}
 	}
+	
 	
 }
