@@ -282,10 +282,10 @@ namespace nsK2Engine {
 
 		modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
 		if (g_renderingEngine->IsSoftShadow()) {
-			modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32_FLOAT;
+			modelInitData.m_colorBufferFormat[0] = g_softShadowMapFormat.colorBufferFormat;
 		}
 		else {
-			modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
+			modelInitData.m_colorBufferFormat[0] = g_hardShadowMapFormat.colorBufferFormat;
 		}
 
 		if (m_isEnableInstancingDraw) {

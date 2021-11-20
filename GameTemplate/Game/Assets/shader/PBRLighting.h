@@ -101,7 +101,7 @@ float CalcShadowRate(int ligNo, float3 worldPos, int isSoftShadow)
                     // 光が届く確率を求める
                     float lit_factor = variance / (variance + md * md);
                     // 光が届く確率から影になる確率を計算する。
-                    shadow = 1.0f - pow( lit_factor, 5.0f ) ;
+                    shadow = 1.0f - pow( lit_factor, 25.0f ) ;
                 }else{
                     // ハードシャドウ。
                     shadow = 1.0f;
