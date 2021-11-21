@@ -100,8 +100,10 @@ float CalcShadowRate(int ligNo, float3 worldPos, int isSoftShadow)
                     float md = zInLVP - shadowValue.x;
                     // 光が届く確率を求める
                     float lit_factor = variance / (variance + md * md);
+                    // 光が届く確率の下限は0.5から。それ以下は届かないようにする。
+                    lit_factor = clamp((lit_factor - 0.5f) / (1.0f - 0.5f), 0.0, 1.0);
                     // 光が届く確率から影になる確率を計算する。
-                    shadow = 1.0f - pow( lit_factor, 25.0f ) ;
+                    shadow = 1.0f - pow( lit_factor, 10.0f ) ;
                 }else{
                     // ハードシャドウ。
                     shadow = 1.0f;

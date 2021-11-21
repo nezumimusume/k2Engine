@@ -350,7 +350,7 @@ namespace nsK2Engine {
             enGBufferNormal,                // 法線
             enGBufferMetaricShadowSmooth,   // メタリック、影パラメータ、スムース。
                                             // メタリックがr、影パラメータがg、スムースがa。gは未使用。
-                                            enGBufferNum,                   // G-Bufferの数
+            enGBufferNum,                   // G-Bufferの数
         };
 
         
