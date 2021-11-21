@@ -12,6 +12,8 @@ struct SPSIn
     float2 depth : TEXCOORD1;   // ライト空間での深度情報
 };
 
+static const int INFINITY = 40.0f; 
+
 ///////////////////////////////////////////////////
 // グローバル変数
 ///////////////////////////////////////////////////
@@ -61,5 +63,6 @@ SPSIn VSMainSkinInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
     float depth = psIn.pos.z ;
-    return float4(depth, depth * depth, 0.0f, 1.0f);
+    float pos = exp(INFINITY * depth);
+    return float4(pos, pos*pos, 0.0f, 1.0f);
 }
