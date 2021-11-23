@@ -22,9 +22,9 @@ namespace nsK2EngineLow {
 		{
 			if (tkmMat.albedoMap != nullptr)
 			{
-				filePath = tkmMat.albedoMapFilePath.c_str();
-				map = tkmMat.albedoMap.get();
-				mapSize = tkmMat.albedoMapSize;
+				filePath = tkmMat.albedoMap->filePath.c_str();
+				map = tkmMat.albedoMap->data.get();
+				mapSize = tkmMat.albedoMap->dataSize;
 			}
 			else
 			{
@@ -48,9 +48,9 @@ namespace nsK2EngineLow {
 		{
 			if (tkmMat.normalMap != nullptr)
 			{
-				filePath = tkmMat.normalMapFilePath.c_str();
-				map = tkmMat.normalMap.get();
-				mapSize = tkmMat.normalMapSize;
+				filePath = tkmMat.normalMap->filePath.c_str();
+				map = tkmMat.normalMap->data.get();
+				mapSize = tkmMat.normalMap->dataSize;
 			}
 			else
 			{
@@ -75,9 +75,9 @@ namespace nsK2EngineLow {
 		{
 			if (tkmMat.specularMap != nullptr)
 			{
-				filePath = tkmMat.specularMapFilePath.c_str();
-				map = tkmMat.specularMap.get();
-				mapSize = tkmMat.specularMapSize;
+				filePath = tkmMat.specularMap->filePath.c_str();
+				map = tkmMat.specularMap->data.get();
+				mapSize = tkmMat.specularMap->dataSize;
 			}
 			else
 			{
@@ -100,9 +100,9 @@ namespace nsK2EngineLow {
 		{
 			if (tkmMat.reflectionMap != nullptr)
 			{
-				filePath = tkmMat.reflectionMapFilePath.c_str();
-				map = tkmMat.reflectionMap.get();
-				mapSize = tkmMat.reflectionMapSize;
+				filePath = tkmMat.reflectionMap->filePath.c_str();
+				map = tkmMat.reflectionMap->data.get();
+				mapSize = tkmMat.reflectionMap->dataSize;
 			}
 			else
 			{
@@ -125,9 +125,9 @@ namespace nsK2EngineLow {
 		{
 			if (tkmMat.refractionMap != nullptr)
 			{
-				filePath = tkmMat.refractionMapFilePath.c_str();
-				map = tkmMat.refractionMap.get();
-				mapSize = tkmMat.refractionMapSize;
+				filePath = tkmMat.refractionMap->filePath.c_str();
+				map = tkmMat.refractionMap->data.get();
+				mapSize = tkmMat.refractionMap->dataSize;
 			}
 			else
 			{

@@ -214,9 +214,7 @@ namespace nsK2EngineLow {
 		std::string texFilePath = filePath;
 		auto loadTexture = [&](
 			std::string& texFileName,
-			std::unique_ptr<char[]>& ddsFileMemory,
-			unsigned int& fileSize,
-			std::string& filePath
+			LowTexture*& lowTexture
 			) {
 			int filePathLength = static_cast<int>(texFilePath.length());
 			if (texFileName.length() > 0) {
@@ -233,33 +231,44 @@ namespace nsK2EngineLow {
 				replaceLen = texFilePath.length() - replaseStartPos;
 				texFilePath.replace(replaseStartPos, replaceLen, "dds");
 
-				//テクスチャをロード。
-				FILE* texFileFp = fopen(texFilePath.c_str(), "rb");
-				if (texFileFp != nullptr) {
-					//ファイルサイズを取得。
-					fseek(texFileFp, 0L, SEEK_END);
-					fileSize = ftell(texFileFp);
-					fseek(texFileFp, 0L, SEEK_SET);
+				// テクスチャをリソースバンクから取得する。
+				lowTexture = g_engine->GetLowTextureFromBank(texFilePath.c_str());
+				if (lowTexture == nullptr) {
+					lowTexture = new LowTexture();
+					// バンクから取得できなかったので、新規テクスチャ。
+					FILE* texFileFp = fopen(texFilePath.c_str(), "rb");
+					if (texFileFp != nullptr) {
+						//ファイルサイズを取得。
+						fseek(texFileFp, 0L, SEEK_END);
+						lowTexture->dataSize = ftell(texFileFp);
+						fseek(texFileFp, 0L, SEEK_SET);
 
-					ddsFileMemory = std::make_unique<char[]>(fileSize);
-					fread(ddsFileMemory.get(), fileSize, 1, texFileFp);
-					fclose(texFileFp);
-					filePath = texFilePath;
+						lowTexture->data = std::make_unique<char[]>(lowTexture->dataSize);
+						fread(lowTexture->data.get(), lowTexture->dataSize, 1, texFileFp);
+						fclose(texFileFp);
+						lowTexture->filePath = texFilePath;
+						// ロードしたテクスチャをバンクに登録する。
+						g_engine->RegistLowTextureToBank(lowTexture->filePath.c_str(), lowTexture);
+					}
+					else {
+						char errorMessage[256];
+						sprintf(errorMessage, "テクスチャのロードに失敗しました。%s\n", texFilePath.c_str());
+						MessageBoxA(nullptr, errorMessage, "エラー", MB_OK);
+
+					}
 				}
 				else {
-					char errorMessage[256];
-					sprintf(errorMessage, "テクスチャのロードに失敗しました。%s\n", texFilePath.c_str());
-					MessageBoxA(nullptr, errorMessage, "エラー", MB_OK);
-
+					int hoge = 0;
 				}
+				
 			}
 		};
 		//テクスチャをロード。
-		loadTexture(tkmMat.albedoMapFileName, tkmMat.albedoMap, tkmMat.albedoMapSize, tkmMat.albedoMapFilePath);
-		loadTexture(tkmMat.normalMapFileName, tkmMat.normalMap, tkmMat.normalMapSize, tkmMat.normalMapFilePath);
-		loadTexture(tkmMat.specularMapFileName, tkmMat.specularMap, tkmMat.specularMapSize, tkmMat.specularMapFilePath);
-		loadTexture(tkmMat.reflectionMapFileName, tkmMat.reflectionMap, tkmMat.reflectionMapSize, tkmMat.reflectionMapFilePath);
-		loadTexture(tkmMat.refractionMapFileName, tkmMat.refractionMap, tkmMat.refractionMapSize, tkmMat.refractionMapFilePath);
+		loadTexture(tkmMat.albedoMapFileName, tkmMat.albedoMap);
+		loadTexture(tkmMat.normalMapFileName, tkmMat.normalMap);
+		loadTexture(tkmMat.specularMapFileName, tkmMat.specularMap);
+		loadTexture(tkmMat.reflectionMapFileName, tkmMat.reflectionMap);
+		loadTexture(tkmMat.refractionMapFileName, tkmMat.refractionMap);
 	}
 	
 	void TkmFile::BuildTangentAndBiNormal()

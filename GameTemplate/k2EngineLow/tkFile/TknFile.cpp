@@ -20,5 +20,6 @@ namespace nsK2EngineLow {
 
 		// ボディをロード。
 		fclose(fp);
+		return true;
 	}
 }
