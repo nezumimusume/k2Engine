@@ -21,13 +21,13 @@ namespace nsK2EngineLow {
 		void Wait()
 		{
 			//スピンロックを行う。
-		// 1フレームの最小時間を計算
+			// 1フレームの最小時間を計算
 			float frameDeltaTimeMin = 1000.0f / m_maxFPS;
 			float restTime = 0;
 			do {
 				m_sw.Stop();
 				restTime = frameDeltaTimeMin - (int)m_sw.GetElapsedMillisecond();
-			} while (restTime > 0.0f);
+			} while (restTime > 1.0f);
 		}
 		/// <summary>
 		/// 現在設定されている最大FPSを取得。

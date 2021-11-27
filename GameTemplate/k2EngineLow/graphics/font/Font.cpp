@@ -31,8 +31,8 @@ namespace nsK2EngineLow {
 		DirectX::XMFLOAT2 tkFloat2Zero(0, 0);
 		//座標系をスプライトと合わせる。
 		Vector2 pos = position;
-		float frameBufferHalfWidth = 1920 * 0.5f;
-		float frameBufferHalfHeight = 1080 * 0.5f;
+		float frameBufferHalfWidth = UI_SPACE_WIDTH * 0.5f;
+		float frameBufferHalfHeight = UI_SPACE_HEIGHT * 0.5f;
 		pos.x += frameBufferHalfWidth;
 		pos.y = -pos.y + frameBufferHalfHeight;
 

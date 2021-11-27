@@ -216,8 +216,8 @@ namespace nsK2Engine {
         float clearColor[4] = { 0.0f,0.0f,0.0f,0.0f };
 
         m_2DRenderTarget.Create(
-            1920,
-            1080,
+            UI_SPACE_WIDTH,
+            UI_SPACE_HEIGHT,
             1,
             1,
             DXGI_FORMAT_R16G16B16A16_FLOAT,

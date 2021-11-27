@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Graphics/IRenderer.h"
+
 namespace nsK2Engine {
 	/// <summary>
 	/// フォントレンダ―。

@@ -197,7 +197,6 @@
     <ClCompile Include="physics\PhysicsGhostObject.cpp">
       <Filter>physics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\FrameBuffer.cpp" />
     <ClCompile Include="k2EngineLow.cpp" />
     <ClCompile Include="online\SyncOnlineTwoPlayerMatchEngine.cpp">
       <Filter>online</Filter>
@@ -222,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="AI\PathFinding\Cell.cpp">
       <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\FrameBuffer.cpp">
+      <Filter>graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -463,7 +465,6 @@
     <ClInclude Include="physics\PhysicsGhostObject.h">
       <Filter>physics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\FrameBuffer.h" />
     <ClInclude Include="k2EngineLow.h" />
     <ClInclude Include="dbg\MyLog.h">
       <Filter>dbg</Filter>
@@ -494,6 +495,9 @@
     </ClInclude>
     <ClInclude Include="AI\PathFinding\Cell.h">
       <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\FrameBuffer.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

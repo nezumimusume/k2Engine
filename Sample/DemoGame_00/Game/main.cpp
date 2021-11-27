@@ -56,9 +56,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		K2Engine::GetInstance()->Execute();
 
 		sw.Stop();
-		char text[256];
-		sprintf(text, "time = %f\n", sw.GetElapsedMillisecond());
-		OutputDebugStringA(text);
+		wchar_t text[256];
+		wsprintf(text, L"time = %f\n", sw.GetElapsedMillisecond());		
 	}
 	
 	// k2Engine‚ÌI—¹ˆ—B

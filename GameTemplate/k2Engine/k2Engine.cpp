@@ -44,8 +44,6 @@ namespace nsK2Engine {
 		// レンダリングエンジンの更新。
 		m_renderingEngine.Update();
 		
-
-
 		g_engine->ExecuteRender();
 		//レンダリングエンジンを実行。		
 		m_renderingEngine.Execute(renderContext);

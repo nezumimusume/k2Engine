@@ -10,6 +10,7 @@ namespace nsK2EngineLow {
 	class GraphicsEngine;
 	class GameTime;
 	class Texture;
+	class Font;
 
 	class K2EngineLow {
 	public:
@@ -163,6 +164,10 @@ namespace nsK2EngineLow {
 		}
 		
 	private:
+#ifdef K2_DEBUG
+		std::unique_ptr<Font> m_fpsFont;
+		std::unique_ptr<Font> m_fpsFontShadow;
+#endif
 		GraphicsEngine* m_graphicsEngine = nullptr;		// グラフィックエンジン。
 		TResourceBank<TkmFile> m_tkmFileBank;			// tkmファイルバンク。
 		TResourceBank<Shader> m_shaderBank;				// シェーダーバンク

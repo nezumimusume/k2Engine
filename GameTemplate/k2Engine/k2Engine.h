@@ -1,7 +1,6 @@
 #pragma once
 
 
-
 namespace nsK2Engine {
 #ifdef K2_DEBUG
 	namespace nsDbg {
@@ -108,6 +107,7 @@ namespace nsK2Engine {
 		}
 #endif // #ifdef K2_DEBUG
 	private:
+
 		K2EngineLow m_k2EngineLow;							// 
 		CollisionObjectManager m_collisionObjectManager;	// 
 		RenderingEngine m_renderingEngine;					// レンダリングエンジン。
