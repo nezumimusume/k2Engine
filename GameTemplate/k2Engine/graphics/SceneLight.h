@@ -132,11 +132,56 @@ namespace nsK2Engine {
         void Update();
 
     };
+    /// <summary>
+    /// スポットライト構造体
+    /// </summary>
+    /// <remark>
+    /// この構造体はPOD型として扱っています。
+    /// 本構造体に仮想関数などは絶対に追加しないようにしてください。
+    /// memcpy、memsetなどの関数を利用している可能性があります。
+    /// 仮想関数などを追加すると、仮想関数テーブルが壊されます。
+    /// 
+    /// また、この構造体のオブジェクトのデータはシェーダー側に定数バッファとして転送されています。
+    /// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
+    /// </remark>
+   struct SpotLight {
+        Vector3 position;       // 座標
+        int isUse = false;      // 使用中フラグ。
+        Vector3 positionInView; // カメラ空間での座標
+        float pad1;
+        Vector3 color;          // ライトのカラー
+        float pad2;
+        Vector3 attn;           // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ。
+        float pad3;
+        /// <summary>
+        /// スポットライトを使用中にする。
+        /// </summary>
+        /// /// <remark>
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
+        /// </remark>
+        void Use()
+        {
+            isUse = true;
+        }
+        /// <summary>
+        /// スポットライトを未使用にする。
+        /// </summary>
+        /// <remark>
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
+        /// </remark>
+        void UnUse()
+        {
+            isUse = false;
+        }
+    };
     // ライト構造体
     struct Light
     {
         DirectionalLight directionalLight[MAX_DIRECTIONAL_LIGHT];   // ディレクショナルライトの配列。
         PointLight pointLights[MAX_POINT_LIGHT];                    // ポイントライトの配列。
+     //   SpotLight spotLights[MAX_SPOT_LIGHT];                       // スポットライトの配列。
         Matrix mViewProjInv;    // ビュープロジェクション行列の逆行列
         Vector3 eyePos;         // カメラの位置
         int numPointLight;      // ポイントライトの数。
@@ -180,9 +225,6 @@ namespace nsK2Engine {
         {
             return m_light.directionalLight[ligNo].castShadow;
         }
-        /// <summary>
-        /// シーンにポイントライトを追加
-        /// </summary>
 
         /// <summary>
         /// シーンにポイントライトを追加
@@ -194,17 +236,7 @@ namespace nsK2Engine {
         /// <returns>追加されたポイントライトのアドレス</returns>
         PointLight* NewPointLight()
         {
-            if (m_unusePointLightQueue.empty()) {
-                // これ以上ポイントライトを追加することはできない。
-                return nullptr;
-            }
-            // 未使用のポイントライトをでキューから取り出す。
-            auto* newPt = m_unusePointLightQueue.front();
-            // 使用中にする。
-            newPt->Use();
-            // 取り出した要素を先頭から除去。
-            m_unusePointLightQueue.pop_front();
-            return newPt;
+            return NewDynamicLight<PointLight>(m_unusePointLightQueue);
         }
         /// <summary>
         /// シーンからポイントライトを削除
@@ -212,12 +244,27 @@ namespace nsK2Engine {
         /// <param name="pointLight">削除するポイントライト</param>
         void DeletePointLight(PointLight* pointLight)
         {
-            if (pointLight != nullptr) {
-                // フラグを未使用に変更する。
-                pointLight->UnUse();
-                // 未使用リストに追加する。
-                m_unusePointLightQueue.push_back(pointLight);
-            }
+            DeleteDynamicLight<PointLight>(pointLight, m_unusePointLightQueue);
+        }
+        /// <summary>
+        /// シーンにスポットライトを追加
+        /// </summary>
+        /// <remark>
+        /// 本関数を利用して追加したスポットライトは、
+        /// 不要になったらDeleteSpotLight()を使用して、削除してください。
+        /// </remark>
+        /// <returns>追加されたスポットライトのアドレス</returns>
+        SpotLight* NewSpotLight()
+        {
+            return NewDynamicLight<SpotLight>(m_unuseSpotLightQueue);
+        }
+        /// <summary>
+        /// シーンからスポットライトを削除
+        /// </summary>
+        /// <param name="spotLight">削除するスポットライト</param>
+        void DeleteSpotLight(SpotLight* spotLight)
+        {
+            DeleteDynamicLight<SpotLight>(spotLight, m_unuseSpotLightQueue);
         }
         /// <summary>
         /// 環境光の計算のためのIBLテクスチャを設定。
@@ -248,9 +295,46 @@ namespace nsK2Engine {
         /// 更新
         /// </summary>
         void Update();
-
+    private:
+        /// <summary>
+        /// 新しい動的ライトを追加。
+        /// </summary>
+        /// <typeparam name="TDynamicLight"></typeparam>
+        /// <typeparam name="TQue"></typeparam>
+        /// <param name="que"></param>
+        /// <returns></returns>
+        template<class TDynamicLight>
+        TDynamicLight* NewDynamicLight(std::deque< TDynamicLight*>& que)
+        {
+            if (que.empty()) {
+                // これ以上ライトを追加することはできない。
+                return nullptr;
+            }
+            // 未使用のライトをでキューから取り出す。
+            TDynamicLight* newPt = que.front();
+            // 使用中にする。
+            newPt->Use();
+            // 取り出した要素を先頭から除去。
+            que.pop_front();
+            return newPt;
+        }
+        /// <summary>
+        /// シーンから動的ライトを削除
+        /// </summary>
+        /// <param name="pointLight">削除するポイントライト</param>
+        template<class TDynamicLight>
+        void DeleteDynamicLight(TDynamicLight* light, std::deque< TDynamicLight*>& que)
+        {
+            if (light != nullptr) {
+                // フラグを未使用に変更する。
+                light->UnUse();
+                // 未使用リストに追加する。
+                que.push_back(light);
+            }
+        }
     private:
         Light m_light;  //シーンライト。
-        std::deque< PointLight* > m_unusePointLightQueue; //未使用のポイントライトのキュー。
+        std::deque< PointLight* > m_unusePointLightQueue;   //未使用のポイントライトのキュー。
+        std::deque< SpotLight* > m_unuseSpotLightQueue;     //未使用のスポットライトのキュー。。
     };
 }

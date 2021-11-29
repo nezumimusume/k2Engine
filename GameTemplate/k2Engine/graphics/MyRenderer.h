@@ -5,7 +5,8 @@ namespace nsK2Engine {
 	const int MAX_DIRECTIONAL_LIGHT = 4;
 	// シーンのポイントライトの最大数。
 	const int MAX_POINT_LIGHT = 1000;
-
+	// シーンのスポットライトの最大数。
+	const int MAX_SPOT_LIGHT = 1000;
 
 	// TBR用のパラメータ。
 	const int TILE_WIDTH = 16;  // タイルの幅
