@@ -20,9 +20,11 @@ namespace nsK2EngineLow {
 	 */
 	class Stopwatch {
 	public:
-		/*!
-		 *@brief	コンストラクタ。
-		 */
+		
+
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		Stopwatch()
 		{
 			freq = 0;
@@ -32,22 +34,26 @@ namespace nsK2EngineLow {
 			elapsedMill = 0.0;
 			elapsedMicro = 0.0;
 		}
-		/*!
-		 *@brief	デストラクタ。
-		 */
+		
+
+		 /// <summary>
+		 /// デストラクタ
+		 /// </summary>
 		~Stopwatch()
 		{
 		}
-		/*!
-		 *@brief	計測開始。
-		 */
+		
+		/// <summary>
+		/// 計測開始
+		/// </summary>
 		void Start()
 		{
 			::QueryPerformanceCounter((LARGE_INTEGER*)&begin);
 		}
-		/*!
-		 *@brief	計測終了
-		 */
+		
+		/// <summary>
+		/// 計測終了
+		/// </summary>
 		void Stop()
 		{
 			::QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
@@ -56,23 +62,29 @@ namespace nsK2EngineLow {
 			elapsedMill = elapsed * 1000.0;
 			elapsedMicro = elapsedMill * 1000.0;
 		}
-		/*!
-		 *@brief	経過時間を取得(単位:秒)
-		 */
+		
+
+		/// <summary>
+		/// 経過時間を取得(単位:秒)
+		/// </summary>
+		/// <returns></returns>
 		double GetElapsed() const
 		{
 			return elapsed;
 		}
-		/*!
-		 *@brief	経過時間を取得(単位:ミリ秒)
-		 */
+		/// <summary>
+		/// 経過時間を取得(単位:ミリ秒)
+		/// </summary>
+		/// <returns></returns>
 		double GetElapsedMillisecond() const
 		{
 			return elapsedMill;
 		}
-		/*!
-		 *@brief	経過時間を取得(単位:マイクロ秒)
-		 */
+
+		/// <summary>
+		/// 経過時間を取得(単位:マイクロ秒)
+		/// </summary>
+		/// <returns></returns>
 		double GetElapsedMicrosecond() const
 		{
 			return elapsedMicro;

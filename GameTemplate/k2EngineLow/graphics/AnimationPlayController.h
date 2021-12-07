@@ -16,6 +16,13 @@ namespace nsK2EngineLow {
 	* @details
 	*  一つのアニメーションクリップに対してアニメーションを進めて、ローカルポーズを計算します。
 	*/
+
+	/// <summary>
+	/// アニメーションの再生コントローラ。
+	/// </summary>
+	/// <remark>
+	/// 一つのアニメーションクリップに対して、アニメーションを進めてローカルポーズを計算します。
+	/// </remark>
 	class AnimationPlayController : public Noncopyable {
 	public:
 		/*!
@@ -36,11 +43,17 @@ namespace nsK2EngineLow {
 		/// <param name="skeleton">スケルトン</param>
 		/// <param name="footStepBoneNo">footstepボーンの番号</param>
 		void Init(Skeleton* skeleton, int footStepBoneNo);
-		/*!
-		* @brief	アニメーションクリップの変更。
-		*/
+
+		/// <summary>
+		/// アニメーションクリップの変更
+		/// </summary>
+		/// <param name="clip">変更後のアニメーションクリップ</param>
 		void ChangeAnimationClip(AnimationClip* clip);
 
+		/// <summary>
+		/// アニメーション補間時間を設定。
+		/// </summary>
+		/// <param name="interpolateTime">補間時間</param>
 		void SetInterpolateTime(float interpolateTime)
 		{
 			if (interpolateTime < 0.0f) {
@@ -50,9 +63,10 @@ namespace nsK2EngineLow {
 			m_interpolateEndTime = interpolateTime;
 			m_interpolateTime = 0.0f;
 		}
-		/*!
-			*@brief	補完率を取得。
-			*/
+		/// <summary>
+		/// 現在のアニメーション補間率を取得
+		/// </summary>
+		/// <returns></returns>
 		float GetInterpolateRate() const
 		{
 			if (m_interpolateEndTime <= 0.0f) {
@@ -60,25 +74,38 @@ namespace nsK2EngineLow {
 			}
 			return min(1.0f, m_interpolateTime / m_interpolateEndTime);
 		}
-		/*!
-		* @brief	アニメーションを進める。
-		*@param[in]	deltaTime		アニメーションを進める時間。
-		*/
+		
+		/// <summary>
+		/// アニメーションを進める
+		/// </summary>
+		/// <param name="deltaTime">アニメーションを進める時間(単位:秒)</param>
+		/// <param name="animation"></param>
+		/// <param name="isInvokeAnimationEvent"></param>
 		void Update(float deltaTime, Animation* animation, bool isInvokeAnimationEvent);
-		/*!
-			* @brief	ローカルボーン行列を取得。
-			*/
+		
+
+		/// <summary>
+		/// ローカルボーン行列を取得。
+		/// </summary>
+		/// <returns></returns>
 		const std::vector<Matrix>& GetBoneLocalMatrix() const
 		{
 			return m_boneMatrix;
 		}
+
+		/// <summary>
+		/// アニメーションクリップの取得。
+		/// </summary>
+		/// <returns></returns>
 		AnimationClip* GetAnimClip() const
 		{
 			return m_animationClip;
 		}
-		/*!
-		* @brief	再生中？
-		*/
+		
+		/// <summary>
+		/// アニメーションを再生中か判定。
+		/// </summary>
+		/// <returns></returns>
 		bool IsPlaying() const
 		{
 			return m_isPlaying;
@@ -92,13 +119,17 @@ namespace nsK2EngineLow {
 			return m_footstepDeltaValue;
 		}
 	private:
-		/*!
-		*@brief	アニメーションイベントを起動する。
-		*/
+		
+
+		/// <summary>
+		/// アニメーションイベントを起動する。
+		/// </summary>
+		/// <param name="animation"></param>
 		void InvokeAnimationEvent(Animation* animation);
-		/*!
-		*@brief	ループ再生開始する時の処理。
-		*/
+		
+		/// <summary>
+		/// ループ再生を開始するときに実行される処理。
+		/// </summary>
 		void StartLoop();
 		/// <summary>
 		/// ルートのボーン空間でのボーン行列を計算する。
@@ -127,17 +158,17 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void ProgressKeyframeNo(float deltaTime);
 	private:
-		AnimationClip* m_animationClip = nullptr;			//アニメーションクリップ。
-		int						m_currentKeyFrameNoLastFrame = 0;	//一フレーム前のキーフレーム番号。
-		int						m_currentKeyFrameNo = 0;			//現在再生中のキーフレーム番号。
+		AnimationClip* m_animationClip = nullptr;					// ア	ニメーションクリップ。
+		int						m_currentKeyFrameNoLastFrame = 0;	// 一フレーム前のキーフレーム番号。
+		int						m_currentKeyFrameNo = 0;			// 現在再生中のキーフレーム番号。
 		float					m_time = 0.0f;
-		std::vector<Matrix>		m_boneMatrix;						//!<このコントローラで再生中のアニメーションのボーン行列。
-		float					m_interpolateTime;					//!<補完時間
-		float					m_interpolateEndTime;				//!<補完終了時間
-		bool					m_isPlaying = false;				//!<再生中？
-		Skeleton* m_skeleton = nullptr;				//!<スケルトン。
-		Vector3					m_footstepDeltaValue = g_vec3Zero;	//フットステップの移動ベクトル。
-		Vector3					m_footstepPos = g_vec3Zero;			//フットステップボーンの座標。
-		int						m_footstepBoneNo = -1;				//フットステップのボーンの番号。
+		std::vector<Matrix>		m_boneMatrix;						// このコントローラで再生中のアニメーションのボーン行列。
+		float					m_interpolateTime;					// 補完時間
+		float					m_interpolateEndTime;				// 補完終了時間
+		bool					m_isPlaying = false;				// 再生中？
+		Skeleton* m_skeleton = nullptr;								// スケルトン。
+		Vector3					m_footstepDeltaValue = g_vec3Zero;	// フットステップの移動ベクトル。
+		Vector3					m_footstepPos = g_vec3Zero;			// フットステップボーンの座標。
+		int						m_footstepBoneNo = -1;				// フットステップのボーンの番号。
 	};
 }

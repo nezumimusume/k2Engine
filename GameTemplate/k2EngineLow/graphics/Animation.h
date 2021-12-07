@@ -29,7 +29,7 @@ namespace nsK2EngineLow {
 	/// </remarks>
 	class Animation : public Noncopyable {
 	public:
-
+		
 		/// <summary>
 		/// 初期化済みか判定。
 		/// </summary>
@@ -103,14 +103,21 @@ namespace nsK2EngineLow {
 		*@return
 		* 登録されたリスナー。
 		*/
+		
+		/// <summary>
+		/// アニメーションイベントリスナーを登録。
+		/// </summary>
+		/// <param name="eventListener">登録するリスナー。</param>
 		void AddAnimationEventListener(AnimationEventListener eventListener)
 		{
 			m_animationEventListeners.push_back(eventListener);
 		}
 
-		/*!
-		* @brief	アニメーションイベントをリスナーに通知。
-		*/
+		/// <summary>
+		/// アニメーションイベントをリスナーに通知。
+		/// </summary>
+		/// <param name="clipName">イベントを起こしたアニメーションクリップの名前</param>
+		/// <param name="eventName">イベント名。</param>
 		void NotifyAnimationEventToListener(const wchar_t* clipName, const wchar_t* eventName)
 		{
 			for (auto& listener : m_animationEventListeners) {
@@ -162,18 +169,20 @@ namespace nsK2EngineLow {
 		void UpdateGlobalPose();
 	private:
 
-		/*!
-			*@brief	最終ポーズになるアニメーションのリングバッファ上でのインデックスを取得。
-			*/
+		/// <summary>
+		/// 最終ポーズになるアニメーションのリングバッファ上でのインデックスを取得。
+		/// </summary>
+		/// <returns></returns>
 		int GetLastAnimationControllerIndex() const
 		{
 			return GetAnimationControllerIndex(m_startAnimationPlayController, m_numAnimationPlayController - 1);
 		}
-		/*!
-		*@brief	アニメーションコントローラのリングバッファ上でのインデックスを取得。
-		*@param[in]	startIndex		開始インデックス。
-		*@param[in]	localIndex		ローカルインデックス。
-		*/
+		/// <summary>
+		/// アニメーションコントローラーのリングバッファ上でのインデックスを取得
+		/// </summary>
+		/// <param name="startIndex">開始インデックス</param>
+		/// <param name="localIndex">ローカルインデックス</param>
+		/// <returns></returns>
 		int GetAnimationControllerIndex(int startIndex, int localIndex) const
 		{
 			return (startIndex + localIndex) % ANIMATION_PLAY_CONTROLLER_NUM;

@@ -1,7 +1,4 @@
-/*!
-*@brief	ゲーム時間クラス。
-* シングルトン。
-*/
+
 #pragma once
 
 #include "Stopwatch.h"
@@ -11,9 +8,10 @@ namespace nsK2EngineLow {
 
 	class K2EngineLow;
 
-	/*!
-	 *@brief	ゲーム時間。
-	 */
+	/// <summary>
+	/// ゲームの時間を管理するクラス。
+	/// シングルトンパターンで設計されています。
+	/// </summary>
 	class GameTime  {
 		
 	public:
@@ -47,9 +45,10 @@ namespace nsK2EngineLow {
 			m_isFixedFrameDeltaTime = false;
 		}
 		
-		/*!
-		 *@brief	1フレームの経過時間を取得(単位・秒)。
-		 */
+		/// <summary>
+		/// 1フレームの経過時間を取得(単位・秒)
+		/// </summary>
+		/// <returns></returns>
 		const float GetFrameDeltaTime() const
 		{
 			if (m_isFixedFrameDeltaTime) {
@@ -59,6 +58,11 @@ namespace nsK2EngineLow {
 			
 			return m_frameDeltaTime;
 		}
+
+		/// <summary>
+		/// 1フレームの経過時間をキューにプッシュする
+		/// </summary>
+		/// <param name="deltaTime">経過時間</param>
 		void PushFrameDeltaTime(float deltaTime)
 		{
 			m_frameDeltaTimeQue.push_back(deltaTime);

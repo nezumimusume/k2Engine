@@ -1,13 +1,11 @@
-/*!
-*@brief	パッド
-*/
+
 
 #pragma once
 
-namespace nsK2EngineLow {
-	/*!
-		*@brief	仮想ボタン定義。
-		*/
+namespace nsK2EngineLow {	
+	/// <summary>
+	/// 仮想ボタン定義
+	/// </summary>
 	enum EnButton {
 		enButtonUp,		//!<上。
 		enButtonDown,		//!<下。
@@ -27,66 +25,77 @@ namespace nsK2EngineLow {
 		enButtonLB3,		//!<LB3ボタン。
 		enButtonNum,	//!<ボタンの数。
 	};
-	/*!
-	*@brief	パッド
-	*/
+
+	/// <summary>
+	/// ゲームパッドクラス
+	/// </summary>
 	class GamePad : public Noncopyable {
 	public:
 		static const int CONNECT_PAD_MAX = 4;		//接続可能なパッドの最大数。
-		/*!
-			*@brief	パッドステート。
-			*/
+		
+		/// <summary>
+		/// パッドステータス
+		/// </summary>
 		struct PAD_STATE
 		{
 			XINPUT_STATE state;
 			bool bConnected;
 		};
-		/*!
-			*@brief	コンストラクタ。
-			*/
+		
+
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		GamePad();
-		/*!
-			*@brief	デストラクタ。
-			*/
+	
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
 		~GamePad();
-		/*!
-		*@brief	初期化。
-		*@param[in]	padNo	パッド番号。
-		*/
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		/// <param name="padNo">パッド番号</param>
 		void Init(int padNo)
 		{
 			m_padNo = padNo;
 		}
-		/*!
-		*@brief	更新。
-		*/
+		/// <summary>
+		/// パッド情報の更新
+		/// </summary>
 		void Update();
 
 		/// <summary>
-		/// 更新(外部からキー入力を渡すバージョン)
+		/// パッド情報の更新(外部からキー入力を渡すバージョン)
 		/// </summary>
 		/// <param name="xInputState">キー入力</param>
 		void Update(const XINPUT_STATE& xInputState);
-		/*!
-		*@brief	ボタンのトリガー判定。
-		*@return	trueが返ってきたらトリガー入力。
-		*/
+		
+		/// <summary>
+		/// ボタンのトリガー判定
+		/// </summary>
+		/// <param name="button">判定したいボタン</param>
+		/// <returns>trueが返ってきたらトリガー入力されている</returns>
 		bool IsTrigger(EnButton button) const
 		{
 			return m_trigger[button] != 0;
 		}
-		/*!
-		*@brief	ボタンが押されているか判定。
-		*@return	trueが返ってきたら押されている。
-		*/
+		
+		/// <summary>
+		/// ボタンが押されているか判定
+		/// </summary>
+		/// <param name="button">判定したいボタン</param>
+		/// <returns>trueが返ってきたら入力されている。</returns>
 		bool IsPress(EnButton button) const
 		{
 			return m_press[button] != 0;
 		}
-		/*!
-		*@brief	何かのボタンが押されているか判定
-		*@return	trueが返ってきたら押されている。
-		*/
+
+		/// <summary>
+		/// 何かのボタンが押されているか判定。
+		/// </summary>
+		/// <returns>trueが返ってきたら押されている。</returns>
 		bool IsPressAnyKey() const
 		{
 			return IsPress(enButtonUp)
@@ -106,39 +115,47 @@ namespace nsK2EngineLow {
 				|| IsPress(enButtonLB2)
 				|| IsPress(enButtonLB3);
 		}
-		/*!
-		*@brief	左スティックのX軸の入力量を取得。
-		*@return	-1.0～1.0の正規化された値を返す。
-		*/
+		/// <summary>
+		/// 左スティックのx軸の入力量を取得
+		/// </summary>
+		/// <returns>-1.0～1.0の正規化された値を返す。</returns>
 		float GetLStickXF() const
 		{
 			return m_lStickX;
 		}
-		/*!
-		*@brief	左スティックのY軸の入力量を取得。
-		*@return	-1.0～1.0の正規化された値を返す。
-		*/
+		
+		/// <summary>
+		/// 左スティックのY軸の入力量を取得。
+		/// </summary>
+		/// <returns>-1.0～1.0の正規化された値を返す。</returns>
 		float GetLStickYF() const
 		{
 			return m_lStickY;
 		}
-		/*!
-		*@brief	右スティックのX軸の入力量を取得。
-		*@return	-1.0～1.0の正規化された値を返す。
-		*/
+		
+
+		/// <summary>
+		/// 右スティックのX軸の入力量を取得。
+		/// </summary>
+		/// <returns>-1.0～1.0の正規化された値を返す。</returns>
 		float GetRStickXF() const
 		{
 			return m_rStickX;
 		}
-		/*!
-		*@brief	右スティックのY軸の入力量を取得。
-		*@return	-1.0～1.0の正規化された値を返す。
-		*/
+		
+		/// <summary>
+		/// 右スティックのY軸の入力量を取得
+		/// </summary>
+		/// <returns>-1.0～1.0の正規化された値を返す。</returns>
 		float GetRStickYF() const
 		{
 			return m_rStickY;
 		}
-		//フレームの開始時に呼ばれる関数。
+		
+		
+		/// <summary>
+		/// フレームの開始時に呼び出す必要がある関数
+		/// </summary>
 		static void BeginFrame();
 		/// <summary>
 		/// XInputから引っ張ってきた生データを取得。
@@ -151,21 +168,28 @@ namespace nsK2EngineLow {
 	private:
 		void UpdateCore(XINPUT_STATE xInputState);
 	public:
+		/// <summary>
+		/// 最大パッド数
+		/// </summary>
 		enum { MAX_PAD = 4 };
+
+		/// <summary>
+		/// XInputパッドのステート。
+		/// </summary>
 		enum class EnXInputPadState {
 			Undef,		//不明。
 			Connect,	//接続されている。
 			Disconnect,	//接続されていない。
 		};
 	private:
-		PAD_STATE m_state;	//!<パッドステート。
-		int m_padNo = 0;			//!<パッド番号。
-		int m_trigger[enButtonNum];	//!<トリガー入力のフラグ。
-		int m_press[enButtonNum];	//!<press入力のフラグ。
-		float m_lStickX = 0.0f;		//!<左スティックのX軸の入力量。
-		float m_lStickY = 0.0f;		//!<左スティックのY軸の入力量。
-		float m_rStickX = 0.0f;		//!<右スティックのX軸の入力量。
-		float m_rStickY = 0.0f;		//!<右スティックのY軸の入力量。
+		PAD_STATE m_state;			// パッドステート。
+		int m_padNo = 0;			// パッド番号。
+		int m_trigger[enButtonNum];	// トリガー入力のフラグ。
+		int m_press[enButtonNum];	// press入力のフラグ。
+		float m_lStickX = 0.0f;		// 左スティックのX軸の入力量。
+		float m_lStickY = 0.0f;		// 左スティックのY軸の入力量。
+		float m_rStickX = 0.0f;		// 右スティックのX軸の入力量。
+		float m_rStickY = 0.0f;		// 右スティックのY軸の入力量。
 
 		static EnXInputPadState m_padStates[MAX_PAD];
 	};

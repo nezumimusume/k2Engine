@@ -9,9 +9,9 @@ namespace nsK2EngineLow {
 	/// </summary>
 	class EffectEngine : public Noncopyable {
 		static EffectEngine* m_instance;	//唯一のインスタンス。
-		EffekseerRenderer::RendererRef m_renderer;	//レンダラー。
-		Effekseer::RefPtr<EffekseerRenderer::SingleFrameMemoryPool> m_memoryPool;	//メモリプール。
-		Effekseer::RefPtr<EffekseerRenderer::CommandList> m_commandList;			//コマンドリスト。
+		EffekseerRenderer::RendererRef m_renderer[2];	//レンダラー。
+		Effekseer::RefPtr<EffekseerRenderer::SingleFrameMemoryPool> m_memoryPool[2];	//メモリプール。
+		Effekseer::RefPtr<EffekseerRenderer::CommandList> m_commandList[2];			//コマンドリスト。
 		Effekseer::ManagerRef m_manager;
 		std::map< int, Effekseer::EffectRef > m_effectMap;
 	public:
@@ -115,6 +115,10 @@ namespace nsK2EngineLow {
 		/// <param name="number">登録番号。</param>
 		/// <param name="filePath">ファイルパス。</param>
 		void ResistEffect(const int number, const char16_t* filePath);
+		/// <summary>
+		/// フレームの開始時に呼び出す必要がある処理。
+		/// </summary>
+		void BeginFrame();
 	private:
 		EffectEngine();
 		~EffectEngine();
