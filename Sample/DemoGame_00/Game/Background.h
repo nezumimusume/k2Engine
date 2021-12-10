@@ -9,6 +9,7 @@ public:
 	Background();
 	~Background();
 	bool Start();
+	
 	void Render(RenderContext& rc);
 
 	/// <summary>

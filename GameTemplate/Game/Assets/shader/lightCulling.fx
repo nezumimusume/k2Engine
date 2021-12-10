@@ -26,8 +26,21 @@ struct PointLight
     float3 attn;            // 減衰パラメータ。
 };
 
+// スポットライト
+struct SpotLight
+{
+    float3 position;        // 座標
+    int isUse;              // 使用中フラグ。
+    float3 positionInView;  // カメラ空間での座標
+    float3 color;           // カラー
+    float3 attn;            // 減衰パラメータ。
+    float3 directin;        // 射出方向
+    float angle;            // 射出角度。
+};
+
 static const int NUM_DIRECTIONAL_LIGHT = 4;  // ディレクションライトの数
-static const int MAX_POINT_LIGHT = 1000;    // ポイントライトの最大数
+static const int MAX_POINT_LIGHT = 100;    // ポイントライトの最大数
+static const int MAX_SPOT_LIGHT = 100;     // スポットライトの最大数。
 
 // 定数バッファー
 cbuffer cbCameraParam : register(b0)
@@ -42,6 +55,7 @@ cbuffer Light : register(b1)
 {
     DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];
     PointLight pointLight[MAX_POINT_LIGHT];
+    SpotLight spotLight[MAX_SPOT_LIGHT];
     float4x4 mViewProjInv;  // ビュープロジェクション行列の逆行列
     float3 eyePos;          // カメラの視点
     int numPointLight;      // ポイントライトの数。    

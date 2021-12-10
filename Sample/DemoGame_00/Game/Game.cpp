@@ -140,10 +140,25 @@ void Game::InitSky()
 		|| m_skyCubeType == enSkyCubeType_SpaceToon_2) {
 		m_skyCube->SetLuminance(0.2f);
 	}
-
+#if 1
+	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
+	m_skyCube->SetLuminance(3.8f);
+	Vector3 ligColor, ligDir;
+	ligColor.x = 1.2f;
+	ligColor.y = 1.2f;
+	ligColor.z = 1.2f;
+	ligDir.x = 1.0f;
+	ligDir.y = -1.0f;
+	ligDir.z = -1.0f;
+	ligDir.Normalize();
+	g_sceneLight->SetDirectionLight(0, ligDir, ligColor);
+	// 環境光の計算のためのIBLテクスチャをセットする。
+	g_sceneLight->SetIBLTextureForAmbient(m_skyCube->GetTextureFilePath(), 0.1f);
+#else
 	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
 	// 環境光の計算のためのIBLテクスチャをセットする。
 	g_sceneLight->SetIBLTextureForAmbient(m_skyCube->GetTextureFilePath(), 0.1f);
+#endif
 }
 bool Game::Start()
 {

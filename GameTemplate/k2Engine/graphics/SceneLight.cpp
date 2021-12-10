@@ -57,6 +57,11 @@ namespace nsK2Engine {
             pt.SetAffectPowParam(1.0f);
             m_unusePointLightQueue.push_back(&pt);
         }
+        // 全てのスポットライトを未使用にする。
+        for (auto& spotLight : m_light.spotLights) {
+            spotLight.UnUse();
+            m_unuseSpotLightQueue.push_back(&spotLight);
+        }
     }
     void SceneLight::SetIBLTextureForAmbient(const wchar_t* textureFilePath, float luminance)
     {

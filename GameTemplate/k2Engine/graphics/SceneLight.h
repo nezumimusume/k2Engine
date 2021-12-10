@@ -153,6 +153,8 @@ namespace nsK2Engine {
         float pad2;
         Vector3 attn;           // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ。
         float pad3;
+        Vector3 direction;      // 射出方向。
+        float angle;            // 射出角度。
         /// <summary>
         /// スポットライトを使用中にする。
         /// </summary>
@@ -181,7 +183,7 @@ namespace nsK2Engine {
     {
         DirectionalLight directionalLight[MAX_DIRECTIONAL_LIGHT];   // ディレクショナルライトの配列。
         PointLight pointLights[MAX_POINT_LIGHT];                    // ポイントライトの配列。
-     //   SpotLight spotLights[MAX_SPOT_LIGHT];                       // スポットライトの配列。
+        SpotLight spotLights[MAX_SPOT_LIGHT];                       // スポットライトの配列。
         Matrix mViewProjInv;    // ビュープロジェクション行列の逆行列
         Vector3 eyePos;         // カメラの位置
         int numPointLight;      // ポイントライトの数。
