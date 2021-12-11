@@ -1,6 +1,8 @@
 #pragma once
 
 namespace nsK2Engine {
+
+    class VolumeSpotLight;
     // ディレクションライト
     struct DirectionalLight
     {
@@ -145,6 +147,7 @@ namespace nsK2Engine {
     /// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
     /// </remark>
    struct SpotLight {
+   private:
         Vector3 position;                   // 座標
         int isUse = false;                  // 使用中フラグ。
         Vector3 positionInView;             // カメラ空間での座標
@@ -157,6 +160,7 @@ namespace nsK2Engine {
         float pad4;
         Vector3 directionInView;            // カメラ空間での射出方向。
         float pad5;
+   public:
         /// <summary>
         /// 射出方向を設定。
         /// </summary>
@@ -397,9 +401,33 @@ namespace nsK2Engine {
             // todo 未対応。
         }
         /// <summary>
+        /// ボリュームスポットライトをシーンに追加
+        /// </summary>
+        /// <param name="lig">ライト</param>
+        void AddVolumeSpotLight(VolumeSpotLight& lig)
+        {
+            m_volumeSpotLightArray.emplace_back(&lig);
+        }
+        /// <summary>
+        /// ボリュームスポットライトをシーンから削除
+        /// </summary>
+        /// <param name="lig"></param>
+        void RemoveVolumeSpotLight(VolumeSpotLight& lig)
+        {
+            auto it = std::find(m_volumeSpotLightArray.begin(), m_volumeSpotLightArray.end(), &lig);
+            if (it != m_volumeSpotLightArray.end()) {
+                m_volumeSpotLightArray.erase(it);
+            }
+        }
+        /// <summary>
         /// 更新
         /// </summary>
         void Update();
+        /// <summary>
+        /// ボリュームライトマップに描画
+        /// </summary>
+        /// <param name="rc">レンダリングコンテキスト</param>
+        void DrawToVulumeLightMap(RenderContext& rc);
     private:
         /// <summary>
         /// 新しい動的ライトを追加。
@@ -439,7 +467,11 @@ namespace nsK2Engine {
         }
     private:
         Light m_light;  //シーンライト。
-        std::deque< PointLight* > m_unusePointLightQueue;   //未使用のポイントライトのキュー。
-        std::deque< SpotLight* > m_unuseSpotLightQueue;     //未使用のスポットライトのキュー。。
+        std::deque< PointLight* > m_unusePointLightQueue;       // 未使用のポイントライトのキュー。
+        std::deque< SpotLight* > m_unuseSpotLightQueue;         // 未使用のスポットライトのキュー。。
+        RenderTarget m_volumeLightMapForward;                   // 手前のボリュームライトマップ。
+        RenderTarget m_volumeLightMapBack;                      // 奥側のボリュームライトマップ。
+        RenderTarget m_volumeLightMap;                          // 奥側のボリュームライトマップ。
+        std::list< VolumeSpotLight* > m_volumeSpotLightArray;   // ボリュームスポットライトの配列。
     };
 }

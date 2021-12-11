@@ -143,7 +143,7 @@ void Game::InitSky()
 
 	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
 	// 環境光の計算のためのIBLテクスチャをセットする。
-	g_sceneLight->SetIBLTextureForAmbient(m_skyCube->GetTextureFilePath(), 0.1f);
+	g_sceneLight->SetIBLTextureForAmbient(m_skyCube->GetTextureFilePath(), 0.1f); 
 }
 bool Game::Start()
 {
@@ -283,6 +283,7 @@ void Game::CountTimer()
 
 void Game::Update()
 {
+	return;
 	if (m_gameState == enGameState_GameClear_Idle)
 	{
 
@@ -352,6 +353,7 @@ void Game::UpdateFont()
 
 void Game::Render(RenderContext& rc)
 {
+	return;
 	m_starCountFont.Draw(rc);
 	m_timerFont.Draw(rc);
 

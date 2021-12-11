@@ -13,6 +13,7 @@ namespace nsK2Engine {
 	const int TILE_HEIGHT = 16; // タイルの高さ
 	const int NUM_TILE = (FRAME_BUFFER_W / TILE_WIDTH) * (FRAME_BUFFER_H / TILE_HEIGHT); // タイルの数
 
+	
 	// シャドウマップ
 	enum {
 		SHADOW_MAP_AREA_NEAR,		//近影範囲のシャドウマップ。
@@ -36,5 +37,10 @@ namespace nsK2Engine {
 	const RenderTargetFormat g_hardShadowMapFormat = {
 		DXGI_FORMAT_R32_FLOAT,		// カラーバッファ
 		DXGI_FORMAT_D32_FLOAT		// 深度バッファ。
+	};
+	// メインレンダリングターゲットのフォーマット。
+	const RenderTargetFormat g_mainRenderTargetFormat = {
+		DXGI_FORMAT_R16G16B16A16_FLOAT,
+		DXGI_FORMAT_UNKNOWN
 	};
 }

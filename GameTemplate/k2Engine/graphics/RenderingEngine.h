@@ -46,13 +46,14 @@ namespace nsK2Engine {
         // レンダリングパス
         enum class EnRenderingPass
         {
-            enRenderToShadowMap,    // シャドウマップへの描画パス
-            enZPrepass,             // ZPrepass
-            enLightCulling,         // ライトカリング。
-            enRenderToGBuffer,      // G-Bufferへの描画パス
-            enForwardRender,        // フォワードレンダリングの描画パス
-            enPostEffect,           // ポストエフェクト
-            enRender2D,             // 2D描画。
+            enRenderToShadowMap,        // シャドウマップへの描画パス
+            enZPrepass,                 // ZPrepass
+            enRenderToVolumeLightMap,   // ボリュームライトマップへの描画
+            enLightCulling,             // ライトカリング。
+            enRenderToGBuffer,          // G-Bufferへの描画パス
+            enForwardRender,            // フォワードレンダリングの描画パス
+            enPostEffect,               // ポストエフェクト
+            enRender2D,                 // 2D描画。
         };
         /// <summary>
         /// イベント。

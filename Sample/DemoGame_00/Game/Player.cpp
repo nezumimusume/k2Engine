@@ -93,9 +93,9 @@ void Player::Update()
 		newPt->SetAffectPowParam(0.5f);
 		m_pointLightList.push_back(newPt);
 	}
-
-	m_spotLight->position = m_position;
-	m_spotLight->position.y += 30.0f;
+	Vector3 pos = m_position;
+	pos.y += 30.0f;
+	m_spotLight->SetPosition(pos);
 	m_spotLight->SetRange( 800.0f );
 	m_spotLight->SetAngle(Math::DegToRad(45.0f));
 	m_spotLight->SetDirection(m_forward);

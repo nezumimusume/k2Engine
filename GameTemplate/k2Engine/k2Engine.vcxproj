@@ -27,6 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\VolumeSpotLight.cpp" />
     <ClCompile Include="camera\CameraCollisionSolver.cpp" />
     <ClCompile Include="camera\SpringCamera.cpp" />
     <ClCompile Include="collision\CollisionObject.cpp" />
@@ -63,6 +64,7 @@
     <ClCompile Include="nature\SkyCube.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\VolumeSpotLight.h" />
     <ClInclude Include="camera\CameraCollisionSolver.h" />
     <ClInclude Include="camera\SpringCamera.h" />
     <ClInclude Include="collision\CollisionObject.h" />

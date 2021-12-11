@@ -1,5 +1,6 @@
 #include "k2EnginePreCompile.h"
 #include "SceneLight.h"
+#include "VolumeSpotLight.h"
 
 namespace nsK2Engine {
     void PointLight::Update()
@@ -74,10 +75,59 @@ namespace nsK2Engine {
             sp.UnUse();
             m_unuseSpotLightQueue.push_back(&sp);
         }
+        // ボリュームライトマップを作成。
+        m_volumeLightMap.Create(
+            FRAME_BUFFER_W,
+            FRAME_BUFFER_H,
+            1,
+            1,
+            g_mainRenderTargetFormat.colorBufferFormat,
+            DXGI_FORMAT_UNKNOWN
+        );
+        m_volumeLightMapForward.Create(
+            FRAME_BUFFER_W,
+            FRAME_BUFFER_H,
+            1,
+            1,
+            g_mainRenderTargetFormat.colorBufferFormat,
+            DXGI_FORMAT_UNKNOWN
+        );
+        m_volumeLightMapBack.Create(
+            FRAME_BUFFER_W,
+            FRAME_BUFFER_H,
+            1,
+            1,
+            g_mainRenderTargetFormat.colorBufferFormat,
+            DXGI_FORMAT_UNKNOWN
+        );
+
     }
     void SceneLight::SetIBLTextureForAmbient(const wchar_t* textureFilePath, float luminance)
     {
         g_renderingEngine->ReInitIBL(textureFilePath, luminance);
+    }
+    void SceneLight::DrawToVulumeLightMap(RenderContext& rc)
+    {
+        // 奥側の描画
+        rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapBack);
+        rc.SetRenderTargetAndViewport(m_volumeLightMapBack);
+        rc.ClearRenderTargetView(m_volumeLightMapBack);
+        for (auto& volumeLig : m_volumeSpotLightArray) {
+            volumeLig->DrawToVolumeLightMap(rc);
+        }
+        // 続いて手前側
+        rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapForward);
+        rc.SetRenderTargetAndViewport(m_volumeLightMapForward);
+        rc.ClearRenderTargetView(m_volumeLightMapForward);
+        for (auto& volumeLig : m_volumeSpotLightArray) {
+            volumeLig->DrawToVolumeLightMap(rc);
+        }
+
+        // 奥と手前の書き込み完了待ち
+        rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapBack);
+        rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapForward);
+
+        // todo 続きはここから奥側と手前側の合成。
     }
     void SceneLight::Update()
     {

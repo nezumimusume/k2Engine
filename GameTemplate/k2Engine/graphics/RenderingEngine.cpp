@@ -134,8 +134,8 @@ namespace nsK2Engine {
             g_graphicsEngine->GetFrameBufferHeight(),
             1,
             1,
-            DXGI_FORMAT_R16G16B16A16_FLOAT,
-            DXGI_FORMAT_UNKNOWN
+            g_mainRenderTargetFormat.colorBufferFormat,
+            g_mainRenderTargetFormat.depthBufferFormat
         );
     }
     void RenderingEngine::InitGBuffer()
@@ -293,6 +293,9 @@ namespace nsK2Engine {
 
         // ZPrepass
         ZPrepass(rc);
+
+        // ボリュームライトマップを描画。
+        m_sceneLight.DrawToVulumeLightMap(rc);
 
         // ライトカリング
         m_lightCulling.Execute(rc);
