@@ -155,6 +155,8 @@ namespace nsK2Engine {
         float pad3;
         Vector3 attn = {0.0f, 1.0f, 0.0f};  // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ、zに射出角度(単位ラジアン。)
         float pad4;
+        Vector3 directionInView;            // カメラ空間での射出方向。
+        float pad5;
         /// <summary>
         /// 射出方向を設定。
         /// </summary>

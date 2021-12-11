@@ -19,6 +19,9 @@ namespace nsK2Engine {
         }
         positionInView = position;
         g_camera3D->GetViewMatrix().Apply(positionInView);
+        Matrix cameraRotInv = g_camera3D->GetCameraRotation();
+        cameraRotInv.Inverse();
+        cameraRotInv.Apply(directionInView);
     }
     void SceneLight::Init()
     {
