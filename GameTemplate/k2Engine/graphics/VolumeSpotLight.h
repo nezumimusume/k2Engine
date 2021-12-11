@@ -15,6 +15,10 @@ namespace nsK2Engine {
 		/// </summary>
 		~VolumeSpotLight();
 		/// <summary>
+		/// 初期化。
+		/// </summary>
+		void Init();
+		/// <summary>
 		/// ボリュームライトマップに描画
 		/// </summary>
 		/// <remark>
