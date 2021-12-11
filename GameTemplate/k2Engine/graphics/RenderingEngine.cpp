@@ -18,7 +18,8 @@ namespace nsK2Engine {
         m_lightCulling.Init(
             m_zprepassRenderTarget.GetRenderTargetTexture(),
             m_diferredLightingSprite.GetExpandConstantBufferGPU(),
-            m_pointLightNoListInTileUAV
+            m_pointLightNoListInTileUAV,
+            m_spotLightNoListInTileUAV
         );
         m_postEffect.Init(
             m_mainRenderTarget,
@@ -55,7 +56,8 @@ namespace nsK2Engine {
         }
         spriteInitData.m_expandConstantBuffer = &m_deferredLightingCB;
         spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
-        spriteInitData.m_expandShaderResoruceView = &m_pointLightNoListInTileUAV;
+        spriteInitData.m_expandShaderResoruceView[0] = &m_pointLightNoListInTileUAV;
+        spriteInitData.m_expandShaderResoruceView[1] = &m_spotLightNoListInTileUAV;
 
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
         {
@@ -84,7 +86,8 @@ namespace nsK2Engine {
         m_lightCulling.Init(
             m_zprepassRenderTarget.GetRenderTargetTexture(),
             m_diferredLightingSprite.GetExpandConstantBufferGPU(),
-            m_pointLightNoListInTileUAV
+            m_pointLightNoListInTileUAV,
+            m_spotLightNoListInTileUAV
         );
         // イベントリスナーにIBLデータに変更があったことを通知する。
         for (auto& listener : m_eventListeners) {
@@ -206,8 +209,14 @@ namespace nsK2Engine {
         m_pointLightNoListInTileUAV.Init(
             sizeof(int),
             MAX_POINT_LIGHT * NUM_TILE,
-            nullptr);
-
+            nullptr
+        );
+        // タイルごとのスポットライトの番号を記憶するリストのUAVを作成。
+        m_spotLightNoListInTileUAV.Init(
+            sizeof(int),
+            MAX_SPOT_LIGHT * NUM_TILE,
+            nullptr
+        );
         // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
         InitDefferedLighting_Sprite();
     }

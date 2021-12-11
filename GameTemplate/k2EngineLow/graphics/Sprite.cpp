@@ -67,12 +67,14 @@ namespace nsK2EngineLow {
                 m_descriptorHeap.RegistShaderResource(texNo, m_textures[texNo]);
             }
         }
-        if (initData.m_expandShaderResoruceView != nullptr) {
-            //拡張シェーダーリソースビュー。
-            m_descriptorHeap.RegistShaderResource(
-                EXPAND_SRV_REG__START_NO,
-                *initData.m_expandShaderResoruceView
-            );
+        for (int exSrvNo = 0; exSrvNo < EXPAND_MAX_SPRITE_EXPAND_SRV; exSrvNo++) {
+            if (initData.m_expandShaderResoruceView[exSrvNo] != nullptr) {
+                //拡張シェーダーリソースビュー。
+                m_descriptorHeap.RegistShaderResource(
+                    EXPAND_SRV_REG__START_NO + exSrvNo,
+                    *initData.m_expandShaderResoruceView[exSrvNo]
+                );
+            }
         }
         m_descriptorHeap.RegistConstantBuffer(0, m_constantBufferGPU);
         if (m_userExpandConstantBufferCPU != nullptr) {

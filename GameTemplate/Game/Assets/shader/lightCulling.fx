@@ -26,8 +26,20 @@ struct PointLight
     float3 attn;            // 減衰パラメータ。
 };
 
+// スポットライト
+struct SpotLight
+{
+    float3 position;        // 座標
+    int isUse;              // 使用中フラグ。
+    float3 positionInView;  // カメラ空間での座標
+    float3 color;           // カラー
+    float3 direction;      // 射出方向。
+    float3 attn;            // 減衰パラメータ。
+};
+
 static const int NUM_DIRECTIONAL_LIGHT = 4;  // ディレクションライトの数
-static const int MAX_POINT_LIGHT = 1000;    // ポイントライトの最大数
+static const int MAX_POINT_LIGHT = 256;      // ポイントライトの最大数
+static const int MAX_SPOT_LIGHT = 256;      // スポットライトの最大数
 
 // 定数バッファー
 cbuffer cbCameraParam : register(b0)
@@ -40,12 +52,14 @@ cbuffer cbCameraParam : register(b0)
 
 cbuffer Light : register(b1)
 {
-    DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];
-    PointLight pointLight[MAX_POINT_LIGHT];
+    DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];   // ディレクションライト
+    PointLight pointLight[MAX_POINT_LIGHT];                     // ポイントライト。
+    SpotLight spotLight[MAX_SPOT_LIGHT];                        // スポットライト。
     float4x4 mViewProjInv;  // ビュープロジェクション行列の逆行列
     float3 eyePos;          // カメラの視点
     int numPointLight;      // ポイントライトの数。    
     float3 ambientLight;    // 環境光
+    int numSpotLight;       // スポットライトの数。
 };
 
 // 入力
@@ -53,15 +67,16 @@ cbuffer Light : register(b1)
 Texture2D depthTexture : register(t0);
 
 // 出力用のバッファー
-RWStructuredBuffer<uint> rwLightIndices : register(u0); // ライトインデックスバッファー
-RWStructuredBuffer<float> hoge : register(u1); // ライトインデックスバッファー
+RWStructuredBuffer<uint> rwPointLightIndices : register(u0); // ポイントライトインデックスバッファー
+RWStructuredBuffer<uint> rwSpotLightIndices : register(u1);  // スポットライトインデックスバッファー
 
 // 共有メモリ
 groupshared uint sMinZ; // タイルの最小深度
 groupshared uint sMaxZ; // タイルの最大深度
-groupshared uint sTileLightIndices[MAX_POINT_LIGHT];    // タイルに接触しているポイントライトのインデックス
-groupshared uint sTileNumLights;                        // タイルに接触しているポイントライトの数
-
+groupshared uint sTilePointLightIndices[MAX_POINT_LIGHT];   // タイルに接触しているポイントライトのインデックス
+groupshared uint sTileNumPointLights;                       // タイルに接触しているポイントライトの数
+groupshared uint sTileSpotLightIndices[MAX_SPOT_LIGHT];     //　タイルに接触しているスポットライトのインデックス
+groupshared uint sTileNumSpotLights;                        //　タイルに接触しているスポットライトの数。
 groupshared uint ligNum = 0;
 
 /*!
@@ -110,7 +125,105 @@ float3 ComputePositionInCamera(uint2 globalCoords)
 
     return cameraPos.xyz / cameraPos.w;
 }
+/*!
+ * @brief 現在調査中のタイルに含まれているスポットライトのインデックスの配列を作成
+ */
+void CreateSpotLightIndexArrayInTile(uint threadNoInTile, float4 frustumPlanes[6])
+{
+    for (uint lightIndex = threadNoInTile; lightIndex < MAX_SPOT_LIGHT; lightIndex += TILE_SIZE)
+    {
+        SpotLight light = spotLight[lightIndex];
+        if( light.isUse ){
+            // タイルとの判定
+            bool inFrustum = true;
+            for (uint i = 0; i < 6; ++i)
+            {
+                // ライトの座標と平面の法線とで内積を使って、
+                // ライトと平面との距離（正負あり）を計算する
+                float4 lp = float4(light.positionInView, 1.0f);
+                float d = dot(frustumPlanes[i], lp);
 
+                // ライトと平面の距離を使って、衝突判定を行う
+                inFrustum = inFrustum && (d >= -light.attn.x);
+            }
+
+            // タイルと衝突している場合
+            if (inFrustum)
+            {
+                // 衝突したポイントライトの番号を影響リストに積んでいく
+                uint listIndex;
+                InterlockedAdd(sTileNumSpotLights, 1, listIndex);
+                sTileSpotLightIndices[listIndex] = lightIndex;
+            }
+        }
+    }
+}
+/*!
+ * @brief 現在調査中のタイルに含まれているポイントライトのインデックスの配列を作成。
+ */
+void CreatePointLightIndexArrayInTile(uint threadNoInTile, float4 frustumPlanes[6])
+{
+    for (uint lightIndex = threadNoInTile; lightIndex < MAX_POINT_LIGHT; lightIndex += TILE_SIZE)
+    {
+        PointLight light = pointLight[lightIndex];
+        if( light.isUse ){
+            // タイルとの判定
+            bool inFrustum = true;
+            for (uint i = 0; i < 6; ++i)
+            {
+                // ライトの座標と平面の法線とで内積を使って、
+                // ライトと平面との距離（正負あり）を計算する
+                float4 lp = float4(light.positionInView, 1.0f);
+                float d = dot(frustumPlanes[i], lp);
+
+                // ライトと平面の距離を使って、衝突判定を行う
+                inFrustum = inFrustum && (d >= -light.attn.x);
+            }
+
+            // タイルと衝突している場合
+            if (inFrustum)
+            {
+                // 衝突したポイントライトの番号を影響リストに積んでいく
+                uint listIndex;
+                InterlockedAdd(sTileNumPointLights, 1, listIndex);
+                sTilePointLightIndices[listIndex] = lightIndex;
+            }
+        }
+    }
+}
+/*!
+ * @brief タイルに含まれているライトの番号を出力用のリストに書き込み。
+ */
+void WriteLightIindexInTileToList(uint threadNoInTile, uint2 frameUV)
+{
+    uint numCellX = (screenParam.z + TILE_WIDTH - 1) / TILE_WIDTH;
+    uint tileIndex = floor(frameUV.x / TILE_WIDTH) + floor(frameUV.y / TILE_WIDTH) * numCellX;
+
+    // ポイントライトの番号を出力  
+    uint lightStart = numPointLight * tileIndex;
+    for (uint lightIndex = threadNoInTile; lightIndex < sTileNumPointLights; lightIndex += TILE_SIZE)
+    {
+        rwPointLightIndices[lightStart + lightIndex] = sTilePointLightIndices[lightIndex];
+    }
+    // 最後に番兵を設定する
+    if ((threadNoInTile == 0) && (sTileNumPointLights < numPointLight))
+    {
+        // -1で番兵
+        rwPointLightIndices[lightStart + sTileNumPointLights] = 0xffffffff;
+    }
+    // 続いてスポットライトの番号を出力。
+    lightStart = numSpotLight * tileIndex;
+    for (uint lightIndex = threadNoInTile; lightIndex < sTileNumSpotLights; lightIndex += TILE_SIZE)
+    {
+        rwSpotLightIndices[lightStart + lightIndex] = sTileSpotLightIndices[lightIndex];
+    }
+    // 最後に番兵を設定する
+    if ((threadNoInTile == 0) && (sTileNumSpotLights < numSpotLight))
+    {
+        // -1で番兵
+        rwSpotLightIndices[lightStart + sTileNumSpotLights] = 0xffffffff;
+    }
+}
 /*!
  * @brief CSMain
  */
@@ -128,7 +241,8 @@ void CSMain(
     // 共有メモリを初期化する
     if(groupIndex == 0)
     {
-        sTileNumLights = 0;
+        sTileNumPointLights = 0;
+        sTileNumSpotLights = 0;
         sMinZ = 0x7F7FFFFF; // floatの最大値
         sMaxZ = 0;
     }
@@ -156,52 +270,16 @@ void CSMain(
     // この関数の中で、錘台を構成する6つ平面を計算している
     GetTileFrustumPlane(frustumPlanes, groupId);
 
-    // タイルとポイントライトの衝突判定を行う
-    for (uint lightIndex = groupIndex; lightIndex < MAX_POINT_LIGHT; lightIndex += TILE_SIZE)
-    {
-        PointLight light = pointLight[lightIndex];
-        if( light.isUse ){
-            // タイルとの判定
-            bool inFrustum = true;
-            for (uint i = 0; i < 6; ++i)
-            {
-                // ライトの座標と平面の法線とで内積を使って、
-                // ライトと平面との距離（正負あり）を計算する
-                float4 lp = float4(light.positionInView, 1.0f);
-                float d = dot(frustumPlanes[i], lp);
+    // タイルに含まれているポイントライトのインデックスの配列を作成する。
+    CreatePointLightIndexArrayInTile( groupIndex, frustumPlanes);
+    // タイルに含まれているスポットライトのインデックスの配列を作成する。
+    CreateSpotLightIndexArrayInTile( groupIndex, frustumPlanes);
 
-                // ライトと平面の距離を使って、衝突判定を行う
-                inFrustum = inFrustum && (d >= -light.attn.x);
-            }
-
-            // タイルと衝突している場合
-            if (inFrustum)
-            {
-                // 衝突したポイントライトの番号を影響リストに積んでいく
-                uint listIndex;
-                InterlockedAdd(sTileNumLights, 1, listIndex);
-                sTileLightIndices[listIndex] = lightIndex;
-            }
-        }
-    }
-
-    // ここで同期を取ると、sTileLightIndicesに
+    // ここで同期を取ると、sTileSpotLightIndicesとsTilePointLightIndicesに
     // タイルと衝突しているライトのインデックスが積まれている
     GroupMemoryBarrierWithGroupSync();
 
     // ライトインデックスを出力バッファーに出力
-    uint numCellX = (screenParam.z + TILE_WIDTH - 1) / TILE_WIDTH;
-    uint tileIndex = floor(frameUV.x / TILE_WIDTH) + floor(frameUV.y / TILE_WIDTH) * numCellX;
-    uint lightStart = numPointLight * tileIndex;
-    for (uint lightIndex = groupIndex; lightIndex < sTileNumLights; lightIndex += TILE_SIZE)
-    {
-        rwLightIndices[lightStart + lightIndex] = sTileLightIndices[lightIndex];
-    }
-
-    // step-15 最後に番兵を設定する
-    if ((groupIndex == 0) && (sTileNumLights < numPointLight))
-    {
-        // -1で番兵
-        rwLightIndices[lightStart + sTileNumLights] = 0xffffffff;
-    }
+    WriteLightIindexInTileToList( groupIndex, frameUV);
+    
 }

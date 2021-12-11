@@ -64,7 +64,7 @@ namespace nsK2EngineLow {
 				&sr,
 				&m_shaderResources.front(),
 				m_numShaderResource,
-				m_shaderResources.size(),
+				static_cast<int>(m_shaderResources.size()),
 				L"DescriptorHeap::RegistShaderResource() レジスタ番号が範囲外です。"
 			);
 		}
@@ -83,7 +83,7 @@ namespace nsK2EngineLow {
 				&sr,
 				&m_uavResoruces.front(),
 				m_numUavResource,
-				m_uavResoruces.size(),
+				static_cast<int>(m_uavResoruces.size()),
 				L"DescriptorHeap::RegistUnorderAccessResource() レジスタ番号が範囲外です。"
 			);
 		}
@@ -101,7 +101,7 @@ namespace nsK2EngineLow {
 				&cb,
 				&m_constantBuffers.front(),
 				m_numConstantBuffer,
-				m_constantBuffers.size(),
+				static_cast<int>(m_constantBuffers.size()),
 				L"DescriptorHeap::RegistConstantBuffer() レジスタ番号が範囲外です。"
 			);
 		}

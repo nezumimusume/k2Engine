@@ -11,6 +11,15 @@ namespace nsK2Engine {
         positionInView = position;
         g_camera3D->GetViewMatrix().Apply(positionInView);
     }
+    void SpotLight::Update()
+    {
+        // 使用中のライトはカメラ空間での座標を計算する。
+        if (!isUse) {
+            return;
+        }
+        positionInView = position;
+        g_camera3D->GetViewMatrix().Apply(positionInView);
+    }
     void SceneLight::Init()
     {
         // 太陽光
@@ -57,6 +66,11 @@ namespace nsK2Engine {
             pt.SetAffectPowParam(1.0f);
             m_unusePointLightQueue.push_back(&pt);
         }
+        // すべてのスポットライトを未使用にする。
+        for (auto& sp : m_light.spotLights) {
+            sp.UnUse();
+            m_unuseSpotLightQueue.push_back(&sp);
+        }
     }
     void SceneLight::SetIBLTextureForAmbient(const wchar_t* textureFilePath, float luminance)
     {
@@ -67,6 +81,10 @@ namespace nsK2Engine {
         for (auto& pt : m_light.pointLights) {
             pt.Update();
         }
+        for (auto& sp : m_light.spotLights) {
+            sp.Update();
+        }
         m_light.numPointLight = MAX_POINT_LIGHT - static_cast<int>(m_unusePointLightQueue.size());
+        m_light.numSpotLight = MAX_SPOT_LIGHT - static_cast<int>(m_unuseSpotLightQueue.size());
     }
 }

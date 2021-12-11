@@ -10,8 +10,15 @@ namespace nsK2Engine {
 		/// 初期化。
 		/// </summary>
 		/// <param name="depthTexture">シーンの深度値が書き込まれるテクスチャ</param>
-		/// /// <param name="lightCb">ライトデータの定数バッファ。</param>
-		void Init(Texture& depthTexture, ConstantBuffer& lightCB, RWStructuredBuffer& pointLightNoListInTileUAV);
+		/// <param name="lightCb">ライトデータの定数バッファ。</param>
+		/// <param name="pointLightNoListInTileUAV">タイルごとのポイントライトのリストを出力するためのUAV。</param>
+		/// <param name="spotLightNoListInTileUAV">タイルごとのスポットライトのリストを出力するためのUAV。</param>
+		void Init(
+			Texture& depthTexture, 
+			ConstantBuffer& lightCB, 
+			RWStructuredBuffer& pointLightNoListInTileUAV,
+			RWStructuredBuffer& spotLightNoListInTileUAV
+		);
 
 		/// <summary>
 		/// ライトカリングを実行。
@@ -31,7 +38,8 @@ namespace nsK2Engine {
 		ConstantBuffer m_cameraDataCB;					// カメラデータの定数バッファ
 		PipelineState m_pipelineState;					// パイプラインステート。
 		Shader m_shader;								// ライトカリングシェーダー。
-		DescriptorHeap m_descriptroHeap;				// ディスクリプタヒープ。
+		DescriptorHeap m_descriptorHeap;				// ディスクリプタヒープ。
 		RWStructuredBuffer* m_pointLightNoListInTileUAV = nullptr;	// タイルごとのポイントライトのリストのUAV。
+		RWStructuredBuffer* m_spotLightNoListInTileUAV = nullptr;	// タイルごとのスポットライトのリストのUAV。
 	};
 }

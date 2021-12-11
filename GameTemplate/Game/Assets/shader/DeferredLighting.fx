@@ -47,6 +47,8 @@ Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(
 TextureCube<float4> g_skyCubeMap : register(t15);
 // タイルごとのポイントライトのインデックスのリスト
 StructuredBuffer<uint> pointLightListInTile : register(t20);
+// タイルごとのスポットライトのインデックスのリスト。
+StructuredBuffer<uint> spotLightListInTile : register(t21);
 
 #include "PBRLighting.h"
 
@@ -80,33 +82,30 @@ float3 CalcWorldPosFromUVZ( float2 uv, float zInScreen, float4x4 mViewProjInv )
 	worldPos.xyz /= worldPos.w;
 	return worldPos.xyz;
 }
-//ピクセルシェーダーのコア。
-float4 PSMainCore(PSInput In, uniform int isSoftShadow) 
-{
-    //G-Bufferの内容を使ってライティング
-    //アルベドカラーをサンプリング。
-    float4 albedoColor = albedoTexture.Sample(Sampler, In.uv);
-    //法線をサンプリング。
-    float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
-    //ワールド座標をサンプリング。
-    float3 worldPos = CalcWorldPosFromUVZ(In.uv, albedoColor.w, mViewProjInv);
-    //スペキュラカラーをサンプリング。
-    float3 specColor = albedoColor.xyz;
-    //金属度をサンプリング。
-    float metaric = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).r;
-    //スムース
-    float smooth = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).a;
-
-    //影生成用のパラメータ。
-    float shadowParam = metallicShadowSmoothTexture.Sample(Sampler, In.uv).g;
-    
-    float2 viewportPos = In.pos.xy;
-
-    // 視線に向かって伸びるベクトルを計算する
-    float3 toEye = normalize(eyePos - worldPos);
-
+/*!
+ * @brief	ディレクションライトの反射光を計算
+ *@param[in]	normal			サーフェイスの法線。
+ *@param[in]	toEye           サーフェイスから視点への方向ベクトル(単位ベクトル)
+ *@param[in]	albedoColor     アルベドカラー
+ *@param[in]    metaric         メタリック
+ *@param[in]    smooth          滑らかさ
+ *@param[in]    specColor       スペキュラカラー
+ *@param[in]    worldPos        サーフェイスのワールド座標
+ *@param[in]    isSoftShadow    ソフトシャドウ？
+ *@param[in]    shadowParam     シャドウレシーバーフラグ。
+ */
+float3 CalcDirectionLight(
+    float3 normal, 
+    float3 toEye, 
+    float4 albedoColor, 
+    float metaric, 
+    float smooth, 
+    float3 specColor,
+    float3 worldPos,
+    bool isSoftShadow,
+    float shadowParam
+){
     float3 lig = 0;
-    
     for(int ligNo = 0; ligNo < NUM_DIRECTIONAL_LIGHT; ligNo++)
     {
         // 影の落ち具合を計算する。
@@ -127,10 +126,32 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
             specColor
         ) * ( 1.0f - shadow );
     }
-    // 続いてポイントライト
+    return lig;
+}
+/*!
+ *@brief	ポイントライトの反射光を計算
+ *@param[in]	normal			サーフェイスの法線。
+ *@param[in]	toEye           サーフェイスから視点への方向ベクトル(単位ベクトル)
+ *@param[in]	albedoColor     アルベドカラー
+ *@param[in]    metaric         メタリック
+ *@param[in]    smooth          滑らかさ
+ *@param[in]    specColor       スペキュラカラー
+ *@param[in]    worldPos        サーフェイスのワールド座標
+ */
+float3 CalcPointLight(
+    float3 normal, 
+    float3 toEye, 
+    float4 albedoColor, 
+    float metaric, 
+    float smooth, 
+    float3 specColor,
+    float3 worldPos,
+    float2 viewportPos
+){
+    float3 lig = 0;
+    
     // スクリーンの左上を(0,0)、右下を(1,1)とする座標系に変換する
     // ビューポート座標系に変換する
-
     // このピクセルが含まれているタイルの番号を計算する
     // スクリーンをタイルで分割したときのセルのX座標を求める
     uint numCellX = (screenParam.z + TILE_WIDTH - 1) / TILE_WIDTH;
@@ -169,8 +190,146 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         float affect = 1.0f - min(1.0f, distance / pointLight[ligNo].attn.x);
         affect = pow( affect, pointLight[ligNo].attn.y );
         lig += ptLig * affect;
-       
     }
+    return lig;
+}
+/*!
+ *@brief	スポットライトの反射光を計算
+ *@param[in]	normal			サーフェイスの法線。
+ *@param[in]	toEye           サーフェイスから視点への方向ベクトル(単位ベクトル)
+ *@param[in]	albedoColor     アルベドカラー
+ *@param[in]    metaric         メタリック
+ *@param[in]    smooth          滑らかさ
+ *@param[in]    specColor       スペキュラカラー
+ *@param[in]    worldPos        サーフェイスのワールド座標
+ */
+float3 CalcSpotLight(
+    float3 normal, 
+    float3 toEye, 
+    float4 albedoColor, 
+    float metaric, 
+    float smooth, 
+    float3 specColor,
+    float3 worldPos,
+    float2 viewportPos
+){
+    float3 lig = 0;
+    // スクリーンの左上を(0,0)、右下を(1,1)とする座標系に変換する
+    // ビューポート座標系に変換する
+
+    // このピクセルが含まれているタイルの番号を計算する
+    // スクリーンをタイルで分割したときのセルのX座標を求める
+    uint numCellX = (screenParam.z + TILE_WIDTH - 1) / TILE_WIDTH;
+
+    // タイルインデックスを計算する
+    uint tileIndex = floor(viewportPos.x / TILE_WIDTH) + floor(viewportPos.y / TILE_HEIGHT) * numCellX;
+
+    // 続いてスポットライト。
+    uint lightStart = tileIndex * numSpotLight;
+    uint lightEnd = lightStart + numSpotLight;
+    for (uint lightListIndex = lightStart; lightListIndex < lightEnd; lightListIndex++)
+    {
+        uint ligNo = spotLightListInTile[lightListIndex];
+        if (ligNo == 0xffffffff)
+        {
+            // このタイルに含まれるポイントライトはもうない
+            break;
+        }
+        
+        float3 ligDir = normalize(worldPos - spotLight[ligNo].position);
+        // 2. 光源からサーフェイスまでの距離を計算
+        float distance = length(worldPos - spotLight[ligNo].position);
+        float3 ligColor = spotLight[ligNo].color;
+        float3 ptLig = CalcLighting(
+            ligDir,
+            ligColor,
+            normal,
+            toEye,
+            albedoColor,
+            metaric,
+            smooth,
+            specColor
+        );
+        // 3. 影響率を計算する。影響率は0.0～1.0の範囲で、
+        //     指定した距離（pointsLights[i].range）を超えたら、影響率は0.0になる
+        float affect = 1.0f - min(1.0f, distance / spotLight[ligNo].attn.x);
+
+        // 入射光と射出方向の角度による減衰を計算する
+        // dot()を利用して内積を求める
+        float angle = dot(ligDir, spotLight[ligNo].direction);
+        // dot()で求めた値をacos()に渡して角度を求める
+        angle = abs(acos(angle));
+        // step-12 角度による影響率を求める
+        // 角度に比例して小さくなっていく影響率を計算する
+        float angleAffect = max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].attn.z * angle );
+        affect *= angleAffect;
+
+        affect = pow( affect, spotLight[ligNo].attn.y );
+        lig += ptLig * affect * angleAffect;
+    }
+    return lig;
+}
+//ピクセルシェーダーのコア。
+float4 PSMainCore(PSInput In, uniform int isSoftShadow) 
+{
+    //G-Bufferの内容を使ってライティング
+    //アルベドカラーをサンプリング。
+    float4 albedoColor = albedoTexture.Sample(Sampler, In.uv);
+    //法線をサンプリング。
+    float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
+    //ワールド座標をサンプリング。
+    float3 worldPos = CalcWorldPosFromUVZ(In.uv, albedoColor.w, mViewProjInv);
+    //スペキュラカラーをサンプリング。
+    float3 specColor = albedoColor.xyz;
+    //金属度をサンプリング。
+    float metaric = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).r;
+    //スムース
+    float smooth = metallicShadowSmoothTexture.SampleLevel(Sampler, In.uv, 0).a;
+
+    //影生成用のパラメータ。
+    float shadowParam = metallicShadowSmoothTexture.Sample(Sampler, In.uv).g;
+    
+    float2 viewportPos = In.pos.xy;
+
+    // 視線に向かって伸びるベクトルを計算する
+    float3 toEye = normalize(eyePos - worldPos);
+    
+    // ディレクションライトを計算
+    float3 lig = CalcDirectionLight(
+        normal, 
+        toEye, 
+        albedoColor, 
+        metaric, 
+        smooth, 
+        specColor, 
+        worldPos,
+        isSoftShadow,
+        shadowParam
+    );
+    
+    lig += CalcPointLight(
+        normal, 
+        toEye, 
+        albedoColor, 
+        metaric, 
+        smooth, 
+        specColor, 
+        worldPos,
+        viewportPos
+    );
+    
+    lig += CalcSpotLight(
+        normal, 
+        toEye, 
+        albedoColor, 
+        metaric, 
+        smooth, 
+        specColor, 
+        worldPos,
+        viewportPos
+    );
+
+    
     if (isIBL == 1) {
         // 視線からの反射ベクトルを求める。
         float3 v = reflect(toEye * -1.0f, normal);

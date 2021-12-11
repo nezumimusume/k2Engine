@@ -145,16 +145,110 @@ namespace nsK2Engine {
     /// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
     /// </remark>
    struct SpotLight {
-        Vector3 position;       // 座標
-        int isUse = false;      // 使用中フラグ。
-        Vector3 positionInView; // カメラ空間での座標
+        Vector3 position;                   // 座標
+        int isUse = false;                  // 使用中フラグ。
+        Vector3 positionInView;             // カメラ空間での座標
         float pad1;
-        Vector3 color;          // ライトのカラー
+        Vector3 color;                      // ライトのカラー
         float pad2;
-        Vector3 attn;           // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ。
+        Vector3 direction;                  // 射出方向。
         float pad3;
+        Vector3 attn = {0.0f, 1.0f, 0.0f};  // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ、zに射出角度(単位ラジアン。)
+        float pad4;
         /// <summary>
-        /// スポットライトを使用中にする。
+        /// 射出方向を設定。
+        /// </summary>
+        /// <param name="direction"></param>
+        void SetDirection(const Vector3& direction)
+        {
+            this->direction = direction;
+            this->direction.Normalize();
+        }
+        /// <summary>
+        /// 射出方向を設定。
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        void SetDirection(float x, float y, float z)
+        {
+            direction.Set(x, y, z);
+            direction.Normalize();
+        }
+        /// <summary>
+        /// 座標を設定。
+        /// </summary>
+        /// <param name="position"></param>
+        void SetPosition(const Vector3& position)
+        {
+            this->position = position;
+        }
+        void SetPosition(float x, float y, float z)
+        {
+            SetPosition({ x, y, z });
+        }
+        /// <summary>
+        /// カラーを設定。
+        /// </summary>
+        /// <param name="color"></param>
+        void SetColor(const Vector3& color)
+        {
+            this->color = color;
+        }
+        void SetColor(float r, float g, float b)
+        {
+            SetColor({ r, g, b });
+        }
+        /// <summary>
+        /// 範囲を設定。
+        /// </summary>
+        /// <param name="range"></param>
+        void SetRange(float range)
+        {
+            attn.x = range;
+        }
+        /// <summary>
+        /// 影響率の累乗数を設定。
+        /// </summary>
+        /// <param name="powParam"></param>
+        void SetAffectPowParam(float powParam)
+        {
+            attn.y = powParam;
+        }
+        /// <summary>
+        /// 射出角度
+        /// </summary>
+        /// <param name="angle"></param>
+        void SetAngle(float angle)
+        {
+            attn.z = angle;
+        }
+        /// <summary>
+        /// 座標を取得。
+        /// </summary>
+        /// <returns></returns>
+        const Vector3& GetPosition() const
+        {
+            return position;
+        }
+        /// <summary>
+        /// カラーを取得。
+        /// </summary>
+        /// <returns></returns>
+        const Vector3& GetColor() const
+        {
+            return color;
+        }
+        /// <summary>
+        /// 影響範囲を取得。
+        /// </summary>
+        /// <returns></returns>
+        float GetRange() const
+        {
+            return attn.x;
+        }
+        /// <summary>
+        /// ポイントライトを使用中にする。
         /// </summary>
         /// /// <remark>
         /// この関数はk2Engine内部で利用されています。
@@ -165,7 +259,7 @@ namespace nsK2Engine {
             isUse = true;
         }
         /// <summary>
-        /// スポットライトを未使用にする。
+        /// ポイントライトを未使用にする。
         /// </summary>
         /// <remark>
         /// この関数はk2Engine内部で利用されています。
@@ -175,17 +269,26 @@ namespace nsK2Engine {
         {
             isUse = false;
         }
+        /// <summary>
+        /// 更新。
+        /// </summary>
+        /// <remark>
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
+        /// </remark>
+        void Update();
     };
     // ライト構造体
     struct Light
     {
         DirectionalLight directionalLight[MAX_DIRECTIONAL_LIGHT];   // ディレクショナルライトの配列。
         PointLight pointLights[MAX_POINT_LIGHT];                    // ポイントライトの配列。
-     //   SpotLight spotLights[MAX_SPOT_LIGHT];                       // スポットライトの配列。
+        SpotLight spotLights[MAX_SPOT_LIGHT];                       // スポットライトの配列。
         Matrix mViewProjInv;    // ビュープロジェクション行列の逆行列
         Vector3 eyePos;         // カメラの位置
         int numPointLight;      // ポイントライトの数。
         Vector3 ambinetLight;   // 環境光。
+        int numSpotLight;       // スポットライトの数。
     };
 
     /// <summary>
