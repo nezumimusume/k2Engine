@@ -182,6 +182,14 @@ namespace nsK2Engine {
             direction.Normalize();
         }
         /// <summary>
+        /// 射出方向を取得。
+        /// </summary>
+        /// <returns></returns>
+        const Vector3& GetDirection() const
+        {
+            return direction;
+;        }
+        /// <summary>
         /// 座標を設定。
         /// </summary>
         /// <param name="position"></param>
@@ -228,6 +236,14 @@ namespace nsK2Engine {
         void SetAngle(float angle)
         {
             attn.z = angle;
+        }
+        /// <summary>
+        /// 射出角度を取得。
+        /// </summary>
+        /// <returns></returns>
+        float GetAngle() const
+        {
+            return attn.z;
         }
         /// <summary>
         /// 座標を取得。
@@ -428,6 +444,10 @@ namespace nsK2Engine {
         /// </summary>
         /// <param name="rc">レンダリングコンテキスト</param>
         void DrawToVulumeLightMap(RenderContext& rc);
+        /// <summary>
+        /// ボリュームライトの描画確認用。
+        /// </summary>
+        void DebugDraw(RenderContext& rc);
     private:
         /// <summary>
         /// 新しい動的ライトを追加。
@@ -469,7 +489,7 @@ namespace nsK2Engine {
         Light m_light;  //シーンライト。
         std::deque< PointLight* > m_unusePointLightQueue;       // 未使用のポイントライトのキュー。
         std::deque< SpotLight* > m_unuseSpotLightQueue;         // 未使用のスポットライトのキュー。。
-        RenderTarget m_volumeLightMapForward;                   // 手前のボリュームライトマップ。
+        RenderTarget m_volumeLightMapFront;                     // 手前のボリュームライトマップ。
         RenderTarget m_volumeLightMapBack;                      // 奥側のボリュームライトマップ。
         RenderTarget m_volumeLightMap;                          // 奥側のボリュームライトマップ。
         std::list< VolumeSpotLight* > m_volumeSpotLightArray;   // ボリュームスポットライトの配列。

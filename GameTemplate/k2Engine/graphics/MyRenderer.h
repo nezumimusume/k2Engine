@@ -43,4 +43,9 @@ namespace nsK2Engine {
 		DXGI_FORMAT_R16G16B16A16_FLOAT,
 		DXGI_FORMAT_UNKNOWN
 	};
+	// ボリュームライトマップのフォーマット。
+	const RenderTargetFormat g_drawVolumeLightMapFormat = {
+		DXGI_FORMAT_R16G16B16A16_FLOAT,
+		DXGI_FORMAT_D32_FLOAT // todo 多分変更が必要
+	};
 }

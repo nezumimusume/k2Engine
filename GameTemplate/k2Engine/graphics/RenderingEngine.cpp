@@ -402,6 +402,7 @@ namespace nsK2Engine {
             m_mainRenderTarget.GetRTVCpuDescriptorHandle(),
             m_gBuffer[enGBufferAlbedoDepth].GetDSVCpuDescriptorHandle()
         );
+        
         for (auto& renderObj : m_renderObjects) {
             renderObj->OnForwardRender(rc);
         }

@@ -1,4 +1,6 @@
+#pragma once
 
+#include "graphics/VolumeSpotLight.h"
 
 class Player : public IGameObject
 {
@@ -98,5 +100,6 @@ private:
 	Vector3				m_forward;
 	std::vector<PointLight* > m_pointLightList;
 	SpotLight* m_spotLight = nullptr;
+	VolumeSpotLight m_volumeSpotLight;	// ボリュームスポットライト。
 };
 

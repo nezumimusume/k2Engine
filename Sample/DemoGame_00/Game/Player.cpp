@@ -54,7 +54,8 @@ bool Player::Start()
 	// スポットライトの生成。
 	m_spotLight = g_sceneLight->NewSpotLight();
 	m_spotLight->SetColor(100.0f, 100.0f, 100.0f);
-	
+	// ボリュームスポットライトの初期化。
+	m_volumeSpotLight.Init();
 	return true;
 }
 
@@ -99,6 +100,7 @@ void Player::Update()
 	m_spotLight->SetRange( 800.0f );
 	m_spotLight->SetAngle(Math::DegToRad(45.0f));
 	m_spotLight->SetDirection(m_forward);
+	m_volumeSpotLight.Update(*m_spotLight);
 }
 
 void Player::Move()

@@ -30,7 +30,7 @@ public:
 	/// <returns>パスのポイントの数。</returns>
 	const int GetNumberPoint() const
 	{
-		return m_pointMap.size();
+		return static_cast<const int>(m_pointMap.size());
 	}
 	/// <summary>
 	/// 最初のポイントを取得。
