@@ -58,7 +58,8 @@ namespace nsK2EngineLow {
 			const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
 			AlphaBlendMode alphaBlendMode,
 			bool isDepthWrite,
-			bool isDepthTest
+			bool isDepthTest,
+			D3D12_CULL_MODE cullMode
 		);
 		/// <summary>
 		/// ï`âÊÅB
@@ -125,7 +126,8 @@ namespace nsK2EngineLow {
 			const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
 			AlphaBlendMode alphaBlendMode,
 			bool isDepthWrite,
-			bool isDepthTest
+			bool isDepthTest,
+			D3D12_CULL_MODE cullMode
 		);
 
 

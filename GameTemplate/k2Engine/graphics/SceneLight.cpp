@@ -75,15 +75,7 @@ namespace nsK2Engine {
             sp.UnUse();
             m_unuseSpotLightQueue.push_back(&sp);
         }
-        // ボリュームライトマップを作成。
-        m_volumeLightMap.Create(
-            FRAME_BUFFER_W,
-            FRAME_BUFFER_H,
-            1,
-            1,
-            g_drawVolumeLightMapFormat.colorBufferFormat,
-            g_drawVolumeLightMapFormat.depthBufferFormat
-        );
+        
         m_volumeLightMapFront.Create(
             FRAME_BUFFER_W,
             FRAME_BUFFER_H,

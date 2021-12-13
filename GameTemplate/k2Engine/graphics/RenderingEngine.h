@@ -61,6 +61,8 @@ namespace nsK2Engine {
         enum EnEvent {
             enEventReInitIBLTexture,    // IBLテクスチャが再初期化された。
         };
+
+        ~RenderingEngine();
         /// <summary>
         /// レンダリングパイプラインを初期化
         /// </summary>

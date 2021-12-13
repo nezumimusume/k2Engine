@@ -49,6 +49,10 @@ TextureCube<float4> g_skyCubeMap : register(t15);
 StructuredBuffer<uint> pointLightListInTile : register(t20);
 // タイルごとのスポットライトのインデックスのリスト。
 StructuredBuffer<uint> spotLightListInTile : register(t21);
+// ボリュームライトマップ(背面)
+Texture2D<float4> g_volumeLightMapBack : register(t22);
+// ボリュームライトマップ(前面)
+Texture2D<float4> g_volumeLightMapFront : register(t23);
 
 #include "PBRLighting.h"
 
@@ -328,6 +332,116 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         worldPos,
         viewportPos
     );
+
+    // todo ボリュームライトのテスト
+    float volumeFrontZ = g_volumeLightMapFront.Sample(Sampler, In.uv).r;
+    float volumeBackZ = g_volumeLightMapBack.Sample(Sampler, In.uv).r;
+    float3 volumePosBack = CalcWorldPosFromUVZ( In.uv, volumeBackZ, mViewProjInv);
+    float3 volumePosFront = CalcWorldPosFromUVZ( In.uv, volumeFrontZ, mViewProjInv);
+    
+    float t0 = dot( spotLight[0].direction, volumePosFront - spotLight[0].position);
+    float t1 = dot( spotLight[0].direction, volumePosBack - spotLight[0].position);
+    float t = t0 / (t0 + t1);
+    float3 volumeCenterPos = lerp( volumePosFront, volumePosBack, t);
+    float volume = length(volumePosBack - volumePosFront);
+    if( volume > 0.001f){
+        float rayStep = volume / 4.0f;
+        
+        // 0番目のスポットライトとボリュームライトの中心座標を使って、適当に光の量を計算する。
+        // 積分は後でね・・・。
+        // 距離による減衰
+        float3 ligDir = (volumeCenterPos - spotLight[0].position);
+        float distance = length(ligDir);
+        ligDir = normalize(ligDir);
+        float affect = pow( 1.0f - min(1.0f, distance / spotLight[0].attn.x), spotLight[0].attn.y);
+        
+        // 続いて角度による減衰を計算する。
+        // 角度に比例して小さくなっていく影響率を計算する
+        float angle = dot(ligDir, spotLight[0].direction);
+        // dot()で求めた値をacos()に渡して角度を求める
+        angle = abs(acos(angle));
+        float angleAffect = max( 0.0f, 1.0f - 1.0f / spotLight[0].attn.z * angle );
+        affect *= pow( angleAffect, spotLight[0].attn.w);
+
+        // ボリュームライトの中央地点の光の量を計算する。
+        lig += albedoColor * spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) * volume * 0.01f;
+        /*float3 centerLig = albedoColor * spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) ;
+        float3 prevLig = centerLig ;
+        
+        // 正の方向にレイマーチングを進める。
+        {
+            float3 rayDirection = (volumePosFront - volumeCenterPos ) ;
+            // 正の方向のボリュームを求める。
+            volume = max( 0.001f, length(rayDirection) );
+            rayDirection /= volume;
+            // レイステップの長さ。
+            int numRayStep = 3;
+            // 一つのステップの長さを計算する。
+            float rayStepLen = volume / (numRayStep + 1); 
+            for( int rayStep = 0; rayStep < numRayStep; rayStep++){
+                float pos = volumeCenterPos + rayDirection * rayStepLen * rayStep;
+                // 0番目のスポットライトを使って、光の量を計算する。
+                // 距離による減衰
+                float3 ligDir = (pos - spotLight[0].position);
+                float distance = length(ligDir);
+                ligDir = normalize(ligDir);
+                float affect = pow( 1.0f - min(1.0f, distance / spotLight[0].attn.x), spotLight[0].attn.y);
+                
+                // 続いて角度による減衰を計算する。
+                // 角度に比例して小さくなっていく影響率を計算する
+                float angle = dot(ligDir, spotLight[0].direction);
+                // dot()で求めた値をacos()に渡して角度を求める
+                angle = abs(acos(angle));
+                float angleAffect = max( 0.0f, 1.0f - 1.0f / spotLight[0].attn.z * angle );
+                affect *= pow( angleAffect, spotLight[0].attn.w);
+
+                // ボリュームライトのこの地点の光の量を計算する。
+                float3 currentLig = spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) ;
+                // 一つ前のステップの光の量と、この地点の光の量を使って、
+                // 光の量を積分する。
+                lig += albedoColor * (prevLig + currentLig) * rayStepLen * 0.5f; // 0.001fは大気中のホコリの密度。
+                prevLig = currentLig;
+
+            }
+        }
+        prevLig = centerLig ;
+        // 負の方向にレイマーチングを進める。
+        {
+            float3 rayDirection = (volumePosBack - volumeCenterPos ) ;
+            // 正の方向のボリュームを求める。
+            volume = max( 0.001f, length(rayDirection) );
+            rayDirection /= volume;
+            // レイステップの長さ。
+            int numRayStep = 3;
+            // 一つのステップの長さを計算する。
+            float rayStepLen = volume / (numRayStep + 1); 
+            for( int rayStep = 0; rayStep < numRayStep; rayStep++){
+                float pos = volumeCenterPos + rayDirection * rayStepLen * rayStep;
+                // 0番目のスポットライトを使って、光の量を計算する。
+                // 距離による減衰
+                float3 ligDir = (pos - spotLight[0].position);
+                float distance = length(ligDir);
+                ligDir = normalize(ligDir);
+                float affect = pow( 1.0f - min(1.0f, distance / spotLight[0].attn.x), spotLight[0].attn.y);
+                
+                // 続いて角度による減衰を計算する。
+                // 角度に比例して小さくなっていく影響率を計算する
+                float angle = dot(ligDir, spotLight[0].direction);
+                // dot()で求めた値をacos()に渡して角度を求める
+                angle = abs(acos(angle));
+                float angleAffect = max( 0.0f, 1.0f - 1.0f / spotLight[0].attn.z * angle );
+                affect *= pow( angleAffect, spotLight[0].attn.w);
+
+                // ボリュームライトのこの地点の光の量を計算する。
+                float3 currentLig = spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) ;
+                // 一つ前のステップの光の量と、この地点の光の量を使って、
+                // 光の量を積分する。
+                lig += albedoColor * (prevLig + currentLig) * rayStepLen * 0.5f; // 0.001fは大気中のホコリの密度。
+                prevLig = currentLig;
+
+            }
+        }*/
+    }
 
     
     if (isIBL == 1) {

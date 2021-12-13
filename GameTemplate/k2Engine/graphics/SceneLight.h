@@ -156,8 +156,7 @@ namespace nsK2Engine {
         float pad2;
         Vector3 direction;                  // 射出方向。
         float pad3;
-        Vector3 attn = {0.0f, 1.0f, 0.0f};  // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ、zに射出角度(単位ラジアン。)
-        float pad4;
+        Vector4 attn = {0.0f, 1.0f, 0.0f, 1.0f};  // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ、zに射出角度(単位ラジアン。)、wに射出角度に累乗するパラーメータ。
         Vector3 directionInView;            // カメラ空間での射出方向。
         float pad5;
    public:
@@ -225,9 +224,13 @@ namespace nsK2Engine {
         /// 影響率の累乗数を設定。
         /// </summary>
         /// <param name="powParam"></param>
-        void SetAffectPowParam(float powParam)
+        void SetRangeAffectPowParam(float powParam)
         {
             attn.y = powParam;
+        }
+        void SetAngleAffectPowParam(float powParam)
+        {
+            attn.w = powParam;
         }
         /// <summary>
         /// 射出角度
@@ -448,6 +451,22 @@ namespace nsK2Engine {
         /// ボリュームライトの描画確認用。
         /// </summary>
         void DebugDraw(RenderContext& rc);
+        /// <summary>
+        /// ボリュームライトモデルの背面のZ値を書き込んだテクスチャを取得。
+        /// </summary>
+        /// <returns></returns>
+        Texture& GetVolumeLightMapBackTexture()
+        {
+            return m_volumeLightMapBack.GetRenderTargetTexture();
+        }
+        /// <summary>
+        /// ボリュームライトモデルの前面のZ値を書き込んだテクスチャを取得。
+        /// </summary>
+        /// <returns></returns>
+        Texture& GetVolumeLightMapFrontTexture()
+        {
+            return m_volumeLightMapFront.GetRenderTargetTexture();
+        }
     private:
         /// <summary>
         /// 新しい動的ライトを追加。
@@ -491,7 +510,6 @@ namespace nsK2Engine {
         std::deque< SpotLight* > m_unuseSpotLightQueue;         // 未使用のスポットライトのキュー。。
         RenderTarget m_volumeLightMapFront;                     // 手前のボリュームライトマップ。
         RenderTarget m_volumeLightMapBack;                      // 奥側のボリュームライトマップ。
-        RenderTarget m_volumeLightMap;                          // 奥側のボリュームライトマップ。
         std::list< VolumeSpotLight* > m_volumeSpotLightArray;   // ボリュームスポットライトの配列。
     };
 }

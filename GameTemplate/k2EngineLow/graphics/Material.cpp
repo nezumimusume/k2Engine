@@ -161,7 +161,8 @@ namespace nsK2EngineLow {
 		UINT offsetInDescriptorsFromTableStartSRV,
 		AlphaBlendMode alphaBlendMode,
 		bool isDepthWrite,
-		bool isDepthTest
+		bool isDepthTest,
+		D3D12_CULL_MODE cullMode
 	)
 	{
 		//テクスチャをロード。
@@ -211,14 +212,21 @@ namespace nsK2EngineLow {
 			//シェーダーを初期化。
 			InitShaders(fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
 			//パイプラインステートを初期化。
-			InitPipelineState(colorBufferFormat, alphaBlendMode, isDepthWrite, isDepthTest);
+			InitPipelineState(
+				colorBufferFormat, 
+				alphaBlendMode, 
+				isDepthWrite, 
+				isDepthTest,
+				cullMode
+			);
 		}
 	}
 	void Material::InitPipelineState(
 		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
 		AlphaBlendMode alphaBlendMode,
 		bool isDepthWrite,
-		bool isDepthTest
+		bool isDepthTest,
+		D3D12_CULL_MODE cullMode
 	) {
 		// 頂点レイアウトを定義する。
 		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -239,7 +247,7 @@ namespace nsK2EngineLow {
 		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel->GetCompiledBlob());
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psModel->GetCompiledBlob());
 		psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+		psoDesc.RasterizerState.CullMode = cullMode;
 		psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
 		if (alphaBlendMode == AlphaBlendMode_Trans) {

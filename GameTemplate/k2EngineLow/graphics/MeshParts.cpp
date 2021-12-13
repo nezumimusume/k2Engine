@@ -32,7 +32,8 @@ namespace nsK2EngineLow {
 		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
 		AlphaBlendMode alphaBlendMode,
 		bool isDepthWrite,
-		bool isDepthTest
+		bool isDepthTest,
+		D3D12_CULL_MODE cullMode
 	)
 	{
 		m_meshs.resize(tkmFile.GetNumMesh());
@@ -51,7 +52,8 @@ namespace nsK2EngineLow {
 				colorBufferFormat,
 				alphaBlendMode,
 				isDepthWrite,
-				isDepthTest
+				isDepthTest,
+				cullMode
 			);
 			meshNo++;
 		});
@@ -129,7 +131,8 @@ namespace nsK2EngineLow {
 		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
 		AlphaBlendMode alphaBlendMode,
 		bool isDepthWrite,
-		bool isDepthTest
+		bool isDepthTest,
+		D3D12_CULL_MODE cullMode
 	) {
 		//1. 頂点バッファを作成。
 		int numVertex = (int)tkmMesh.vertexBuffer.size();
@@ -195,7 +198,8 @@ namespace nsK2EngineLow {
 				NUM_SRV_ONE_MATERIAL * materialNum,
 				alphaBlendMode,
 				isDepthWrite,
-				isDepthTest
+				isDepthTest,
+				cullMode
 			);
 			//作成したマテリアル数をカウントする。
 			materialNum++;

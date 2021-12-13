@@ -95,11 +95,14 @@ void Player::Update()
 		m_pointLightList.push_back(newPt);
 	}
 	Vector3 pos = m_position;
-	pos.y += 30.0f;
+	pos.y += 50.0f;
 	m_spotLight->SetPosition(pos);
-	m_spotLight->SetRange( 800.0f );
-	m_spotLight->SetAngle(Math::DegToRad(45.0f));
+	m_spotLight->SetRange( 2400.0f );
+	m_spotLight->SetAngle(Math::DegToRad(10.0f));
 	m_spotLight->SetDirection(m_forward);
+	m_spotLight->SetRangeAffectPowParam(20.0f);
+	m_spotLight->SetAngleAffectPowParam(1.0f);
+	m_spotLight->SetColor( 100.f, 0.f, 0.f);
 	m_volumeSpotLight.Update(*m_spotLight);
 }
 

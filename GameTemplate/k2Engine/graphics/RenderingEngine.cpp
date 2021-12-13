@@ -3,6 +3,10 @@
 
 namespace nsK2Engine {
 
+    RenderingEngine::~RenderingEngine()
+    {
+        g_sceneLight = nullptr;
+    }
     void RenderingEngine::Init(bool isSoftShadow)
     {
         m_isSoftShadow = isSoftShadow;
@@ -58,7 +62,8 @@ namespace nsK2Engine {
         spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
         spriteInitData.m_expandShaderResoruceView[0] = &m_pointLightNoListInTileUAV;
         spriteInitData.m_expandShaderResoruceView[1] = &m_spotLightNoListInTileUAV;
-
+        spriteInitData.m_expandShaderResoruceView[2] = &m_sceneLight.GetVolumeLightMapBackTexture();
+        spriteInitData.m_expandShaderResoruceView[3] = &m_sceneLight.GetVolumeLightMapFrontTexture();
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
         {
             for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)

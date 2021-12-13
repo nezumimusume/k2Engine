@@ -70,7 +70,9 @@ Game::~Game()
 
 	//ポイントライトを削除。
 	for (auto pt : m_pointLightList) {
-		g_sceneLight->DeletePointLight(pt);
+		if (g_sceneLight) {
+			g_sceneLight->DeletePointLight(pt);
+		}
 	}
 }
 void Game::InitSky()
@@ -283,7 +285,6 @@ void Game::CountTimer()
 
 void Game::Update()
 {
-	return;
 	if (m_gameState == enGameState_GameClear_Idle)
 	{
 

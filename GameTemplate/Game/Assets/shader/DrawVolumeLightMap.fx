@@ -33,5 +33,5 @@ SPSIn VSMain(float4 pos : POSITION)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-	return float4( 1.0f, 0.0f, 0.0f, 1.0f);
+	return float4( psIn.pos.z, psIn.pos.z, psIn.pos.z, psIn.pos.z);
 }

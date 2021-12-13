@@ -10,7 +10,9 @@ namespace nsK2Engine {
 	VolumeSpotLight::~VolumeSpotLight()
 	{
 		// シーンライトから削除。
-		g_sceneLight->RemoveVolumeSpotLight(*this);
+		if (g_sceneLight) {
+			g_sceneLight->RemoveVolumeSpotLight(*this);
+		}
 	}
 	void VolumeSpotLight::Init()
 	{
@@ -21,8 +23,12 @@ namespace nsK2Engine {
 		modelInitData.m_tkmFilePath = "Assets/modelData/preset/VolumeSpotLight.tkm";
 		modelInitData.m_fxFilePath = "Assets/shader/DrawVolumeLightMap.fx";
 		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapFormat.colorBufferFormat;
+		// 背面カリング
+		modelInitData.m_cullMode = D3D12_CULL_MODE_BACK;
 		m_modelFront.Init(modelInitData);
 
+		// 表面カリング
+		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT;
 		m_modelBack.Init(modelInitData);
 	}
 	void VolumeSpotLight::DrawToVolumeLightMapBack(RenderContext& rc)

@@ -25,7 +25,8 @@ namespace nsK2EngineLow {
 			UINT offsetInDescriptorsFromTableStartSRV,
 			AlphaBlendMode alphaBlendMode,
 			bool isDepthWrite,
-			bool isDepthTest
+			bool isDepthTest,
+			D3D12_CULL_MODE cullMode
 		);
 		/// <summary>
 		/// レンダリングを開始するときに呼び出す関数。
@@ -91,7 +92,8 @@ namespace nsK2EngineLow {
 			const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
 			AlphaBlendMode alphaBlendMode,
 			bool isDepthWrite,
-			bool isDepthTest
+			bool isDepthTest,
+			D3D12_CULL_MODE cullMode
 		);
 		/// <summary>
 		/// シェーダーの初期化。
