@@ -103,6 +103,10 @@ namespace nsK2Engine {
         // ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒg‚Ì”w–Ê‚ð•`‰æ
         rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapBack);
         rc.SetRenderTargetAndViewport(m_volumeLightMapBack);
+        rc.SetRenderTarget(
+            m_volumeLightMapBack.GetRTVCpuDescriptorHandle(),
+            m_gBuffer[enGBufferAlbedoDepth].GetDSVCpuDescriptorHandle()
+        );
         rc.ClearRenderTargetView(m_volumeLightMapBack);
         for (auto& volumeLig : m_volumeSpotLightArray) {
             volumeLig->DrawToVolumeLightMapBack(rc);

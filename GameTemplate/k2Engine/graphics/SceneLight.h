@@ -446,7 +446,8 @@ namespace nsK2Engine {
         /// ボリュームライトマップに描画
         /// </summary>
         /// <param name="rc">レンダリングコンテキスト</param>
-        void DrawToVulumeLightMap(RenderContext& rc);
+        /// <param name="dsvHandle">デプスステンシルバッファのディスクリプタハンドル</param>
+        void DrawToVulumeLightMap(RenderContext& rc, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
         /// <summary>
         /// ボリュームライトの描画確認用。
         /// </summary>
