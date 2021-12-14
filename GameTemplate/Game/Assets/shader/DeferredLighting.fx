@@ -256,7 +256,7 @@ float3 CalcSpotLight(
         );
         // 3. 影響率を計算する。影響率は0.0～1.0の範囲で、
         //     指定した距離（pointsLights[i].range）を超えたら、影響率は0.0になる
-        float affect = 1.0f - min(1.0f, distance / spotLight[ligNo].attn.x);
+        float affect = pow( 1.0f - min(1.0f, distance / spotLight[ligNo].attn.x), spotLight[ligNo].attn.y);
 
         // 入射光と射出方向の角度による減衰を計算する
         // dot()を利用して内積を求める
@@ -265,10 +265,10 @@ float3 CalcSpotLight(
         angle = abs(acos(angle));
         // step-12 角度による影響率を求める
         // 角度に比例して小さくなっていく影響率を計算する
-        float angleAffect = max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].attn.z * angle );
+        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].attn.z * angle ), spotLight[ligNo].attn.w);
         affect *= angleAffect;
 
-        affect = pow( affect, spotLight[ligNo].attn.y );
+        
         lig += ptLig * affect * angleAffect;
     }
     return lig;
@@ -334,6 +334,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
     );
 
     // todo ボリュームライトのテスト
+    
     float volumeFrontZ = g_volumeLightMapFront.Sample(Sampler, In.uv).r;
     float volumeBackZ = g_volumeLightMapBack.Sample(Sampler, In.uv).r;
     float3 volumePosBack = CalcWorldPosFromUVZ( In.uv, volumeBackZ, mViewProjInv);
@@ -364,8 +365,10 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         affect *= pow( angleAffect, spotLight[0].attn.w);
 
         // ボリュームライトの中央地点の光の量を計算する。
+    #if 0
         lig += albedoColor * spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) * volume * 0.01f;
-        /*float3 centerLig = albedoColor * spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) ;
+    #else
+        float3 centerLig = albedoColor * spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) ;
         float3 prevLig = centerLig ;
         
         // 正の方向にレイマーチングを進める。
@@ -399,7 +402,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
                 float3 currentLig = spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) ;
                 // 一つ前のステップの光の量と、この地点の光の量を使って、
                 // 光の量を積分する。
-                lig += albedoColor * (prevLig + currentLig) * rayStepLen * 0.5f; // 0.001fは大気中のホコリの密度。
+                lig += albedoColor * (prevLig + currentLig) * rayStepLen * 0.1f; // 0.001fは大気中のホコリの密度。
                 prevLig = currentLig;
 
             }
@@ -436,11 +439,12 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
                 float3 currentLig = spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) ;
                 // 一つ前のステップの光の量と、この地点の光の量を使って、
                 // 光の量を積分する。
-                lig += albedoColor * (prevLig + currentLig) * rayStepLen * 0.5f; // 0.001fは大気中のホコリの密度。
+                lig += albedoColor * (prevLig + currentLig) * rayStepLen * 0.1f; // 0.001fは大気中のホコリの密度。
                 prevLig = currentLig;
 
             }
-        }*/
+        }
+    #endif
     }
 
     

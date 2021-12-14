@@ -100,9 +100,9 @@ void Player::Update()
 	m_spotLight->SetRange( 2400.0f );
 	m_spotLight->SetAngle(Math::DegToRad(10.0f));
 	m_spotLight->SetDirection(m_forward);
-	m_spotLight->SetRangeAffectPowParam(20.0f);
+	m_spotLight->SetRangeAffectPowParam(5.0f);
 	m_spotLight->SetAngleAffectPowParam(1.0f);
-	m_spotLight->SetColor( 100.f, 0.f, 0.f);
+	m_spotLight->SetColor( 1.5, 1.5f, 1.5f);
 	m_volumeSpotLight.Update(*m_spotLight);
 }
 

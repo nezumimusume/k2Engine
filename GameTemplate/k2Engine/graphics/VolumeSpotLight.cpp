@@ -23,8 +23,10 @@ namespace nsK2Engine {
 		modelInitData.m_tkmFilePath = "Assets/modelData/preset/VolumeSpotLight.tkm";
 		modelInitData.m_fxFilePath = "Assets/shader/DrawVolumeLightMap.fx";
 		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapFormat.colorBufferFormat;
+		modelInitData.m_expandShaderResoruceView[0] = &g_renderingEngine->GetZPrepassDepthTexture();
 		// 背面カリング
 		modelInitData.m_cullMode = D3D12_CULL_MODE_BACK;
+		
 		m_modelFront.Init(modelInitData);
 
 		// 表面カリング

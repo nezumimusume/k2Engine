@@ -24,7 +24,8 @@ namespace nsK2EngineLow {
 		const char* m_fxFilePath = nullptr;								// .fxファイルのファイルパス。
 		void* m_expandConstantBuffer = nullptr;							// ユーザー拡張の定数バッファ。
 		int m_expandConstantBufferSize = 0;								// ユーザー拡張の定数バッファのサイズ。
-		std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };			// ユーザー拡張のシェーダーリソース。
+		std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };	// ユーザー拡張のシェーダーリソース。
+																										// t10レジスタから順番に割り当てられます。
 		Skeleton* m_skeleton = nullptr;									// スケルトン。
 		EnModelUpAxis m_modelUpAxis = enModelUpAxisZ;					// モデルの上方向。
 		AlphaBlendMode m_alphaBlendMode = AlphaBlendMode_None;			// アルファブレンディングモード。
