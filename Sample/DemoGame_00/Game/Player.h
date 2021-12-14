@@ -1,4 +1,6 @@
+#pragma once
 
+#include "graphics/VolumeSpotLight.h"
 
 class Player : public IGameObject
 {
@@ -94,10 +96,10 @@ private:
 		enAnimationClip_Num,
 	};
 	AnimationClip		m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
-	
 	EnPlayerState		m_playerState = enPlayerState_Idle;				//プレイヤーのステート(状態)を表す変数。
 	Vector3				m_forward;
-
 	std::vector<PointLight* > m_pointLightList;
+	SpotLight* m_spotLight = nullptr;
+	VolumeSpotLight m_volumeSpotLight;	// ボリュームスポットライト。
 };
 

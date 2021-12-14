@@ -30,10 +30,10 @@ namespace nsK2Engine {
         // ディファードライティング用の定数バッファ
         struct SDeferredLightingCB
         {
-            Light m_light;      // ライト
-            int m_isIBL;        // IBLを行う。
-            Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
+            Light m_light;          // ライト
+            Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP]; // ライトビュープロジェクション行列。
             float m_iblLuminance;   // IBLの明るさ。
+            int m_isIBL;            // IBLを行う。
         };
 
         //メインレンダリングターゲットのスナップショット
@@ -46,13 +46,14 @@ namespace nsK2Engine {
         // レンダリングパス
         enum class EnRenderingPass
         {
-            enRenderToShadowMap,    // シャドウマップへの描画パス
-            enZPrepass,             // ZPrepass
-            enLightCulling,         // ライトカリング。
-            enRenderToGBuffer,      // G-Bufferへの描画パス
-            enForwardRender,        // フォワードレンダリングの描画パス
-            enPostEffect,           // ポストエフェクト
-            enRender2D,             // 2D描画。
+            enRenderToShadowMap,        // シャドウマップへの描画パス
+            enZPrepass,                 // ZPrepass
+            enRenderToVolumeLightMap,   // ボリュームライトマップへの描画
+            enLightCulling,             // ライトカリング。
+            enRenderToGBuffer,          // G-Bufferへの描画パス
+            enForwardRender,            // フォワードレンダリングの描画パス
+            enPostEffect,               // ポストエフェクト
+            enRender2D,                 // 2D描画。
         };
         /// <summary>
         /// イベント。
@@ -60,6 +61,8 @@ namespace nsK2Engine {
         enum EnEvent {
             enEventReInitIBLTexture,    // IBLテクスチャが再初期化された。
         };
+
+        ~RenderingEngine();
         /// <summary>
         /// レンダリングパイプラインを初期化
         /// </summary>
@@ -372,6 +375,7 @@ namespace nsK2Engine {
         RenderTarget m_gBuffer[enGBufferNum];                           // G-Buffer
         PostEffect m_postEffect;                                        // ポストエフェクト
         RWStructuredBuffer m_pointLightNoListInTileUAV;                 // タイルごとのポイントライトのリストのUAV。
+        RWStructuredBuffer m_spotLightNoListInTileUAV;                  // タイルごとのスポットライトのリストのUAV。
         std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。
         SceneLight m_sceneLight;                                        // シーンライト。
         bool m_isSoftShadow = false;                                    // ソフトシャドウフラグ。

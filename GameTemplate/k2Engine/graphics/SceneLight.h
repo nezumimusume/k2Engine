@@ -1,6 +1,8 @@
 #pragma once
 
 namespace nsK2Engine {
+
+    class VolumeSpotLight;
     // ディレクションライト
     struct DirectionalLight
     {
@@ -145,18 +147,133 @@ namespace nsK2Engine {
     /// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
     /// </remark>
    struct SpotLight {
-        Vector3 position;       // 座標
-        int isUse = false;      // 使用中フラグ。
-        Vector3 positionInView; // カメラ空間での座標
+   private:
+        Vector3 position;                   // 座標
+        int isUse = false;                  // 使用中フラグ。
+        Vector3 positionInView;             // カメラ空間での座標
         float pad1;
-        Vector3 color;          // ライトのカラー
+        Vector3 color;                      // ライトのカラー
         float pad2;
-        Vector3 attn;           // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ。
+        Vector3 direction;                  // 射出方向。
         float pad3;
-        Vector3 direction;      // 射出方向。
-        float angle;            // 射出角度。
+        Vector4 attn = {0.0f, 1.0f, 0.0f, 1.0f};  // 減衰パラメータ。xに影響範囲、yには影響率に累乗するパラメータ、zに射出角度(単位ラジアン。)、wに射出角度に累乗するパラーメータ。
+        Vector3 directionInView;            // カメラ空間での射出方向。
+        float pad5;
+   public:
         /// <summary>
-        /// スポットライトを使用中にする。
+        /// 射出方向を設定。
+        /// </summary>
+        /// <param name="direction"></param>
+        void SetDirection(const Vector3& direction)
+        {
+            this->direction = direction;
+            this->direction.Normalize();
+        }
+        /// <summary>
+        /// 射出方向を設定。
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        void SetDirection(float x, float y, float z)
+        {
+            direction.Set(x, y, z);
+            direction.Normalize();
+        }
+        /// <summary>
+        /// 射出方向を取得。
+        /// </summary>
+        /// <returns></returns>
+        const Vector3& GetDirection() const
+        {
+            return direction;
+;        }
+        /// <summary>
+        /// 座標を設定。
+        /// </summary>
+        /// <param name="position"></param>
+        void SetPosition(const Vector3& position)
+        {
+            this->position = position;
+        }
+        void SetPosition(float x, float y, float z)
+        {
+            SetPosition({ x, y, z });
+        }
+        /// <summary>
+        /// カラーを設定。
+        /// </summary>
+        /// <param name="color"></param>
+        void SetColor(const Vector3& color)
+        {
+            this->color = color;
+        }
+        void SetColor(float r, float g, float b)
+        {
+            SetColor({ r, g, b });
+        }
+        /// <summary>
+        /// 範囲を設定。
+        /// </summary>
+        /// <param name="range"></param>
+        void SetRange(float range)
+        {
+            attn.x = range;
+        }
+        /// <summary>
+        /// 影響率の累乗数を設定。
+        /// </summary>
+        /// <param name="powParam"></param>
+        void SetRangeAffectPowParam(float powParam)
+        {
+            attn.y = powParam;
+        }
+        void SetAngleAffectPowParam(float powParam)
+        {
+            attn.w = powParam;
+        }
+        /// <summary>
+        /// 射出角度
+        /// </summary>
+        /// <param name="angle"></param>
+        void SetAngle(float angle)
+        {
+            attn.z = angle;
+        }
+        /// <summary>
+        /// 射出角度を取得。
+        /// </summary>
+        /// <returns></returns>
+        float GetAngle() const
+        {
+            return attn.z;
+        }
+        /// <summary>
+        /// 座標を取得。
+        /// </summary>
+        /// <returns></returns>
+        const Vector3& GetPosition() const
+        {
+            return position;
+        }
+        /// <summary>
+        /// カラーを取得。
+        /// </summary>
+        /// <returns></returns>
+        const Vector3& GetColor() const
+        {
+            return color;
+        }
+        /// <summary>
+        /// 影響範囲を取得。
+        /// </summary>
+        /// <returns></returns>
+        float GetRange() const
+        {
+            return attn.x;
+        }
+        /// <summary>
+        /// ポイントライトを使用中にする。
         /// </summary>
         /// /// <remark>
         /// この関数はk2Engine内部で利用されています。
@@ -167,7 +284,7 @@ namespace nsK2Engine {
             isUse = true;
         }
         /// <summary>
-        /// スポットライトを未使用にする。
+        /// ポイントライトを未使用にする。
         /// </summary>
         /// <remark>
         /// この関数はk2Engine内部で利用されています。
@@ -177,6 +294,14 @@ namespace nsK2Engine {
         {
             isUse = false;
         }
+        /// <summary>
+        /// 更新。
+        /// </summary>
+        /// <remark>
+        /// この関数はk2Engine内部で利用されています。
+        /// ゲーム側からは使用しないように注意してください。
+        /// </remark>
+        void Update();
     };
     // ライト構造体
     struct Light
@@ -188,6 +313,7 @@ namespace nsK2Engine {
         Vector3 eyePos;         // カメラの位置
         int numPointLight;      // ポイントライトの数。
         Vector3 ambinetLight;   // 環境光。
+        int numSpotLight;       // スポットライトの数。
     };
 
     /// <summary>
@@ -294,9 +420,53 @@ namespace nsK2Engine {
             // todo 未対応。
         }
         /// <summary>
+        /// ボリュームスポットライトをシーンに追加
+        /// </summary>
+        /// <param name="lig">ライト</param>
+        void AddVolumeSpotLight(VolumeSpotLight& lig)
+        {
+            m_volumeSpotLightArray.emplace_back(&lig);
+        }
+        /// <summary>
+        /// ボリュームスポットライトをシーンから削除
+        /// </summary>
+        /// <param name="lig"></param>
+        void RemoveVolumeSpotLight(VolumeSpotLight& lig)
+        {
+            auto it = std::find(m_volumeSpotLightArray.begin(), m_volumeSpotLightArray.end(), &lig);
+            if (it != m_volumeSpotLightArray.end()) {
+                m_volumeSpotLightArray.erase(it);
+            }
+        }
+        /// <summary>
         /// 更新
         /// </summary>
         void Update();
+        /// <summary>
+        /// ボリュームライトマップに描画
+        /// </summary>
+        /// <param name="rc">レンダリングコンテキスト</param>
+        void DrawToVulumeLightMap(RenderContext& rc);
+        /// <summary>
+        /// ボリュームライトの描画確認用。
+        /// </summary>
+        void DebugDraw(RenderContext& rc);
+        /// <summary>
+        /// ボリュームライトモデルの背面のZ値を書き込んだテクスチャを取得。
+        /// </summary>
+        /// <returns></returns>
+        Texture& GetVolumeLightMapBackTexture()
+        {
+            return m_volumeLightMapBack.GetRenderTargetTexture();
+        }
+        /// <summary>
+        /// ボリュームライトモデルの前面のZ値を書き込んだテクスチャを取得。
+        /// </summary>
+        /// <returns></returns>
+        Texture& GetVolumeLightMapFrontTexture()
+        {
+            return m_volumeLightMapFront.GetRenderTargetTexture();
+        }
     private:
         /// <summary>
         /// 新しい動的ライトを追加。
@@ -336,7 +506,10 @@ namespace nsK2Engine {
         }
     private:
         Light m_light;  //シーンライト。
-        std::deque< PointLight* > m_unusePointLightQueue;   //未使用のポイントライトのキュー。
-        std::deque< SpotLight* > m_unuseSpotLightQueue;     //未使用のスポットライトのキュー。。
+        std::deque< PointLight* > m_unusePointLightQueue;       // 未使用のポイントライトのキュー。
+        std::deque< SpotLight* > m_unuseSpotLightQueue;         // 未使用のスポットライトのキュー。。
+        RenderTarget m_volumeLightMapFront;                     // 手前のボリュームライトマップ。
+        RenderTarget m_volumeLightMapBack;                      // 奥側のボリュームライトマップ。
+        std::list< VolumeSpotLight* > m_volumeSpotLightArray;   // ボリュームスポットライトの配列。
     };
 }

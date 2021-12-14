@@ -1,5 +1,6 @@
 #include "k2EnginePreCompile.h"
 #include "SceneLight.h"
+#include "VolumeSpotLight.h"
 
 namespace nsK2Engine {
     void PointLight::Update()
@@ -10,6 +11,18 @@ namespace nsK2Engine {
         }
         positionInView = position;
         g_camera3D->GetViewMatrix().Apply(positionInView);
+    }
+    void SpotLight::Update()
+    {
+        // 使用中のライトはカメラ空間での座標を計算する。
+        if (!isUse) {
+            return;
+        }
+        positionInView = position;
+        g_camera3D->GetViewMatrix().Apply(positionInView);
+        Matrix cameraRotInv = g_camera3D->GetCameraRotation();
+        cameraRotInv.Inverse();
+        cameraRotInv.Apply(directionInView);
     }
     void SceneLight::Init()
     {
@@ -57,21 +70,72 @@ namespace nsK2Engine {
             pt.SetAffectPowParam(1.0f);
             m_unusePointLightQueue.push_back(&pt);
         }
-        // 全てのスポットライトを未使用にする。
-        for (auto& spotLight : m_light.spotLights) {
-            spotLight.UnUse();
-            m_unuseSpotLightQueue.push_back(&spotLight);
+        // すべてのスポットライトを未使用にする。
+        for (auto& sp : m_light.spotLights) {
+            sp.UnUse();
+            m_unuseSpotLightQueue.push_back(&sp);
         }
+        
+        m_volumeLightMapFront.Create(
+            FRAME_BUFFER_W,
+            FRAME_BUFFER_H,
+            1,
+            1,
+            g_drawVolumeLightMapFormat.colorBufferFormat,
+            g_drawVolumeLightMapFormat.depthBufferFormat
+        );
+        m_volumeLightMapBack.Create(
+            FRAME_BUFFER_W,
+            FRAME_BUFFER_H,
+            1,
+            1,
+            g_drawVolumeLightMapFormat.colorBufferFormat,
+            g_drawVolumeLightMapFormat.depthBufferFormat
+        );
+
     }
     void SceneLight::SetIBLTextureForAmbient(const wchar_t* textureFilePath, float luminance)
     {
         g_renderingEngine->ReInitIBL(textureFilePath, luminance);
+    }
+    void SceneLight::DrawToVulumeLightMap(RenderContext& rc)
+    {
+        // ボリュームライトの背面を描画
+        rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapBack);
+        rc.SetRenderTargetAndViewport(m_volumeLightMapBack);
+        rc.ClearRenderTargetView(m_volumeLightMapBack);
+        for (auto& volumeLig : m_volumeSpotLightArray) {
+            volumeLig->DrawToVolumeLightMapBack(rc);
+        }
+        // ボリュームライトの前面を描画。
+        rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapFront);
+        rc.SetRenderTargetAndViewport(m_volumeLightMapFront);
+        rc.ClearRenderTargetView(m_volumeLightMapFront);
+        for (auto& volumeLig : m_volumeSpotLightArray) {
+            volumeLig->DrawToVolumeLightMapFront(rc);
+        }
+
+        // 奥と手前の書き込み完了待ち
+        rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapBack);
+        rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapFront);
+
+        // todo 続きはここから奥側と手前側の合成。
+    }
+    void SceneLight::DebugDraw(RenderContext& rc)
+    {
+        for (auto& volumeLig : m_volumeSpotLightArray) {
+            volumeLig->DrawToVolumeLightMapFront(rc);
+        }
     }
     void SceneLight::Update()
     {
         for (auto& pt : m_light.pointLights) {
             pt.Update();
         }
+        for (auto& sp : m_light.spotLights) {
+            sp.Update();
+        }
         m_light.numPointLight = MAX_POINT_LIGHT - static_cast<int>(m_unusePointLightQueue.size());
+        m_light.numSpotLight = MAX_SPOT_LIGHT - static_cast<int>(m_unuseSpotLightQueue.size());
     }
 }

@@ -18,6 +18,7 @@ namespace nsK2EngineLow {
 	}
 	void ConstantBuffer::Init(int size, void* srcData)
 	{
+		Release();
 		m_size = size;
 
 		//D3Dデバイスを取得。

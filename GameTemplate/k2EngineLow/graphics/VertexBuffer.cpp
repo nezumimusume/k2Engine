@@ -7,8 +7,13 @@ namespace nsK2EngineLow {
 	{
 		ReleaseD3D12Object(m_vertexBuffer);
 	}
+	void VertexBuffer::Release()
+	{
+		ReleaseD3D12Object(m_vertexBuffer);
+	}
 	void VertexBuffer::Init(int size, int stride)
 	{
+		Release();
 		auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 		auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 		auto rDesc = CD3DX12_RESOURCE_DESC::Buffer(size);

@@ -117,6 +117,9 @@
     <ClCompile Include="dbg\dbgVectorRenderer.cpp">
       <Filter>dbg</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\VolumeSpotLight.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -208,6 +211,9 @@
     <ClInclude Include="graphics\preRender\CalcAnimatedVertex.h" />
     <ClInclude Include="dbg\dbgVectorRenderer.h">
       <Filter>dbg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\VolumeSpotLight.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

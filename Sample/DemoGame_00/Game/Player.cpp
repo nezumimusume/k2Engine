@@ -51,6 +51,11 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/gameclear.wav");
 	// ポイントライトの生成
 	//m_pointLight = g_sceneLight->NewPointLight();
+	// スポットライトの生成。
+	m_spotLight = g_sceneLight->NewSpotLight();
+	m_spotLight->SetColor(100.0f, 100.0f, 100.0f);
+	// ボリュームスポットライトの初期化。
+	m_volumeSpotLight.Init();
 	return true;
 }
 
@@ -89,7 +94,16 @@ void Player::Update()
 		newPt->SetAffectPowParam(0.5f);
 		m_pointLightList.push_back(newPt);
 	}
-
+	Vector3 pos = m_position;
+	pos.y += 50.0f;
+	m_spotLight->SetPosition(pos);
+	m_spotLight->SetRange( 2400.0f );
+	m_spotLight->SetAngle(Math::DegToRad(10.0f));
+	m_spotLight->SetDirection(m_forward);
+	m_spotLight->SetRangeAffectPowParam(20.0f);
+	m_spotLight->SetAngleAffectPowParam(1.0f);
+	m_spotLight->SetColor( 100.f, 0.f, 0.f);
+	m_volumeSpotLight.Update(*m_spotLight);
 }
 
 void Player::Move()

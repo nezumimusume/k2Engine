@@ -2,20 +2,27 @@
 #include "LightCulling.h"
 
 namespace nsK2Engine {
-    void LightCulling::Init(Texture& depthTexture, ConstantBuffer& lightCB, RWStructuredBuffer& pointLightNoListInTileUAV)
-    {
+    void LightCulling::Init(
+        Texture& depthTexture, 
+        ConstantBuffer& lightCB, 
+        RWStructuredBuffer& pointLightNoListInTileUAV,
+        RWStructuredBuffer& spotLightNoListInTileUAV
+    ){
         m_pointLightNoListInTileUAV = &pointLightNoListInTileUAV;
+        m_spotLightNoListInTileUAV = &spotLightNoListInTileUAV;
+
         m_shader.LoadCS("Assets/shader/lightCulling.fx", "CSMain");
 
         // ライトカリングのカメラ用の定数バッファーを作成
         m_cameraDataCB.Init(sizeof(CameraData), nullptr);
 
         // ディスクリプタヒープを初期化。
-        m_descriptroHeap.RegistShaderResource(0, depthTexture);
-        m_descriptroHeap.RegistUnorderAccessResource(0, pointLightNoListInTileUAV);
-        m_descriptroHeap.RegistConstantBuffer(0, m_cameraDataCB);
-        m_descriptroHeap.RegistConstantBuffer(1, lightCB);
-        m_descriptroHeap.Commit();
+        m_descriptorHeap.RegistShaderResource(0, depthTexture);
+        m_descriptorHeap.RegistUnorderAccessResource(0, pointLightNoListInTileUAV);
+        m_descriptorHeap.RegistUnorderAccessResource(1, spotLightNoListInTileUAV);
+        m_descriptorHeap.RegistConstantBuffer(0, m_cameraDataCB);
+        m_descriptorHeap.RegistConstantBuffer(1, lightCB);
+        m_descriptorHeap.Commit();
 
         // ルートシグネチャを作成。
         m_rootSignature.Init(D3D12_FILTER_MIN_MAG_MIP_LINEAR,
@@ -46,7 +53,7 @@ namespace nsK2Engine {
 
         //ライトカリングのコンピュートシェーダーをディスパッチ
         rc.SetComputeRootSignature(m_rootSignature);
-        rc.SetComputeDescriptorHeap(m_descriptroHeap);
+        rc.SetComputeDescriptorHeap(m_descriptorHeap);
         rc.SetPipelineState(m_pipelineState);
 
         // グループの数はタイルの数

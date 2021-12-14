@@ -19,7 +19,37 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <returns></returns>
 		ID3D12DescriptorHeap* Get() const;
-
+		/// <summary>
+		/// シェーダーリソースを記憶するための領域をリサイズ
+		/// </summary>
+		/// <remark>
+		/// デフォルトで足りなくなった or 最適なサイズにしたい場合に利用してください。
+		/// </remark>
+		void ResizeShaderResource(int numSRV)
+		{
+			m_shaderResources.resize(numSRV);
+		}
+		/// <summary>
+		/// 定数バッファを記憶するための領域を確保
+		/// </summary>
+		/// <remark>
+		/// デフォルトで足りなくなった or 最適なサイズにしたい場合に利用してください。
+		/// </remark>
+		/// <param name="numCB"></param>
+		void ResizeConstantBuffer(int numCB)
+		{
+			m_constantBuffers.resize(numCB);
+		}
+		/// <summary>
+		/// UAVを記憶するための領域をリサイズ
+		/// </summary>
+		/// <remark>
+		/// デフォルトで足りなくなった or 最適なサイズにしたい場合に利用してください。
+		/// </remark>
+		void ResizeUnorderAccessResource(int numUAV)
+		{
+			m_uavResoruces.resize(numUAV);
+		}
 		/// <summary>
 		/// シェーダーリソースをディスクリプタヒープに登録。
 		/// </summary>
@@ -34,7 +64,7 @@ namespace nsK2EngineLow {
 				&sr,
 				&m_shaderResources.front(),
 				m_numShaderResource,
-				MAX_SHADER_RESOURCE,
+				static_cast<int>(m_shaderResources.size()),
 				L"DescriptorHeap::RegistShaderResource() レジスタ番号が範囲外です。"
 			);
 		}
@@ -53,7 +83,7 @@ namespace nsK2EngineLow {
 				&sr,
 				&m_uavResoruces.front(),
 				m_numUavResource,
-				MAX_SHADER_RESOURCE,
+				static_cast<int>(m_uavResoruces.size()),
 				L"DescriptorHeap::RegistUnorderAccessResource() レジスタ番号が範囲外です。"
 			);
 		}
@@ -71,7 +101,7 @@ namespace nsK2EngineLow {
 				&cb,
 				&m_constantBuffers.front(),
 				m_numConstantBuffer,
-				MAX_CONSTANT_BUFFER,
+				static_cast<int>(m_constantBuffers.size()),
 				L"DescriptorHeap::RegistConstantBuffer() レジスタ番号が範囲外です。"
 			);
 		}
@@ -220,9 +250,9 @@ namespace nsK2EngineLow {
 		}
 	private:
 		enum {
-			MAX_SHADER_RESOURCE = 1024 * 100,	//シェーダーリソースの最大数。
-			MAX_CONSTANT_BUFFER = 1024 * 10,	//定数バッファの最大数。
-			MAX_SAMPLER_STATE = 16,	//サンプラステートの最大数。
+			MAX_SHADER_RESOURCE = 128,	//シェーダーリソースの最大数。
+			MAX_CONSTANT_BUFFER = 32,	//定数バッファの最大数。
+			MAX_SAMPLER_STATE = 16,		//サンプラステートの最大数。
 		};
 		int m_numShaderResource = 0;	//シェーダーリソースの数。
 		int m_numConstantBuffer = 0;	//定数バッファの数。

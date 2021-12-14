@@ -44,7 +44,8 @@ namespace nsK2EngineLow {
 			initData.m_colorBufferFormat,
 			initData.m_alphaBlendMode,
 			initData.m_isDepthWrite,
-			initData.m_isDepthTest
+			initData.m_isDepthTest,
+			initData.m_cullMode
 		);
 
 		UpdateWorldMatrix(g_vec3Zero, g_quatIdentity, g_vec3One);

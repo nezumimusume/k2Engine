@@ -32,7 +32,8 @@ namespace nsK2EngineLow {
 		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
 		AlphaBlendMode alphaBlendMode,
 		bool isDepthWrite,
-		bool isDepthTest
+		bool isDepthTest,
+		D3D12_CULL_MODE cullMode
 	)
 	{
 		m_meshs.resize(tkmFile.GetNumMesh());
@@ -51,7 +52,8 @@ namespace nsK2EngineLow {
 				colorBufferFormat,
 				alphaBlendMode,
 				isDepthWrite,
-				isDepthTest
+				isDepthTest,
+				cullMode
 			);
 			meshNo++;
 		});
@@ -78,9 +80,23 @@ namespace nsK2EngineLow {
 	}
 	void MeshParts::CreateDescriptorHeaps()
 	{
-		//ディスクリプタヒープを構築していく。
+		// 必要なディスクリプタヒープの総数を計算する。
 		int srvNo = 0;
 		int cbNo = 0;
+		for (auto& mesh : m_meshs) {
+			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
+				srvNo += NUM_SRV_ONE_MATERIAL;
+				cbNo += NUM_CBV_ONE_MATERIAL;
+			}
+		}
+		// シェーダーリソースビューと定数バッファの登録できるサイズをリサイズする。
+		m_descriptorHeap.ResizeShaderResource(srvNo);
+		m_descriptorHeap.ResizeConstantBuffer(cbNo);
+		// UAVいらない。
+		m_descriptorHeap.ResizeUnorderAccessResource(0);
+		//ディスクリプタヒープを構築していく。
+		srvNo = 0;
+		cbNo = 0;
 		for (auto& mesh : m_meshs) {
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 
@@ -115,7 +131,8 @@ namespace nsK2EngineLow {
 		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat,
 		AlphaBlendMode alphaBlendMode,
 		bool isDepthWrite,
-		bool isDepthTest
+		bool isDepthTest,
+		D3D12_CULL_MODE cullMode
 	) {
 		//1. 頂点バッファを作成。
 		int numVertex = (int)tkmMesh.vertexBuffer.size();
@@ -181,7 +198,8 @@ namespace nsK2EngineLow {
 				NUM_SRV_ONE_MATERIAL * materialNum,
 				alphaBlendMode,
 				isDepthWrite,
-				isDepthTest
+				isDepthTest,
+				cullMode
 			);
 			//作成したマテリアル数をカウントする。
 			materialNum++;

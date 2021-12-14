@@ -38,6 +38,7 @@ namespace nsK2EngineLow {
 	void Texture::LoadTextureFromMemory(const char* memory, unsigned int size
 	)
 	{
+		Release();
 		auto device = g_graphicsEngine->GetD3DDevice();
 		DirectX::ResourceUploadBatch re(device);
 		re.Begin();
@@ -64,6 +65,7 @@ namespace nsK2EngineLow {
 	}
 	void Texture::LoadTextureFromDDSFile(const wchar_t* filePath)
 	{
+		Release();
 		auto device = g_graphicsEngine->GetD3DDevice();
 		DirectX::ResourceUploadBatch re(device);
 		re.Begin();

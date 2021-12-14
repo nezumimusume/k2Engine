@@ -59,6 +59,8 @@ namespace nsK2EngineLow {
 			return m_vertexBuffer;
 		}
 	private:
+		void Release();
+	private:
 		ID3D12Resource* m_vertexBuffer = nullptr;		//頂点バッファ。
 		D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;	//頂点バッファビュー。
 	};

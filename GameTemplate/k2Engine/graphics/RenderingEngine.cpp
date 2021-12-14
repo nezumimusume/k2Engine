@@ -3,6 +3,10 @@
 
 namespace nsK2Engine {
 
+    RenderingEngine::~RenderingEngine()
+    {
+        g_sceneLight = nullptr;
+    }
     void RenderingEngine::Init(bool isSoftShadow)
     {
         m_isSoftShadow = isSoftShadow;
@@ -18,7 +22,8 @@ namespace nsK2Engine {
         m_lightCulling.Init(
             m_zprepassRenderTarget.GetRenderTargetTexture(),
             m_diferredLightingSprite.GetExpandConstantBufferGPU(),
-            m_pointLightNoListInTileUAV
+            m_pointLightNoListInTileUAV,
+            m_spotLightNoListInTileUAV
         );
         m_postEffect.Init(
             m_mainRenderTarget,
@@ -55,8 +60,10 @@ namespace nsK2Engine {
         }
         spriteInitData.m_expandConstantBuffer = &m_deferredLightingCB;
         spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
-        spriteInitData.m_expandShaderResoruceView = &m_pointLightNoListInTileUAV;
-
+        spriteInitData.m_expandShaderResoruceView[0] = &m_pointLightNoListInTileUAV;
+        spriteInitData.m_expandShaderResoruceView[1] = &m_spotLightNoListInTileUAV;
+        spriteInitData.m_expandShaderResoruceView[2] = &m_sceneLight.GetVolumeLightMapBackTexture();
+        spriteInitData.m_expandShaderResoruceView[3] = &m_sceneLight.GetVolumeLightMapFrontTexture();
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
         {
             for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
@@ -84,7 +91,8 @@ namespace nsK2Engine {
         m_lightCulling.Init(
             m_zprepassRenderTarget.GetRenderTargetTexture(),
             m_diferredLightingSprite.GetExpandConstantBufferGPU(),
-            m_pointLightNoListInTileUAV
+            m_pointLightNoListInTileUAV,
+            m_spotLightNoListInTileUAV
         );
         // イベントリスナーにIBLデータに変更があったことを通知する。
         for (auto& listener : m_eventListeners) {
@@ -131,8 +139,8 @@ namespace nsK2Engine {
             g_graphicsEngine->GetFrameBufferHeight(),
             1,
             1,
-            DXGI_FORMAT_R16G16B16A16_FLOAT,
-            DXGI_FORMAT_UNKNOWN
+            g_mainRenderTargetFormat.colorBufferFormat,
+            g_mainRenderTargetFormat.depthBufferFormat
         );
     }
     void RenderingEngine::InitGBuffer()
@@ -206,8 +214,14 @@ namespace nsK2Engine {
         m_pointLightNoListInTileUAV.Init(
             sizeof(int),
             MAX_POINT_LIGHT * NUM_TILE,
-            nullptr);
-
+            nullptr
+        );
+        // タイルごとのスポットライトの番号を記憶するリストのUAVを作成。
+        m_spotLightNoListInTileUAV.Init(
+            sizeof(int),
+            MAX_SPOT_LIGHT * NUM_TILE,
+            nullptr
+        );
         // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
         InitDefferedLighting_Sprite();
     }
@@ -284,6 +298,9 @@ namespace nsK2Engine {
 
         // ZPrepass
         ZPrepass(rc);
+
+        // ボリュームライトマップを描画。
+        m_sceneLight.DrawToVulumeLightMap(rc);
 
         // ライトカリング
         m_lightCulling.Execute(rc);
@@ -390,6 +407,7 @@ namespace nsK2Engine {
             m_mainRenderTarget.GetRTVCpuDescriptorHandle(),
             m_gBuffer[enGBufferAlbedoDepth].GetDSVCpuDescriptorHandle()
         );
+        
         for (auto& renderObj : m_renderObjects) {
             renderObj->OnForwardRender(rc);
         }

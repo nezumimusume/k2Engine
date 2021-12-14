@@ -30,6 +30,7 @@ namespace nsK2EngineLow {
 		AlphaBlendMode m_alphaBlendMode = AlphaBlendMode_None;			// アルファブレンディングモード。
 		bool m_isDepthWrite = true;										// 深度バッファに書き込む？
 		bool m_isDepthTest = true;										// 深度テストを行う？
+		D3D12_CULL_MODE m_cullMode = D3D12_CULL_MODE_BACK;				// カリングモード。
 		std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = {
 			DXGI_FORMAT_R8G8B8A8_UNORM,
 			DXGI_FORMAT_UNKNOWN,

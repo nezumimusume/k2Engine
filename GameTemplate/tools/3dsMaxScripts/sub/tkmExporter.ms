@@ -407,33 +407,58 @@ private
 
 				--頂点バッファを出力
 				for v in md.meshParts[meshNo].vertexBuffer do (
-					--頂点座標を出力。
-					WriteFloat file v.pos.x
-					WriteFloat file v.pos.y
-					WriteFloat file v.pos.z
-					--頂点法線を出力。
-					WriteFloat file v.normal.x
-					WriteFloat file v.normal.y
-					WriteFloat file v.normal.Z
-					--UV座標を出力
-					WriteFloat file v.uv.x
-					WriteFloat file v.uv.y
-					--スキンウェイトを出力
-					WriteFloat file v.weights[1]
-					WriteFloat file v.weights[2]
-					WriteFloat file v.weights[3]
-					WriteFloat file v.weights[4]
-					--ボーンインデックスを出力。
-					WriteShort file v.indices[1]
-					WriteShort file v.indices[2]
-					WriteShort file v.indices[3]
-					WriteShort file v.indices[4]
+					if v != undefined then (
+						--頂点座標を出力。
+						WriteFloat file v.pos.x
+						WriteFloat file v.pos.y
+						WriteFloat file v.pos.z
+						--頂点法線を出力。
+						WriteFloat file v.normal.x
+						WriteFloat file v.normal.y
+						WriteFloat file v.normal.Z
+						--UV座標を出力
+						WriteFloat file v.uv.x
+						WriteFloat file v.uv.y
+						--スキンウェイトを出力
+						WriteFloat file v.weights[1]
+						WriteFloat file v.weights[2]
+						WriteFloat file v.weights[3]
+						WriteFloat file v.weights[4]
+						--ボーンインデックスを出力。
+						WriteShort file v.indices[1]
+						WriteShort file v.indices[2]
+						WriteShort file v.indices[3]
+						WriteShort file v.indices[4]
+					)else(
+						-- ダミーの頂点を出力する
+						WriteFloat file 0.0f
+						WriteFloat file 0.0f
+						WriteFloat file 0.0f
+						--頂点法線を出力。
+						WriteFloat file 0.0f
+						WriteFloat file 0.0f
+						WriteFloat file 0.0f
+						--UV座標を出力
+						WriteFloat file 0.0f
+						WriteFloat file 0.0f
+						--スキンウェイトを出力
+						WriteFloat file 0.0f
+						WriteFloat file 0.0f
+						WriteFloat file 0.0f
+						WriteFloat file 0.0f
+						--ボーンインデックスを出力。
+						WriteShort file 0
+						WriteShort file 0
+						WriteShort file 0
+						WriteShort file 0
+					)
 				)
 
 				--インデックスバッファを出力する。
 				for indexBuffer in md.meshParts[meshNo].indexBufferArray do (
 					--ポリゴンの数を出力する。
 					numPoly = indexBuffer.count / 3
+					
 					WriteLong file numPoly
 					
 					

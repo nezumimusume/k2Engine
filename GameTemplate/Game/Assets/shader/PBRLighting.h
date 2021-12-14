@@ -10,8 +10,9 @@ static const float PI = 3.1415926f;         // π
 
 // これらは3dsMaxでは不要。
 #ifndef _MAX_
-static const int MAX_POINT_LIGHT = 100;    // ポイントライトの最大数
-static const int MAX_SPOT_LIGHT = 100;     // スポットライトの最大数。
+static const int MAX_POINT_LIGHT = 256;     // ポイントライトの最大数。
+static const int MAX_SPOT_LIGHT = 256;      // スポットライトの最大数。
+
 #define TILE_WIDTH 16
 #define TILE_HEIGHT 16
 static const int INFINITY = 40.0f; 
@@ -33,18 +34,17 @@ struct PointLight
     float3 color;           // カラー
     float3 attn;            // 減衰パラメータ。
 };
-
 // スポットライト
 struct SpotLight
 {
     float3 position;        // 座標
-    int isUse;              // 使用中フラグ。
     float3 positionInView;  // カメラ空間での座標
     float3 color;           // カラー
-    float3 attn;            // 減衰パラメータ。
-    float3 directin;        // 射出方向
-    float angle;            // 射出角度。
+    float3 direction;       // 射出方向。
+    float4 attn;            // 減衰パラメータ。
+    float3 directionInView; // カメラ空間での射出方向。
 };
+
 ///////////////////////////////////////
 // 定数バッファ。
 ///////////////////////////////////////
@@ -59,9 +59,10 @@ cbuffer LightCb : register(b1)
     float3 eyePos;          // カメラの視点
     int numPointLight;      // ポイントライトの数。    
     float3 ambientLight;    // 環境光
-    int isIBL;              // IBLを行う。
+    int numSpotLight;       // スポットライトの数。
     float4x4 mlvp[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
     float iblLuminance;     // IBLの明るさ。
+    int isIBL;              // IBLを行う。
 };
 
 ///////////////////////////////////////
