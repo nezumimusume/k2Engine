@@ -76,18 +76,17 @@ namespace nsAI {
 		return isVisible;
 	}
 	void PathFinding::Smoothing(
-		std::list<CellWork*>& cellList,
-		PhysicsWorld* physicsWorld,
-		float agentRadius,
-		float agentHeight
+			std::list<CellWork*>& cellList,
+			PhysicsWorld* physicsWorld,
+			float agentRadius,
+			float agentHeight
 	) {
 		// パスの可視判定を行って、不要なセルを除外していく。
 		if (cellList.size() < 3) {
 			// セルの数が3以下ならスムージングする必要なし。
 			return;
 		}
-		
-		int skipCellCount = cellList.size()-1;
+		int skipCellCount = static_cast<int>(cellList.size()) - 1;
 		while (skipCellCount > 2) {
 			// セルの数が３以上なら、パスの可視判定を行って、不要なセルを除外していく。
 			// レイの始点となるセル。
@@ -104,14 +103,12 @@ namespace nsAI {
 				Vector3 rayEndPos = (*rayEndCellIt)->cell->GetCenterPosition();
 				rayStartPos.y = 0.0f;
 				rayEndPos.y = 0.0f;
-
 				bool isVisible = true;
 				auto cellIt = rayStartCellIt;
 				do {
 					cellIt++;
 					isVisible = isVisible && IsIntercetRayToCell(rayStartPos, rayEndPos, *cellIt);
 				} while (cellIt != rayEndCellIt);
-
 				if (isVisible) {
 					// 可視
 					// 始点から終点が見えるということは、始点～終点までの間のセルは削除できるのでスムースマークを付ける。
@@ -133,8 +130,7 @@ namespace nsAI {
 					}
 				}
 			}
-
-			skipCellCount /=2;
+			skipCellCount /= 2;
 		}
 		// スムースフラグが立っているセルを除去していく
 		for (auto it = cellList.begin(); it != cellList.end(); it++) {
@@ -142,7 +138,6 @@ namespace nsAI {
 				it = cellList.erase(it);
 			}
 		}
-
 		// 物理オブジェクトとの衝突判定を行い、削除できるセルは削除する。
 		if (physicsWorld && cellList.size() > 2) {
 			CCapsuleCollider collider;
@@ -152,7 +147,7 @@ namespace nsAI {
 			rayPrevCellit++;
 			auto rayEndCellIt = rayPrevCellit;
 			rayEndCellIt++;
-			while(rayEndCellIt != cellList.end()) {
+			while (rayEndCellIt != cellList.end()) {
 				Vector3 rayStartPos = (*rayStartCellIt)->pathPoint;
 				Vector3 rayEndPos = (*rayEndCellIt)->pathPoint;
 				float offset = agentHeight * 0.5f + agentRadius + agentHeight * 0.1f;
@@ -180,7 +175,6 @@ namespace nsAI {
 					rayEndCellIt++;
 				}
 			}
-
 		}
 	}
 	/// <summary>
