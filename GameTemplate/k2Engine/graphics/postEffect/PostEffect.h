@@ -46,6 +46,20 @@ namespace nsK2Engine {
         {
             m_tonemap.NotifyChangeScene(changeSceneTime);
         }
+        /// <summary>
+        /// トーンマップをオフに。
+        /// </summary>
+        void DisableTonemap()
+        {
+            m_tonemap.Disable();
+        }
+        /// <summary>
+        /// トーンマップをオンに。
+        /// </summary>
+        void EnableTonemap()
+        {
+            m_tonemap.Enable();
+        }
     private:
         Bloom m_bloom;	    //ブルーム
         Dof m_dof;		    //被写界深度

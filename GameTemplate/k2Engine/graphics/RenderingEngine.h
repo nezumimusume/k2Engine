@@ -257,6 +257,20 @@ namespace nsK2Engine {
         {
             return m_deferredLightingCB;
         }
+        /// <summary>
+        /// トーンマップを無効にする
+        /// </summary>
+        void DisableTonemap()
+        {
+            m_postEffect.DisableTonemap();
+        }
+        /// <summary>
+        /// トーンマップを有効にする。
+        /// </summary>
+        void EnableTonemap()
+        {
+            m_postEffect.EnableTonemap();
+        }
     private:
         /// <summary>
         /// イメージベースドライティング(IBL)のためのデータを初期化する。

@@ -48,20 +48,7 @@ namespace nsK2Engine {
 			m_isFirstWhenChangeScene = timer;
 			m_changeSceneTimer = timer;
 		}
-		/// <summary>
-		/// トーンマップを有効にする。
-		/// </summary>
-		void Enable()
-		{
-			m_isEnable = true;
-		}
-		/// <summary>
-		/// トーンマップを無効にする。
-		/// </summary>
-		void Disable()
-		{
-			m_isEnable = false;
-		}
+		
 	private:
 		/// <summary>
 		/// 平均輝度を計算する。
@@ -98,7 +85,6 @@ namespace nsK2Engine {
 		Vector4 m_avSampleOffsets[MAX_SAMPLES];
 		RenderTarget m_finalRt;						// 最終合成レンダリングターゲット。
 		STonemapParam m_tonemapParam;
-		bool m_isEnable = true;					// トーンマップが有効？
 		float m_changeSceneTimer = 0.5f;		// シーン切り替えタイマー。
 	};
 }

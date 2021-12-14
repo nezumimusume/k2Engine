@@ -201,9 +201,6 @@ namespace nsK2Engine {
 	}
 	void ToneMap::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
-		if (!m_isEnable) {
-			return;
-		}
 		CalcLuminanceAvarage(rc);
 
 		// –¾ˆÃ‡‰

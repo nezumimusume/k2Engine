@@ -11,6 +11,20 @@ namespace nsK2Engine {
 			RenderTarget& albedoRenderTarget
 		);
 		void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
+		/// <summary>
+		/// ポストエフェクトを無効にする。
+		/// </summary>
+		void Disable()
+		{
+			m_isEnable = false;
+		}
+		/// <summary>
+		/// ポストエフェクトを有効にする。
+		/// </summary>
+		void Enable()
+		{
+			m_isEnable = true;
+		}
 	private:
 		virtual void OnInit(
 			RenderTarget& mainRenderTarget,
@@ -28,7 +42,9 @@ namespace nsK2Engine {
 		{
 			return false;
 		}
+		
 	private:
+		bool m_isEnable = true;
 		Sprite m_copyMainRtSprite;	// メインレンダリングターゲットに描画するためのスプライト。
 	};
 }

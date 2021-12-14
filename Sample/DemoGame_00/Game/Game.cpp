@@ -80,14 +80,15 @@ void Game::InitSky()
 	// Œ»İ‚Ì‹ó‚ğ”jŠüB
 	DeleteGO(m_skyCube);
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
-
+	m_skyCubeType = enSkyCubeType_Night;
+	g_renderingEngine->EnableTonemap();
 	if (m_skyCubeType == enSkyCubeType_Night
 		|| m_skyCubeType == enSkyCubeType_Wild_Night
 		|| m_skyCubeType == enSkyCubeType_NightToon
 		|| m_skyCubeType == enSkyCubeType_NightToon_2
 		) {
 
-
+		g_renderingEngine->DisableTonemap();
 		m_skyCube->SetLuminance(0.1f);
 		Vector3 ligColor, ligDir;
 		ligColor.x = 0.6f;

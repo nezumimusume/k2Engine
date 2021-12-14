@@ -31,6 +31,9 @@ namespace nsK2Engine {
 
 	void PostEffectComponentBase::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
+		if (!m_isEnable) {
+			return;
+		}
 		OnRender(rc, mainRenderTarget);
 		if (IsCopyResultTextureToMainRenderTarget()) {
 			// レンダリングターゲットとして利用できるまで待つ

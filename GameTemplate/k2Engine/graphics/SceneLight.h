@@ -212,6 +212,7 @@ namespace nsK2Engine {
         {
             SetColor({ r, g, b });
         }
+       
         /// <summary>
         /// 範囲を設定。
         /// </summary>
@@ -220,18 +221,41 @@ namespace nsK2Engine {
         {
             attn.x = range;
         }
+       
         /// <summary>
-        /// 影響率の累乗数を設定。
+        /// 距離による影響率の累乗数を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam(float powParam)
         {
             attn.y = powParam;
         }
+        /// <summary>
+        /// 角度による影響率の累乗数を設定。
+        /// </summary>
+        /// <param name="powParam"></param>
         void SetAngleAffectPowParam(float powParam)
         {
             attn.w = powParam;
         }
+    
+        /// <summary>
+        /// 角度による影響率の累乗数を取得。
+        /// </summary>
+        /// <param name="powParam"></param>
+        float GetAngleAffectPowParam() const
+        {
+            return attn.w;
+        }
+        /// <summary>
+        /// 離による影響率の累乗数を取得。
+        /// </summary>
+        /// <returns></returns>
+        float GetRangeAffectPowParam() const
+        {
+            return attn.y;
+        }
+       
         /// <summary>
         /// 射出角度
         /// </summary>

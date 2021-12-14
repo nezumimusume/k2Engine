@@ -54,6 +54,12 @@ bool Player::Start()
 	// スポットライトの生成。
 	m_spotLight = g_sceneLight->NewSpotLight();
 	m_spotLight->SetColor(100.0f, 100.0f, 100.0f);
+	m_spotLight->SetRange(800.0f);
+	m_spotLight->SetAngle(Math::DegToRad(20.0f));
+	m_spotLight->SetRangeAffectPowParam(5.0f);
+	m_spotLight->SetAngleAffectPowParam(1.0f);
+	m_spotLight->SetColor(1.0f, 1.0f, 1.0f);
+
 	// ボリュームスポットライトの初期化。
 	m_volumeSpotLight.Init();
 	return true;
@@ -61,6 +67,41 @@ bool Player::Start()
 
 void Player::Update()
 {
+	Vector3 color = m_spotLight->GetColor();
+	float affect_0 = m_spotLight->GetAngleAffectPowParam();
+	float affect_1 = m_spotLight->GetRangeAffectPowParam();
+	float angle = m_spotLight->GetAngle();
+	float range = m_spotLight->GetRange();
+	if( GetAsyncKeyState('Z'))
+	{
+		color.x += 0.1f;
+	}
+	if (GetAsyncKeyState('X'))
+	{
+		color.y += 0.1f;
+	}
+	if (GetAsyncKeyState('C'))
+	{
+		color.z += 0.1f;
+	}
+	if (GetAsyncKeyState('V')) {
+		range += 10.0f;
+	}
+	if (GetAsyncKeyState('B'))
+	{
+		affect_0 -= 0.01f;
+	}
+	if (GetAsyncKeyState('N')) {
+		angle -= 0.01f;
+	}
+	if (GetAsyncKeyState('M')) {
+		angle += 0.01f;
+	}
+	m_spotLight->SetRange(range);
+	m_spotLight->SetRangeAffectPowParam(affect_1);
+	m_spotLight->SetAngleAffectPowParam(affect_0);
+	m_spotLight->SetAngle(angle);
+	m_spotLight->SetColor(color);
 	//移動処理。
 	Move();
 	//旋回処理。
@@ -97,12 +138,8 @@ void Player::Update()
 	Vector3 pos = m_position;
 	pos.y += 50.0f;
 	m_spotLight->SetPosition(pos);
-	m_spotLight->SetRange( 2400.0f );
-	m_spotLight->SetAngle(Math::DegToRad(10.0f));
+	
 	m_spotLight->SetDirection(m_forward);
-	m_spotLight->SetRangeAffectPowParam(5.0f);
-	m_spotLight->SetAngleAffectPowParam(1.0f);
-	m_spotLight->SetColor( 1.5, 1.5f, 1.5f);
 	m_volumeSpotLight.Update(*m_spotLight);
 }
 
