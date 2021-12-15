@@ -13,7 +13,7 @@ namespace nsK2Engine {
 
         InitZPrepassRenderTarget();
         InitMainRenderTarget();
-        m_volumeLightMap.Init();
+        m_volumeLightRender.Init();
         InitGBuffer();
         InitMainRTSnapshotRenderTarget();
         InitCopyMainRenderTargetToFrameBufferSprite();
@@ -64,8 +64,7 @@ namespace nsK2Engine {
         spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
         spriteInitData.m_expandShaderResoruceView[0] = &m_pointLightNoListInTileUAV;
         spriteInitData.m_expandShaderResoruceView[1] = &m_spotLightNoListInTileUAV;
-        spriteInitData.m_expandShaderResoruceView[2] = &m_volumeLightMap.GetVolumeLightMapBackTexture();
-        spriteInitData.m_expandShaderResoruceView[3] = &m_volumeLightMap.GetVolumeLightMapFrontTexture();
+        
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
         {
             for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
@@ -301,9 +300,6 @@ namespace nsK2Engine {
         // ZPrepass
         ZPrepass(rc);
 
-        // ボリュームライトマップを描画。
-        m_volumeLightMap.Render(rc);
-
         // ライトカリング
         m_lightCulling.Execute(rc);
 
@@ -413,6 +409,13 @@ namespace nsK2Engine {
         for (auto& renderObj : m_renderObjects) {
             renderObj->OnForwardRender(rc);
         }
+
+        // ボリュームライトを描画。
+        m_volumeLightRender.Render(
+            rc, 
+            m_mainRenderTarget.GetRTVCpuDescriptorHandle(),
+            m_gBuffer[enGBufferAlbedoDepth].GetDSVCpuDescriptorHandle()
+        );
 
         // 続いて半透明オブジェクトを描画。
         for (auto& renderObj : m_renderObjects) {

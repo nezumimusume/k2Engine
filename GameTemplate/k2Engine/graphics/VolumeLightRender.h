@@ -3,9 +3,9 @@
 
 namespace nsK2Engine {
 	/// <summary>
-	/// ボリュームライトマップ。
+	/// ボリュームライトレンダラー。
 	/// </summary>
-	class VolumeLightMap : Noncopyable {
+	class VolumeLightRender : Noncopyable {
 	public:
 		/// <summary>
 		/// 初期化。
@@ -13,28 +13,12 @@ namespace nsK2Engine {
 		void Init();
 
 		/// <summary>
-		/// ボリュームライトマップを描画する。
+		/// ボリュームライトを描画する。
 		/// </summary>
-		/// <param name="rc"></param>
-		void Render(RenderContext& rc);
+		void Render(RenderContext& rc, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
+		
 		/// <summary>
-		/// ボリュームライトモデルの背面のZ値を書き込んだテクスチャを取得。
-		/// </summary>
-		/// <returns></returns>
-		Texture& GetVolumeLightMapBackTexture()
-		{
-			return m_volumeLightMapBack.GetRenderTargetTexture();
-		}
-		/// <summary>
-		/// ボリュームライトモデルの前面のZ値を書き込んだテクスチャを取得。
-		/// </summary>
-		/// <returns></returns>
-		Texture& GetVolumeLightMapFrontTexture()
-		{
-			return m_volumeLightMapFront.GetRenderTargetTexture();
-		}
-		/// <summary>
-		/// ボリュームスポットライトをシーンに追加
+		/// ボリュームスポットライトをレンダラーに追加
 		/// </summary>
 		/// <param name="lig">ライト</param>
 		void AddVolumeSpotLight(VolumeSpotLight& lig)
@@ -42,7 +26,7 @@ namespace nsK2Engine {
 			m_volumeSpotLightArray.emplace_back(&lig);
 		}
 		/// <summary>
-		/// ボリュームスポットライトをシーンから削除
+		/// ボリュームスポットライトをレンダラーから削除
 		/// </summary>
 		/// <param name="lig"></param>
 		void RemoveVolumeSpotLight(VolumeSpotLight& lig)
@@ -51,6 +35,14 @@ namespace nsK2Engine {
 			if (it != m_volumeSpotLightArray.end()) {
 				m_volumeSpotLightArray.erase(it);
 			}
+		}
+		Texture& GetVolumeLightMapFrontTexture()
+		{
+			return m_volumeLightMapFront.GetRenderTargetTexture();
+		}
+		Texture& GetVolumeLightMapBackTexture()
+		{
+			return m_volumeLightMapBack.GetRenderTargetTexture();
 		}
 	private:
 		RenderTarget m_volumeLightMapFront;                     // 手前のボリュームライトマップ。

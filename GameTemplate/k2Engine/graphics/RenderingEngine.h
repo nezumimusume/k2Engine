@@ -6,7 +6,7 @@
 #include "SceneLight.h"
 #include "graphics/preRender/LightCulling.h"
 #include "geometry/SceneGeometryData.h"
-#include "graphics/preRender/VolumeLightMap.h"
+#include "graphics/VolumeLightRender.h"
 
 namespace nsK2Engine {
    
@@ -278,7 +278,7 @@ namespace nsK2Engine {
         /// <param name="lig">ライト</param>
         void AddVolumeSpotLight(VolumeSpotLight& lig)
         {
-            m_volumeLightMap.AddVolumeSpotLight(lig);
+            m_volumeLightRender.AddVolumeSpotLight(lig);
             
         }
         /// <summary>
@@ -287,7 +287,15 @@ namespace nsK2Engine {
         /// <param name="lig"></param>
         void RemoveVolumeSpotLight(VolumeSpotLight& lig)
         {
-            m_volumeLightMap.RemoveVolumeSpotLight(lig);
+            m_volumeLightRender.RemoveVolumeSpotLight(lig);
+        }
+        /// <summary>
+        /// ボリュームライトレンダラーを取得。
+        /// </summary>
+        /// <returns></returns>
+        VolumeLightRender& GetVolumeLightRender()
+        {
+            return m_volumeLightRender;
         }
     private:
         /// <summary>
@@ -398,7 +406,7 @@ namespace nsK2Engine {
         };
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
-        VolumeLightMap m_volumeLightMap;                                // ボリュームライトマップ。
+        VolumeLightRender m_volumeLightRender;                          // ボリュームライトレンダラー。
         SDeferredLightingCB m_deferredLightingCB;                       // ディファードライティング用の定数バッファ
         Sprite m_copyMainRtToFrameBufferSprite;                         // メインレンダリングターゲットをフレームバッファにコピーするためのスプライト
         Sprite m_diferredLightingSprite;                                // ディファードライティングを行うためのスプライト

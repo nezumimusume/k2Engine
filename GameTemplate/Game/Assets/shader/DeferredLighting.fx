@@ -49,10 +49,7 @@ TextureCube<float4> g_skyCubeMap : register(t15);
 StructuredBuffer<uint> pointLightListInTile : register(t20);
 // タイルごとのスポットライトのインデックスのリスト。
 StructuredBuffer<uint> spotLightListInTile : register(t21);
-// ボリュームライトマップ(背面)
-Texture2D<float4> g_volumeLightMapBack : register(t22);
-// ボリュームライトマップ(前面)
-Texture2D<float4> g_volumeLightMapFront : register(t23);
+
 
 #include "PBRLighting.h"
 
@@ -334,7 +331,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
     );
 
     // todo ボリュームライトのテスト
-    
+  /*  
     float volumeFrontZ = g_volumeLightMapFront.Sample(Sampler, In.uv).r;
     float2 volumeBackZ_No = g_volumeLightMapBack.Sample(Sampler, In.uv).rg;
     float volumeBackZ = volumeBackZ_No.r;
@@ -374,7 +371,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         // ボリュームライトの中央地点の光の量を計算する。
         lig += albedoColor * spLig.color * affect * step( volumeFrontZ, albedoColor.w ) * log(volume) * 0.1f;
     }
-
+*/
     
     if (isIBL == 1) {
         // 視線からの反射ベクトルを求める。

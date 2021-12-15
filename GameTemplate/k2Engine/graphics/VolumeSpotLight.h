@@ -42,6 +42,10 @@ namespace nsK2Engine {
 		/// </remark>
 		/// <param name="rc">レンダリングコンテキスト</param>
 		void DrawToVolumeLightMapFront(RenderContext& rc);
+		/// <summary>
+		/// 最終描画
+		/// </summary>
+		void DrawFinal(RenderContext& rc);
 	private:
 		/// <summary>
 		/// GPUに送るスポットライト情報
@@ -52,5 +56,6 @@ namespace nsK2Engine {
 		SpotLightInfo m_spotLightInfo;	// GPUに送るスポットライト情報。
 		Model m_modelFront;	// ボリュームライトの前面描画用のモデル。
 		Model m_modelBack;	// ボリュームライトの背面描画用のモデル。
+		Sprite m_final;		// 最終描画。
 	};
 }
