@@ -24,21 +24,22 @@ namespace nsK2Engine {
     }
 	void VolumeLightMap::Render(RenderContext& rc)
 	{
-        // ボリュームライトの背面を描画
-        rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapBack);
-        rc.SetRenderTargetAndViewport(m_volumeLightMapBack);
-        rc.SetRenderTarget(m_volumeLightMapBack);
-        rc.ClearRenderTargetView(m_volumeLightMapBack);
-        for (auto& volumeLig : m_volumeSpotLightArray) {
-            volumeLig->DrawToVolumeLightMapBack(rc);
-        }
         // ボリュームライトの前面を描画。
         rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapFront);
-        rc.SetRenderTarget(m_volumeLightMapFront);
+        rc.SetRenderTargetAndViewport(m_volumeLightMapFront);
         rc.ClearRenderTargetView(m_volumeLightMapFront);
         for (auto& volumeLig : m_volumeSpotLightArray) {
             volumeLig->DrawToVolumeLightMapFront(rc);
         }
+
+        // ボリュームライトの背面を描画
+        rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapBack);
+        rc.SetRenderTargetAndViewport(m_volumeLightMapBack);
+        rc.ClearRenderTargetView(m_volumeLightMapBack);
+        for (auto& volumeLig : m_volumeSpotLightArray) {
+            volumeLig->DrawToVolumeLightMapBack(rc);
+        }
+        
 
         // 奥と手前の書き込み完了待ち
         rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapBack);

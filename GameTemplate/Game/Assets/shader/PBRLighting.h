@@ -16,6 +16,7 @@ static const int MAX_SPOT_LIGHT = 256;      // スポットライトの最大数。
 #define TILE_WIDTH 16
 #define TILE_HEIGHT 16
 static const int INFINITY = 40.0f; 
+
 ///////////////////////////////////////
 // 構造体。
 ///////////////////////////////////////
@@ -38,7 +39,9 @@ struct PointLight
 struct SpotLight
 {
     float3 position;        // 座標
+    int isUse;              // 使用中フラグ
     float3 positionInView;  // カメラ空間での座標
+    int no;                 // ライトの番号。
     float3 color;           // カラー
     float3 direction;       // 射出方向。
     float4 attn;            // 減衰パラメータ。

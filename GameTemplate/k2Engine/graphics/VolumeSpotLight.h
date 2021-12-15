@@ -43,7 +43,13 @@ namespace nsK2Engine {
 		/// <param name="rc">レンダリングコンテキスト</param>
 		void DrawToVolumeLightMapFront(RenderContext& rc);
 	private:
-		
+		/// <summary>
+		/// GPUに送るスポットライト情報
+		/// </summary>
+		struct SpotLightInfo {
+			int no;	// スポットライトの番号。
+		};
+		SpotLightInfo m_spotLightInfo;	// GPUに送るスポットライト情報。
 		Model m_modelFront;	// ボリュームライトの前面描画用のモデル。
 		Model m_modelBack;	// ボリュームライトの背面描画用のモデル。
 	};

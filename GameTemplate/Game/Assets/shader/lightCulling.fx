@@ -32,6 +32,7 @@ struct SpotLight
     float3 position;        // 座標
     int isUse;              // 使用中フラグ。
     float3 positionInView;  // カメラ空間での座標
+    int no;                 // ライトの番号。
     float3 color;           // カラー
     float3 direction;       // 射出方向。
     float3 attn;            // 減衰パラメータ。

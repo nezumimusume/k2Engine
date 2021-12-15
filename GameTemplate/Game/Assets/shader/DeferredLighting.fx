@@ -336,35 +336,43 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
     // todo ボリュームライトのテスト
     
     float volumeFrontZ = g_volumeLightMapFront.Sample(Sampler, In.uv).r;
-    float volumeBackZ = g_volumeLightMapBack.Sample(Sampler, In.uv).r;
+    float2 volumeBackZ_No = g_volumeLightMapBack.Sample(Sampler, In.uv).rg;
+    float volumeBackZ = volumeBackZ_No.r;
+    // このピクセルに影響を与えているスポットライトの番号を復元。
+    int spotLightNo = (int)(volumeBackZ_No.g / 100.0f);
+    if(volumeFrontZ > volumeBackZ){
+        volumeFrontZ = 0.0f;
+    }
+
     float3 volumePosBack = CalcWorldPosFromUVZ( In.uv, volumeBackZ, mViewProjInv);
     float3 volumePosFront = CalcWorldPosFromUVZ( In.uv, volumeFrontZ, mViewProjInv);
     
-    float t0 = dot( spotLight[0].direction, volumePosFront - spotLight[0].position);
-    float t1 = dot( spotLight[0].direction, volumePosBack - spotLight[0].position);
+    
+    SpotLight spLig = spotLight[spotLightNo];
+
+    float t0 = dot( spLig.direction, volumePosFront - spLig.position);
+    float t1 = dot( spLig.direction, volumePosBack - spLig.position);
     float t = t0 / (t0 + t1);
     float3 volumeCenterPos = lerp( volumePosFront, volumePosBack, t);
     float volume = length(volumePosBack - volumePosFront);
     if( volume > 0.001f){
-        // 0番目のスポットライトとボリュームライトの中心座標を使って、適当に光の量を計算する。
-        // 積分は後でね・・・。
-        // 距離による減衰
-        float3 ligDir = (volumeCenterPos - spotLight[0].position);
+        // 距離による減衰。
+        float3 ligDir = (volumeCenterPos - spLig.position);
         float distance = length(ligDir);
         ligDir = normalize(ligDir);
-        float affect = pow( 1.0f - min(1.0f, distance / spotLight[0].attn.x), spotLight[0].attn.y);
+        float affect = pow( 1.0f - min(1.0f, distance / spLig.attn.x), spLig.attn.y);
         
         // 続いて角度による減衰を計算する。
         
         // 角度に比例して小さくなっていく影響率を計算する
-        float angle = dot(ligDir, spotLight[0].direction);
+        float angle = dot(ligDir, spLig.direction);
         // dot()で求めた値をacos()に渡して角度を求める
         angle = abs(acos(angle));
-        float angleAffect = max( 0.0f, 1.0f - 1.0f / spotLight[0].attn.z * angle );
-        affect *= pow( angleAffect, spotLight[0].attn.w);
+        float angleAffect = max( 0.0f, 1.0f - 1.0f / spLig.attn.z * angle );
+        affect *= pow( angleAffect, spLig.attn.w);
 
         // ボリュームライトの中央地点の光の量を計算する。
-        lig += albedoColor * spotLight[0].color * affect * step( volumeFrontZ, albedoColor.w ) * log(volume) * 0.1f;
+        lig += albedoColor * spLig.color * affect * step( volumeFrontZ, albedoColor.w ) * log(volume) * 0.1f;
     }
 
     

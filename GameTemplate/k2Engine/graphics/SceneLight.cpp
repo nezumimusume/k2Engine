@@ -71,9 +71,12 @@ namespace nsK2Engine {
             m_unusePointLightQueue.push_back(&pt);
         }
         // すべてのスポットライトを未使用にする。
+        int spNo = 0;
         for (auto& sp : m_light.spotLights) {
             sp.UnUse();
+            sp.SetNo(spNo);
             m_unuseSpotLightQueue.push_back(&sp);
+            spNo++;
         }
     }
     void SceneLight::SetIBLTextureForAmbient(const wchar_t* textureFilePath, float luminance)
@@ -81,7 +84,7 @@ namespace nsK2Engine {
         g_renderingEngine->ReInitIBL(textureFilePath, luminance);
     }
     
-   
+    
     void SceneLight::Update()
     {
         for (auto& pt : m_light.pointLights) {

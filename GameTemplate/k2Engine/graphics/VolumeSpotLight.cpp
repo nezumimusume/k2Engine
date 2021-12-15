@@ -24,7 +24,6 @@ namespace nsK2Engine {
 		modelInitData.m_tkmFilePath = "Assets/modelData/preset/VolumeSpotLight.tkm";
 		modelInitData.m_fxFilePath = "Assets/shader/DrawVolumeLightMap.fx";
 		modelInitData.m_expandShaderResoruceView[0] = &g_renderingEngine->GetZPrepassDepthTexture();
-
 		// ここから前面描画用の初期化設定。
 		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapFrontFormat.colorBufferFormat;
 		modelInitData.m_psEntryPointFunc = "PSMainFront";
@@ -32,6 +31,9 @@ namespace nsK2Engine {
 		m_modelFront.Init(modelInitData);
 
 		// ここから背面描画用の初期化設定。
+		// 背面描画の時にスポットライトの番号を書き込む
+		modelInitData.m_expandConstantBuffer = &m_spotLightInfo;
+		modelInitData.m_expandConstantBufferSize = sizeof(m_spotLightInfo);
 		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapBackFormat.colorBufferFormat;
 		modelInitData.m_psEntryPointFunc = "PSMainBack";
 		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT; // 背面描画なので、前面カリング。
@@ -63,5 +65,8 @@ namespace nsK2Engine {
 		scale.y = xyScale;
 		m_modelBack.UpdateWorldMatrix(pos, rot, scale);
 		m_modelFront.UpdateWorldMatrix(pos, rot, scale);
+
+		// スポットライトの番号を更新する。
+		m_spotLightInfo.no = spotLight.GetNo();
 	}
 }

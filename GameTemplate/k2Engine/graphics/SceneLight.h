@@ -150,9 +150,9 @@ namespace nsK2Engine {
    private:
         Vector3 position;                   // 座標
         int isUse = false;                  // 使用中フラグ。
-        Vector3 positionInView;             // カメラ空間での座標
-        float pad1;
-        Vector3 color;                      // ライトのカラー
+        Vector3 positionInView;             // カメラ空間での座標。
+        int no = 0;                         // ライトの番号。
+        Vector3 color;                      // ライトのカラー。
         float pad2;
         Vector3 direction;                  // 射出方向。
         float pad3;
@@ -160,6 +160,22 @@ namespace nsK2Engine {
         Vector3 directionInView;            // カメラ空間での射出方向。
         float pad5;
    public:
+       /// <summary>
+       /// スポットライトの番号を取得。
+       /// </summary>
+       /// <returns></returns>
+       int GetNo() const
+       {
+           return no;
+       }
+       /// <summary>
+       /// スポットライトの番号を設定。
+       /// </summary>
+       /// <param name="no"></param>
+       void SetNo(int no)
+       {
+           this->no = no;
+       }
         /// <summary>
         /// 射出方向を設定。
         /// </summary>

@@ -10,6 +10,15 @@ Texture2D<float4> g_sceneDepthTexture : register(t10);
 sampler Sampler : register(s0);
 
 ///////////////////////////////////////
+// 定数バッファ
+///////////////////////////////////////
+// スポットライト情報
+cbuffer SpotLightInfoCb : register(b1)
+{
+	int no;		// スポットライトの番号。
+};
+
+///////////////////////////////////////
 // 構造体。
 ///////////////////////////////////////
 
@@ -53,6 +62,7 @@ float4 PSMainFront(SPSIn psIn) : SV_Target0
 	float z = CalcDrawDepth(psIn);
 	return float4( z, z, z, z);
 }
+
 /// <summary>
 /// 背面描画用のピクセルシェーダーエントリー関数。
 /// </summary>
@@ -60,5 +70,8 @@ float4 PSMainBack(SPSIn psIn) : SV_Target0
 {
 	// ボリュームライトマップに書き込む深度値を計算する。
 	float z = CalcDrawDepth(psIn);
-	return float4( z, z, z, z);
+	// スポットライトの番号をg成分に書き込む。
+	// 整数値を100倍+10で書き込む。ディファードライティング側では
+	// 100で除算して、スポットライトの番号に復元する。
+	return float4( z, no * 100.0f + 10.0f, z, z);
 }

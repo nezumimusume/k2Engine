@@ -100,6 +100,8 @@ private:
 	Vector3				m_forward;
 	std::vector<PointLight* > m_pointLightList;
 	SpotLight* m_spotLight = nullptr;
+	SpotLight* m_spotLight2 = nullptr;
 	VolumeSpotLight m_volumeSpotLight;	// ボリュームスポットライト。
+	VolumeSpotLight m_volumeSpotLight2; // 2本目のボリュームスポットライト。
 };
 
