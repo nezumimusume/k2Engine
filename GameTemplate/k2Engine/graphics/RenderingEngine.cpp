@@ -13,12 +13,14 @@ namespace nsK2Engine {
 
         InitZPrepassRenderTarget();
         InitMainRenderTarget();
+        m_volumeLightMap.Init();
         InitGBuffer();
         InitMainRTSnapshotRenderTarget();
         InitCopyMainRenderTargetToFrameBufferSprite();
         InitShadowMapRender();
         InitDeferredLighting();
         Init2DRenderTarget();
+        
         m_lightCulling.Init(
             m_zprepassRenderTarget.GetRenderTargetTexture(),
             m_diferredLightingSprite.GetExpandConstantBufferGPU(),
@@ -62,8 +64,8 @@ namespace nsK2Engine {
         spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
         spriteInitData.m_expandShaderResoruceView[0] = &m_pointLightNoListInTileUAV;
         spriteInitData.m_expandShaderResoruceView[1] = &m_spotLightNoListInTileUAV;
-        spriteInitData.m_expandShaderResoruceView[2] = &m_sceneLight.GetVolumeLightMapBackTexture();
-        spriteInitData.m_expandShaderResoruceView[3] = &m_sceneLight.GetVolumeLightMapFrontTexture();
+        spriteInitData.m_expandShaderResoruceView[2] = &m_volumeLightMap.GetVolumeLightMapBackTexture();
+        spriteInitData.m_expandShaderResoruceView[3] = &m_volumeLightMap.GetVolumeLightMapFrontTexture();
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
         {
             for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
@@ -300,7 +302,7 @@ namespace nsK2Engine {
         ZPrepass(rc);
 
         // ボリュームライトマップを描画。
-        m_sceneLight.DrawToVulumeLightMap(rc);
+        m_volumeLightMap.Render(rc);
 
         // ライトカリング
         m_lightCulling.Execute(rc);

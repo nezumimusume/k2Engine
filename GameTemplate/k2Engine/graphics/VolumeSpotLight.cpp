@@ -10,27 +10,31 @@ namespace nsK2Engine {
 	VolumeSpotLight::~VolumeSpotLight()
 	{
 		// シーンライトから削除。
-		if (g_sceneLight) {
-			g_sceneLight->RemoveVolumeSpotLight(*this);
+		if (g_renderingEngine) {
+			g_renderingEngine->RemoveVolumeSpotLight(*this);
 		}
 	}
 	void VolumeSpotLight::Init()
 	{
 		// シーンライトに登録。
-		g_sceneLight->AddVolumeSpotLight(*this);
-		// 続きはここから
+		g_renderingEngine->AddVolumeSpotLight(*this);
+		// ボリュームライトマップ描画用のモデル初期化設定を行う。
+		// 背面描画、前面描画共通の初期化設定。
 		ModelInitData modelInitData;
 		modelInitData.m_tkmFilePath = "Assets/modelData/preset/VolumeSpotLight.tkm";
 		modelInitData.m_fxFilePath = "Assets/shader/DrawVolumeLightMap.fx";
-		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapFormat.colorBufferFormat;
 		modelInitData.m_expandShaderResoruceView[0] = &g_renderingEngine->GetZPrepassDepthTexture();
-		// 背面カリング
-		modelInitData.m_cullMode = D3D12_CULL_MODE_BACK;
-		
+
+		// ここから前面描画用の初期化設定。
+		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapFrontFormat.colorBufferFormat;
+		modelInitData.m_psEntryPointFunc = "PSMainFront";
+		modelInitData.m_cullMode = D3D12_CULL_MODE_BACK; // 前面描画なので、背面カリング。
 		m_modelFront.Init(modelInitData);
 
-		// 表面カリング
-		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT;
+		// ここから背面描画用の初期化設定。
+		modelInitData.m_colorBufferFormat[0] = g_drawVolumeLightMapBackFormat.colorBufferFormat;
+		modelInitData.m_psEntryPointFunc = "PSMainBack";
+		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT; // 背面描画なので、前面カリング。
 		m_modelBack.Init(modelInitData);
 	}
 	void VolumeSpotLight::DrawToVolumeLightMapBack(RenderContext& rc)

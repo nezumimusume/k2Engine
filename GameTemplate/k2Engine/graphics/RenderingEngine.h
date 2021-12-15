@@ -6,6 +6,7 @@
 #include "SceneLight.h"
 #include "graphics/preRender/LightCulling.h"
 #include "geometry/SceneGeometryData.h"
+#include "graphics/preRender/VolumeLightMap.h"
 
 namespace nsK2Engine {
    
@@ -271,6 +272,23 @@ namespace nsK2Engine {
         {
             m_postEffect.EnableTonemap();
         }
+        /// <summary>
+        /// ボリュームスポットライトをシーンに追加
+        /// </summary>
+        /// <param name="lig">ライト</param>
+        void AddVolumeSpotLight(VolumeSpotLight& lig)
+        {
+            m_volumeLightMap.AddVolumeSpotLight(lig);
+            
+        }
+        /// <summary>
+        /// ボリュームスポットライトをシーンから削除
+        /// </summary>
+        /// <param name="lig"></param>
+        void RemoveVolumeSpotLight(VolumeSpotLight& lig)
+        {
+            m_volumeLightMap.RemoveVolumeSpotLight(lig);
+        }
     private:
         /// <summary>
         /// イメージベースドライティング(IBL)のためのデータを初期化する。
@@ -380,6 +398,7 @@ namespace nsK2Engine {
         };
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
+        VolumeLightMap m_volumeLightMap;                                // ボリュームライトマップ。
         SDeferredLightingCB m_deferredLightingCB;                       // ディファードライティング用の定数バッファ
         Sprite m_copyMainRtToFrameBufferSprite;                         // メインレンダリングターゲットをフレームバッファにコピーするためのスプライト
         Sprite m_diferredLightingSprite;                                // ディファードライティングを行うためのスプライト

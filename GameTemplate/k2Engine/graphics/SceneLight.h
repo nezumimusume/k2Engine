@@ -443,54 +443,11 @@ namespace nsK2Engine {
         {
             // todo 未対応。
         }
-        /// <summary>
-        /// ボリュームスポットライトをシーンに追加
-        /// </summary>
-        /// <param name="lig">ライト</param>
-        void AddVolumeSpotLight(VolumeSpotLight& lig)
-        {
-            m_volumeSpotLightArray.emplace_back(&lig);
-        }
-        /// <summary>
-        /// ボリュームスポットライトをシーンから削除
-        /// </summary>
-        /// <param name="lig"></param>
-        void RemoveVolumeSpotLight(VolumeSpotLight& lig)
-        {
-            auto it = std::find(m_volumeSpotLightArray.begin(), m_volumeSpotLightArray.end(), &lig);
-            if (it != m_volumeSpotLightArray.end()) {
-                m_volumeSpotLightArray.erase(it);
-            }
-        }
+       
         /// <summary>
         /// 更新
         /// </summary>
         void Update();
-        /// <summary>
-        /// ボリュームライトマップに描画
-        /// </summary>
-        /// <param name="rc">レンダリングコンテキスト</param>
-        void DrawToVulumeLightMap(RenderContext& rc);
-        /// <summary>
-        /// ボリュームライトの描画確認用。
-        /// </summary>
-        void DebugDraw(RenderContext& rc);
-        /// <summary>
-        /// ボリュームライトモデルの背面のZ値を書き込んだテクスチャを取得。
-        /// </summary>
-        /// <returns></returns>
-        Texture& GetVolumeLightMapBackTexture()
-        {
-            return m_volumeLightMapBack.GetRenderTargetTexture();
-        }
-        /// <summary>
-        /// ボリュームライトモデルの前面のZ値を書き込んだテクスチャを取得。
-        /// </summary>
-        /// <returns></returns>
-        Texture& GetVolumeLightMapFrontTexture()
-        {
-            return m_volumeLightMapFront.GetRenderTargetTexture();
-        }
     private:
         /// <summary>
         /// 新しい動的ライトを追加。
@@ -532,8 +489,5 @@ namespace nsK2Engine {
         Light m_light;  //シーンライト。
         std::deque< PointLight* > m_unusePointLightQueue;       // 未使用のポイントライトのキュー。
         std::deque< SpotLight* > m_unuseSpotLightQueue;         // 未使用のスポットライトのキュー。。
-        RenderTarget m_volumeLightMapFront;                     // 手前のボリュームライトマップ。
-        RenderTarget m_volumeLightMapBack;                      // 奥側のボリュームライトマップ。
-        std::list< VolumeSpotLight* > m_volumeSpotLightArray;   // ボリュームスポットライトの配列。
     };
 }

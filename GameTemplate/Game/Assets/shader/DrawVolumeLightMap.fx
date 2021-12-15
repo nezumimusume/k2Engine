@@ -33,17 +33,32 @@ SPSIn VSMain(float4 pos : POSITION)
 
 	return psIn;
 }
-
-
 /// <summary>
-/// ピクセルシェーダーのエントリー関数。
+/// 書き込む深度値を計算する。
 /// </summary>
-float4 PSMain(SPSIn psIn) : SV_Target0
+float CalcDrawDepth(SPSIn psIn)
 {
 	float2 uv = psIn.posInProj.xy / psIn.posInProj.w;
 	uv = uv * float2( 0.5f, -0.5f ) + float2( 0.5f, 0.5f );
 	float sceneDepth = g_sceneDepthTexture.Sample(Sampler, uv).r;
 	float z = min( sceneDepth, psIn.pos.z);
-	
+	return z;
+}
+/// <summary>
+/// 前面描画用のピクセルシェーダーエントリー関数。
+/// </summary>
+float4 PSMainFront(SPSIn psIn) : SV_Target0
+{
+	// ボリュームライトマップに書き込む深度値を計算する。
+	float z = CalcDrawDepth(psIn);
+	return float4( z, z, z, z);
+}
+/// <summary>
+/// 背面描画用のピクセルシェーダーエントリー関数。
+/// </summary>
+float4 PSMainBack(SPSIn psIn) : SV_Target0
+{
+	// ボリュームライトマップに書き込む深度値を計算する。
+	float z = CalcDrawDepth(psIn);
 	return float4( z, z, z, z);
 }

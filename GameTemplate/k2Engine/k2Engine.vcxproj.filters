@@ -120,6 +120,9 @@
     <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\VolumeSpotLight.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\preRender\VolumeLightMap.cpp">
+      <Filter>graphics\preRender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\VolumeSpotLight.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\preRender\VolumeLightMap.h">
+      <Filter>graphics\preRender</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -48,6 +48,7 @@
     <ClCompile Include="graphics\preRender\CascadeShadowMapMatrix.cpp" />
     <ClCompile Include="graphics\preRender\LightCulling.cpp" />
     <ClCompile Include="graphics\preRender\ShadowMapRender.cpp" />
+    <ClCompile Include="graphics\preRender\VolumeLightMap.cpp" />
     <ClCompile Include="graphics\RenderingEngine.cpp" />
     <ClCompile Include="graphics\SceneLight.cpp" />
     <ClCompile Include="graphics\SpriteRender.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="graphics\preRender\CascadeShadowMapMatrix.h" />
     <ClInclude Include="graphics\preRender\LightCulling.h" />
     <ClInclude Include="graphics\preRender\ShadowMapRender.h" />
+    <ClInclude Include="graphics\preRender\VolumeLightMap.h" />
     <ClInclude Include="graphics\RenderingEngine.h" />
     <ClInclude Include="graphics\SceneLight.h" />
     <ClInclude Include="graphics\SpriteRender.h" />
