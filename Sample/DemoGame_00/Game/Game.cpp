@@ -80,7 +80,7 @@ void Game::InitSky()
 	// åªç›ÇÃãÛÇîjä¸ÅB
 	DeleteGO(m_skyCube);
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
-	m_skyCubeType = enSkyCubeType_Night;
+	//m_skyCubeType = enSkyCubeType_Night;
 	g_renderingEngine->EnableTonemap();
 	if (m_skyCubeType == enSkyCubeType_Night
 		|| m_skyCubeType == enSkyCubeType_Wild_Night
@@ -88,7 +88,7 @@ void Game::InitSky()
 		|| m_skyCubeType == enSkyCubeType_NightToon_2
 		) {
 
-		//g_renderingEngine->DisableTonemap();
+		g_renderingEngine->DisableTonemap();
 		m_skyCube->SetLuminance(0.1f);
 		Vector3 ligColor, ligDir;
 		ligColor.x = 0.6f;
@@ -212,6 +212,18 @@ bool Game::Start()
 			pointLight->SetRange(POINTLIGHT_RANGE);
 			pointLight->SetAffectPowParam(POINTLIGHT_ATTEN_POW);
 			m_pointLightList.push_back(pointLight);
+			auto spotLight = g_sceneLight->NewSpotLight();
+			spotLight->SetPosition(objData.position);
+			spotLight->SetColor(POINTLIGHT_COLOR);
+			spotLight->SetRange(POINTLIGHT_RANGE);
+			spotLight->SetRangeAffectPowParam(POINTLIGHT_ATTEN_POW);
+			spotLight->SetAngleAffectPowParam(1.0f);
+			spotLight->SetDirection(g_vec3Down);
+			spotLight->SetAngle(Math::DegToRad(40.0f));
+			m_spotLightList.push_back(spotLight);
+			VolumeSpotLight* volumeSpotLight = new VolumeSpotLight();
+			volumeSpotLight->Init();
+			m_volumeSpotLightList.push_back(volumeSpotLight);
 			return true;
 		}
 
@@ -286,6 +298,9 @@ void Game::CountTimer()
 
 void Game::Update()
 {
+	for (int spotLigNo = 0; spotLigNo < m_volumeSpotLightList.size(); spotLigNo++) {
+		m_volumeSpotLightList[spotLigNo]->Update(*m_spotLightList[spotLigNo]);
+	}
 	if (m_gameState == enGameState_GameClear_Idle)
 	{
 

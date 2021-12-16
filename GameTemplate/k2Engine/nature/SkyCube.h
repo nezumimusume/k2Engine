@@ -73,6 +73,7 @@ namespace nsK2Engine {
 		}
 	private:
 		ModelRender m_modelRender;
+		
 		Texture m_texture[enSkyCubeType_Num];
 		const wchar_t* m_textureFilePaths[enSkyCubeType_Num];
 		Vector3 m_position = g_vec3Zero;

@@ -56,21 +56,13 @@ bool Player::Start()
 	// スポットライトの生成。
 	m_spotLight = g_sceneLight->NewSpotLight();	
 	m_spotLight->SetRange(800.0f);
-	m_spotLight->SetAngle(Math::DegToRad(40.0f));
+	m_spotLight->SetAngle(Math::DegToRad(20.0f));
 	m_spotLight->SetRangeAffectPowParam(5.0f);
 	m_spotLight->SetAngleAffectPowParam(1.0f);
 	m_spotLight->SetColor(1.0f, 1.0f, 1.0f);
 
-	m_spotLight2 = g_sceneLight->NewSpotLight();
-	m_spotLight2->SetRange(800.0f);
-	m_spotLight2->SetAngle(Math::DegToRad(40.0f));
-	m_spotLight2->SetRangeAffectPowParam(5.0f);
-	m_spotLight2->SetAngleAffectPowParam(1.0f);
-	m_spotLight2->SetColor(10.0f, 0.0f, 0.0f);
-
 	// ボリュームスポットライトの初期化。
 	m_volumeSpotLight.Init();
-	m_volumeSpotLight2.Init();
 	return true;
 }
 
@@ -147,12 +139,9 @@ void Player::Update()
 	Vector3 pos = m_position;
 	pos.y += 50.0f;
 	m_spotLight->SetPosition(pos);
-	m_spotLight2->SetPosition(pos);
 
 	m_spotLight->SetDirection(m_forward);
 	m_volumeSpotLight.Update(*m_spotLight);
-	m_spotLight2->SetDirection(m_forward * -1.0f);
-	m_volumeSpotLight2.Update(*m_spotLight2);
 }
 
 void Player::Move()

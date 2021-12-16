@@ -77,6 +77,8 @@ private:
 	EnGameState				m_gameState = enGameState_DuringGamePlay;		//ゲームステート。
 	SpriteRender			m_pressA;
 	std::vector<PointLight*> m_pointLightList;
+	std::vector<SpotLight*> m_spotLightList;
+	std::vector<VolumeSpotLight*> m_volumeSpotLightList;
 	int m_skyCubeType = enSkyCubeType_Day;
 	SoundSource* m_bgm = nullptr;
 };

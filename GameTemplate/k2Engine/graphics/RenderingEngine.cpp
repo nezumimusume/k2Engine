@@ -150,13 +150,15 @@ namespace nsK2Engine {
         int frameBuffer_h = g_graphicsEngine->GetFrameBufferHeight();
 
         // アルベドカラーを出力用のレンダリングターゲットを初期化する
+        float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
         m_gBuffer[enGBufferAlbedoDepth].Create(
             frameBuffer_w,
             frameBuffer_h,
             1,
             1,
             DXGI_FORMAT_R32G32B32A32_FLOAT,
-            DXGI_FORMAT_D32_FLOAT
+            DXGI_FORMAT_D32_FLOAT,
+            clearColor
         );
 
         // 法線出力用のレンダリングターゲットを初期化する
