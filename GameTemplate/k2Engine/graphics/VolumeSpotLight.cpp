@@ -41,18 +41,21 @@ namespace nsK2Engine {
 
 		// 最後に最終描画
 		SpriteInitData spriteInitData;
-		spriteInitData.m_fxFilePath = 
-		modelInitData.m_cullMode = D3D12_CULL_MODE_NONE; // 背面描画なので、前面カリング。
-		auto& volumeLightRender = g_renderingEngine->GetVolumeLightRender();
-		modelInitData.m_colorBufferFormat[0] = g_mainRenderTargetFormat.colorBufferFormat;		
-		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetDeferredLightingCB().m_light;
-		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetDeferredLightingCB().m_light);
-		modelInitData.m_expandShaderResoruceView[0] = &volumeLightRender.GetVolumeLightMapFrontTexture();
-		modelInitData.m_expandShaderResoruceView[1] = &volumeLightRender.GetVolumeLightMapBackTexture();
-		modelInitData.m_psEntryPointFunc = "PSMainFinal";
-		modelInitData.m_alphaBlendMode = AlphaBlendMode_Add;
-		modelInitData.m_isDepthWrite = false;
-		m_modelFinal.Init(modelInitData);
+		spriteInitData.m_fxFilePath = "Assets/shader/DrawVolumeLightMap.fx";
+		spriteInitData.m_vsEntryPointFunc = "VSFinal";
+		spriteInitData.m_psEntryPoinFunc = "PSFinal";
+		spriteInitData.m_colorBufferFormat[0] = g_mainRenderTargetFormat.colorBufferFormat;
+		spriteInitData.m_textures[0] = &g_renderingEngine->GetGBufferAlbedoTexture();
+		spriteInitData.m_textures[1] = &g_renderingEngine->GetVolumeLightRender().GetVolumeLightMapFrontTexture();
+		spriteInitData.m_textures[2] = &g_renderingEngine->GetVolumeLightRender().GetVolumeLightMapBackTexture();
+		spriteInitData.m_expandConstantBuffer = &g_renderingEngine->GetDeferredLightingCB().m_light;
+		spriteInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetDeferredLightingCB().m_light);
+		
+		spriteInitData.m_width = FRAME_BUFFER_W;
+		spriteInitData.m_height = FRAME_BUFFER_H;
+		spriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
+		m_final.Init(spriteInitData);
+		
 	}
 	void VolumeSpotLight::DrawToVolumeLightMapBack(RenderContext& rc)
 	{
@@ -64,7 +67,7 @@ namespace nsK2Engine {
 	}
 	void VolumeSpotLight::DrawFinal(RenderContext& rc)
 	{
-		m_modelFinal.Draw(rc);
+		m_final.Draw(rc);
 	}
 	void VolumeSpotLight::Update(const SpotLight& spotLight)
 	{
@@ -83,7 +86,7 @@ namespace nsK2Engine {
 		scale.y = xyScale;
 		m_modelBack.UpdateWorldMatrix(pos, rot, scale);
 		m_modelFront.UpdateWorldMatrix(pos, rot, scale);
-		m_modelFinal.UpdateWorldMatrix(pos, rot, scale);
+		
 		// スポットライトの番号を更新する。
 		m_spotLightInfo.no = spotLight.GetNo();
 	}

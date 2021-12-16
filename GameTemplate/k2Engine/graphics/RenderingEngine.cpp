@@ -309,9 +309,6 @@ namespace nsK2Engine {
         // ディファードライティング
         DeferredLighting(rc);
 
-        // ディファードライティングが終わった時点でスナップショットを撮影する
-        SnapshotMainRenderTarget(rc, EnMainRTSnapshot::enDrawnOpacity);
-
         // フォワードレンダリング
         ForwardRendering(rc);
 
@@ -409,6 +406,9 @@ namespace nsK2Engine {
         for (auto& renderObj : m_renderObjects) {
             renderObj->OnForwardRender(rc);
         }
+
+        // 不透明オブジェクトの描画が終わった時点でスナップショットを撮影する
+        SnapshotMainRenderTarget(rc, EnMainRTSnapshot::enDrawnOpacity);
 
         // ボリュームライトを描画。
         m_volumeLightRender.Render(

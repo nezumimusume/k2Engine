@@ -20,7 +20,9 @@ Player::~Player()
 {
 	// ポイントライトの削除
 	for (auto pt : m_pointLightList) {
-		g_sceneLight->DeletePointLight(pt);
+		if (g_sceneLight != nullptr) {
+			g_sceneLight->DeletePointLight(pt);
+		}
 	}
 }
 
@@ -54,17 +56,17 @@ bool Player::Start()
 	// スポットライトの生成。
 	m_spotLight = g_sceneLight->NewSpotLight();	
 	m_spotLight->SetRange(800.0f);
-	m_spotLight->SetAngle(Math::DegToRad(20.0f));
+	m_spotLight->SetAngle(Math::DegToRad(40.0f));
 	m_spotLight->SetRangeAffectPowParam(5.0f);
 	m_spotLight->SetAngleAffectPowParam(1.0f);
 	m_spotLight->SetColor(1.0f, 1.0f, 1.0f);
 
 	m_spotLight2 = g_sceneLight->NewSpotLight();
 	m_spotLight2->SetRange(800.0f);
-	m_spotLight2->SetAngle(Math::DegToRad(20.0f));
+	m_spotLight2->SetAngle(Math::DegToRad(40.0f));
 	m_spotLight2->SetRangeAffectPowParam(5.0f);
 	m_spotLight2->SetAngleAffectPowParam(1.0f);
-	m_spotLight2->SetColor(100.0f, 1.0f, 1.0f);
+	m_spotLight2->SetColor(10.0f, 0.0f, 0.0f);
 
 	// ボリュームスポットライトの初期化。
 	m_volumeSpotLight.Init();

@@ -88,7 +88,7 @@ void Game::InitSky()
 		|| m_skyCubeType == enSkyCubeType_NightToon_2
 		) {
 
-		g_renderingEngine->DisableTonemap();
+		//g_renderingEngine->DisableTonemap();
 		m_skyCube->SetLuminance(0.1f);
 		Vector3 ligColor, ligDir;
 		ligColor.x = 0.6f;

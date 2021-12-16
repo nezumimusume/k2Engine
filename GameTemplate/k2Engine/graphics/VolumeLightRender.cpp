@@ -32,8 +32,8 @@ namespace nsK2Engine {
             rc.SetRenderTargetAndViewport(m_volumeLightMapFront);
             rc.ClearRenderTargetView(m_volumeLightMapFront);
             volumeLig->DrawToVolumeLightMapFront(rc);
+
             // 2ÉpÉXÅAîwñ Çï`âÊ
-            
             rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapBack);
             rc.SetRenderTargetAndViewport(m_volumeLightMapBack);
             rc.ClearRenderTargetView(m_volumeLightMapBack);
