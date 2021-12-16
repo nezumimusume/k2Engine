@@ -80,7 +80,7 @@ void Game::InitSky()
 	// Œ»İ‚Ì‹ó‚ğ”jŠüB
 	DeleteGO(m_skyCube);
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
-	//m_skyCubeType = enSkyCubeType_Night;
+	m_skyCubeType = enSkyCubeType_NightToon_2;
 	g_renderingEngine->EnableTonemap();
 	if (m_skyCubeType == enSkyCubeType_Night
 		|| m_skyCubeType == enSkyCubeType_Wild_Night
