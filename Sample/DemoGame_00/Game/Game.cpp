@@ -70,9 +70,7 @@ Game::~Game()
 
 	//ポイントライトを削除。
 	for (auto pt : m_pointLightList) {
-		if (g_sceneLight) {
-			g_sceneLight->DeletePointLight(pt);
-		}
+		delete pt;
 	}
 	for (auto spt : m_spotLightList) {
 		delete spt;
@@ -212,12 +210,14 @@ bool Game::Start()
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"pointlight") == true) {
-			auto pointLight = g_sceneLight->NewPointLight();
+			auto pointLight = new PointLight;
+			pointLight->Init();
 			pointLight->SetPosition(objData.position);
 			pointLight->SetColor(POINTLIGHT_COLOR);
 			pointLight->SetRange(POINTLIGHT_RANGE);
 			pointLight->SetAffectPowParam(POINTLIGHT_ATTEN_POW);
 			m_pointLightList.push_back(pointLight);
+
 			SpotLight* spotLight = new SpotLight;
 			spotLight->Init();
 			spotLight->SetPosition(objData.position);
@@ -306,9 +306,15 @@ void Game::CountTimer()
 
 void Game::Update()
 {
+	// ポイントライトの更新。
+	for (auto pt : m_pointLightList) {
+		pt->Update();
+	}
+	// スポットライトの更新。
 	for (auto spotLight : m_spotLightList) {
 		spotLight->Update();
 	}
+	// ボリュームライトの更新。
 	for (auto volumeSpotLight : m_volumeSpotLightList) {
 		volumeSpotLight->Update();
 	}

@@ -3,10 +3,10 @@
 #include "MyRenderer.h"
 #include "graphics/preRender/ShadowMapRender.h"
 #include "graphics/postEffect/PostEffect.h"
-#include "SceneLight.h"
+#include "graphics/light/SceneLight.h"
 #include "graphics/preRender/LightCulling.h"
 #include "geometry/SceneGeometryData.h"
-#include "graphics/VolumeLightRender.h"
+#include "graphics/light/VolumeLightRender.h"
 
 namespace nsK2Engine {
    

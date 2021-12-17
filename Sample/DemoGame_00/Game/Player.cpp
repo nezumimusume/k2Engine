@@ -20,9 +20,7 @@ Player::~Player()
 {
 	// ポイントライトの削除
 	for (auto pt : m_pointLightList) {
-		if (g_sceneLight != nullptr) {
-			g_sceneLight->DeletePointLight(pt);
-		}
+		delete pt;
 	}
 }
 
@@ -68,6 +66,9 @@ bool Player::Start()
 
 void Player::Update()
 {
+	for (auto pt : m_pointLightList) {
+		pt->Update();
+	}
 	Vector3 color = m_spotLight.GetColor();
 	float affect_0 = m_spotLight.GetAngleAffectPowParam();
 	float affect_1 = m_spotLight.GetRangeAffectPowParam();
@@ -129,12 +130,14 @@ void Player::Update()
 	m_pointLight->SetAffectPowParam( 0.5f );*/
 	// ポイントライト大量設置のテスト
 	if (g_pad[0]->IsTrigger(enButtonB)) {
-		auto newPt = g_sceneLight->NewPointLight();
+		auto newPt = new PointLight;
+		newPt->Init();
 		// 現在のプレイヤーのポイントライトをコピー。
 		newPt->SetPosition(m_position.x, m_position.y + 50.0f, m_position.z);
 		newPt->SetColor(7.0f, 7.0f, 7.0f);
 		newPt->SetRange(200.0f);
 		newPt->SetAffectPowParam(0.5f);
+		
 		m_pointLightList.push_back(newPt);
 	}
 	Vector3 pos = m_position;

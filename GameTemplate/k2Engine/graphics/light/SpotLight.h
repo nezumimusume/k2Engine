@@ -2,7 +2,7 @@
 
 namespace nsK2Engine {
 	struct SSpotLight;
-	class SpotLight {
+	class SpotLight : Noncopyable{
 	public:
 		// デストラクタ。
 		~SpotLight();

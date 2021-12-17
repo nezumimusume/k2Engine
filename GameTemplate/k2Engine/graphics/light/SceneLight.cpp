@@ -1,6 +1,6 @@
 #include "k2EnginePreCompile.h"
-#include "SceneLight.h"
-#include "VolumeSpotLight.h"
+#include "graphics/light/SceneLight.h"
+#include "graphics/light/VolumeSpotLight.h"
 
 namespace nsK2Engine {
     void SPointLight::Update()
@@ -87,10 +87,6 @@ namespace nsK2Engine {
     
     void SceneLight::Update()
     {
-        for (auto& pt : m_light.pointLights) {
-            pt.Update();
-        }
-       
         m_light.numPointLight = MAX_POINT_LIGHT - static_cast<int>(m_unusePointLightQueue.size());
         m_light.numSpotLight = MAX_SPOT_LIGHT - static_cast<int>(m_unuseSpotLightQueue.size());
     }

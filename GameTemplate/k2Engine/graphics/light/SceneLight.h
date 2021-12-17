@@ -11,7 +11,6 @@ namespace nsK2Engine {
         Vector4 color;      // ライトのカラー
     };
 
-    // ポイントライト。
 
     /// <summary>
     /// ポイントライト構造体

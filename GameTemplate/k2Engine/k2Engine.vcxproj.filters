@@ -73,9 +73,6 @@
     <ClCompile Include="collision\CollisionObject.cpp">
       <Filter>collision</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\SceneLight.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\postEffect\Ssao.cpp">
       <Filter>graphics\postEffect</Filter>
     </ClCompile>
@@ -120,13 +117,19 @@
     <ClCompile Include="dbg\dbgVectorRenderer.cpp">
       <Filter>dbg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GameTemplate\k2Engine\graphics\VolumeSpotLight.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\VolumeLightRender.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\light\SpotLight.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\PointLight.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\SceneLight.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\VolumeSpotLight.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\VolumeLightRender.cpp">
       <Filter>graphics\light</Filter>
     </ClCompile>
   </ItemGroup>
@@ -174,9 +177,6 @@
     <ClInclude Include="collision\CollisionObject.h">
       <Filter>collision</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\SceneLight.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\postEffect\Ssao.h">
       <Filter>graphics\postEffect</Filter>
     </ClInclude>
@@ -221,13 +221,19 @@
     <ClInclude Include="dbg\dbgVectorRenderer.h">
       <Filter>dbg</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2Engine\graphics\VolumeSpotLight.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\VolumeLightRender.h">
-      <Filter>graphics</Filter>
+    <ClInclude Include="graphics\light\SceneLight.h">
+      <Filter>graphics\light</Filter>
     </ClInclude>
     <ClInclude Include="graphics\light\SpotLight.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\PointLight.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\VolumeSpotLight.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\VolumeLightRender.h">
       <Filter>graphics\light</Filter>
     </ClInclude>
   </ItemGroup>

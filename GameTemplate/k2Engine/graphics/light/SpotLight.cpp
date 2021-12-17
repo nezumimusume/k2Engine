@@ -1,6 +1,6 @@
 #include "k2EnginePreCompile.h"
-#include "graphics/SceneLight.h"
-#include "SpotLight.h"
+#include "graphics/light/SceneLight.h"
+#include "graphics/light/SpotLight.h"
 
 namespace nsK2Engine {
 	SpotLight::~SpotLight()
