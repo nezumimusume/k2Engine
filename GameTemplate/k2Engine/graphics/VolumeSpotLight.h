@@ -1,7 +1,7 @@
 #pragma once
 
 namespace nsK2Engine {
-	struct SpotLight;
+	struct SSpotLight;
 	/// <summary>
 	/// モデルベースのボリュームライト
 	/// </summary>
@@ -18,12 +18,11 @@ namespace nsK2Engine {
 		/// <summary>
 		/// 初期化。
 		/// </summary>
-		void Init();
+		void Init(const SpotLight& spotLight);
 		/// <summary>
 		/// スポットライトの情報をもとに更新
 		/// </summary>
-		/// <param name="spotLight">スポットライト</param>
-		void Update(const SpotLight& spotLight);
+		void Update();
 		/// <summary>
 		/// ボリュームライトの背面を描画
 		/// </summary>
@@ -47,15 +46,18 @@ namespace nsK2Engine {
 		/// </summary>
 		void DrawFinal(RenderContext& rc);
 	private:
+		
 		/// <summary>
-		/// GPUに送るスポットライト情報
+		/// 最終描画のパスの定数バッファ。
 		/// </summary>
-		struct SpotLightInfo {
-			int no;	// スポットライトの番号。
+		struct FinalCB {
+			SSpotLight spotLight;   // スポットライト。
+			Matrix mViewProjInv;   // ビュープロジェクション行列の逆行列
 		};
-		SpotLightInfo m_spotLightInfo;	// GPUに送るスポットライト情報。
 		Model m_modelFront;	// ボリュームライトの前面描画用のモデル。
 		Model m_modelBack;	// ボリュームライトの背面描画用のモデル。
 		Sprite m_final;		// 最終描画。
+		FinalCB m_finalCB;	// 最終描画の定数バッファ。
+		const SpotLight* m_spotLight = nullptr;
 	};
 }

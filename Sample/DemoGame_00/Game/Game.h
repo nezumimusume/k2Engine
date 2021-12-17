@@ -76,7 +76,7 @@ private:
 	FontRender				m_timerFont;				//タイマーを表示するフォント。
 	EnGameState				m_gameState = enGameState_DuringGamePlay;		//ゲームステート。
 	SpriteRender			m_pressA;
-	std::vector<PointLight*> m_pointLightList;
+	std::vector<SPointLight*> m_pointLightList;
 	std::vector<SpotLight*> m_spotLightList;
 	std::vector<VolumeSpotLight*> m_volumeSpotLightList;
 	int m_skyCubeType = enSkyCubeType_Day;

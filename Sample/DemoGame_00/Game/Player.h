@@ -98,8 +98,9 @@ private:
 	AnimationClip		m_animationClips[enAnimationClip_Num];		//アニメーションクリップ。
 	EnPlayerState		m_playerState = enPlayerState_Idle;				//プレイヤーのステート(状態)を表す変数。
 	Vector3				m_forward;
-	std::vector<PointLight* > m_pointLightList;
-	SpotLight* m_spotLight = nullptr;
+	std::vector<SPointLight* > m_pointLightList;
+	SpotLight m_spotLight;				// スポットライト。
+	
 	VolumeSpotLight m_volumeSpotLight;	// ボリュームスポットライト。
 };
 

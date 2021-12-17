@@ -25,7 +25,7 @@ namespace nsK2Engine {
     /// また、この構造体のオブジェクトのデータはシェーダー側に定数バッファとして転送されています。
     /// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
     /// </remark>
-    struct PointLight
+    struct SPointLight
     {
     private:
         Vector3 position;       // 座標
@@ -146,7 +146,7 @@ namespace nsK2Engine {
     /// また、この構造体のオブジェクトのデータはシェーダー側に定数バッファとして転送されています。
     /// メンバ変数を追加した場合は、lightCulling.fx、DeferredLighting.fxも変更する必要があります。
     /// </remark>
-   struct SpotLight {
+   struct SSpotLight {
    private:
         Vector3 position;                   // 座標
         int isUse = false;                  // 使用中フラグ。
@@ -347,8 +347,8 @@ namespace nsK2Engine {
     struct Light
     {
         DirectionalLight directionalLight[MAX_DIRECTIONAL_LIGHT];   // ディレクショナルライトの配列。
-        PointLight pointLights[MAX_POINT_LIGHT];                    // ポイントライトの配列。
-        SpotLight spotLights[MAX_SPOT_LIGHT];                       // スポットライトの配列。
+        SPointLight pointLights[MAX_POINT_LIGHT];                    // ポイントライトの配列。
+        SSpotLight spotLights[MAX_SPOT_LIGHT];                       // スポットライトの配列。
         Matrix mViewProjInv;    // ビュープロジェクション行列の逆行列
         Vector3 eyePos;         // カメラの位置
         int numPointLight;      // ポイントライトの数。
@@ -402,37 +402,37 @@ namespace nsK2Engine {
         /// 不要になったらDeletePointLight()を使用して、削除してください。
         /// </remark>
         /// <returns>追加されたポイントライトのアドレス</returns>
-        PointLight* NewPointLight()
+        SPointLight* NewPointLight()
         {
-            return NewDynamicLight<PointLight>(m_unusePointLightQueue);
+            return NewDynamicLight<SPointLight>(m_unusePointLightQueue);
         }
         /// <summary>
         /// シーンからポイントライトを削除
         /// </summary>
         /// <param name="pointLight">削除するポイントライト</param>
-        void DeletePointLight(PointLight* pointLight)
+        void DeletePointLight(SPointLight* pointLight)
         {
-            DeleteDynamicLight<PointLight>(pointLight, m_unusePointLightQueue);
+            DeleteDynamicLight<SPointLight>(pointLight, m_unusePointLightQueue);
         }
         /// <summary>
         /// シーンにスポットライトを追加
         /// </summary>
         /// <remark>
-        /// 本関数を利用して追加したスポットライトは、
-        /// 不要になったらDeleteSpotLight()を使用して、削除してください。
+        /// この関数はエンジン側で利用されます。
+        /// ゲーム側では利用しないでください。
         /// </remark>
         /// <returns>追加されたスポットライトのアドレス</returns>
-        SpotLight* NewSpotLight()
+        SSpotLight* NewSpotLight()
         {
-            return NewDynamicLight<SpotLight>(m_unuseSpotLightQueue);
+            return NewDynamicLight<SSpotLight>(m_unuseSpotLightQueue);
         }
         /// <summary>
         /// シーンからスポットライトを削除
         /// </summary>
         /// <param name="spotLight">削除するスポットライト</param>
-        void DeleteSpotLight(SpotLight* spotLight)
+        void DeleteSpotLight(SSpotLight* spotLight)
         {
-            DeleteDynamicLight<SpotLight>(spotLight, m_unuseSpotLightQueue);
+            DeleteDynamicLight<SSpotLight>(spotLight, m_unuseSpotLightQueue);
         }
         /// <summary>
         /// 環境光の計算のためのIBLテクスチャを設定。
@@ -503,7 +503,7 @@ namespace nsK2Engine {
         }
     private:
         Light m_light;  //シーンライト。
-        std::deque< PointLight* > m_unusePointLightQueue;       // 未使用のポイントライトのキュー。
-        std::deque< SpotLight* > m_unuseSpotLightQueue;         // 未使用のスポットライトのキュー。。
+        std::deque< SPointLight* > m_unusePointLightQueue;       // 未使用のポイントライトのキュー。
+        std::deque< SSpotLight* > m_unuseSpotLightQueue;         // 未使用のスポットライトのキュー。。
     };
 }

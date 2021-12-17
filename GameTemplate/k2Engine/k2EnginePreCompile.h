@@ -14,4 +14,5 @@ using namespace nsK2EngineLow;
 #include "graphics/SceneLight.h"
 #include "nature/SkyCube.h"
 #include "Level3DRender/LevelRender.h"
+#include "graphics/light/SpotLight.h"
 

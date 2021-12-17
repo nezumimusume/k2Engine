@@ -35,6 +35,7 @@
     <ClCompile Include="geometry\GeometryData.cpp" />
     <ClCompile Include="geometry\SceneGeometryData.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
+    <ClCompile Include="graphics\light\SpotLight.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\postEffect\Bloom.cpp" />
     <ClCompile Include="graphics\postEffect\Dof.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="geometry\SceneGeometryData.h" />
     <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\IRenderer.h" />
+    <ClInclude Include="graphics\light\SpotLight.h" />
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\MyRenderer.h" />
     <ClInclude Include="graphics\postEffect\Bloom.h" />

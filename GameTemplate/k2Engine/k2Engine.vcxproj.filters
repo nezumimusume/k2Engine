@@ -31,6 +31,9 @@
     <Filter Include="dbg">
       <UniqueIdentifier>{da4adfd3-066d-493e-8ff5-83d0147f941e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics\light">
+      <UniqueIdentifier>{098d7f12-6f25-45fe-b2f2-3519670804f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics\ModelRender.cpp">
@@ -122,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="graphics\VolumeLightRender.cpp">
       <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\SpotLight.cpp">
+      <Filter>graphics\light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="graphics\VolumeLightRender.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\SpotLight.h">
+      <Filter>graphics\light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

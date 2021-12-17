@@ -74,6 +74,12 @@ Game::~Game()
 			g_sceneLight->DeletePointLight(pt);
 		}
 	}
+	for (auto spt : m_spotLightList) {
+		delete spt;
+	}
+	for (auto vspt : m_volumeSpotLightList){
+		delete vspt;
+	}
 }
 void Game::InitSky()
 {
@@ -212,7 +218,8 @@ bool Game::Start()
 			pointLight->SetRange(POINTLIGHT_RANGE);
 			pointLight->SetAffectPowParam(POINTLIGHT_ATTEN_POW);
 			m_pointLightList.push_back(pointLight);
-			auto spotLight = g_sceneLight->NewSpotLight();
+			SpotLight* spotLight = new SpotLight;
+			spotLight->Init();
 			spotLight->SetPosition(objData.position);
 			spotLight->SetColor(POINTLIGHT_COLOR);
 			spotLight->SetRange(POINTLIGHT_RANGE);
@@ -221,8 +228,9 @@ bool Game::Start()
 			spotLight->SetDirection(g_vec3Down);
 			spotLight->SetAngle(Math::DegToRad(40.0f));
 			m_spotLightList.push_back(spotLight);
+
 			VolumeSpotLight* volumeSpotLight = new VolumeSpotLight();
-			volumeSpotLight->Init();
+			volumeSpotLight->Init(*spotLight);
 			m_volumeSpotLightList.push_back(volumeSpotLight);
 			return true;
 		}
@@ -298,8 +306,11 @@ void Game::CountTimer()
 
 void Game::Update()
 {
-	for (int spotLigNo = 0; spotLigNo < m_volumeSpotLightList.size(); spotLigNo++) {
-		m_volumeSpotLightList[spotLigNo]->Update(*m_spotLightList[spotLigNo]);
+	for (auto spotLight : m_spotLightList) {
+		spotLight->Update();
+	}
+	for (auto volumeSpotLight : m_volumeSpotLightList) {
+		volumeSpotLight->Update();
 	}
 	if (m_gameState == enGameState_GameClear_Idle)
 	{

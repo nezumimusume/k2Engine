@@ -10,16 +10,16 @@ namespace nsK2Engine {
             FRAME_BUFFER_H,
             1,
             1,
-            g_drawVolumeLightMapFrontFormat.colorBufferFormat,
-            g_drawVolumeLightMapFrontFormat.depthBufferFormat
+            g_drawVolumeLightMapFormat.colorBufferFormat,
+            g_drawVolumeLightMapFormat.depthBufferFormat
         );
         m_volumeLightMapBack.Create(
             FRAME_BUFFER_W,
             FRAME_BUFFER_H,
             1,
             1,
-            g_drawVolumeLightMapBackFormat.colorBufferFormat,
-            g_drawVolumeLightMapBackFormat.depthBufferFormat
+            g_drawVolumeLightMapFormat.colorBufferFormat,
+            g_drawVolumeLightMapFormat.depthBufferFormat
         );
     }
 	void VolumeLightRender::Render(RenderContext& rc, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)

@@ -53,26 +53,26 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/gameclear.wav");
 	// ポイントライトの生成
 	//m_pointLight = g_sceneLight->NewPointLight();
-	// スポットライトの生成。
-	m_spotLight = g_sceneLight->NewSpotLight();	
-	m_spotLight->SetRange(800.0f);
-	m_spotLight->SetAngle(Math::DegToRad(20.0f));
-	m_spotLight->SetRangeAffectPowParam(5.0f);
-	m_spotLight->SetAngleAffectPowParam(1.0f);
-	m_spotLight->SetColor(1.0f, 1.0f, 1.0f);
+	// スポットライトを初期化。
+	m_spotLight.Init();
+	m_spotLight.SetRange(800.0f);
+	m_spotLight.SetAngle(Math::DegToRad(20.0f));
+	m_spotLight.SetRangeAffectPowParam(5.0f);
+	m_spotLight.SetAngleAffectPowParam(1.0f);
+	m_spotLight.SetColor(1.0f, 1.0f, 1.0f);
 
 	// ボリュームスポットライトの初期化。
-	m_volumeSpotLight.Init();
+	m_volumeSpotLight.Init(m_spotLight);
 	return true;
 }
 
 void Player::Update()
 {
-	Vector3 color = m_spotLight->GetColor();
-	float affect_0 = m_spotLight->GetAngleAffectPowParam();
-	float affect_1 = m_spotLight->GetRangeAffectPowParam();
-	float angle = m_spotLight->GetAngle();
-	float range = m_spotLight->GetRange();
+	Vector3 color = m_spotLight.GetColor();
+	float affect_0 = m_spotLight.GetAngleAffectPowParam();
+	float affect_1 = m_spotLight.GetRangeAffectPowParam();
+	float angle = m_spotLight.GetAngle();
+	float range = m_spotLight.GetRange();
 	if( GetAsyncKeyState('Z'))
 	{
 		color.x += 0.1f;
@@ -98,11 +98,12 @@ void Player::Update()
 	if (GetAsyncKeyState('M')) {
 		angle += 0.01f;
 	}
-	m_spotLight->SetRange(range);
-	m_spotLight->SetRangeAffectPowParam(affect_1);
-	m_spotLight->SetAngleAffectPowParam(affect_0);
-	m_spotLight->SetAngle(angle);
-	m_spotLight->SetColor(color);
+	m_spotLight.SetRange(range);
+	m_spotLight.SetRangeAffectPowParam(affect_1);
+	m_spotLight.SetAngleAffectPowParam(affect_0);
+	m_spotLight.SetAngle(angle);
+	m_spotLight.SetColor(color);
+	m_spotLight.Update();
 	//移動処理。
 	Move();
 	//旋回処理。
@@ -138,10 +139,10 @@ void Player::Update()
 	}
 	Vector3 pos = m_position;
 	pos.y += 50.0f;
-	m_spotLight->SetPosition(pos);
+	m_spotLight.SetPosition(pos);
 
-	m_spotLight->SetDirection(m_forward);
-	m_volumeSpotLight.Update(*m_spotLight);
+	m_spotLight.SetDirection(m_forward);
+	m_volumeSpotLight.Update();
 }
 
 void Player::Move()
