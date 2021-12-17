@@ -45,6 +45,16 @@ namespace nsK2Engine {
 		/// 最終描画
 		/// </summary>
 		void DrawFinal(RenderContext& rc);
+		/// <summary>
+		/// 深度値書き込みパス
+		/// </summary>
+		/// <remark>
+		/// 1～3パスではボリュームライトの深度値を描きこんでいないため、
+		/// SSRでボリュームライトの映り込みが起きていない。
+		/// そこで、追加の4パス目でアルファ0で深度値のみを書き込む。
+		/// </remark>
+		/// <param name="rc"></param>
+		//void DrawDepth(RenderContext& rc);
 	private:
 		
 		/// <summary>
