@@ -54,9 +54,11 @@ namespace nsK2Engine {
             metallicSmoothRenderTarget,
             albedoRenderTarget
         );
+
     }
     void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
     {
+        BeginGPUEvent("PostEffect");
         //m_ssao.Render(rc, mainRenderTarget);
         // SSR
         m_ssr.Render(rc, mainRenderTarget);
@@ -77,5 +79,7 @@ namespace nsK2Engine {
         m_dof.Render(rc, mainRenderTarget);
         // FXAA
         m_fXaa.Render(rc, mainRenderTarget);
+
+        EndGPUEvent();
     }
 }

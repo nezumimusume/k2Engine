@@ -54,7 +54,7 @@ namespace nsK2Engine {
 		/// そこで、追加の4パス目でアルファ0で深度値のみを書き込む。
 		/// </remark>
 		/// <param name="rc"></param>
-		//void DrawDepth(RenderContext& rc);
+		void DrawDepth(RenderContext& rc);
 	private:
 		
 		/// <summary>
@@ -64,10 +64,11 @@ namespace nsK2Engine {
 			SSpotLight spotLight;   // スポットライト。
 			Matrix mViewProjInv;   // ビュープロジェクション行列の逆行列
 		};
-		Model m_modelFront;	// ボリュームライトの前面描画用のモデル。
-		Model m_modelBack;	// ボリュームライトの背面描画用のモデル。
-		Sprite m_final;		// 最終描画。
-		FinalCB m_finalCB;	// 最終描画の定数バッファ。
+		Model m_modelFront;		// ボリュームライトの前面描画用のモデル。
+		Model m_modelBack;		// ボリュームライトの背面描画用のモデル。
+		Model m_drawDepthModel;	// 深度値書き込み用のモデル。
+		Sprite m_final;			// 最終描画。
+		FinalCB m_finalCB;		// 最終描画の定数バッファ。
 		const SpotLight* m_spotLight = nullptr;
 	};
 }

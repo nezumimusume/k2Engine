@@ -41,6 +41,8 @@ namespace nsK2Engine {
     }
     void LightCulling::Execute(RenderContext& rc)
     {
+        BeginGPUEvent("LightCulling");
+
         CameraData cameraData;
         cameraData.mProj = g_camera3D->GetProjectionMatrix();
         cameraData.mProjInv.Inverse(g_camera3D->GetProjectionMatrix());
@@ -69,6 +71,6 @@ namespace nsK2Engine {
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
         );
 
-
+        EndGPUEvent();
     }
 }

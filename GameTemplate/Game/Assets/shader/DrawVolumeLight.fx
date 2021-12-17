@@ -173,3 +173,9 @@ float4 PSFinal( PSFinalInput In ) : SV_Target0
     
 	return float4( lig, 1.0f);
 }
+
+float4 PSDepth(SPSIn psIn) : SV_Target0
+{
+	// 深度値を書き込むだけなので、透明なピクセルを描画する。
+	return float4( 0.0f, 0.0f, 0.0f, 0.0f);
+}

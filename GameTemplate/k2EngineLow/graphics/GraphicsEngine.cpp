@@ -1,5 +1,6 @@
 #include "k2EngineLowPreCompile.h"
 #include "GraphicsEngine.h"
+#include <pix.h>
 
 namespace nsK2EngineLow {
 	GraphicsEngine* g_graphicsEngine = nullptr;	//グラフィックスエンジン
@@ -44,6 +45,7 @@ namespace nsK2EngineLow {
 		if (m_d3dDevice) {
 			m_d3dDevice->Release();
 		}
+		
 		CloseHandle(m_fenceEvent);
 	}
 	void GraphicsEngine::WaitDraw()
@@ -285,6 +287,7 @@ namespace nsK2EngineLow {
 			}
 			//コマンドリストは開かれている状態で作成されるので、いったん閉じる。
 			commandList->Close();
+			
 			listNo++;
 		}
 		return true;
@@ -363,7 +366,7 @@ namespace nsK2EngineLow {
 	{
 		// レンダリングターゲットへの描き込み完了待ち
 		m_renderContext.WaitUntilFinishDrawingToRenderTarget(m_frameBuffer.GetCurrentRenderTarget());
-
+		
 		if (m_isExecuteCommandList)
 		{
 			m_frameBuffer.Present(1);

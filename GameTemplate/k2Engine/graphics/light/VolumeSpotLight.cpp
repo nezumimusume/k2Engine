@@ -38,6 +38,13 @@ namespace nsK2Engine {
 		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT; // 背面描画なので、前面カリング。
 		m_modelBack.Init(modelInitData);
 
+		// 深度値書き込み用のモデルを初期化。
+		modelInitData.m_colorBufferFormat[0] = g_mainRenderTargetFormat.colorBufferFormat;
+		modelInitData.m_psEntryPointFunc = "PSDepth";
+		modelInitData.m_cullMode = D3D12_CULL_MODE_BACK;
+		modelInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
+		m_drawDepthModel.Init(modelInitData);
+
 		// 最後に最終描画
 		SpriteInitData spriteInitData;
 		spriteInitData.m_fxFilePath = "Assets/shader/DrawVolumeLight.fx";
@@ -54,6 +61,9 @@ namespace nsK2Engine {
 		spriteInitData.m_height = FRAME_BUFFER_H;
 		spriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
 		m_final.Init(spriteInitData);
+
+		
+
 		
 	}
 	void VolumeSpotLight::DrawToVolumeLightMapBack(RenderContext& rc)
@@ -75,6 +85,10 @@ namespace nsK2Engine {
 
 		m_final.Draw(rc);
 	}
+	void VolumeSpotLight::DrawDepth(RenderContext& rc)
+	{
+		m_drawDepthModel.Draw(rc);
+	}
 	void VolumeSpotLight::Update()
 	{
 		// スポットライトの情報をもとにワールド行列を更新する。
@@ -91,5 +105,6 @@ namespace nsK2Engine {
 		scale.y = xyScale;
 		m_modelBack.UpdateWorldMatrix(pos, rot, scale);
 		m_modelFront.UpdateWorldMatrix(pos, rot, scale);
+		m_drawDepthModel.UpdateWorldMatrix(pos, rot, scale);
 	}
 }
