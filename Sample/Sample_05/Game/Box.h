@@ -13,7 +13,6 @@ public:
 	Vector3					m_scale;					//大きさ。
 	Quaternion				m_rotation;					//回転。
 	PhysicsStaticObject		m_physicsStaticObject;		//静的物理オブジェクト。
-	PointLight*				m_pointLight;				//ポイントライト。
 	int						m_lightNumber = 0;
 };
 

@@ -24,11 +24,11 @@ bool Player::Start()
 	m_modelRender.Init("Assets/modelData/unityChan.tkm");
 	m_modelRender.SetScale(m_scale);
 
-	m_pointLight = g_sceneLight->NewPointLight();
-	m_pointLight->SetPosition(m_position);
-	m_pointLight->SetColor(Vector3(10.0f, 10.0f, 10.0f));
-	m_pointLight->SetAffectPowParam(0.7f);
-	m_pointLight->SetRange(100.0f);
+	m_pointLight.Init();
+	m_pointLight.SetPosition(m_position);
+	m_pointLight.SetColor(Vector3(10.0f, 10.0f, 10.0f));
+	m_pointLight.SetAffectPowParam(0.7f);
+	m_pointLight.SetRange(100.0f);
 	return true;
 }
 
@@ -41,7 +41,8 @@ void Player::Update()
 
 	Vector3 pointLightPosition = m_position;
 	pointLightPosition.y += 50.0f;
-	m_pointLight->SetPosition(pointLightPosition);
+	m_pointLight.SetPosition(pointLightPosition);
+	m_pointLight.Update();
 	//モデルを更新。
 	m_modelRender.Update();
 }

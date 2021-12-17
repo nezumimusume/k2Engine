@@ -7,6 +7,11 @@
 
 Game::Game()
 {
+	
+}
+
+Game::~Game()
+{
 	//削除。
 	DeleteGO(m_player);
 	DeleteGO(m_gameCamera);
@@ -17,13 +22,8 @@ Game::Game()
 	for (auto pointLight : m_pointLightList)
 	{
 		//ポイントライトを削除する。
-		g_sceneLight->DeletePointLight(pointLight);
+		delete pointLight;
 	}
-}
-
-Game::~Game()
-{
-
 }
 
 bool Game::Start()
@@ -44,7 +44,8 @@ bool Game::Start()
 			box->m_rotation = objData.rotation;
 			
 			//ポイントライトを作成する。
-			PointLight* pointLight = g_sceneLight->NewPointLight();
+			PointLight* pointLight = new PointLight;
+			pointLight->Init();
 			Vector3 pointLightPosition = objData.position;
 			pointLightPosition.y += 100.0f;
 			//ポイントライトの座標を設定する。
@@ -90,7 +91,9 @@ bool Game::Start()
 
 void Game::Update()
 {
-
+	for (auto pt : m_pointLightList) {
+		pt->Update();
+	}
 }
 
 void Game::Render(RenderContext& rc)

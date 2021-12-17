@@ -17,11 +17,11 @@ public:
 	// メンバ変数とか
 	////////////////////////////////////
 	ModelRender m_modelRender;
-	Vector3 m_position;						//座標。
-	Vector3	m_scale = Vector3::One;			//大きさ。
-	CharacterController m_charaCon;			//キャラクターコントローラー。
-	Vector3 m_moveSpeed;					//移動速度。
-	Quaternion m_rotation;					//クォータニオン。
-	PointLight* m_pointLight = nullptr;		//ポイントライト。
+	Vector3 m_position;						// 座標。
+	Vector3	m_scale = Vector3::One;			// 大きさ。
+	CharacterController m_charaCon;			// キャラクターコントローラー。
+	Vector3 m_moveSpeed;					// 移動速度。
+	Quaternion m_rotation;					// クォータニオン。
+	PointLight m_pointLight;				// ポイントライト。
 };
 
