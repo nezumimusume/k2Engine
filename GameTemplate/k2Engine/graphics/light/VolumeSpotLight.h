@@ -45,16 +45,7 @@ namespace nsK2Engine {
 		/// 最終描画
 		/// </summary>
 		void DrawFinal(RenderContext& rc);
-		/// <summary>
-		/// 深度値書き込みパス
-		/// </summary>
-		/// <remark>
-		/// 1～3パスではボリュームライトの深度値を描きこんでいないため、
-		/// SSRでボリュームライトの映り込みが起きていない。
-		/// そこで、追加の4パス目でアルファ0で深度値のみを書き込む。
-		/// </remark>
-		/// <param name="rc"></param>
-		void DrawDepth(RenderContext& rc);
+		
 	private:
 		
 		/// <summary>
@@ -66,7 +57,6 @@ namespace nsK2Engine {
 		};
 		Model m_modelFront;		// ボリュームライトの前面描画用のモデル。
 		Model m_modelBack;		// ボリュームライトの背面描画用のモデル。
-		Model m_drawDepthModel;	// 深度値書き込み用のモデル。
 		Sprite m_final;			// 最終描画。
 		FinalCB m_finalCB;		// 最終描画の定数バッファ。
 		const SpotLight* m_spotLight = nullptr;
