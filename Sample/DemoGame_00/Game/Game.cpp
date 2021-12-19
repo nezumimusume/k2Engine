@@ -32,7 +32,8 @@ namespace
 
 	const Vector3 POINTLIGHT_COLOR = Vector3(4.0f, 1.0f, 1.0f);
 	const float POINTLIGHT_RANGE = 220.0f;
-	const float POINTLIGHT_ATTEN_POW = 0.65f;
+	const float POINTLIGHT_ATTEN_POW = 1.5f;
+	const float SPOTLIGHT_ATTEN_POW = 0.65f;
 }
 
 Game::Game()
@@ -217,21 +218,24 @@ bool Game::Start()
 			pointLight->SetRange(POINTLIGHT_RANGE);
 			pointLight->SetAffectPowParam(POINTLIGHT_ATTEN_POW);
 			m_pointLightList.push_back(pointLight);
+			VolumePointLight* volumePointLight = new VolumePointLight;
+			volumePointLight->Init(*pointLight);
+			m_volumePointLightList.push_back(volumePointLight);
 
-			SpotLight* spotLight = new SpotLight;
+			/*SpotLight* spotLight = new SpotLight;
 			spotLight->Init();
 			spotLight->SetPosition(objData.position);
 			spotLight->SetColor(POINTLIGHT_COLOR);
 			spotLight->SetRange(POINTLIGHT_RANGE);
-			spotLight->SetRangeAffectPowParam(POINTLIGHT_ATTEN_POW);
+			spotLight->SetRangeAffectPowParam(SPOTLIGHT_ATTEN_POW);
 			spotLight->SetAngleAffectPowParam(1.0f);
 			spotLight->SetDirection(g_vec3Down);
 			spotLight->SetAngle(Math::DegToRad(40.0f));
 			m_spotLightList.push_back(spotLight);
-
-			VolumeSpotLight* volumeSpotLight = new VolumeSpotLight();
+			*/
+			/*VolumeSpotLight* volumeSpotLight = new VolumeSpotLight();
 			volumeSpotLight->Init(*spotLight);
-			m_volumeSpotLightList.push_back(volumeSpotLight);
+			m_volumeSpotLightList.push_back(volumeSpotLight);*/
 			return true;
 		}
 
@@ -317,6 +321,9 @@ void Game::Update()
 	// ボリュームライトの更新。
 	for (auto volumeSpotLight : m_volumeSpotLightList) {
 		volumeSpotLight->Update();
+	}
+	for (auto volumePointLight : m_volumePointLightList) {
+		volumePointLight->Update();
 	}
 	if (m_gameState == enGameState_GameClear_Idle)
 	{

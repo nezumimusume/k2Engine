@@ -37,6 +37,9 @@ bool Enemy::Start()
 	m_modelRender.SetScale(m_scale);
 
 	m_movedPath->Init(m_position, MOVE_SPPED);
+	m_spotLight.Init();
+	m_volumeSpotLight.Init(m_spotLight);
+
 	return true;
 }
 
@@ -54,7 +57,18 @@ void Enemy::Update()
 	{
 		return;
 	}
-
+	Vector3 pos;
+	pos = m_position;
+	pos.y += 50.0f;
+	m_spotLight.SetPosition(pos);
+	m_spotLight.SetColor(10.0f, 10.0f, 10.0f);
+	m_spotLight.SetDirection(m_moveVector);
+	m_spotLight.SetAngle(Math::DegToRad(15.0f));
+	m_spotLight.SetRange(400.0f);
+	m_spotLight.SetAngleAffectPowParam(0.2f);
+	m_spotLight.SetRangeAffectPowParam(2.0f);
+	m_spotLight.Update();
+	m_volumeSpotLight.Update();
 	//ˆÚ“®ˆ—B
 	Move();
 	//ù‰ñˆ—B

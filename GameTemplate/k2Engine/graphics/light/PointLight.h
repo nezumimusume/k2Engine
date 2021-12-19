@@ -83,6 +83,14 @@ namespace nsK2Engine {
         {
             m_pointLight->Update();
         }
+        /// <summary>
+        /// 生データを取得。
+        /// </summary>
+        /// <returns></returns>
+        const SPointLight& GetRawData() const
+        {
+            return *m_pointLight;
+        }
 	private:
 		SPointLight* m_pointLight = nullptr;	// ポイントライト。
 	};

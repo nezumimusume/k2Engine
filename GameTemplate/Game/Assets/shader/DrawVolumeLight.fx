@@ -91,6 +91,15 @@ struct SpotLight
     float3 directionInView; // カメラ空間での射出方向。
 };
 
+// ポイントライト
+struct PointLight
+{
+    float3 position;        // 座標
+    float3 positionInView;  // カメラ空間での座標
+    float3 color;           // カラー
+    float3 attn;            // 減衰パラメータ。
+};
+
 ///////////////////////////////////////
 // 定数バッファ。
 ///////////////////////////////////////
@@ -100,13 +109,19 @@ cbuffer cb : register(b0){
 	float4 mulColor;	// 乗算カラー
 };
 
-// ライト用の定数バッファー
-cbuffer finalCb : register(b1){
+// スポットライト用の定数バッファー
+cbuffer finalSpotLightCb : register(b1){
     SpotLight spotLight;    // スポットライト。
     float4x4 mViewProjInv;  // ビュープロジェクション行列の逆行列
     
 };
 
+// ポイントライト用の定数バッファ。
+cbuffer finalPointLightCb : register(b1){
+    PointLight pointLight;    // スポットライト。
+    float4x4 mViewProjInv2;  // ビュープロジェクション行列の逆行列
+    
+};
 
 struct VSFinalInput{
 	float4 pos : POSITION;
@@ -129,7 +144,7 @@ PSFinalInput VSFinal(VSFinalInput In)
 	psIn.uv = In.uv;
 	return psIn;
 }
-float4 PSFinal( PSFinalInput In ) : SV_Target0
+float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
 {
 	float3 lig = 0;
 	float2 uv = In.uv;
@@ -173,9 +188,35 @@ float4 PSFinal( PSFinalInput In ) : SV_Target0
     
 	return float4( lig, 1.0f);
 }
-
-float4 PSDepth(SPSIn psIn) : SV_Target0
+float4 PSFinal_PointLight( PSFinalInput In ) : SV_Target0
 {
-	// 深度値を書き込むだけなので、透明なピクセルを描画する。
-	return float4( 0.0f, 0.0f, 0.0f, 0.0f);
+	float3 lig = 0;
+	float2 uv = In.uv;
+	
+	float volumeFrontZ = g_volumeLightMapFront.Sample(Sampler, uv).r;
+    float2 volumeBackZ_No = g_volumeLightMapBack.Sample(Sampler, uv).rg;
+    float volumeBackZ = volumeBackZ_No.r;
+  
+    float3 volumePosBack = CalcWorldPosFromUVZ( uv, volumeBackZ, mViewProjInv2);
+    float3 volumePosFront = CalcWorldPosFromUVZ( uv, volumeFrontZ, mViewProjInv2);
+    
+
+    
+    float3 volumeCenterPos = (volumePosFront + volumePosBack ) * 0.5f;
+    float volume = length(volumePosBack - volumePosFront);
+
+    // ボリュームがない箇所はピクセルキル。
+    clip( volume - 0.001f);
+
+	 float4 albedoColor = albedoTexture.Sample(Sampler, uv);
+    
+    // 距離による減衰。
+    float3 ligDir = (volumeCenterPos - pointLight.position);
+    float distance = length(ligDir);
+    ligDir = normalize(ligDir);
+    float affect = pow( 1.0f - min(1.0f, distance / pointLight.attn.x), pointLight.attn.y);
+
+	lig = albedoColor * pointLight.color * affect * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.05f;
+
+	return float4( lig, 1.0f);
 }
