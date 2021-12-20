@@ -32,6 +32,7 @@ namespace nsK2EngineLow {
 			nullptr,
 			IID_PPV_ARGS(&m_indexBuffer));
 
+		
 		//インデックスバッファのビューを作成。
 		m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
 
