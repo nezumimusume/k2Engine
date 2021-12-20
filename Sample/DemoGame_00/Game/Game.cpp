@@ -79,6 +79,9 @@ Game::~Game()
 	for (auto vspt : m_volumeSpotLightList){
 		delete vspt;
 	}
+	for (auto vpt : m_volumePointLightList) {
+		delete vpt;
+	}
 }
 void Game::InitSky()
 {
