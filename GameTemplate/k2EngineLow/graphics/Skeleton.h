@@ -250,12 +250,12 @@ namespace nsK2EngineLow {
 		static 	void UpdateBoneWorldMatrix(Bone& bone, const Matrix& parentMatrix);
 
 	private:
-		TksFile m_tksFile;										//TKSファイル。
-		static const int BONE_MAX = 512;				//ボーンの最大数。
 		using BonePtr = std::unique_ptr<Bone>;
-		std::vector<BonePtr>	m_bones;				//ボーンの配列。
+		TksFile* m_tksFile = nullptr;				//TKSファイル。
+		static const int BONE_MAX = 512;			//ボーンの最大数。
+		std::vector<BonePtr>	m_bones;			//ボーンの配列。
 		std::unique_ptr<Matrix[]>	m_boneMatrixs;	//ボーン行列。
-		bool m_isInited = false;								//初期化済み？
-		bool m_isPlayAnimation = false;					//アニメーションが流し込まれている？
+		bool m_isInited = false;					//初期化済み？
+		bool m_isPlayAnimation = false;				//アニメーションが流し込まれている？
 	};
 }

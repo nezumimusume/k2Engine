@@ -47,7 +47,14 @@ namespace nsK2EngineLow {
 	bool Skeleton::Init(const char* tksFilePath)
 	{
 		//tksファイルをロードする。
-		if (m_tksFile.Load(tksFilePath)) {
+		m_tksFile = g_engine->GetTksFileFromBank(tksFilePath);
+		if (m_tksFile == nullptr) {
+			// 新規。
+			m_tksFile = new TksFile;
+			// バンクに登録する。
+			g_engine->RegistTksFileToBank(tksFilePath, m_tksFile);
+		}
+		if (m_tksFile->Load(tksFilePath)) {
 			//ボーン行列を構築する。
 			BuildBoneMatrices();
 			return true;
@@ -56,7 +63,7 @@ namespace nsK2EngineLow {
 	}
 	void Skeleton::BuildBoneMatrices()
 	{
-		m_tksFile.QueryBone([&](TksFile::SBone& tksBone) {
+		m_tksFile->QueryBone([&](TksFile::SBone& tksBone) {
 			//バインドポーズ。
 			Matrix bindPoseMatrix;
 			memcpy(bindPoseMatrix.m[0], &tksBone.bindPose[0], sizeof(tksBone.bindPose[0]));
