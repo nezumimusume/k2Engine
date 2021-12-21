@@ -483,6 +483,30 @@ namespace nsK2EngineLow {
 			Optimize();
 		}
 	}
+	bool TkmFile::Save(const char* filePath)
+	{
+		FILE* fp = fopen(filePath, "wb");
+		if (fp) {
+			printf("tkmファイルの保存に失敗しました。%s\n", filePath);
+			return false;
+		}
+		if (m_meshParts.empty()) {
+			printf("tkmファイルの保存に失敗しました。オリジナルのtkmファイルがロードされていません。\n", filePath);
+			return false;
+		}
+		// ヘッダー情報の構築。
+		tkmFileFormat::SHeader header;
+		header.isFlatShading = m_meshParts[0].isFlatShading;
+		header.numMeshParts = m_meshParts.size();
+		header.version = tkmFileFormat::VERSION;
+		fwrite(&header, sizeof(header), 1, fp);
+
+		// 続いてメッシュパーツ本体のデータを書き込んでいく。
+		for (int meshPartsNo = 0; meshPartsNo < header.numMeshParts; meshPartsNo++) {
+		}
+
+		fclose(fp);
+	}
 	void TkmFile::Optimize()
 	{
 		// 同じマテリアルを使っているメッシュをひとまとめにする。

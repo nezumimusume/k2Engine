@@ -81,7 +81,11 @@ namespace nsK2EngineLow {
 		/// <param name="filePath">ファイルパス。</param>
 		/// <param name="isOptimize">最適化フラグ。</param>
 		void Load(const char* filePath, bool isOptimize);
-
+		/// <summary>
+		/// tkmファイルを保存。
+		/// </summary>
+		/// <param name="filePath">保存先のファイルパス。</param>
+		bool Save(const char* filePath);
 		/// <summary>
 		/// メッシュパーツに対してクエリを行う。
 		/// </summary>
