@@ -42,6 +42,7 @@ namespace nsK2Engine {
 
     void Fxaa::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
     {
+        g_graphicsEngine->BeginGPUEvent("FXAA");
         // レンダリングターゲットとして利用できるまで待つ
         rc.WaitUntilToPossibleSetRenderTarget(m_fxaaRt);
         // レンダリングターゲットを設定
@@ -53,5 +54,6 @@ namespace nsK2Engine {
         // レンダリングターゲットへの書き込み終了待ち
         //メインレンダ―ターゲットをRENDERTARGETからPRESENTへ。
         rc.WaitUntilFinishDrawingToRenderTarget(m_fxaaRt);
+        g_graphicsEngine->EndGPUEvent();
     }
 }

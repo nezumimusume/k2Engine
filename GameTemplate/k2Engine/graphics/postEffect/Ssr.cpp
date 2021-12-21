@@ -86,6 +86,7 @@ namespace nsK2Engine {
 		if (!m_isEnable) {
 			return;
 		}
+		g_graphicsEngine->BeginGPUEvent("SSR");
 		// まずは映り込みイメージを作成する。
 		// レンダリングターゲットとして利用できるまで待つ
 		rc.WaitUntilToPossibleSetRenderTarget(m_reflectionRt);
@@ -96,7 +97,6 @@ namespace nsK2Engine {
 		m_ssrCb.cameraPosInWorld = g_camera3D->GetPosition();
 		m_ssrCb.mViewProj = g_camera3D->GetViewProjectionMatrix();
 		m_ssrCb.mViewProjInv.Inverse(m_ssrCb.mViewProj);
-
 
 		// 描画
 		m_reflectionSprite.Draw(rc);
@@ -114,5 +114,6 @@ namespace nsK2Engine {
 		m_finalSprite.Draw(rc);
 		// レンダリングターゲットへの書き込み終了待ち
 		rc.WaitUntilFinishDrawingToRenderTarget(m_finalRt);
+		g_graphicsEngine->EndGPUEvent();
 	}
 }

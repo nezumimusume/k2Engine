@@ -88,7 +88,7 @@ float4 PSMain(PSInput In) : SV_Target0
 	//反射ベクトルを使って、レイマーチングを行う。
 	//レイマーチングのイテレーション回数と線分を伸ばす距離は
 	//後で定数バッファにするんやで？
-	int maxRayNum = 40;
+	int maxRayNum = 20;
 	float3 raystep = 800.0f/ maxRayNum * toPixelDirReflect;
 	float maxThickness = 0.001f / maxRayNum;
 	for( int step = 1; step < maxRayNum; step++){ //自分自身とぶつかるので、stepは1から進める。
@@ -128,6 +128,7 @@ float4 PSMain(PSInput In) : SV_Target0
 			t *= pow( 1.0f - min( 1.0f, abs(posInProj.x) ), 0.5f );
 			t *= pow( 1.0f - min( 1.0f, abs(posInProj.y) ), 0.5f );
 			return float4(reflectColor.xyz, metallicSmooth.a * t);
+		
 		}
 	}
 	clip(-1.0f);
