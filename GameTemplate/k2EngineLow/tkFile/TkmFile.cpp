@@ -1,5 +1,6 @@
 #include "k2EngineLowPreCompile.h"
 #include "tkFile/TkmFile.h"
+#include "util/Util.h"
 
 namespace nsK2EngineLow {
 	
@@ -257,18 +258,31 @@ namespace nsK2EngineLow {
 
 					}
 				}
-				else {
-					int hoge = 0;
-				}
-				
 			}
 		};
-		//テクスチャをロード。
+		// テクスチャをロード。
 		loadTexture(tkmMat.albedoMapFileName, tkmMat.albedoMap);
 		loadTexture(tkmMat.normalMapFileName, tkmMat.normalMap);
 		loadTexture(tkmMat.specularMapFileName, tkmMat.specularMap);
 		loadTexture(tkmMat.reflectionMapFileName, tkmMat.reflectionMap);
 		loadTexture(tkmMat.refractionMapFileName, tkmMat.refractionMap);
+
+		// マテリアルのユニークIDを生成する。
+		std::string sourceName = tkmMat.albedoMapFileName;
+		if (!tkmMat.normalMapFileName.empty()) {
+			sourceName += tkmMat.normalMapFileName;
+		}
+		if (!tkmMat.specularMapFileName.empty()) {
+			sourceName += tkmMat.specularMapFileName;
+		}
+		if (!tkmMat.reflectionMapFileName.empty()) {
+			sourceName += tkmMat.reflectionMapFileName;
+		}
+		if (!tkmMat.refractionMapFileName.empty()) {
+			sourceName += tkmMat.refractionMapFileName;
+		}
+		// テクスチャ名からユニークIDを生成する。
+		tkmMat.uniqID = MakeHash(sourceName.c_str());
 	}
 	
 	void TkmFile::BuildTangentAndBiNormal()
@@ -371,7 +385,7 @@ namespace nsK2EngineLow {
 			}
 		}
 	}
-	void TkmFile::Load(const char* filePath)
+	void TkmFile::Load(const char* filePath, bool isOptimize)
 	{
 		FILE* fp = fopen(filePath, "rb");
 		if (fp == nullptr) {
@@ -455,14 +469,89 @@ namespace nsK2EngineLow {
 				}
 			}
 		}
+		// ファイルを閉じる。
+		fclose(fp);
 
 		// 頂点データのBSPツリーを構築する。
 		m_bpsOnVertexPosition.Build();
 
 		// 接ベクトルと従ベクトルを構築する。
 		BuildTangentAndBiNormal();
+		
+		if (isOptimize) {
+			// 最適化を行う。
+			Optimize();
+		}
+	}
+	void TkmFile::Optimize()
+	{
+		// 同じマテリアルを使っているメッシュをひとまとめにする。
+		// 最悪のケースでマテリアルの数分だけメッシュが存在するので、
+		// メッシュの最大数を調べておく。
+		int maxMesh = 0;
+		for (SMesh& mesh : m_meshParts) {
+			maxMesh += mesh.materials.size();
+		}
+		std::vector< SMesh > optimizeMeshParts;
+		// 最適化済みのメッシュを記憶する領域を最悪のケースで確保しておく。
+		optimizeMeshParts.reserve(maxMesh);
 
-		fclose(fp);
+		std::map<int, SMesh*> meshMap;
+		for (SMesh& mesh : m_meshParts) {
+			for (int matNo = 0; matNo < mesh.materials.size(); matNo++) {
+				int matId = mesh.materials[matNo].uniqID;
+				if (matId == -1406481509) {
+					int hoge = 0;
+				}
+				auto it = meshMap.find(matId);
+				if (it == meshMap.end()) {
+					// 新規マテリアル。
+					SMesh optMesh;
+					optMesh.materials.emplace_back(mesh.materials[matNo]);
+					optMesh.vertexBuffer = mesh.vertexBuffer;
+					optMesh.indexBuffer32Array.resize(1);
+					// もう16bitのイ0ンデックスバッファは使わない。
+					if (mesh.indexBuffer32Array.size() != 0) {
+						for (int index : mesh.indexBuffer32Array[matNo].indices) {
+							optMesh.indexBuffer32Array[0].indices.emplace_back(index);
+						}
+					}
+					if (mesh.indexBuffer16Array.size() != 0) {
+						for (int index : mesh.indexBuffer16Array[matNo].indices) {
+							optMesh.indexBuffer32Array[0].indices.emplace_back(index);
+						}
+					}
+					optimizeMeshParts.emplace_back(optMesh);
+					meshMap.insert(std::pair<int, SMesh*>(matId, &optimizeMeshParts.back()));
+				}
+				else {
+					// 重複マテリアルなので統合する。
+					// 頂点バッファを連結。
+					SMesh* optMesh = it->second;
+					int baseIndex = optMesh->vertexBuffer.size();
+					optMesh->vertexBuffer.insert(
+						optMesh->vertexBuffer.end(), 
+						mesh.vertexBuffer.begin(),
+						mesh.vertexBuffer.end()
+					);
 
+					// インデックスバッファを連結。
+					if (mesh.indexBuffer32Array.size() != 0) {
+						for (int index : mesh.indexBuffer32Array[matNo].indices) {
+							optMesh->indexBuffer32Array[0].indices.emplace_back(index + baseIndex);
+						}
+					}
+					if (mesh.indexBuffer16Array.size() != 0) {
+						for (int index : mesh.indexBuffer16Array[matNo].indices) {
+							optMesh->indexBuffer32Array[0].indices.emplace_back(index + baseIndex);
+						}
+					}
+
+					printf("hoge");
+				}
+			}
+		}
+		// 最適化済みメッシュに差し替える。
+		m_meshParts = optimizeMeshParts;
 	}
 }

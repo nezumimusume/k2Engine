@@ -52,7 +52,7 @@ namespace nsK2EngineLow {
 				btIndexedMesh indexedMesh;
 				IndexBuffer* pIb = m_indexBufferArray.back().get();
 				VertexBuffer* pVb = m_vertexBufferArray.back().get();
-				indexedMesh.m_numTriangles = (int)ib->size() / 3;
+				indexedMesh.m_numTriangles = (int)pIb->size() / 3;
 				indexedMesh.m_triangleIndexBase = (unsigned char*)(&pIb->front());
 				indexedMesh.m_triangleIndexStride = 12;
 				indexedMesh.m_numVertices = (int)pVb->size();

@@ -65,7 +65,9 @@ namespace nsK2EngineLow {
 		m_fpsFont->End(g_graphicsEngine->GetRenderContext());
 #endif 
 		m_graphicsEngine->EndRender();
+#ifdef USE_FPS_LIMITTER
 		m_fpsLimitter.Wait();
+#endif
 		m_gameTime.EndMeasurement();
 
 	}

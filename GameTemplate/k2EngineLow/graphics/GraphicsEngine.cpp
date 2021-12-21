@@ -392,7 +392,11 @@ namespace nsK2EngineLow {
 		
 		if (m_isExecuteCommandList)
 		{
+#ifdef USE_FPS_LIMITTER
 			m_frameBuffer.Present(1);
+#else
+			m_frameBuffer.Present(0);
+#endif
 			// •`‰æŠ®—¹‘Ò‚¿B
 			WaitDraw();
 		}

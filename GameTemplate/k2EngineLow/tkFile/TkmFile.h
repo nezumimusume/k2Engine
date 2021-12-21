@@ -24,7 +24,8 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// マテリアル
 		/// </summary>
-		struct SMaterial {
+		struct  SMaterial{
+			int uniqID;								// テクスチャファイル名から作成されるユニークID。
 			std::string albedoMapFileName;			// アルベドマップのファイル名。
 			std::string normalMapFileName;			// 法線マップのファイル名。
 			std::string specularMapFileName;		// スペキュラマップのファイル名。
@@ -78,7 +79,8 @@ namespace nsK2EngineLow {
 		/// 3Dモデルをロード。
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
-		void Load(const char* filePath);
+		/// <param name="isOptimize">最適化フラグ。</param>
+		void Load(const char* filePath, bool isOptimize);
 
 		/// <summary>
 		/// メッシュパーツに対してクエリを行う。
@@ -130,9 +132,13 @@ namespace nsK2EngineLow {
 		/// 3dsMaxScriptでやるべきなんだろうけど、デバッグしたいので今はこちらでやる。
 		/// </remarks>
 		void BuildTangentAndBiNormal();
-		
+	private:
+		/// <summary>
+		/// TKMファイルの最適化。
+		/// </summary>
+		void Optimize();
 	private:
 		BSP m_bpsOnVertexPosition;				// 頂点座標を使ったBSPツリー。
-		std::vector< SMesh>	m_meshParts;		// メッシュパーツ。
+		std::vector< SMesh >	m_meshParts;		// メッシュパーツ。
 	};
 }
