@@ -1,7 +1,6 @@
 #include "k2EngineLowPreCompile.h"
 #include "GraphicsEngine.h"
 #include <pix.h>
-#include <dxgidebug.h>
 
 namespace nsK2EngineLow {
 	GraphicsEngine* g_graphicsEngine = nullptr;	//グラフィックスエンジン
@@ -147,7 +146,7 @@ namespace nsK2EngineLow {
 		g_camera2D = &m_camera2D;
 		g_camera3D = &m_camera3D;
 
-		//DirectXTK用のグラフィックメモリ管理クラスのインスタンスを作成する。
+		//DirectXTK用のグラフィッsクメモリ管理クラスのインスタンスを作成する。
 		m_directXTKGfxMemroy = std::make_unique<DirectX::GraphicsMemory>(m_d3dDevice);
 		//フォント描画エンジンを初期化。
 		m_fontEngine.Init();
@@ -169,7 +168,6 @@ namespace nsK2EngineLow {
 			dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
 			debugController->Release();
 		}
-		
 #endif
 		IDXGIFactory4* factory;
 		CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory));
@@ -258,13 +256,13 @@ namespace nsK2EngineLow {
 			adapterMaxVideoMemory->Release();
 		}
 #ifdef K2_DEBUG
-		// Windows11の不具合で起きている、MISMATCHING_COMMAND_LIST_TYPEの警告を消すための対処。
-		// 近日中のWindowsUpdateで治るとのことらしい。
+		// Windows11の不具合の回避対応
+		// Windows11でMISMATCHING_COMMAND_LIST_TYPEが出るようになっており、
+		// WindowsSDKの不具合とのこと。
+		// 近日中に修正されるらしい。
 		// https://stackoverflow.com/questions/69805245/directx-12-application-is-crashing-in-windows-11
-		ID3D12InfoQueue* dxgiInfoQueue;
-		if (SUCCEEDED(m_d3dDevice->QueryInterface(IID_PPV_ARGS(&dxgiInfoQueue))))
-		{
-
+		ID3D12InfoQueue* infoQueue;
+		if ( m_d3dDevice->QueryInterface(IID_PPV_ARGS(&infoQueue)) == S_OK ) {
 			D3D12_MESSAGE_ID hide[] =
 			{
 				D3D12_MESSAGE_ID_MAP_INVALID_NULLRANGE,
@@ -276,8 +274,8 @@ namespace nsK2EngineLow {
 			D3D12_INFO_QUEUE_FILTER filter = {};
 			filter.DenyList.NumIDs = static_cast<UINT>(std::size(hide));
 			filter.DenyList.pIDList = hide;
-			dxgiInfoQueue->AddStorageFilterEntries(&filter);
-			dxgiInfoQueue->Release();
+			infoQueue->AddStorageFilterEntries(&filter);
+			infoQueue->Release();
 		}
 #endif
 		return m_d3dDevice != nullptr;
@@ -398,11 +396,7 @@ namespace nsK2EngineLow {
 			// 描画完了待ち。
 			WaitDraw();
 		}
-		m_renderContext.TransitionResourceState(
-			m_frameBuffer.GetCurrentRenderTarget(), 
-			D3D12_RESOURCE_STATE_COPY_SOURCE,
-			D3D12_RESOURCE_STATE_COMMON
-		);
+
 		m_directXTKGfxMemroy->Commit(m_commandQueue);
 		//レンダリングコンテキストを閉じる。
 		m_renderContext.Close();

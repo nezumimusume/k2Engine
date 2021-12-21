@@ -79,8 +79,8 @@ Game::~Game()
 	for (auto vspt : m_volumeSpotLightList){
 		delete vspt;
 	}
-	for (auto vppt : m_volumePointLightList) {
-		delete vppt;
+	for (auto vpt : m_volumePointLightList) {
+		delete vpt;
 	}
 }
 void Game::InitSky()
@@ -88,7 +88,7 @@ void Game::InitSky()
 	// åªç›ÇÃãÛÇîjä¸ÅB
 	DeleteGO(m_skyCube);
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
-	//m_skyCubeType = enSkyCubeType_NightToon_2;
+	m_skyCubeType = enSkyCubeType_NightToon_2;
 	g_renderingEngine->EnableTonemap();
 	if (m_skyCubeType == enSkyCubeType_Night
 		|| m_skyCubeType == enSkyCubeType_Wild_Night
