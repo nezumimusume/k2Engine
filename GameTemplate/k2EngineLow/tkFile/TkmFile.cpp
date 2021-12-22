@@ -426,12 +426,13 @@ namespace nsK2EngineLow {
 			}
 			return false;
 		}
+		
 		//メッシュ情報をロードしていく。
 		m_meshParts.resize(header.numMeshParts);
 		for (int meshPartsNo = 0; meshPartsNo < header.numMeshParts; meshPartsNo++) {
 
 			auto& meshParts = m_meshParts[meshPartsNo];
-			meshParts.isFlatShading = header.isFlatShading;
+			meshParts.isFlatShading = header.isFlatShading != 0;
 			tkmFileFormat::SMeshePartsHeader meshPartsHeader;
 			fread(&meshPartsHeader, sizeof(meshPartsHeader), 1, fp);
 			//マテリアル情報を記録できる領域を確保。
@@ -628,7 +629,7 @@ namespace nsK2EngineLow {
 		std::vector< SMesh > optimizeMeshParts;
 		// 最適化済みのメッシュを記憶する領域を最悪のケースで確保しておく。
 		optimizeMeshParts.reserve(maxMesh);
-
+		
 		std::map<int, SMesh*> meshMap;
 		for (SMesh& mesh : m_meshParts) {
 			for (int matNo = 0; matNo < mesh.materials.size(); matNo++) {
@@ -640,6 +641,7 @@ namespace nsK2EngineLow {
 					optMesh.materials.emplace_back(mesh.materials[matNo]);
 					optMesh.vertexBuffer = mesh.vertexBuffer;
 					optMesh.indexBuffer32Array.resize(1);
+					optMesh.isFlatShading = m_meshParts[0].isFlatShading;
 					// もう16bitのイ0ンデックスバッファは使わない。
 					if (mesh.indexBuffer32Array.size() != 0) {
 						for (int index : mesh.indexBuffer32Array[matNo].indices) {

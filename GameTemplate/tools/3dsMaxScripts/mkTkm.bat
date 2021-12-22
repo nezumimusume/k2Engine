@@ -1,1 +1,15 @@
-make texture SRC_TEX=%1 OUTPUT_DIR=%2
+
+@tkmOptimizer.exe -i %1 -o %1
+@if %errorlevel%==1 goto ERR
+@goto SUCCESS
+
+@:ERR
+@echo tkmファイルの最適化に失敗。
+
+@goto END
+
+@:SUCCESS
+@echo tkmファイルの保存成功しました。
+@:END
+
+pause

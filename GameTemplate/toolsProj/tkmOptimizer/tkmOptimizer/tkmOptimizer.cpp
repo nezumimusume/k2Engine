@@ -64,7 +64,6 @@ int main( int argc, char* argv[] )
         // エラー。
         return 1;
     }
-    printf("tkmファイルの最適化成功！\n");
     return 0;
 }
 
