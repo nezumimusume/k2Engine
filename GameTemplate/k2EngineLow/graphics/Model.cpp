@@ -28,7 +28,7 @@ namespace nsK2EngineLow {
 		if (tkmFile == nullptr) {
 			//–¢“o˜^
 			tkmFile = new TkmFile;
-			tkmFile->Load(initData.m_tkmFilePath, true);
+			tkmFile->Load(initData.m_tkmFilePath, false);
 			g_engine->RegistTkmFileToBank(initData.m_tkmFilePath, tkmFile);
 		}
 		m_tkmFile = tkmFile;

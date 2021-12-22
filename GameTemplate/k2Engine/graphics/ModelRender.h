@@ -100,6 +100,17 @@ namespace nsK2Engine {
 		/// <returns>ÉÇÉfÉã</returns>
 		Model& GetModel()
 		{
+			if (m_renderToGBufferModel.IsInited()) {
+				return m_renderToGBufferModel;
+			}
+			else if (m_forwardRenderModel.IsInited()) {
+				return m_forwardRenderModel;
+			}
+			else if (m_translucentModel.IsInited())
+			{
+				return m_translucentModel;
+			}
+			// Ç±Ç±Ç‹Ç≈óàÇÈÇÃÇÕÇ®Ç©ÇµÇ¢ÅB
 			return m_zprepassModel;
 		}
 

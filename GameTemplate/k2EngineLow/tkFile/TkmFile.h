@@ -80,7 +80,14 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
 		/// <param name="isOptimize">最適化フラグ。</param>
-		void Load(const char* filePath, bool isOptimize);
+		/// <param name="isLoadTexture">
+		/// テクスチャをロードする？
+		/// コリジョンの構築のためなどにtkmファイルをロードするなどといった、
+		/// テクスチャが不要の場合には、この引数をfalseにしてください。
+		/// すると、メモリ使用量、ロード時間などが削減されます。
+		/// </param>
+		/// <param name="isOutputMsgTTY">メッセージを標準入出力デバイスに出力する？</param>
+		bool Load(const char* filePath, bool isOptimize, bool isLoadTexture = true, bool isOutputErrorCodeTTY = false);
 		/// <summary>
 		/// tkmファイルを保存。
 		/// </summary>
@@ -128,7 +135,7 @@ namespace nsK2EngineLow {
 		/// マテリアルを構築。
 		/// </summary>
 		/// <param name="tkmMat"></param>
-		void BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath);
+		void BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath, bool isLoadTexture, bool isOutputErrorCodeTTY);
 		/// <summary>
 		/// 接ベクトルと従ベクトルを計算する。
 		/// </summary>

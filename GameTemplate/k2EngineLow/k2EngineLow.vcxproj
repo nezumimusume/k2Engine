@@ -151,6 +151,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>k2EngineLowPreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -210,6 +211,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>k2EngineLowPreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -234,6 +236,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>k2EngineLowPreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

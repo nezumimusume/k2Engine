@@ -66,6 +66,10 @@ PSInput VSMain(VSInput In)
 }
 float4 PSMain(PSInput In) : SV_Target0
 {
+	//金属度とスムースを取得。
+	float4 metallicSmooth = metallicSmoothTexture.Sample(Sampler, In.uv);
+	// スムース0.5以上のサーフェイスでのみ映り込みを起こすようにする。
+	clip( metallicSmooth.a - 0.5f);
 	//ピクセルのワールド座標を計算する。
 	float3 worldPos = CalcWorldPosFromUVZ(
 		In.uv,
@@ -77,8 +81,7 @@ float4 PSMain(PSInput In) : SV_Target0
 	
 	//ピクセルの法線を取得。
 	float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
-	//金属度とスムースを取得。
-	float4 metallicSmooth = metallicSmoothTexture.Sample(Sampler, In.uv);
+	
 	//カメラの視点からピクセルに向かうベクトルを計算する。
 	float3 toPixelDir = normalize( worldPos - cameraPosInWorld.xyz );
 	//反射ベクトルを求める。

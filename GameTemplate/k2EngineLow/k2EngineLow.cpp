@@ -23,9 +23,11 @@ namespace nsK2EngineLow {
 	}
 	void K2EngineLow::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeight)
 	{
-		//グラフィックエンジンの初期化。
-		m_graphicsEngine = new GraphicsEngine();
-		m_graphicsEngine->Init(hwnd, frameBufferWidth, frameBufferHeight);
+		if (hwnd) {
+			//グラフィックエンジンの初期化。
+			m_graphicsEngine = new GraphicsEngine();
+			m_graphicsEngine->Init(hwnd, frameBufferWidth, frameBufferHeight);
+		}
 		g_gameTime = &m_gameTime;
 		//ゲームパッドの初期化。
 		for (int i = 0; i < GamePad::CONNECT_PAD_MAX; i++) {
@@ -35,12 +37,17 @@ namespace nsK2EngineLow {
 		GameObjectManager::CreateInstance();
 		PhysicsWorld::CreateInstance();
 		g_soundEngine = new SoundEngine();
-		//エフェクトエンジンの初期化。
-		EffectEngine::CreateInstance();
+		if (m_graphicsEngine) {
+			//エフェクトエンジンの初期化。
+			EffectEngine::CreateInstance();
+		}
 #ifdef K2_DEBUG
-		m_fpsFont = std::make_unique<Font>();
-		m_fpsFontShadow = std::make_unique<Font>();
+		if (m_graphicsEngine) {
+			m_fpsFont = std::make_unique<Font>();
+			m_fpsFontShadow = std::make_unique<Font>();
+		}
 #endif
+		g_engine = this;
 	}
 	void K2EngineLow::BeginFrame()
 	{

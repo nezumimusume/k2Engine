@@ -13,6 +13,9 @@ namespace nsK2EngineLow {
 
 	void DebugWireframe::Init()
 	{
+		if (g_graphicsEngine == nullptr) {
+			return;
+		}
 		//ルートシグネチャを初期化。
 		InitRootSignature();
 		//シェーダーを初期化。

@@ -72,7 +72,7 @@ namespace nsK2Engine {
 		//半透明オブジェクト描画パスで使用されるモデルを初期化。
 		InitModelOnTranslucent(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
 		//ZPrepass描画用のモデルを初期化。
-		InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
+		//InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 		//シャドウマップ描画用のモデルを初期化。
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 		// 幾何学データを初期化。
@@ -91,7 +91,7 @@ namespace nsK2Engine {
 		//作成した初期化データをもとにモデルを初期化する。
 		m_forwardRenderModel.Init(initData);
 		//ZPrepass描画用のモデルを初期化。
-		InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
+		//InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 		//シャドウマップ描画用のモデルを初期化。
 		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 		// 幾何学データを初期化。
