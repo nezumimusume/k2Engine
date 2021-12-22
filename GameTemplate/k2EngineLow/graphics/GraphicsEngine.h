@@ -229,8 +229,7 @@ namespace nsK2EngineLow {
 			if(res == nullptr){
 				return;
 			}
-			// D3Dオブジェクトは解放までに1フレームの時間をかける
-			// なぜ？
+			// D3Dオブジェクトは解放までに1フレームの時間をかける。
 			// 描画コマンドは１フレーム遅れて実行されるように実装されているため、即座に開放すると描画中に
 			// リソースが解放されてしまう。そのため、１フレーム遅延して開放する必要がある。
 			m_reqDelayRelease3d12ObjectList.push_back({ res, 1 });
@@ -248,6 +247,9 @@ namespace nsK2EngineLow {
 		void BeginGPUEvent(const char*)
 		{
 
+		}
+		void EndGPUEvent()
+		{
 		}
 #endif
 	private:

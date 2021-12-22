@@ -602,8 +602,9 @@ namespace nsK2EngineLow {
 				const auto& indeces = m_meshParts[meshPartsNo].indexBuffer32Array[matNo].indices;
 				for (int i = 0; i < indeces.size(); i++) {
 					// インデックスバッファを書き込む
+					int index = indeces[i] + 1;	// 3dsMaxから出力される際に＋１されているので、それに合わせて戻す。
 					fwrite(
-						&indeces[i],
+						&index,
 						sizeof(std::uint32_t),
 						1,
 						fp
