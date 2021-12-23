@@ -5,6 +5,7 @@
 
 @:ERR
 @echo tkmファイルの最適化に失敗。
+@echo tkmファイルの保存に失敗しました。
 
 @goto END
 
