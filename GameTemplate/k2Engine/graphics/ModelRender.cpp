@@ -161,11 +161,11 @@ namespace nsK2Engine {
 	{
 		m_maxInstance = maxInstance;
 		if (m_maxInstance > 1) {
-			//インスタンシング描画を行うので、
-			//それ用のデータを構築する。
-			//ワールド行列の配列のメモリを確保する。
+			// インスタンシング描画を行うので、
+			// それ用のデータを構築する。
+			// ワールド行列の配列のメモリを確保する。
 			m_worldMatrixArray = std::make_unique<Matrix[]>(m_maxInstance);
-			//ワールド行列をGPUに転送するためのストラクチャードバッファを確保。
+			// ワールド行列をGPUに転送するためのストラクチャードバッファを確保。
 			m_worldMatrixArraySB.Init(
 				sizeof(Matrix),
 				m_maxInstance,

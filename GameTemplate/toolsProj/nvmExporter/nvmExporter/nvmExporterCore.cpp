@@ -6,14 +6,14 @@
 
 bool nvmExporterCore::Execute(const std::wstring& filePath)
 {
-	//ファイルオープン
+	// ファイルオープン
 	FILE* fp = _wfopen(filePath.c_str(), L"wb");
 
 	nvmData data;
 
 	int faceNum = data.GetFaceNum();
-	//ヘッダーの出力
-	//面(ポリゴン)数の出力。
+	// ヘッダーの出力
+	// 面(ポリゴン)数の出力。
 	fwrite(&faceNum, sizeof(int), 1, fp);
 	for (int faceNo = 0; faceNo < faceNum; faceNo++) {
 		for (int vertexNo = 0; vertexNo < 3; vertexNo++) {
@@ -26,7 +26,7 @@ bool nvmExporterCore::Execute(const std::wstring& filePath)
 
 		Point3 normal = data.GetNormal(faceNo);
 
-		//法線を出力
+		// 法線を出力
 		fwrite(&normal[0], sizeof(float), 1, fp);
 		fwrite(&normal[1], sizeof(float), 1, fp);
 		fwrite(&normal[2], sizeof(float), 1, fp);
@@ -35,7 +35,7 @@ bool nvmExporterCore::Execute(const std::wstring& filePath)
 		
 		for (int linkNoListNo = 0; linkNoListNo < nvmData::LINK_NO_LIST_SIZE; linkNoListNo++) {
 			int linkNo = data.GetLinkNo(faceNo, linkNoListNo);
-			//リンクデータを出力
+			// リンクデータを出力
 			fwrite(&linkNo, sizeof(linkNo), 1, fp);
 		}
 	}

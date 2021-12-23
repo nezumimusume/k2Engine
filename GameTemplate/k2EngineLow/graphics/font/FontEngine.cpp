@@ -15,7 +15,7 @@ namespace nsK2EngineLow {
 	{
 		auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 
-		//ディスクリプタヒープを作成。
+		// ディスクリプタヒープを作成。
 		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 
 		srvHeapDesc.NumDescriptors = 1;
@@ -25,7 +25,7 @@ namespace nsK2EngineLow {
 
 		ResourceUploadBatch re(d3dDevice);
 		re.Begin();
-		//SpriteBatchのパイプラインステートを作成する。
+		// SpriteBatchのパイプラインステートを作成する。
 		RenderTargetState renderTargetState;
 		renderTargetState.rtvFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 		renderTargetState.numRenderTargets = 1;
@@ -40,13 +40,13 @@ namespace nsK2EngineLow {
 		viewport.TopLeftY = 0.0f;
 		viewport.Width = static_cast<FLOAT>(1920);
 		viewport.Height = static_cast<FLOAT>(1080);
-		//Spriteバッチを作成。
+		// Spriteバッチを作成。
 		m_spriteBatch = make_unique<SpriteBatch>(
 			d3dDevice,
 			re,
 			sprBatchDesc,
 			&viewport);
-		//SpriteFontを作成。
+		// SpriteFontを作成。
 		D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = m_srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 		D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 		m_spriteFont = make_unique<SpriteFont>(

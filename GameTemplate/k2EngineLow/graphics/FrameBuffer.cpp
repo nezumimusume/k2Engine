@@ -116,8 +116,6 @@ namespace nsK2EngineLow {
 		fullScreenDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		fullScreenDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		fullScreenDesc.Windowed = true;
-		
-	
 
 		IDXGISwapChain1* swapChain;
 		dxgiFactory->CreateSwapChainForHwnd(
