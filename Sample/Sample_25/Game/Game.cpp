@@ -8,8 +8,7 @@ Game::Game()
 }
 
 Game::~Game()
-{
-	g_sceneLight->DeletePointLight(m_targetPointPointLight);
+{	
 }
 
 bool Game::Start()
@@ -28,7 +27,7 @@ bool Game::Start()
 	m_targetPointRender.SetScale(4.0f, 4.0f, 4.0f);
 	m_targetPointRender.SetShadowCasterFlag(false);
 	m_charaCon.Init(50.0f, 50.0f, m_targetPointPosition);
-	m_targetPointPointLight = g_sceneLight->NewPointLight();
+	m_targetPointPointLight.Init();
 	
 	// ナビメッシュを構築。
 	m_nvmMesh.Init("Assets/nvm/test.tkn");
@@ -70,12 +69,12 @@ void Game::Update()
 	m_targetPointRender.SetPosition(
 		{ m_targetPointPosition.x, m_targetPointPosition.y + 100.0f, m_targetPointPosition.z }
 	);
-	m_targetPointPointLight->SetPosition(
+	m_targetPointPointLight.SetPosition(
 		{ m_targetPointPosition.x, m_targetPointPosition.y + 100.0f, m_targetPointPosition.z }
 	);
-	m_targetPointPointLight->SetColor({ 100.5f, 100.5f, 100.5f });
-	m_targetPointPointLight->SetRange(130.0f);
-	m_targetPointPointLight->Update();
+	m_targetPointPointLight.SetColor({ 100.5f, 100.5f, 100.5f });
+	m_targetPointPointLight.SetRange(130.0f);
+	m_targetPointPointLight.Update();
 
 	m_targetPointRender.Update();
 
