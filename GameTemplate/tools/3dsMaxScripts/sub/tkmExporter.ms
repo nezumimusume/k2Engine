@@ -196,10 +196,6 @@ private
 				normalMap = c_node.material.g_normal 
 				specMap = c_node.material.g_metallicAndSmoothMap
 				
-				
-				-- if matType == 0 then(
-				-- 	messageBox "標準マテリアルとフィジカルマテリアル以外は未対応です。"
-				--)
 				albedoFileName = ""
 				if diffMap != undefined then(
 					albedoFileName = diffMap.fileName
@@ -243,7 +239,7 @@ private
 							--マテリアルタイプを取得
 							matType = GetMaterialType mat
 							if matType == 0 then(
-								messageBox "DirectXマテリアル以外は使えません。"
+								throw "DirectXマテリアル以外は使えません。\nK2Engineについて.pdfの「K2Engine用3Dモデルのmaxマテリアルの設定」を参照してください。"
 							)
 					
 							diffMap = mat.g_albedo
@@ -273,9 +269,10 @@ private
 					)
 				)
 			)else(
-				messageBox "使えません以外は使えません"
+				throw  "DirectXマテリアル以外は使えません。\nK2Engineについて.pdfの「K2Engine用3Dモデルのmaxマテリアルの設定」を参照してください。"
 			)
-	
+		)else(
+			throw  "マテリアルが割り当てられていないオブジェクトを出力することはできません。\n"
 		)
 	),
 	--インデックスバッファを構築する。
@@ -348,135 +345,128 @@ private
 		
 		--保存だよ
 		file = fopen filePath "wb"
-		--try(
-			--ヘッダーを出力
-			WriteByte file TKM_VERSION
-			if m_isFlatShading == true then(
-				WriteByte file 1 
+		--ヘッダーを出力
+		WriteByte file TKM_VERSION
+		if m_isFlatShading == true then(
+			WriteByte file 1 
+		)else(
+			WriteByte file 0
+		)
+		--メッシュパーツの数を出力
+		WriteShort file md.meshParts.count
+		--メッシュパーツを出力していく。
+		for meshNo = 1 to md.meshParts.count do(
+			--マテリアルの数を出力する。
+			numMat = md.meshParts[meshNo].materials.count
+			WriteLong file numMat
+			
+			--頂点数を出力。
+			numVertex = md.meshParts[meshNo].vertexBuffer.count
+			WriteLong file numVertex
+
+			--インデックスのサイズを出力
+			indexSize = 0
+			if numVertex < 65536  then (
+				--2byte
+				indexSize = 2
 			)else(
-				WriteByte file 0
+				--4byte
+				indexSize = 4
 			)
-			--メッシュパーツの数を出力
-			WriteShort file md.meshParts.count
-			--メッシュパーツを出力していく。
-			for meshNo = 1 to md.meshParts.count do(
-				--マテリアルの数を出力する。
-				numMat = md.meshParts[meshNo].materials.count
-				WriteLong file numMat
-				
-				--頂点数を出力。
-				numVertex = md.meshParts[meshNo].vertexBuffer.count
-				WriteLong file numVertex
+			WriteByte file indexSize
+			--パディング
+			WriteByte file 0
+			WriteByte file 0
+			WriteByte file 0
 
-				--インデックスのサイズを出力
-				indexSize = 0
-				if numVertex < 65536  then (
-					--2byte
-					indexSize = 2
+			--マテリアルの情報を出力する。
+			for tkMat in md.meshParts[meshNo].materials do (
+				--ファイル名だけを抽出する。
+				--アルベド。
+				WriteFileToFileNameFromFilePath file tkMat.albedoMap
+				--法線マップ
+				WriteFileToFileNameFromFilePath file tkMat.normalMap
+				--スペキュラマップ。
+				WriteFileToFileNameFromFilePath file tkMat.specMap
+				--リフレクションマップ。
+				WriteFileToFileNameFromFilePath file tkMat.reflectionMap
+				--屈折マップ
+				WriteFileToFileNameFromFilePath file tkMat.refractionMap
+
+				--テクスチャをコンバートリストに積んでいく
+				appendIfUnique textureFilePaths tkMat.albedoMap
+				appendIfUnique textureFilePaths tkMat.normalMap
+				appendIfUnique textureFilePaths tkMat.specMap
+				appendIfUnique textureFilePaths tkMat.reflectionMap
+				appendIfUnique textureFilePaths tkMat.refractionMap
+			)
+
+			--頂点バッファを出力
+			for v in md.meshParts[meshNo].vertexBuffer do (
+				if v != undefined then (
+					--頂点座標を出力。
+					WriteFloat file v.pos.x
+					WriteFloat file v.pos.y
+					WriteFloat file v.pos.z
+					--頂点法線を出力。
+					WriteFloat file v.normal.x
+					WriteFloat file v.normal.y
+					WriteFloat file v.normal.Z
+					--UV座標を出力
+					WriteFloat file v.uv.x
+					WriteFloat file v.uv.y
+					--スキンウェイトを出力
+					WriteFloat file v.weights[1]
+					WriteFloat file v.weights[2]
+					WriteFloat file v.weights[3]
+					WriteFloat file v.weights[4]
+					--ボーンインデックスを出力。
+					WriteShort file v.indices[1]
+					WriteShort file v.indices[2]
+					WriteShort file v.indices[3]
+					WriteShort file v.indices[4]
 				)else(
-					--4byte
-					indexSize = 4
+					-- ダミーの頂点を出力する
+					WriteFloat file 0.0f
+					WriteFloat file 0.0f
+					WriteFloat file 0.0f
+					--頂点法線を出力。
+					WriteFloat file 0.0f
+					WriteFloat file 0.0f
+					WriteFloat file 0.0f
+					--UV座標を出力
+					WriteFloat file 0.0f
+					WriteFloat file 0.0f
+					--スキンウェイトを出力
+					WriteFloat file 0.0f
+					WriteFloat file 0.0f
+					WriteFloat file 0.0f
+					WriteFloat file 0.0f
+					--ボーンインデックスを出力。
+					WriteShort file 0
+					WriteShort file 0
+					WriteShort file 0
+					WriteShort file 0
 				)
-				WriteByte file indexSize
-				--パディング
-				WriteByte file 0
-				WriteByte file 0
-				WriteByte file 0
+			)
 
-				--マテリアルの情報を出力する。
-				for tkMat in md.meshParts[meshNo].materials do (
-					--ファイル名だけを抽出する。
-					--アルベド。
-					WriteFileToFileNameFromFilePath file tkMat.albedoMap
-					--法線マップ
-					WriteFileToFileNameFromFilePath file tkMat.normalMap
-					--スペキュラマップ。
-					WriteFileToFileNameFromFilePath file tkMat.specMap
-					--リフレクションマップ。
-					WriteFileToFileNameFromFilePath file tkMat.reflectionMap
-					--屈折マップ
-					WriteFileToFileNameFromFilePath file tkMat.refractionMap
-
-					--テクスチャをコンバートリストに積んでいく
-					appendIfUnique textureFilePaths tkMat.albedoMap
-					appendIfUnique textureFilePaths tkMat.normalMap
-					appendIfUnique textureFilePaths tkMat.specMap
-					appendIfUnique textureFilePaths tkMat.reflectionMap
-					appendIfUnique textureFilePaths tkMat.refractionMap
-				)
-
-				--頂点バッファを出力
-				for v in md.meshParts[meshNo].vertexBuffer do (
-					if v != undefined then (
-						--頂点座標を出力。
-						WriteFloat file v.pos.x
-						WriteFloat file v.pos.y
-						WriteFloat file v.pos.z
-						--頂点法線を出力。
-						WriteFloat file v.normal.x
-						WriteFloat file v.normal.y
-						WriteFloat file v.normal.Z
-						--UV座標を出力
-						WriteFloat file v.uv.x
-						WriteFloat file v.uv.y
-						--スキンウェイトを出力
-						WriteFloat file v.weights[1]
-						WriteFloat file v.weights[2]
-						WriteFloat file v.weights[3]
-						WriteFloat file v.weights[4]
-						--ボーンインデックスを出力。
-						WriteShort file v.indices[1]
-						WriteShort file v.indices[2]
-						WriteShort file v.indices[3]
-						WriteShort file v.indices[4]
+			--インデックスバッファを出力する。
+			for indexBuffer in md.meshParts[meshNo].indexBufferArray do (
+				--ポリゴンの数を出力する。
+				numPoly = indexBuffer.count / 3
+				WriteLong file numPoly
+				--インデックスバッファを出力。
+				for index in indexBuffer do (
+					if indexSize == 2 then (
+						WriteShort file index #unsigned
 					)else(
-						-- ダミーの頂点を出力する
-						WriteFloat file 0.0f
-						WriteFloat file 0.0f
-						WriteFloat file 0.0f
-						--頂点法線を出力。
-						WriteFloat file 0.0f
-						WriteFloat file 0.0f
-						WriteFloat file 0.0f
-						--UV座標を出力
-						WriteFloat file 0.0f
-						WriteFloat file 0.0f
-						--スキンウェイトを出力
-						WriteFloat file 0.0f
-						WriteFloat file 0.0f
-						WriteFloat file 0.0f
-						WriteFloat file 0.0f
-						--ボーンインデックスを出力。
-						WriteShort file 0
-						WriteShort file 0
-						WriteShort file 0
-						WriteShort file 0
+						WriteLong file index #unsigned
 					)
 				)
-
-				--インデックスバッファを出力する。
-				for indexBuffer in md.meshParts[meshNo].indexBufferArray do (
-					--ポリゴンの数を出力する。
-					numPoly = indexBuffer.count / 3
-					
-					WriteLong file numPoly
-					
-					
-					
-					--インデックスバッファを出力。
-					for index in indexBuffer do (
-						if indexSize == 2 then (
-							WriteShort file index #unsigned
-						)else(
-							WriteLong file index #unsigned
-						)
-					)
-					
-				)
-			)			
-	/*	)catch(
-			messageBox "tkmファイルの保存に失敗しました。"
-		)*/
+				
+			)
+		)			
+	
 		fclose file
 		--テクスチャのコンバード
 		for texFilePath in textureFilePaths do(
@@ -496,28 +486,36 @@ public
 		
 		filePath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
 		if filePath != undefined then(
-	
-			--出力先のフォルダを取得。
-			outputFolder = pathConfig.removePathLeaf filePath
-			
-			--スケルトンが取得できる？
-			TrySaveSkeleton nodesTmp filePath
+			try(
+				--出力先のフォルダを取得。
+				outputFolder = pathConfig.removePathLeaf filePath
+				
+				--スケルトンが取得できる？
+				TrySaveSkeleton nodesTmp filePath
 
-			md = ModelData meshParts:#()
+				md = ModelData meshParts:#()
 
-			for p in nodesTmp do (
-				--編集可能頂点に変換できるか調べる。
-				if canConvertTo p Mesh then(
-					--メッシュパーツをビルド				
-					BUildMeshParts p
+				for p in nodesTmp do (
+					--編集可能頂点に変換できるか調べる。
+					if canConvertTo p Mesh then(
+						--メッシュパーツをビルド				
+						BUildMeshParts p
+					)
+				) 
+				--保存。
+				InternalSave filePath
+				currentDir = pathConfig.GetDir(#userScripts)
+				command = currentDir+"\mkTkm.bat"
+				arg = "\"" + filePath + "\""
+				ShellLaunch command arg
+			)catch(
+				if cloneMeshObj != undefined then(
+					delete cloneMeshObj
+					cloneMeshObj=undefined
 				)
-			) 
-			--保存。
-			InternalSave filePath
-			currentDir = pathConfig.GetDir(#userScripts)
-			command = currentDir+"\mkTkm.bat"
-			arg = "\"" + filePath + "\""
-			ShellLaunch command arg
+				errorMessage = getCurrentException()
+				messageBox errorMessage
+			)
 	
 		)
 	)
