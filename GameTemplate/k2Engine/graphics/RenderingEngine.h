@@ -276,7 +276,7 @@ namespace nsK2Engine {
         /// ボリュームスポットライトをシーンに追加
         /// </summary>
         /// <param name="lig">ライト</param>
-        void AddVolumeSpotLight(VolumeSpotLight& lig)
+        void AddVolumeSpotLight(VolumeLightBase& lig)
         {
             m_volumeLightRender.AddVolumeSpotLight(lig);
             
@@ -285,7 +285,7 @@ namespace nsK2Engine {
         /// ボリュームスポットライトをシーンから削除
         /// </summary>
         /// <param name="lig"></param>
-        void RemoveVolumeSpotLight(VolumeSpotLight& lig)
+        void RemoveVolumeSpotLight(VolumeLightBase& lig)
         {
             m_volumeLightRender.RemoveVolumeSpotLight(lig);
         }

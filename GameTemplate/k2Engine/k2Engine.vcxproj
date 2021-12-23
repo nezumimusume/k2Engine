@@ -37,7 +37,9 @@
     <ClCompile Include="graphics\light\PointLight.cpp" />
     <ClCompile Include="graphics\light\SceneLight.cpp" />
     <ClCompile Include="graphics\light\SpotLight.cpp" />
+    <ClCompile Include="graphics\light\VolumeLightBase.cpp" />
     <ClCompile Include="graphics\light\VolumeLightRender.cpp" />
+    <ClCompile Include="graphics\light\VolumePointLight.cpp" />
     <ClCompile Include="graphics\light\VolumeSpotLight.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\postEffect\Bloom.cpp" />
@@ -78,7 +80,9 @@
     <ClInclude Include="graphics\light\PointLight.h" />
     <ClInclude Include="graphics\light\SceneLight.h" />
     <ClInclude Include="graphics\light\SpotLight.h" />
+    <ClInclude Include="graphics\light\VolumeLightBase.h" />
     <ClInclude Include="graphics\light\VolumeLightRender.h" />
+    <ClInclude Include="graphics\light\VolumePointLight.h" />
     <ClInclude Include="graphics\light\VolumeSpotLight.h" />
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\MyRenderer.h" />
@@ -224,6 +228,7 @@
       <PrecompiledHeaderFile>k2EnginePreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -278,6 +283,7 @@
       <PrecompiledHeaderFile>k2EnginePreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -301,6 +307,7 @@
       <PrecompiledHeaderFile>k2EnginePreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

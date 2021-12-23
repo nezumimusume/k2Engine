@@ -79,6 +79,7 @@ private:
 	std::vector<PointLight*> m_pointLightList;
 	std::vector<SpotLight*> m_spotLightList;
 	std::vector<VolumeSpotLight*> m_volumeSpotLightList;
+	std::vector< VolumePointLight*> m_volumePointLightList;
 	int m_skyCubeType = enSkyCubeType_Day;
 	SoundSource* m_bgm = nullptr;
 };

@@ -2,6 +2,7 @@
 
 
 namespace nsK2Engine {
+	class VolumeLightBase;
 	/// <summary>
 	/// ボリュームライトレンダラー。
 	/// </summary>
@@ -21,7 +22,7 @@ namespace nsK2Engine {
 		/// ボリュームスポットライトをレンダラーに追加
 		/// </summary>
 		/// <param name="lig">ライト</param>
-		void AddVolumeSpotLight(VolumeSpotLight& lig)
+		void AddVolumeSpotLight(VolumeLightBase& lig)
 		{
 			m_volumeSpotLightArray.emplace_back(&lig);
 		}
@@ -29,7 +30,7 @@ namespace nsK2Engine {
 		/// ボリュームスポットライトをレンダラーから削除
 		/// </summary>
 		/// <param name="lig"></param>
-		void RemoveVolumeSpotLight(VolumeSpotLight& lig)
+		void RemoveVolumeSpotLight(VolumeLightBase& lig)
 		{
 			auto it = std::find(m_volumeSpotLightArray.begin(), m_volumeSpotLightArray.end(), &lig);
 			if (it != m_volumeSpotLightArray.end()) {
@@ -47,6 +48,6 @@ namespace nsK2Engine {
 	private:
 		RenderTarget m_volumeLightMapFront;                     // 手前のボリュームライトマップ。
 		RenderTarget m_volumeLightMapBack;                      // 奥側のボリュームライトマップ。
-		std::list< VolumeSpotLight* > m_volumeSpotLightArray;   // ボリュームスポットライトの配列。
+		std::list< VolumeLightBase* > m_volumeSpotLightArray;   // ボリュームスポットライトの配列。
 	};
 }

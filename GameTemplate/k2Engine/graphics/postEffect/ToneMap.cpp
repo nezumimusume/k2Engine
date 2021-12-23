@@ -201,6 +201,8 @@ namespace nsK2Engine {
 	}
 	void ToneMap::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
+		g_graphicsEngine->BeginGPUEvent("Tonemap");
+
 		CalcLuminanceAvarage(rc);
 
 		// –¾ˆÃ‡‰ž
@@ -239,5 +241,6 @@ namespace nsK2Engine {
 
 		m_currentAvgRt = 1 ^ m_currentAvgRt;
 
+		g_graphicsEngine->EndGPUEvent();
 	}
 }

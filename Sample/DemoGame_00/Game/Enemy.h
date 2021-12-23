@@ -100,5 +100,7 @@ private:
 	EnEnemyState		m_enemyState = enEnemyState_Idle;			//エネミーのステート(状態)を表す変数。
 	std::unique_ptr<MovedPath>	m_movedPath;
 	Player*				m_player = nullptr;			//プレイヤー。
+	SpotLight m_spotLight;
+	VolumeSpotLight m_volumeSpotLight;
 };
 

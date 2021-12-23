@@ -237,7 +237,7 @@ namespace nsK2Engine {
             UI_SPACE_HEIGHT,
             1,
             1,
-            DXGI_FORMAT_R16G16B16A16_FLOAT,
+            DXGI_FORMAT_R8G8B8A8_UNORM,
             DXGI_FORMAT_UNKNOWN,
             clearColor
         );
@@ -310,6 +310,9 @@ namespace nsK2Engine {
 
         // ディファードライティング
         DeferredLighting(rc);
+            
+        // 不透明オブジェクトの描画が終わった時点でスナップショットを撮影する
+        SnapshotMainRenderTarget(rc, EnMainRTSnapshot::enDrawnOpacity);
 
         // フォワードレンダリング
         ForwardRendering(rc);
@@ -332,6 +335,7 @@ namespace nsK2Engine {
         if (m_sceneGeometryData.IsBuildshadowCasterGeometryData() == false) {
             return;
         }
+        BeginGPUEvent("RenderToShadowMap");
         int ligNo = 0;
         for (auto& shadowMapRender : m_shadowMapRenders)
         {
@@ -347,10 +351,12 @@ namespace nsK2Engine {
             }
             ligNo++;
         }
+        EndGPUEvent();
     }
 
     void RenderingEngine::ZPrepass(RenderContext& rc)
     {
+        BeginGPUEvent("ZPrepass");
         // まず、レンダリングターゲットとして設定できるようになるまで待つ
         rc.WaitUntilToPossibleSetRenderTarget(m_zprepassRenderTarget);
 
@@ -365,9 +371,11 @@ namespace nsK2Engine {
         }
 
         rc.WaitUntilFinishDrawingToRenderTarget(m_zprepassRenderTarget);
+        EndGPUEvent();
     }
     void RenderingEngine::Render2D(RenderContext& rc)
     {
+        BeginGPUEvent("Render2D");
         // レンダリングターゲットとして利用できるまで待つ。
         //PRESENTからRENDERTARGETへ。
         rc.WaitUntilToPossibleSetRenderTarget(m_2DRenderTarget);
@@ -396,9 +404,12 @@ namespace nsK2Engine {
 
         //RENDERTARGETからPRESENTへ。
         rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+
+        EndGPUEvent();
     }
     void RenderingEngine::ForwardRendering(RenderContext& rc)
     {
+        BeginGPUEvent("ForwardRendering");
         rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
         rc.SetRenderTarget(
             m_mainRenderTarget.GetRTVCpuDescriptorHandle(),
@@ -408,9 +419,6 @@ namespace nsK2Engine {
         for (auto& renderObj : m_renderObjects) {
             renderObj->OnForwardRender(rc);
         }
-
-        // 不透明オブジェクトの描画が終わった時点でスナップショットを撮影する
-        SnapshotMainRenderTarget(rc, EnMainRTSnapshot::enDrawnOpacity);
 
         // ボリュームライトを描画。
         m_volumeLightRender.Render(
@@ -426,9 +434,12 @@ namespace nsK2Engine {
 
         // メインレンダリングターゲットへの書き込み終了待ち
         rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+        
+        EndGPUEvent();
     }
     void RenderingEngine::RenderToGBuffer(RenderContext& rc)
     {
+        BeginGPUEvent("RenderToGBuffer");
         // レンダリングターゲットをG-Bufferに変更
         RenderTarget* rts[enGBufferNum] = {
             &m_gBuffer[enGBufferAlbedoDepth],         // 0番目のレンダリングターゲット
@@ -451,19 +462,26 @@ namespace nsK2Engine {
 
         // レンダリングターゲットへの書き込み待ち
         rc.WaitUntilFinishDrawingToRenderTargets(ARRAYSIZE(rts), rts);
+        EndGPUEvent();
     }
 
     void RenderingEngine::SnapshotMainRenderTarget(RenderContext& rc, EnMainRTSnapshot enSnapshot)
     {
+        BeginGPUEvent("SnapshotMainRenderTarget");
+
         // メインレンダリングターゲットの内容をスナップショット
         rc.WaitUntilToPossibleSetRenderTarget(m_mainRTSnapshots[(int)enSnapshot]);
         rc.SetRenderTargetAndViewport(m_mainRTSnapshots[(int)enSnapshot]);
         m_copyMainRtToFrameBufferSprite.Draw(rc);
         rc.WaitUntilFinishDrawingToRenderTarget(m_mainRTSnapshots[(int)enSnapshot]);
+
+        EndGPUEvent();
     }
 
     void RenderingEngine::DeferredLighting(RenderContext& rc)
     {
+        BeginGPUEvent("DeferredLighting");
+
         // ディファードライティングに必要なライト情報を更新する
         m_deferredLightingCB.m_light.eyePos = g_camera3D->GetPosition();
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
@@ -485,10 +503,14 @@ namespace nsK2Engine {
 
         // メインレンダリングターゲットへの書き込み終了待ち
         rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+
+        EndGPUEvent();
     }
 
     void RenderingEngine::CopyMainRenderTargetToFrameBuffer(RenderContext& rc)
     {
+        BeginGPUEvent("CopyMainRenderTargetToFrameBuffer");
+
         // メインレンダリングターゲットの絵をフレームバッファーにコピー
         rc.SetRenderTarget(
             g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
@@ -506,5 +528,7 @@ namespace nsK2Engine {
 
         rc.SetViewportAndScissor(viewport);
         m_copyMainRtToFrameBufferSprite.Draw(rc);
+
+        EndGPUEvent();
     }
 }

@@ -132,6 +132,12 @@
     <ClCompile Include="graphics\light\VolumeLightRender.cpp">
       <Filter>graphics\light</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\light\VolumePointLight.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\light\VolumeLightBase.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -234,6 +240,12 @@
       <Filter>graphics\light</Filter>
     </ClInclude>
     <ClInclude Include="graphics\light\VolumeLightRender.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\VolumePointLight.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\light\VolumeLightBase.h">
       <Filter>graphics\light</Filter>
     </ClInclude>
   </ItemGroup>

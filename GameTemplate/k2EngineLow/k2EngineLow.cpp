@@ -23,9 +23,11 @@ namespace nsK2EngineLow {
 	}
 	void K2EngineLow::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeight)
 	{
-		//グラフィックエンジンの初期化。
-		m_graphicsEngine = new GraphicsEngine();
-		m_graphicsEngine->Init(hwnd, frameBufferWidth, frameBufferHeight);
+		if (hwnd) {
+			//グラフィックエンジンの初期化。
+			m_graphicsEngine = new GraphicsEngine();
+			m_graphicsEngine->Init(hwnd, frameBufferWidth, frameBufferHeight);
+		}
 		g_gameTime = &m_gameTime;
 		//ゲームパッドの初期化。
 		for (int i = 0; i < GamePad::CONNECT_PAD_MAX; i++) {
@@ -35,8 +37,17 @@ namespace nsK2EngineLow {
 		GameObjectManager::CreateInstance();
 		PhysicsWorld::CreateInstance();
 		g_soundEngine = new SoundEngine();
-		//エフェクトエンジンの初期化。
-		EffectEngine::CreateInstance();
+		if (m_graphicsEngine) {
+			//エフェクトエンジンの初期化。
+			EffectEngine::CreateInstance();
+		}
+#ifdef K2_DEBUG
+		if (m_graphicsEngine) {
+			m_fpsFont = std::make_unique<Font>();
+			m_fpsFontShadow = std::make_unique<Font>();
+		}
+#endif
+		g_engine = this;
 	}
 	void K2EngineLow::BeginFrame()
 	{
@@ -51,8 +62,19 @@ namespace nsK2EngineLow {
 	}
 	void K2EngineLow::EndFrame()
 	{
+#ifdef K2_DEBUG
+		m_fpsFont->Begin(g_graphicsEngine->GetRenderContext());
+		float time = g_gameTime->GetFrameDeltaTime();
+		wchar_t text[256];
+		swprintf(text, L"FPS = %0.2f", 1.0f / time);
+		m_fpsFontShadow->Draw(text, { UI_SPACE_WIDTH * -0.48f + 3.0f , UI_SPACE_HEIGHT * 0.48f - 3.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, 0.0f, 1.0f, { 0.0f, 1.0f });
+		m_fpsFont->Draw(text, { UI_SPACE_WIDTH * -0.48f, UI_SPACE_HEIGHT * 0.48f }, { 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, 1.0f, { 0.0f, 1.0f });
+		m_fpsFont->End(g_graphicsEngine->GetRenderContext());
+#endif 
 		m_graphicsEngine->EndRender();
+#ifdef USE_FPS_LIMITTER
 		m_fpsLimitter.Wait();
+#endif
 		m_gameTime.EndMeasurement();
 
 	}

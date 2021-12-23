@@ -1,44 +1,46 @@
-/*!
- *@brief	アニメーションクリップ。
- */
-
 #pragma once
 
 #include "tkFile/TkaFile.h"
 
 namespace nsK2EngineLow {
-	/*!
-	*@brief	キーフレーム。
-	*/
+	/// <summary>
+	/// キーフレーム
+	/// </summary>
 	struct KeyFrame {
 		uint32_t boneIndex;	//!<ボーンインデックス。
 		float time;					//!<時間。
 		Matrix transform;			//!<トランスフォーム。
 	};
 
-	/*!
-	*@brief	アニメーションイベント。
-	*/
+	/// <summary>
+	/// アニメーションイベント。
+	/// </summary>
 	class AnimationEvent : public Noncopyable {
 	public:
 
-		/*!
-		*@brief	イベント発生時間を設定。
-		*/
+
+		/// <summary>
+		/// イベント発生時間を設定。
+		/// </summary>
+		/// <returns></returns>
 		float GetInvokeTime() const
 		{
 			return m_invokeTime;
 		}
-		/*!
-		*@brief	イベント名を取得。
-		*/
+
+		/// <summary>
+		/// イベント名を取得。
+		/// </summary>
+		/// <returns></returns>
 		const wchar_t* GetEventName() const
 		{
 			return m_eventName.c_str();
 		}
-		/*!
-		*@brief	イベント発生時間を設定。
-		*/
+
+		/// <summary>
+		/// イベント発生時間を設定。
+		/// </summary>
+		/// <param name="time"></param>
 		void SetInvokeTime(float time)
 		{
 			m_invokeTime = time;
@@ -46,20 +48,29 @@ namespace nsK2EngineLow {
 		/*!
 		*@brief	イベント名を設定。
 		*/
+
+		/// <summary>
+		/// イベント名を設定
+		/// </summary>
+		/// <param name="name"></param>
 		void SetEventName(const wchar_t* name)
 		{
 			m_eventName = name;
 		}
-		/*!
-		*@brief	イベントが発生済みか判定。
-		*/
+
+		/// <summary>
+		/// イベントが発生済みか判定
+		/// </summary>
+		/// <returns></returns>
 		bool IsInvoked() const
 		{
 			return m_isInvoked;
 		}
-		/*!
-		*@brief	イベントが発生済みのフラグを設定する。
-		*/
+
+		/// <summary>
+		/// イベント発生済みのフラグを設定する。
+		/// </summary>
+		/// <param name="flag"></param>
 		void SetInvokedFlag(bool flag)
 		{
 			m_isInvoked = flag;
@@ -69,22 +80,24 @@ namespace nsK2EngineLow {
 		float m_invokeTime = 0.0f;	//!<イベント発生時間。
 		std::wstring m_eventName;	//!<イベント名。
 	};
-	/*!
-		*@brief	アニメーションクリップ。
-		*/
+
+	/// <summary>
+	/// アニメーションクリップクラス。
+	/// </summary>
 	class AnimationClip {
 	public:
 
 		using keyFramePtrList = std::vector<KeyFrame*>;
-		/*!
-		* @brief	コンストラクタ
-		*/
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		AnimationClip()
 		{
 		}
-		/*!
-			*@brief	デストラクタ。
-			*/
+		
+		/// <summary>
+		/// デストラクタ。
+		/// </summary>
 		~AnimationClip();
 		/// <summary>
 		/// アニメーションクリップを同期ロード。
@@ -124,16 +137,20 @@ namespace nsK2EngineLow {
 		{
 			return *m_topBoneKeyFramList;
 		}
-		/*!
-			*@brief	クリップ名を取得。
-			*/
+		
+		/// <summary>
+		/// クリップ名を取得。
+		/// </summary>
+		/// <returns></returns>
 		const wchar_t* GetName() const
 		{
 			return m_clipName.c_str();
 		}
-		/*!
-		*@brief	アニメーションイベントを取得。
-		*/
+		
+		/// <summary>
+		/// アニメーションイベントを取得。
+		/// </summary>
+		/// <returns></returns>
 		std::unique_ptr<AnimationEvent[]>& GetAnimationEvent()
 		{
 			return m_animationEvent;
@@ -145,18 +162,18 @@ namespace nsK2EngineLow {
 		/// <returns></returns>
 		int GetNumAnimationEvent() const
 		{
-			return m_tkaFile.GetNumAnimationEvent();
+			return m_tkaFile->GetNumAnimationEvent();
 		}
 	private:
 		using KeyframePtr = std::unique_ptr<KeyFrame>;
-		std::wstring m_clipName;	//!<アニメーションクリップの名前。
-		bool m_isLoop = false;	//!<ループフラグ。
+		std::wstring m_clipName;										//!<アニメーションクリップの名前。
+		bool m_isLoop = false;											//!<ループフラグ。
 		std::vector<KeyframePtr>			m_keyframes;				//キーフレーム。
 		std::vector<keyFramePtrList>		m_keyFramePtrListArray;		//ボーンごとのキーフレームのリストを管理するための配列。
 		std::unique_ptr<AnimationEvent[]>	m_animationEvent;			//アニメーションイベント。
 		int									m_numAnimationEvent = 0;	//アニメーションイベントの数。
 		keyFramePtrList* m_topBoneKeyFramList = nullptr;
-		TkaFile							m_tkaFile;			//tkaファイル
+		TkaFile*							m_tkaFile = nullptr;		//tkaファイル
 	};
 	using AnimationClipPtr = std::unique_ptr<AnimationClip>;
 }

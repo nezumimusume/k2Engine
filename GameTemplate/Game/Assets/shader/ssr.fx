@@ -66,6 +66,10 @@ PSInput VSMain(VSInput In)
 }
 float4 PSMain(PSInput In) : SV_Target0
 {
+	//金属度とスムースを取得。
+	float4 metallicSmooth = metallicSmoothTexture.Sample(Sampler, In.uv);
+	// スムース0.5以上のサーフェイスでのみ映り込みを起こすようにする。
+	clip( metallicSmooth.a - 0.5f);
 	//ピクセルのワールド座標を計算する。
 	float3 worldPos = CalcWorldPosFromUVZ(
 		In.uv,
@@ -77,8 +81,7 @@ float4 PSMain(PSInput In) : SV_Target0
 	
 	//ピクセルの法線を取得。
 	float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
-	//金属度とスムースを取得。
-	float4 metallicSmooth = metallicSmoothTexture.Sample(Sampler, In.uv);
+	
 	//カメラの視点からピクセルに向かうベクトルを計算する。
 	float3 toPixelDir = normalize( worldPos - cameraPosInWorld.xyz );
 	//反射ベクトルを求める。
@@ -88,7 +91,7 @@ float4 PSMain(PSInput In) : SV_Target0
 	//反射ベクトルを使って、レイマーチングを行う。
 	//レイマーチングのイテレーション回数と線分を伸ばす距離は
 	//後で定数バッファにするんやで？
-	int maxRayNum = 40;
+	int maxRayNum = 20;
 	float3 raystep = 800.0f/ maxRayNum * toPixelDirReflect;
 	float maxThickness = 0.001f / maxRayNum;
 	for( int step = 1; step < maxRayNum; step++){ //自分自身とぶつかるので、stepは1から進める。
@@ -128,6 +131,7 @@ float4 PSMain(PSInput In) : SV_Target0
 			t *= pow( 1.0f - min( 1.0f, abs(posInProj.x) ), 0.5f );
 			t *= pow( 1.0f - min( 1.0f, abs(posInProj.y) ), 0.5f );
 			return float4(reflectColor.xyz, metallicSmooth.a * t);
+		
 		}
 	}
 	clip(-1.0f);

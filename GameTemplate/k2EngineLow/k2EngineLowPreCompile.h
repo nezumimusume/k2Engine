@@ -31,6 +31,9 @@
 #include "DirectXTK/Inc/SpriteBatch.h"
 #include "DirectXTK/Inc/SpriteFont.h"
 
+#include "Effekseer.h"
+#include "EffekseerRendererDX12.h"
+
 #include "graphics/d3dx12.h"
 
 const int MAX_RENDERING_TARGET = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;	//レンダリングターゲットの最大数。
@@ -80,6 +83,8 @@ const UINT UI_SPACE_WIDTH = 1920;	// UI空間の幅。
 const UINT UI_SPACE_HEIGHT = 1080;	// UI空間の高さ。
 static const int MAX_BONE = 512;	// ボーンの最大数。
 
+#define USE_FPS_LIMITTER	// 有効でFPSに上限を設ける。
+
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"
 
@@ -100,8 +105,6 @@ static const int MAX_BONE = 512;	// ボーンの最大数。
 #include <x3daudio.h>
 #include <xaudio2fx.h>
 
-#include "Effekseer.h"
-#include "EffekseerRendererDX12.h"
 
 #include "graphics/effect/EffectEngine.h"
 #include "sound/SoundSource.h"

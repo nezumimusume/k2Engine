@@ -72,6 +72,7 @@ namespace nsK2Engine {
     }
     void Bloom::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
     {
+        g_graphicsEngine->BeginGPUEvent("Bloom");
         // 輝度抽出
         // 輝度抽出用のレンダリングターゲットに変更
         rc.WaitUntilToPossibleSetRenderTarget(m_luminanceRenderTarget);
@@ -99,5 +100,7 @@ namespace nsK2Engine {
         m_finalSprite.Draw(rc);
         // レンダリングターゲットへの書き込み終了待ち
         rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+
+        g_graphicsEngine->EndGPUEvent();
     }
 }

@@ -6,6 +6,7 @@
 #include "sound/SoundSource.h"
 #include "sound/SoundEngine.h"
 
+// #define ENABLE_PLAYER_SPOTLIGHT
 namespace
 {
 	float GAMEOVER_LIMITED_POSITION = -200.0f;
@@ -52,6 +53,8 @@ bool Player::Start()
 	// ポイントライトの生成
 	//m_pointLight = g_sceneLight->NewPointLight();
 	// スポットライトを初期化。
+#ifdef ENABLE_PLAYER_SPOTLIGHT
+
 	m_spotLight.Init();
 	m_spotLight.SetRange(800.0f);
 	m_spotLight.SetAngle(Math::DegToRad(20.0f));
@@ -61,6 +64,7 @@ bool Player::Start()
 
 	// ボリュームスポットライトの初期化。
 	m_volumeSpotLight.Init(m_spotLight);
+#endif
 	return true;
 }
 
@@ -69,6 +73,8 @@ void Player::Update()
 	for (auto pt : m_pointLightList) {
 		pt->Update();
 	}
+#ifdef ENABLE_PLAYER_SPOTLIGHT
+
 	Vector3 color = m_spotLight.GetColor();
 	float affect_0 = m_spotLight.GetAngleAffectPowParam();
 	float affect_1 = m_spotLight.GetRangeAffectPowParam();
@@ -105,6 +111,13 @@ void Player::Update()
 	m_spotLight.SetAngle(angle);
 	m_spotLight.SetColor(color);
 	m_spotLight.Update();
+	Vector3 pos = m_position;
+	pos.y += 50.0f;
+	m_spotLight.SetPosition(pos);
+
+	m_spotLight.SetDirection(m_forward);
+	m_volumeSpotLight.Update();
+#endif
 	//移動処理。
 	Move();
 	//旋回処理。
@@ -140,12 +153,7 @@ void Player::Update()
 		
 		m_pointLightList.push_back(newPt);
 	}
-	Vector3 pos = m_position;
-	pos.y += 50.0f;
-	m_spotLight.SetPosition(pos);
-
-	m_spotLight.SetDirection(m_forward);
-	m_volumeSpotLight.Update();
+	
 }
 
 void Player::Move()

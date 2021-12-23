@@ -24,8 +24,8 @@ namespace nsK2Engine {
     }
 	void VolumeLightRender::Render(RenderContext& rc, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
 	{
+        BeginGPUEvent("VolumeLightRender");
         // ボリュームライトを描画
-        
         for (auto& volumeLig : m_volumeSpotLightArray) {
             // 1パス、前面を描画。
             rc.WaitUntilToPossibleSetRenderTarget(m_volumeLightMapFront);
@@ -42,9 +42,15 @@ namespace nsK2Engine {
             // 奥と手前の書き込み完了待ち
             rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapBack);
             rc.WaitUntilFinishDrawingToRenderTarget(m_volumeLightMapFront);
+            
             // 3パス、最終描画
             rc.SetRenderTarget(rtvHandle, dsvHandle);
             volumeLig->DrawFinal(rc);
+
+            // 最後にSSRのためにボリュームライトの深度値を書き込む。
+            // volumeLig->DrawDepth(rc);
+            
         }
+        EndGPUEvent();
 	}
 }

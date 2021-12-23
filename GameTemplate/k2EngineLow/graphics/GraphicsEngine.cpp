@@ -1,5 +1,6 @@
 #include "k2EngineLowPreCompile.h"
 #include "GraphicsEngine.h"
+#include <pix.h>
 
 namespace nsK2EngineLow {
 	GraphicsEngine* g_graphicsEngine = nullptr;	//グラフィックスエンジン
@@ -44,6 +45,7 @@ namespace nsK2EngineLow {
 		if (m_d3dDevice) {
 			m_d3dDevice->Release();
 		}
+		
 		CloseHandle(m_fenceEvent);
 	}
 	void GraphicsEngine::WaitDraw()
@@ -144,7 +146,7 @@ namespace nsK2EngineLow {
 		g_camera2D = &m_camera2D;
 		g_camera3D = &m_camera3D;
 
-		//DirectXTK用のグラフィックメモリ管理クラスのインスタンスを作成する。
+		//DirectXTK用のグラフィッsクメモリ管理クラスのインスタンスを作成する。
 		m_directXTKGfxMemroy = std::make_unique<DirectX::GraphicsMemory>(m_d3dDevice);
 		//フォント描画エンジンを初期化。
 		m_fontEngine.Init();
@@ -155,7 +157,7 @@ namespace nsK2EngineLow {
 	IDXGIFactory4* GraphicsEngine::CreateDXGIFactory()
 	{
 		UINT dxgiFactoryFlags = 0;
-#ifdef _DEBUG
+#ifdef K2_DEBUG
 		//デバッグコントローラーがあれば、デバッグレイヤーがあるDXGIを作成する。
 		ID3D12Debug* debugController;
 		if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
@@ -253,6 +255,29 @@ namespace nsK2EngineLow {
 		if (adapterMaxVideoMemory) {
 			adapterMaxVideoMemory->Release();
 		}
+#ifdef K2_DEBUG
+		// Windows11の不具合の回避対応
+		// Windows11でMISMATCHING_COMMAND_LIST_TYPEが出るようになっており、
+		// WindowsSDKの不具合とのこと。
+		// 近日中に修正されるらしい。
+		// https://stackoverflow.com/questions/69805245/directx-12-application-is-crashing-in-windows-11
+		ID3D12InfoQueue* infoQueue;
+		if ( m_d3dDevice->QueryInterface(IID_PPV_ARGS(&infoQueue)) == S_OK ) {
+			D3D12_MESSAGE_ID hide[] =
+			{
+				D3D12_MESSAGE_ID_MAP_INVALID_NULLRANGE,
+				D3D12_MESSAGE_ID_UNMAP_INVALID_NULLRANGE,
+				// Workarounds for debug layer issues on hybrid-graphics systems
+				D3D12_MESSAGE_ID_EXECUTECOMMANDLISTS_WRONGSWAPCHAINBUFFERREFERENCE,
+				D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE,
+			};
+			D3D12_INFO_QUEUE_FILTER filter = {};
+			filter.DenyList.NumIDs = static_cast<UINT>(std::size(hide));
+			filter.DenyList.pIDList = hide;
+			infoQueue->AddStorageFilterEntries(&filter);
+			infoQueue->Release();
+		}
+#endif
 		return m_d3dDevice != nullptr;
 	}
 	bool GraphicsEngine::CreateCommandQueue()
@@ -285,6 +310,7 @@ namespace nsK2EngineLow {
 			}
 			//コマンドリストは開かれている状態で作成されるので、いったん閉じる。
 			commandList->Close();
+			
 			listNo++;
 		}
 		return true;
@@ -363,10 +389,14 @@ namespace nsK2EngineLow {
 	{
 		// レンダリングターゲットへの描き込み完了待ち
 		m_renderContext.WaitUntilFinishDrawingToRenderTarget(m_frameBuffer.GetCurrentRenderTarget());
-
+		
 		if (m_isExecuteCommandList)
 		{
+#ifdef USE_FPS_LIMITTER
 			m_frameBuffer.Present(1);
+#else
+			m_frameBuffer.Present(0);
+#endif
 			// 描画完了待ち。
 			WaitDraw();
 		}

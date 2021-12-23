@@ -173,6 +173,8 @@ namespace nsK2EngineLow {
 			d3dDevice->CreateRenderTargetView(
 				m_renderTargets[n], nullptr, rtvHandle
 			);
+			m_renderTargets[n]->SetName(L"FrameBuffer::RenderTargetView");
+			
 			rtvHandle.ptr += m_rtvDescriptorSize;
 		}
 		return true;

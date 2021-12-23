@@ -14,6 +14,7 @@
 #include "NullTextureMaps.h"
 #include "font/FontEngine.h"
 #include "FrameBuffer.h"
+#include <pix.h>
 
 namespace nsK2EngineLow {
 	/// <summary>
@@ -228,12 +229,29 @@ namespace nsK2EngineLow {
 			if(res == nullptr){
 				return;
 			}
-			// D3Dオブジェクトは解放までに1フレームの時間をかける
-			// なぜ？
+			// D3Dオブジェクトは解放までに1フレームの時間をかける。
 			// 描画コマンドは１フレーム遅れて実行されるように実装されているため、即座に開放すると描画中に
 			// リソースが解放されてしまう。そのため、１フレーム遅延して開放する必要がある。
 			m_reqDelayRelease3d12ObjectList.push_back({ res, 1 });
 		}
+#ifdef K2_DEBUG
+		void BeginGPUEvent(const char* eventName)
+		{
+			PIXBeginEvent(m_commandList[m_frameIndex], 0xffffffffffffffff, eventName);
+		}
+		void EndGPUEvent()
+		{
+			PIXEndEvent(m_commandList[m_frameIndex]);
+		}
+#else
+		void BeginGPUEvent(const char*)
+		{
+
+		}
+		void EndGPUEvent()
+		{
+		}
+#endif
 	private:
 		/// <summary>
 		/// D3Dデバイスの作成。
@@ -314,7 +332,7 @@ namespace nsK2EngineLow {
 		UINT m_samplerDescriptorSize = 0;								//サンプラのディスクリプタのサイズ。			
 		RenderContext m_renderContext;									//レンダリングコンテキスト。
 		FrameBuffer m_frameBuffer;										//フレームバッファ
-
+		
 		// GPUとの同期で使用する変数。
 		UINT m_frameIndex = 0;
 		HANDLE m_fenceEvent = nullptr;
@@ -351,5 +369,15 @@ namespace nsK2EngineLow {
 			obj->Release();
 		}
 	}
+	static inline void BeginGPUEvent(const char* eventName)
+	{
+		g_graphicsEngine->BeginGPUEvent(eventName);
+		
+	}
+	static inline void EndGPUEvent()
+	{
+		g_graphicsEngine->EndGPUEvent();
+	}
+
 }
 

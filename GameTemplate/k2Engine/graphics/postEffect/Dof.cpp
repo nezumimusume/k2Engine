@@ -91,6 +91,7 @@ namespace nsK2Engine {
         if (m_isEnable == false) {
             return;
         }
+        g_graphicsEngine->BeginGPUEvent("Dof");
         //step-4 垂直、対角線ブラーをかける
         RenderTarget* blurRts[] = {
             &m_rtVerticalBlur,
@@ -127,5 +128,6 @@ namespace nsK2Engine {
 
         // レンダリングターゲットへの書き込み終了待ち
         rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+        g_graphicsEngine->EndGPUEvent();
     };
 }
