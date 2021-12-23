@@ -8,14 +8,19 @@ using namespace nsK2EngineLow;
 
 // コマンドライン引数
 enum Arg {
-    Arg_InputTkmFilePath,
-    Arg_OutputTkmFIlePath,
+    Arg_Exefilename,                // 実行ファイル名。
+    Arg_InputTkmFilePath,           // 入力tkmファイルパス。
+    Arg_OutputTkmFilePath,          // 出力tkmファイルパス。
+    CommonArg_Num,                  // 共通引数の数。
+    Arg_Options = CommonArg_Num,    // ここからオプション。
 };
 int main( int argc, char* argv[] )
 {
-    if (argc == 1) {
+    if (argc < CommonArg_Num) {
         printf("tkmファイルの最適化ツール\n");
-        printf("tkmOptimizer -i <入力tkmファイルパス> -o <出力ファイルパス>\n");
+        printf("Usage : tkmOptimizer <入力tkmファイルパス> <出力tkmファイルパス> [option]\n");
+        printf("    <入力tkmファイルパス>    最適化前のtkmファイルのパス\n");
+        printf("    <出力tkmファイルパス>    最適化後のtkmファイルの出力パス\n");
         return 0 ;
     }   
     // k2Engineを初期化する。
@@ -23,36 +28,10 @@ int main( int argc, char* argv[] )
     engine.Init(nullptr, 0, 0);
     // コマンドライン引数を解析
     std::string inputTkmFilePath, outputTkmFilePath;
+    // 入力ファイルパスと出力ファイルパスを取得。
+    inputTkmFilePath = argv[Arg_InputTkmFilePath];
+    outputTkmFilePath = argv[Arg_OutputTkmFilePath];
     
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-i") == 0) {
-            if (i + 1 < argc) {
-                // 入力ファイルパスが指定されている。
-                inputTkmFilePath = argv[i + 1];
-                i++;
-            }
-        }
-        else if (strcmp(argv[i], "-o") == 0) {
-            if (i + 1 < argc) {
-                // 出力ファイルパスが指定されている。
-                outputTkmFilePath = argv[i + 1];
-                i++;
-            }
-        }
-    }
-    bool isError = false;
-    if (inputTkmFilePath.empty()) {
-        printf("エラー : 入力tkmファイルが指定されていません。\n");
-        isError = true;
-    }
-    if (outputTkmFilePath.empty()) {
-        printf("エラー : 出力tkmファイルが指定されていません。\n");
-        isError = true;
-    }
-    if (isError) {
-        // エラー。
-        return 1;
-    }
     // tkmファイルをロード。
     TkmFile tkmFile;
     if (tkmFile.Load(inputTkmFilePath.c_str(), true, false, true) == false) {

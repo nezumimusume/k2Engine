@@ -1,5 +1,5 @@
 
-@tkmOptimizer.exe -i %1 -o %1
+@tkmOptimizer.exe %1 %1
 @if %errorlevel%==1 goto ERR
 @goto SUCCESS
 

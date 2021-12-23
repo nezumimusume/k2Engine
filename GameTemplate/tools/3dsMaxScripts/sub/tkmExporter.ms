@@ -514,7 +514,10 @@ public
 			) 
 			--保存。
 			InternalSave filePath
-			messageBox "出力成功しました。" beep:false
+			currentDir = pathConfig.GetDir(#userScripts)
+			command = currentDir+"\mkTkm.bat"
+			arg = "\"" + filePath + "\""
+			ShellLaunch command arg
 	
 		)
 	)
