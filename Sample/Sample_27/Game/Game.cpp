@@ -48,6 +48,15 @@ bool Game::Start()
 		}
 		else if (objData.EqualObjectName(L"light") == true)
 		{
+			
+			for (int i = 0; i < m_glowingObjectList.size(); i++)
+			{
+				Vector3 diff = m_glowingObjectList[i]->GetPosition() - objData.position;
+				if (diff.Length() < 1.0f)
+				{
+					return false;
+				}
+			}
 			auto glowingObject = NewGO<GlowingObject>(0);
 			glowingObject->SetPosition(objData.position);
 			glowingObject->SetRotation(objData.rotation);

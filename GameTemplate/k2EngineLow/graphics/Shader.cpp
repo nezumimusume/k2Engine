@@ -25,7 +25,7 @@ namespace nsK2EngineLow {
 	{
 		Release();
 		ID3DBlob* errorBlob;
-#ifdef _DEBUG
+#ifdef K2_DEBUG
 		// Enable better shader debugging with the graphics debugging tools.
 		UINT compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #else

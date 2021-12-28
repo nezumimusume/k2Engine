@@ -91,7 +91,7 @@ namespace nsK2Engine {
 			// カメラ関係のデータはDrawのパスでコピーしないと、Updateの順番で
 			// 1フレーム前のカメラ情報になってしまう。
 			m_finalCB.mViewProjInv = g_camera3D->GetViewProjectionMatrixInv();
-
+			m_finalCB.randomSeed = rand() % 100;
 		}
 	protected:
 		/// <summary>
@@ -100,6 +100,7 @@ namespace nsK2Engine {
 		struct FinalCB {
 			TLightDataRaw lightDataRaw; // 生のライトデータ。
 			Matrix mViewProjInv;		// ビュープロジェクション行列の逆行列
+			float randomSeed;			// 乱数の種
 		};
 		const TLightData* m_lightData = nullptr;
 		FinalCB m_finalCB;		// 最終描画の定数バッファ。

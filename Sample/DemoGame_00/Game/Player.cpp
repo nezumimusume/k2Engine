@@ -57,10 +57,22 @@ bool Player::Start()
 #ifdef ENABLE_PLAYER_SPOTLIGHT
 
 	m_spotLight.Init();
-	m_spotLight.SetRange(800.0f);
-	m_spotLight.SetAngle(Math::DegToRad(20.0f));
-	m_spotLight.SetRangeAffectPowParam(2.0f);
+	m_spotLight.SetRange(400.0f);
 	m_spotLight.SetColor(2.0f, 2.0f, 2.0f);
+	m_spotLight.SetAngle(Math::DegToRad(20.0f));
+	m_spotLight.SetRangeAffectPowParam(1.0f);
+	m_spotLight.SetAngleAffectPowParam(1.0f);
+	
+
+	m_spotLight.SetColor2(10.0f, 10.0f, 10.0f);	
+	m_spotLight.SetAngle2(Math::DegToRad(20.0f));
+	m_spotLight.SetRangeAffectPowParam2(10.0f);
+	m_spotLight.SetAngleAffectPowParam2(5.0f);
+	
+	m_spotLight.SetColor3(20.0f, 20.0f, 20.0f);
+	m_spotLight.SetAngle3(Math::DegToRad(30.0f));
+	m_spotLight.SetRangeAffectPowParam3(40.0f);
+	m_spotLight.SetAngleAffectPowParam3(0.1f);
 
 	// ボリュームスポットライトの初期化。
 	m_volumeSpotLight.Init(m_spotLight);
@@ -104,10 +116,10 @@ void Player::Update()
 	if (GetAsyncKeyState('M')) {
 		angle += 0.01f;
 	}
-	m_spotLight.SetRange(range);
+	/*m_spotLight.SetRange(range);
 	m_spotLight.SetRangeAffectPowParam(affect_1);
 	m_spotLight.SetAngle(angle);
-	m_spotLight.SetColor(color);
+	m_spotLight.SetColor(color);*/
 	m_spotLight.Update();
 	Vector3 pos = m_position;
 	pos.y += 50.0f;

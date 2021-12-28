@@ -12,6 +12,8 @@ namespace nsK2Engine {
 		Vector3 scale;
 		scale.z = m_lightData->GetRange();
 		float angle = m_lightData->GetAngle();
+		/*angle = max(angle, m_lightData->GetAngle2());
+		angle = max(angle, m_lightData->GetAngle3());*/
 		// Šp“x‚©‚çxy‚ÌŠg‘å—¦‚ðŒvŽZ‚·‚éB
 		float xyScale = tan(angle) * m_lightData->GetRange() ;
 		scale.x = xyScale;

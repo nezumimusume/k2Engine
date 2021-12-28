@@ -262,7 +262,7 @@ float3 CalcSpotLight(
         angleLigToPixel = abs(acos(angleLigToPixel));
         // step-12 角度による影響率を求める
         // 角度に比例して小さくなっていく影響率を計算する
-        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].angle * angleLigToPixel ), spotLight[ligNo].anglePow);
+        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].angle.x * angleLigToPixel ), spotLight[ligNo].anglePow);
         affect *= angleAffect;
 
         

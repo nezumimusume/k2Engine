@@ -45,6 +45,7 @@ namespace nsK2Engine {
             
             // 3パス、最終描画
             rc.SetRenderTarget(rtvHandle, dsvHandle);
+            rc.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
             volumeLig->DrawFinal(rc);
 
             // 最後にSSRのためにボリュームライトの深度値を書き込む。

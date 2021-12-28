@@ -15,6 +15,7 @@ namespace nsK2EngineLow {
 		initData.m_fxFilePath = "Assets/shader/model.fx";
 		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 		initData.m_vsEntryPointFunc = "VSMain";
+
 		//モデルを読み込む。
 		m_model.Init(initData);
 

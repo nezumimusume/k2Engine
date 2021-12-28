@@ -90,9 +90,9 @@ struct SpotLight
     float3 direction;       // 射出方向。
     float rangePow;         // 距離による光の影響率に累乗するパラメータ。
     float3 directionInView; // カメラ空間での射出方向。
-    float angle;            // 射出角度(単位ラジアン)
-    float3 color2;          // 二つ目のカラー。
     float anglePow;
+    float3 angle;           // 射出角度(単位：ラジアン。xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー)。
+    float3 color2;          // 二つ目のカラー。
     float3 color3;          // 三つ目のカラー。
     float2 attn2;           // 二つ目のカラーの減衰パラメータ。
     float2 attn3;           // 三つ目のカラーの減衰パラメータ。
@@ -120,14 +120,15 @@ cbuffer cb : register(b0){
 cbuffer finalSpotLightCb : register(b1){
     SpotLight spotLight;    // スポットライト。
     float4x4 mViewProjInv;  // ビュープロジェクション行列の逆行列
+    float randomSeed;   // ランダムシード。
     
 };
 
 // ポイントライト用の定数バッファ。
 cbuffer finalPointLightCb : register(b1){
     PointLight pointLight;    // スポットライト。
-    float4x4 mViewProjInv2;  // ビュープロジェクション行列の逆行列
-    
+    float4x4 mViewProjInv2;   // ビュープロジェクション行列の逆行列
+    float randomSeed2;        // ランダムシード。
 };
 
 struct VSFinalInput{
@@ -144,6 +145,9 @@ Texture2D<float4> albedoTexture : register(t0);	// アルベドカラー
 Texture2D<float4> g_volumeLightMapFront : register(t1);
 Texture2D<float4> g_volumeLightMapBack : register(t2);
 
+
+
+
 PSFinalInput VSFinal(VSFinalInput In) 
 {
 	PSFinalInput psIn;
@@ -151,14 +155,17 @@ PSFinalInput VSFinal(VSFinalInput In)
 	psIn.uv = In.uv;
 	return psIn;
 }
+float GetRandomNumber(float2 texCoord, float Seed)
+{
+	return frac(sin(dot(texCoord.xy, float2(12.9898, 78.233)) + Seed) * 43758.5453);
+}
 float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
 {
 	float3 lig = 0;
 	float2 uv = In.uv;
 	
 	float volumeFrontZ = g_volumeLightMapFront.Sample(Sampler, uv).r;
-    float2 volumeBackZ_No = g_volumeLightMapBack.Sample(Sampler, uv).rg;
-    float volumeBackZ = volumeBackZ_No.r;
+    float volumeBackZ = g_volumeLightMapBack.Sample(Sampler, uv).r;
   
     float3 volumePosBack = CalcWorldPosFromUVZ( uv, volumeBackZ, mViewProjInv);
     float3 volumePosFront = CalcWorldPosFromUVZ( uv, volumeFrontZ, mViewProjInv);
@@ -179,23 +186,49 @@ float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
     float3 ligDir = (volumeCenterPos - spotLight.position);
     float distance = length(ligDir);
     ligDir = normalize(ligDir);
-    float affect = pow( 1.0f - min(1.0f, distance / spotLight.range), spotLight.rangePow);
-    // affect = pow(affect, 3.0f) * ( 3.0f - 2 * affect);
-    // 根元の光を計算する。
-    float affect2 = pow( 1.0f - min(1.0f, distance / spotLight.range), 40.0f);
+    float affectBase = 1.0f - min(1.0f, distance / spotLight.range);
+    float affect = pow( affectBase, spotLight.rangePow);
+    float affect2 = pow( affectBase, spotLight.attn2.x );
+    float affect3 = pow( affectBase, spotLight.attn3.x );
+    
+    
 
     // 続いて角度による減衰を計算する。
     // 角度に比例して小さくなっていく影響率を計算する
-    float angleLigToPixel = dot(ligDir, spotLight.direction);
+    float angleLigToPixel = saturate(dot(ligDir, spotLight.direction) );
+    
     // dot()で求めた値をacos()に渡して角度を求める
     angleLigToPixel = abs(acos(angleLigToPixel)) ;
-    float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight.angle * angleLigToPixel ), 1.5f);
-    
+    // 一つ目の光の角度による減衰を計算。
+    float angleAffectBase = max( 0.0f, 1.0f - 1.0f / spotLight.angle.x * angleLigToPixel );
+    angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
+    float angleAffect = pow( angleAffectBase, spotLight.anglePow);
+    // 二つ目の光の角度による減衰を計算。
+    angleAffectBase = max( 0.0f, 1.0f - 1.0f / ( spotLight.angle.y ) * angleLigToPixel );
+    angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
+    float angleAffect2 = pow( angleAffectBase, spotLight.attn2.y);
+    // 三つ目の光の角度による減衰を計算。
+    angleAffectBase = max( 0.0f, 1.0f - 1.0f / ( spotLight.angle.z ) * angleLigToPixel );
+    angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
+    float angleAffect3 = pow( angleAffectBase, spotLight.attn3.y);
+
     affect *= angleAffect;
-    affect2 *= angleAffect;
-    // ボリュームライトの中央地点の光の量を計算する。
-    lig = albedoColor * spotLight.color * affect * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.1f;
-    lig += albedoColor * spotLight.color * 1000.0f * affect2 * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.1f;
+    affect2 *= angleAffect2;
+    affect3 *= angleAffect3;
+
+    // 三つの光を合成。    
+    // 光のベースを計算。
+    float3 ligBase = albedoColor * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.1f;
+    // 光のベースに影響率を乗算する。
+    lig = ligBase * affect * spotLight.color; 
+    lig += ligBase * affect2 * spotLight.color2;
+    lig += ligBase * affect3 * spotLight.color3;
+    
+    // ノイズを乗せる。
+    lig *= lerp( 0.9f, 1.1f, GetRandomNumber(uv, randomSeed));
+
+    // ディザリング
+    
 	return float4( lig, 1.0f);
 }
 float4 PSFinal_PointLight( PSFinalInput In ) : SV_Target0
@@ -204,8 +237,7 @@ float4 PSFinal_PointLight( PSFinalInput In ) : SV_Target0
 	float2 uv = In.uv;
 	
 	float volumeFrontZ = g_volumeLightMapFront.Sample(Sampler, uv).r;
-    float2 volumeBackZ_No = g_volumeLightMapBack.Sample(Sampler, uv).rg;
-    float volumeBackZ = volumeBackZ_No.r;
+    float volumeBackZ = g_volumeLightMapBack.Sample(Sampler, uv).r;
   
     float3 volumePosBack = CalcWorldPosFromUVZ( uv, volumeBackZ, mViewProjInv2);
     float3 volumePosFront = CalcWorldPosFromUVZ( uv, volumeFrontZ, mViewProjInv2);
@@ -227,6 +259,6 @@ float4 PSFinal_PointLight( PSFinalInput In ) : SV_Target0
     float affect = pow( 1.0f - min(1.0f, distance / pointLight.attn.x), pointLight.attn.y);
 
 	lig = albedoColor * pointLight.color * affect * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.05f;
-
+    lig *= lerp( 0.7f, 1.2f, GetRandomNumber(uv, randomSeed2));
 	return float4( lig, 1.0f);
 }

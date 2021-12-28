@@ -11,6 +11,10 @@ public:
 	{
 		m_position = position;
 	}
+	const Vector3& GetPosition() const
+	{
+		return m_position;
+	}
 	void SetRotation(const Quaternion& rotation)
 	{
 		m_rotation = rotation;

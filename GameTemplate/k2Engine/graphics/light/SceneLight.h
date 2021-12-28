@@ -156,13 +156,15 @@ namespace nsK2Engine {
         Vector3 direction;                  // 射出方向。
         float rangePow = 1.0f;              // 距離による光の影響率に累乗するパラメーター。1.0で線形の変化をする。
         Vector3 directionInView;            // カメラ空間での射出方向。
-        float angle;                        // 射出角度(単位ラジアン)
-        Vector3 color2;                     // 二つ目のカラー。        
         float anglePow = 1.0f;              // 
-        Vector3 color3;                     // 三つ目のカラー。
+        Vector3 angle;                      // 射出角度(単位：ラジアン。xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー)。
         float pad7;
-        Vector2 attn2;                      // 二つ目のカラーの減衰パラメータ。
-        Vector2 attn3;                      // 三つ目のカラーの減衰パラメータ。
+        Vector3 color2 = g_vec3Zero;        // 二つ目のカラー。
+        float pad8;
+        Vector3 color3 = g_vec3Zero;        // 三つ目のカラー。
+        float pad9;
+        Vector2 attn2 = {1.0f, 1.0f};       // 二つ目のカラーの減衰パラメータ。
+        Vector2 attn3 = { 1.0f, 1.0f };     // 三つ目のカラーの減衰パラメータ。
    public:
        /// <summary>
        /// スポットライトの番号を取得。
@@ -232,7 +234,22 @@ namespace nsK2Engine {
         {
             SetColor({ r, g, b });
         }
-       
+        void SetColor2(const Vector3 color)
+        {
+            color2 = color;
+        }
+        void SetColor2(float r, float g, float b)
+        {
+            SetColor2({ r, g, b });
+        }
+        void SetColor3(const Vector3 color)
+        {
+            color3 = color;
+        }
+        void SetColor3(float r, float g, float b)
+        {
+            SetColor3({ r, g, b });
+        }
         /// <summary>
         /// 範囲を設定。
         /// </summary>
@@ -241,16 +258,23 @@ namespace nsK2Engine {
         {
             this->range = range;
         }
-       
+        
         /// <summary>
-        /// 距離による影響率の累乗数を設定。
+        /// 距離による影響率に累乗する値を設定。
         /// </summary>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam(float powParam)
         {
             this->rangePow = powParam;
         }
-        
+        /// <summary>
+        /// 角度による影響率に累乗する値を設定。
+        /// </summary>
+        /// <param name="powParam"></param>
+        void SetAngleAffectPowParam(float powParam)
+        {
+            this->anglePow = powParam;
+        }
         /// <summary>
         /// 離による影響率の累乗数を取得。
         /// </summary>
@@ -259,14 +283,46 @@ namespace nsK2Engine {
         {
             return rangePow;
         }
-       
+        void SetRangeAffectPowParam2(float powParam)
+        {
+            attn2.x = powParam;
+        }
+        
+        void SetRangeAffectPowParam3(float powParam)
+        {
+            attn3.x = powParam;
+        }
+        void SetAngleAffectPowParam2(float powParam)
+        {
+            attn2.y = powParam;
+        }
+        void SetAngleAffectPowParam3(float powParam)
+        {
+            attn3.y = powParam;
+        }
         /// <summary>
-        /// 射出角度
+        /// 射出角度を設定。
         /// </summary>
         /// <param name="angle"></param>
         void SetAngle(float angle)
         {
-            this->angle = angle;
+            this->angle.x = angle;
+        }
+        /// <summary>
+        /// 二つ目の光の射出角度を設定。
+        /// </summary>
+        /// <param name="angle"></param>
+        void SetAngle2(float angle)
+        {
+            this->angle.y = angle;
+        }
+        /// <summary>
+        /// 三つ目の光の射出角度を設定。
+        /// </summary>
+        /// <param name="angle"></param>
+        void SetAngle3(float angle)
+        {
+            this->angle.z = angle;
         }
         /// <summary>
         /// 射出角度を取得。
@@ -274,7 +330,15 @@ namespace nsK2Engine {
         /// <returns></returns>
         float GetAngle() const
         {
-            return angle;
+            return angle.x;
+        }
+        float GetAngle2() const
+        {
+            return angle.y;
+        }
+        float GetAngle3() const
+        {
+            return angle.z;
         }
         /// <summary>
         /// 座標を取得。
