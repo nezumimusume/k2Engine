@@ -182,16 +182,12 @@ float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
     
     float4 albedoColor = albedoTexture.Sample(Sampler, uv);
     
-    // 距離による減衰。
+    // 距離による光の影響率を計算。
     float3 ligDir = (volumeCenterPos - spotLight.position);
     float distance = length(ligDir);
     ligDir = normalize(ligDir);
-    float affectBase = 1.0f - min(1.0f, distance / spotLight.range);
-    float affect = pow( affectBase, spotLight.rangePow.x);
-    float affect2 = pow( affectBase, spotLight.rangePow.y );
-    float affect3 = pow( affectBase, spotLight.rangePow.z );
-    
-    
+    float3 affectBase = 1.0f - min(1.0f, distance / spotLight.range);
+    float3 affect = pow( affectBase, spotLight.rangePow);     
 
     // 続いて角度による減衰を計算する。
     // 角度に比例して小さくなっていく影響率を計算する
@@ -199,36 +195,25 @@ float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
     
     // dot()で求めた値をacos()に渡して角度を求める
     angleLigToPixel = abs(acos(angleLigToPixel)) ;
-    // 一つ目の光の角度による減衰を計算。
-    float angleAffectBase = max( 0.0f, 1.0f - 1.0f / spotLight.angle.x * angleLigToPixel );
-    angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
-    float angleAffect = pow( angleAffectBase, spotLight.anglePow.x);
-    // 二つ目の光の角度による減衰を計算。
-    angleAffectBase = max( 0.0f, 1.0f - 1.0f / ( spotLight.angle.y ) * angleLigToPixel );
-    angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
-    float angleAffect2 = pow( angleAffectBase, spotLight.anglePow.y);
-    // 三つ目の光の角度による減衰を計算。
-    angleAffectBase = max( 0.0f, 1.0f - 1.0f / ( spotLight.angle.z ) * angleLigToPixel );
-    angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
-    float angleAffect3 = pow( angleAffectBase, spotLight.anglePow.z);
+    
+    // 光の角度による減衰を計算。
+    float3 angleAffectBase = max( 0.0f, 1.0f - 1.0f / spotLight.angle * angleLigToPixel );
 
+    angleAffectBase = min( 1.0f, angleAffectBase * 1.8f);
+    float3 angleAffect = pow( angleAffectBase, spotLight.anglePow );    
     affect *= angleAffect;
-    affect2 *= angleAffect2;
-    affect3 *= angleAffect3;
-
+    
     // 三つの光を合成。    
     // 光のベースを計算。
     float3 ligBase = albedoColor * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.1f;
     // 光のベースに影響率を乗算する。
-    lig = ligBase * affect * spotLight.color; 
-    lig += ligBase * affect2 * spotLight.color2;
-    lig += ligBase * affect3 * spotLight.color3;
+    lig = ligBase * affect.x * spotLight.color; 
+    lig += ligBase * affect.y * spotLight.color2;
+    lig += ligBase * affect.z * spotLight.color3;
     
-    // ノイズを乗せる。
+    // 空気中のチリの表現としてノイズを加える。
     lig *= lerp( 0.9f, 1.1f, GetRandomNumber(uv, randomSeed));
 
-    // ディザリング
-    
 	return float4( lig, 1.0f);
 }
 float4 PSFinal_PointLight( PSFinalInput In ) : SV_Target0
