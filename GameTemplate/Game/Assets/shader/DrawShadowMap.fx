@@ -24,7 +24,6 @@ SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal)
     SPSIn psIn;
 
     psIn.pos = mul(mWorldLocal, vsIn.pos);
-    float3 worldPos = psIn.pos;
     psIn.pos = mul(mView, psIn.pos);
     psIn.pos = mul(mProj, psIn.pos);
 

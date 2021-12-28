@@ -1,10 +1,10 @@
 /*!
- * @brief	?X?v???C?g?p??V?F?[?_?[?B
+ * @brief	スプライトシェーダー。
  */
 
 cbuffer cb : register(b0){
-	float4x4 mvp;		//???[???h?r???[?v???W?F?N?V?????s??B
-	float4 mulColor;	//??Z?J???[?B
+	float4x4 mvp;		// モデルビュープロジェクション行列
+	float4 mulColor;	// 乗算カラー。ピクセルシェーダーの出力結果に乗算されます。
 };
 struct VSInput{
 	float4 pos : POSITION;
@@ -16,7 +16,7 @@ struct PSInput{
 	float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> colorTexture : register(t0);	//?J???[?e?N?X?`???B
+Texture2D<float4> colorTexture : register(t0);
 sampler Sampler : register(s0);
 
 PSInput VSMain(VSInput In) 

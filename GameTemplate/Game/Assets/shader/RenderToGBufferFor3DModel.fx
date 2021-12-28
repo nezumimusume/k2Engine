@@ -63,11 +63,14 @@ SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal)
     psIn.pos = mul(mWorldLocal, vsIn.pos); // モデルの頂点をワールド座標系に変換
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
-    psIn.normal = normalize(mul(mWorldLocal, vsIn.normal));
-    psIn.tangent = normalize(mul(mWorldLocal, vsIn.tangent));
-    psIn.biNormal = normalize(mul(mWorldLocal, vsIn.biNormal));
-    psIn.uv = vsIn.uv;
 
+    // 法線の回転には平行移動成分は不要なので、3x3行列にキャストする。
+    float3x3 mWorldLocal3x3 = (float3x3)mWorldLocal;
+    psIn.normal = normalize(mul(mWorldLocal3x3, vsIn.normal));
+    psIn.tangent = normalize(mul(mWorldLocal3x3, vsIn.tangent));
+    psIn.biNormal = normalize(mul(mWorldLocal3x3, vsIn.biNormal));
+    psIn.uv = vsIn.uv;
+    
     return psIn;
 }
 SPSIn VSMain( SVSIn vsIn )
@@ -106,6 +109,7 @@ SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
     psOut.metaricShadowSmooth = g_spacular.Sample(g_sampler, psIn.uv);
     // 影パラメータ。
     psOut.metaricShadowSmooth.g = 255.0f * isShadowReciever;
+    
     return psOut;
 }
 // モデル用のピクセルシェーダーのエントリーポイント
