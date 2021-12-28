@@ -15,9 +15,12 @@ GameCamera::~GameCamera()
 
 bool GameCamera::Start()
 {
-	//注視点から視点までのベクトルを設定。
-	m_toCameraPos.Set(200.0f, 200.0f, 0.0f);
+	g_camera3D->SetPosition(200.0f, 200.0f, 0.0f);
+	g_camera3D->SetTarget(0, 250.f, 0.0f);
 
+	//注視点から視点までのベクトルを設定。
+	m_toCameraPos = g_camera3D->GetPosition() - g_camera3D->GetTarget();
+	
 	//プレイヤーのインスタンスを探す。
 	m_player = FindGO<Player>("player");
 

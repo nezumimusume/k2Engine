@@ -86,40 +86,6 @@ void Player::Update()
 		pt->Update();
 	}
 #ifdef ENABLE_PLAYER_SPOTLIGHT
-
-	Vector3 color = m_spotLight.GetColor();
-	float affect_1 = m_spotLight.GetRangeAffectPowParam();
-	float angle = m_spotLight.GetAngle();
-	float range = m_spotLight.GetRange();
-	if( GetAsyncKeyState('Z'))
-	{
-		color.x += 0.1f;
-	}
-	if (GetAsyncKeyState('X'))
-	{
-		color.y += 0.1f;
-	}
-	if (GetAsyncKeyState('C'))
-	{
-		color.z += 0.1f;
-	}
-	if (GetAsyncKeyState('V')) {
-		range += 10.0f;
-	}
-	if (GetAsyncKeyState('B'))
-	{
-		affect_1 -= 0.01f;
-	}
-	if (GetAsyncKeyState('N')) {
-		angle -= 0.01f;
-	}
-	if (GetAsyncKeyState('M')) {
-		angle += 0.01f;
-	}
-	/*m_spotLight.SetRange(range);
-	m_spotLight.SetRangeAffectPowParam(affect_1);
-	m_spotLight.SetAngle(angle);
-	m_spotLight.SetColor(color);*/
 	m_spotLight.Update();
 	Vector3 pos = m_position;
 	pos.y += 50.0f;

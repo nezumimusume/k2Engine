@@ -2,6 +2,17 @@
 
 namespace nsK2Engine {
 	struct SSpotLight;
+	/// <summary>
+	/// スポットライトクラス。
+	/// </summary>
+    /// <remark>
+    /// このスポットライトには３つの光を設定することができます。
+    /// ２番目と３番目の光はボリュームライト用のパラメータです。
+    /// ボリュームライトを実装する際には、「根元部分を光らせたい」や
+    /// 「中央部分を光らせたい」といった調整をする場合があります。
+    /// このような調整をしたい場合に利用してください。
+    /// ボリュームライトでの使用方法はSample_27を参照してください。
+    /// </remark>
 	class SpotLight : Noncopyable{
 	public:
 		// デストラクタ。
@@ -66,7 +77,7 @@ namespace nsK2Engine {
             m_spotLight->SetPosition( x, y, z );
         }
         /// <summary>
-        /// カラーを設定。
+        /// 一つ目の光のカラーを設定。
         /// </summary>
         /// <param name="color"></param>
         void SetColor(const Vector3& color)
@@ -77,6 +88,13 @@ namespace nsK2Engine {
         {
             m_spotLight->SetColor( r, g, b );
         }
+        /// <summary>
+        /// 二つ目の光のカラーを設定。
+        /// </summary>
+        /// <reamrk>
+        /// ボリュームライトを使用するときにのみ使用されます。
+        /// </remark>
+        /// <param name="color"></param>
         void SetColor2(const Vector3 color)
         {
             m_spotLight->SetColor2(color);
@@ -85,6 +103,13 @@ namespace nsK2Engine {
         {
             m_spotLight->SetColor2(r, g, b);
         }
+        /// <summary>
+        /// 三つ目の光のカラーを設定。
+        /// </summary>
+        /// <reamrk>
+        /// ボリュームライトを使用するときにのみ使用されます。
+        /// </remark>
+        /// <param name="color"></param>
         void SetColor3(const Vector3 color)
         {
             m_spotLight->SetColor3(color);
@@ -94,7 +119,7 @@ namespace nsK2Engine {
             m_spotLight->SetColor3(r, g, b);
         }
         /// <summary>
-        /// 範囲を設定。
+        /// スポットライトの範囲を設定。
         /// </summary>
         /// <param name="range"></param>
         void SetRange(float range)
@@ -103,7 +128,7 @@ namespace nsK2Engine {
         }
 
         /// <summary>
-        /// 距離による影響率の累乗数を設定。
+        /// 一つ目の光の距離による影響率の累乗数を設定。
         /// </summary>
         /// <remark>
         /// SetColor()で設定した光に影響を与えます。
@@ -113,47 +138,61 @@ namespace nsK2Engine {
         {
             m_spotLight->SetRangeAffectPowParam(powParam);
         }
-        void SetAngleAffectPowParam(float powParam)
-        {
-            m_spotLight->SetAngleAffectPowParam(powParam);
-        }
         /// <summary>
-        /// 距離による影響率の累乗数を設定。
+        /// 二つ目の光の距離による影響率の累乗数を設定。
         /// </summary>
         /// <remark>
         /// SetColor2()で設定した光に影響を与えます。
+        /// ボリュームライトを使用するときにのみ使用されます。
         /// </remark>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam2(float powParam)
         {
             m_spotLight->SetRangeAffectPowParam2(powParam);
         }
-        void SetAngleAffectPowParam2(float powParam)
-        {
-            m_spotLight->SetAngleAffectPowParam2(powParam);
-        }
         /// <summary>
-        /// 距離による影響率の累乗数を設定。
+        /// 三つ目の光の距離による影響率の累乗数を設定。
         /// </summary>
         /// <remark>
         /// SetColor3()で設定した光に影響を与えます。
+        /// ボリュームライトを使用するときにのみ使用されます。
         /// </remark>
         /// <param name="powParam"></param>
         void SetRangeAffectPowParam3(float powParam)
         {
             m_spotLight->SetRangeAffectPowParam3(powParam);
         }
+        /// <summary>
+        /// 一つ目の光のスポットライトとピクセルの角度による影響率に累乗する値を設定。
+        /// </summary>
+        /// <param name="powParam"></param>
+        void SetAngleAffectPowParam(float powParam)
+        {
+            m_spotLight->SetAngleAffectPowParam(powParam);
+        }
+        /// <summary>
+        /// 二つ目の光のスポットライトとピクセルの角度による影響率に累乗する値を設定。
+        /// </summary>
+        /// <remark>
+        /// SetColor2()で設定した光に影響を与えます。
+        /// ボリュームライトを使用するときにのみ使用されます。
+        /// </remark>
+        /// <param name="powParam"></param>
+        void SetAngleAffectPowParam2(float powParam)
+        {
+            m_spotLight->SetAngleAffectPowParam2(powParam);
+        }
+        /// <summary>
+        /// 三つ目の光のスポットライトとピクセルの角度による影響率に累乗する値を設定。
+        /// </summary>
+        /// <remark>
+        /// SetColor3()で設定した光に影響を与えます。
+        /// ボリュームライトを使用するときにのみ使用されます。
+        /// </remark>
+        /// <param name="powParam"></param>
         void SetAngleAffectPowParam3(float powParam)
         {
             m_spotLight->SetAngleAffectPowParam3(powParam);
-        }
-        /// <summary>
-        /// 離による影響率の累乗数を取得。
-        /// </summary>
-        /// <returns></returns>
-        float GetRangeAffectPowParam() const
-        {
-            return m_spotLight->GetRangeAffectPowParam();
         }
 
         /// <summary>
@@ -203,14 +242,6 @@ namespace nsK2Engine {
         const Vector3& GetPosition() const
         {
             return m_spotLight->GetPosition();
-        }
-        /// <summary>
-        /// カラーを取得。
-        /// </summary>
-        /// <returns></returns>
-        const Vector3& GetColor() const
-        {
-            return m_spotLight->GetColor();
         }
         /// <summary>
         /// 影響範囲を取得。

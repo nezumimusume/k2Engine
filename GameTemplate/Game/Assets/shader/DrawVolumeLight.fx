@@ -198,11 +198,10 @@ float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
     
     // 光の角度による減衰を計算。
     float3 angleAffectBase = max( 0.0f, 1.0f - 1.0f / spotLight.angle * angleLigToPixel );
-
     angleAffectBase = min( 1.0f, angleAffectBase * 1.8f);
     float3 angleAffect = pow( angleAffectBase, spotLight.anglePow );    
     affect *= angleAffect;
-    
+
     // 三つの光を合成。    
     // 光のベースを計算。
     float3 ligBase = albedoColor * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.1f;
@@ -244,6 +243,6 @@ float4 PSFinal_PointLight( PSFinalInput In ) : SV_Target0
     float affect = pow( 1.0f - min(1.0f, distance / pointLight.attn.x), pointLight.attn.y);
 
 	lig = albedoColor * pointLight.color * affect * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.05f;
-    lig *= lerp( 0.7f, 1.2f, GetRandomNumber(uv, randomSeed2));
+    lig *= lerp( 0.9f, 1.1f, GetRandomNumber(uv, randomSeed2));
 	return float4( lig, 1.0f);
 }
