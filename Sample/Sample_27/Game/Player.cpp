@@ -35,8 +35,7 @@ bool Player::Start()
 	m_spotLight.SetAngle(Math::DegToRad(20.0f));
 	//距離による、光の減衰率を設定。
 	m_spotLight.SetRangeAffectPowParam(1.5f);
-	//角度による、光の減衰率を設定。
-	m_spotLight.SetAngleAffectPowParam(0.7f);
+	
 	//ライトの色を設定。
 	m_spotLight.SetColor(Vector3::One);
 	//ライトの座標を設定。
@@ -62,9 +61,9 @@ void Player::Update()
 	m_modelRender.Update();
 
 	//スポットライトを更新。
-	m_spotLight.Update();
+	//m_spotLight.Update();
 	//ボリュームライトを更新。
-	m_volumeSpotLight.Update();
+	//m_volumeSpotLight.Update();
 }
 
 void Player::Move()
@@ -126,5 +125,5 @@ void Player::Rotation()
 
 void Player::Render(RenderContext& rc)
 {
-	m_modelRender.Draw(rc);
+	// m_modelRender.Draw(rc);
 }

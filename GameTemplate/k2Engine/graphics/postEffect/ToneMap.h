@@ -48,7 +48,14 @@ namespace nsK2Engine {
 			m_isFirstWhenChangeScene = timer;
 			m_changeSceneTimer = timer;
 		}
-		
+		/// <summary>
+		/// シーンの明るさの基準値を設定する。
+		/// </summary>
+		/// <param name="middlegray"></param>
+		void SetMiddlegray(float middlegray)
+		{
+			m_tonemapParam.midddleGray = middlegray;
+		}
 	private:
 		/// <summary>
 		/// 平均輝度を計算する。
@@ -74,17 +81,17 @@ namespace nsK2Engine {
 			enNumCalcAvgSprite
 		};
 		RenderTarget m_calcAvgRt[enNumCalcAvgSprite];	// 平均輝度計算用のレンダリングターゲット。
-		RenderTarget m_avgRt[2];					// 平均輝度が格納されるレンダリングターゲット。
-		int m_currentAvgRt = 0;						// 
+		RenderTarget m_avgRt[2];						// 平均輝度が格納されるレンダリングターゲット。
+		int m_currentAvgRt = 0;							// 
 		Sprite m_calcAvgSprites[enNumCalcAvgSprite];
-		Sprite m_calcAdapteredLuminanceSprite;		// 明暗順応用のスプライト。
-		Sprite m_calcAdapteredLuminanceFisrtSprite;	// 明暗順応用のスプライト。(シーンが切り替わったときに使用される。)
-		Sprite m_finalSprite;						// 最終合成用のスプライト。
+		Sprite m_calcAdapteredLuminanceSprite;			// 明暗順応用のスプライト。
+		Sprite m_calcAdapteredLuminanceFisrtSprite;		// 明暗順応用のスプライト。(シーンが切り替わったときに使用される。)
+		Sprite m_finalSprite;							// 最終合成用のスプライト。
 
-		bool m_isFirstWhenChangeScene = true;			//!<シーンが切り替わって初回の描画かどうかのフラグ。
+		bool m_isFirstWhenChangeScene = true;			// シーンが切り替わって初回の描画かどうかのフラグ。
 		Vector4 m_avSampleOffsets[MAX_SAMPLES];
-		RenderTarget m_finalRt;						// 最終合成レンダリングターゲット。
+		RenderTarget m_finalRt;							// 最終合成レンダリングターゲット。
 		STonemapParam m_tonemapParam;
-		float m_changeSceneTimer = 0.5f;		// シーン切り替えタイマー。
+		float m_changeSceneTimer = 0.5f;				// シーン切り替えタイマー。
 	};
 }

@@ -60,6 +60,13 @@ namespace nsK2Engine {
         {
             m_tonemap.Enable();
         }
+        /// <summary>
+        /// シーンの明るさの基準値を設定
+        /// </summary>
+        void SetTonemapMiddlegray(float middlegray)
+        {
+            m_tonemap.SetMiddlegray(middlegray);
+        }
     private:
         Bloom m_bloom;	    //ブルーム
         Dof m_dof;		    //被写界深度

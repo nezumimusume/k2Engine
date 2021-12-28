@@ -30,13 +30,20 @@ struct PointLight
 struct SpotLight
 {
     float3 position;        // 座標
-    int isUse;              // 使用中フラグ。
+    int isUse;              // 使用中フラグ
     float3 positionInView;  // カメラ空間での座標
     int no;                 // ライトの番号。
     float3 color;           // カラー
+    float range;            // 射出角度。
     float3 direction;       // 射出方向。
-    float3 attn;            // 減衰パラメータ。
+    float rangePow;         // 距離による光の影響率に累乗するパラメータ。
     float3 directionInView; // カメラ空間での射出方向。
+    float angle;            // 射出角度(単位ラジアン)
+    float3 color2;          // 二つ目のカラー。
+    float anglePow;
+    float3 color3;          // 三つ目のカラー。
+    float2 attn2;           // 二つ目のカラーの減衰パラメータ。
+    float2 attn3;           // 三つ目のカラーの減衰パラメータ。
 };
 
 static const int NUM_DIRECTIONAL_LIGHT = 4;  // ディレクションライトの数
@@ -155,7 +162,7 @@ void CreateSpotLightIndexArrayInTile(uint threadNoInTile, float4 frustumPlanes[6
                     }
                 }
                 // ライトと平面の距離を使って、衝突判定を行う
-                inFrustum = inFrustum && (d >= -light.attn.x);
+                inFrustum = inFrustum && (d >= -light.range);
             }
 
             // タイルと衝突している場合

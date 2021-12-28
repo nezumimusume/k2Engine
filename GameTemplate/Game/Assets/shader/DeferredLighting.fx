@@ -253,16 +253,16 @@ float3 CalcSpotLight(
         );
         // 3. 影響率を計算する。影響率は0.0～1.0の範囲で、
         //     指定した距離（pointsLights[i].range）を超えたら、影響率は0.0になる
-        float affect = pow( 1.0f - min(1.0f, distance / spotLight[ligNo].attn.x), spotLight[ligNo].attn.y);
+        float affect = pow( 1.0f - min(1.0f, distance / spotLight[ligNo].range), spotLight[ligNo].rangePow);
 
         // 入射光と射出方向の角度による減衰を計算する
         // dot()を利用して内積を求める
-        float angle = dot(ligDir, spotLight[ligNo].direction);
+        float angleLigToPixel = dot(ligDir, spotLight[ligNo].direction);
         // dot()で求めた値をacos()に渡して角度を求める
-        angle = abs(acos(angle));
+        angleLigToPixel = abs(acos(angleLigToPixel));
         // step-12 角度による影響率を求める
         // 角度に比例して小さくなっていく影響率を計算する
-        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].attn.z * angle ), spotLight[ligNo].attn.w);
+        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].angle * angleLigToPixel ), spotLight[ligNo].anglePow);
         affect *= angleAffect;
 
         

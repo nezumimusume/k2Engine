@@ -86,9 +86,16 @@ struct SpotLight
     float3 positionInView;  // カメラ空間での座標
     int no;                 // ライトの番号。
     float3 color;           // カラー
+    float range;            // 射出角度。
     float3 direction;       // 射出方向。
-    float4 attn;            // 減衰パラメータ。
+    float rangePow;         // 距離による光の影響率に累乗するパラメータ。
     float3 directionInView; // カメラ空間での射出方向。
+    float angle;            // 射出角度(単位ラジアン)
+    float3 color2;          // 二つ目のカラー。
+    float anglePow;
+    float3 color3;          // 三つ目のカラー。
+    float2 attn2;           // 二つ目のカラーの減衰パラメータ。
+    float2 attn3;           // 三つ目のカラーの減衰パラメータ。
 };
 
 // ポイントライト
@@ -172,20 +179,23 @@ float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
     float3 ligDir = (volumeCenterPos - spotLight.position);
     float distance = length(ligDir);
     ligDir = normalize(ligDir);
-    float affect = pow( 1.0f - min(1.0f, distance / spotLight.attn.x), spotLight.attn.y);
-    
-    // 続いて角度による減衰を計算する。
-    
-    // 角度に比例して小さくなっていく影響率を計算する
-    float angle = dot(ligDir, spotLight.direction);
-    // dot()で求めた値をacos()に渡して角度を求める
-    angle = abs(acos(angle));
-    float angleAffect = max( 0.0f, 1.0f - 1.0f / spotLight.attn.z * angle );
-    affect *= pow( angleAffect, spotLight.attn.w);
+    float affect = pow( 1.0f - min(1.0f, distance / spotLight.range), spotLight.rangePow);
+    // affect = pow(affect, 3.0f) * ( 3.0f - 2 * affect);
+    // 根元の光を計算する。
+    float affect2 = pow( 1.0f - min(1.0f, distance / spotLight.range), 40.0f);
 
+    // 続いて角度による減衰を計算する。
+    // 角度に比例して小さくなっていく影響率を計算する
+    float angleLigToPixel = dot(ligDir, spotLight.direction);
+    // dot()で求めた値をacos()に渡して角度を求める
+    angleLigToPixel = abs(acos(angleLigToPixel)) ;
+    float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight.angle * angleLigToPixel ), 1.5f);
+    
+    affect *= angleAffect;
+    affect2 *= angleAffect;
     // ボリュームライトの中央地点の光の量を計算する。
     lig = albedoColor * spotLight.color * affect * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.1f;
-    
+    lig += albedoColor * spotLight.color * 1000.0f * affect2 * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.1f;
 	return float4( lig, 1.0f);
 }
 float4 PSFinal_PointLight( PSFinalInput In ) : SV_Target0

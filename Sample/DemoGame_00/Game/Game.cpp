@@ -97,7 +97,7 @@ void Game::InitSky()
 		) {
 
 		g_renderingEngine->DisableTonemap();
-		m_skyCube->SetLuminance(0.1f);
+		m_skyCube->SetLuminance(1.0f);
 		Vector3 ligColor, ligDir;
 		ligColor.x = 0.6f;
 		ligColor.y = 0.6f;
@@ -106,7 +106,8 @@ void Game::InitSky()
 		ligDir.y = -1.0f;
 		ligDir.z = -1.0f;
 		ligDir.Normalize();
-		g_sceneLight->SetDirectionLight(0, ligDir, ligColor);
+		g_renderingEngine->SetSceneLuminance(0.18f);
+		g_renderingEngine->SetDirectionLight(0, ligDir, ligColor);
 	}
 	else if (m_skyCubeType == enSkyCubeType_Snow) {
 
@@ -154,7 +155,7 @@ void Game::InitSky()
 
 	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
 	// 環境光の計算のためのIBLテクスチャをセットする。
-	g_sceneLight->SetIBLTextureForAmbient(m_skyCube->GetTextureFilePath(), 0.1f);
+	g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.1f);
 }
 bool Game::Start()
 {

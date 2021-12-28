@@ -79,10 +79,7 @@ namespace nsK2Engine {
             spNo++;
         }
     }
-    void SceneLight::SetIBLTextureForAmbient(const wchar_t* textureFilePath, float luminance)
-    {
-        g_renderingEngine->ReInitIBL(textureFilePath, luminance);
-    }
+    
     
     
     void SceneLight::Update()

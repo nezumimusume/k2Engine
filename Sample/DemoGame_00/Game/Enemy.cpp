@@ -65,7 +65,7 @@ void Enemy::Update()
 	m_spotLight.SetDirection(m_moveVector);
 	m_spotLight.SetAngle(Math::DegToRad(15.0f));
 	m_spotLight.SetRange(400.0f);
-	m_spotLight.SetAngleAffectPowParam(0.2f);
+
 	m_spotLight.SetRangeAffectPowParam(2.0f);
 	m_spotLight.Update();
 	m_volumeSpotLight.Update();

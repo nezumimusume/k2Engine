@@ -95,23 +95,8 @@ namespace nsK2Engine {
         {
             m_spotLight->SetRangeAffectPowParam(powParam);
         }
-        /// <summary>
-        /// 角度による影響率の累乗数を設定。
-        /// </summary>
-        /// <param name="powParam"></param>
-        void SetAngleAffectPowParam(float powParam)
-        {
-            m_spotLight->SetAngleAffectPowParam(powParam);
-        }
-
-        /// <summary>
-        /// 角度による影響率の累乗数を取得。
-        /// </summary>
-        /// <param name="powParam"></param>
-        float GetAngleAffectPowParam() const
-        {
-            return m_spotLight->GetAngleAffectPowParam();
-        }
+        
+        
         /// <summary>
         /// 離による影響率の累乗数を取得。
         /// </summary>

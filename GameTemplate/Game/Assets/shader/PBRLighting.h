@@ -43,9 +43,16 @@ struct SpotLight
     float3 positionInView;  // カメラ空間での座標
     int no;                 // ライトの番号。
     float3 color;           // カラー
+    float range;            // 射出角度。
     float3 direction;       // 射出方向。
-    float4 attn;            // 減衰パラメータ。
+    float rangePow;         // 距離による光の影響率に累乗するパラメータ。
     float3 directionInView; // カメラ空間での射出方向。
+    float angle;            // 射出角度(単位ラジアン)
+    float3 color2;          // 二つ目のカラー。
+    float anglePow;         // 射出角度による減衰率に累乗するパラメータ。
+    float3 color3;          // 三つ目のカラー。
+    float2 attn2;           // 二つ目のカラーの減衰パラメータ。
+    float2 attn3;           // 三つ目のカラーの減衰パラメータ。
 };
 
 ///////////////////////////////////////

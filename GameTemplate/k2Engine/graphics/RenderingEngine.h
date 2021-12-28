@@ -273,6 +273,16 @@ namespace nsK2Engine {
             m_postEffect.EnableTonemap();
         }
         /// <summary>
+        /// シーンの明るさを設定。
+        /// </summary>
+        /// <remark>
+        /// この設定はポストエフェクトのトーンマップが有効なときに利用されます。
+        /// </remark>
+        void SetSceneLuminance(float luminance)
+        {
+            m_postEffect.SetTonemapMiddlegray(luminance);
+        }
+        /// <summary>
         /// ボリュームスポットライトをシーンに追加
         /// </summary>
         /// <param name="lig">ライト</param>
@@ -296,6 +306,42 @@ namespace nsK2Engine {
         VolumeLightRender& GetVolumeLightRender()
         {
             return m_volumeLightRender;
+        }
+        /// <summary>
+        /// 環境光の計算のためのIBLテクスチャを設定。
+        /// </summary>
+        /// <remark>
+        /// この関数を利用して、IBLテクスチャをセットすると、
+        /// 環境光をIBLテクスチャからサンプリングして、それを利用した
+        /// ライティングが行われます。
+        /// IBLテクスチャを利用した環境光の計算をオフにしたい場合は、DisableIBLForAmbinet()を呼び出して、
+        /// IBLを無効にしてください。
+        /// </remark>
+        /// <param name="textureFilePath">
+        /// IBLテクスチャのファイルパス。
+        /// キューブマップである必要があります。
+        /// </param>
+        /// <param name="luminance">
+        /// IBLテクスチャの明るさ。
+        /// <param>
+        void SetAmbientByIBLTexture(const wchar_t* textureFilePath, float luminance)
+        {
+            ReInitIBL(textureFilePath, luminance);
+        }
+        /// <summary>
+        /// IBL環境光を無効にする。
+        /// </summary>
+        void DisableIBLTextureForAmbient()
+        {
+            m_sceneLight.DisableIBLTextureForAmbient();
+        }
+        /// <summary>
+        /// 環境光を設定。
+        /// </summary>
+        /// <param name="ambient"></param>
+        void SetAmbient(Vector3 ambient)
+        {
+            m_sceneLight.SetAmbinet(ambient);
         }
     private:
         /// <summary>

@@ -22,11 +22,10 @@ bool GlowingObject::Start()
 	//ライトの有効距離を設定。
 	m_spotLight.SetRange(600.0f);
 	//角度を設定。
-	m_spotLight.SetAngle(Math::DegToRad(20.0f));
+	m_spotLight.SetAngle(Math::DegToRad(10.0f));
 	//距離による、光の減衰率を設定。
-	m_spotLight.SetRangeAffectPowParam(1.5f);
-	//角度による、光の減衰率を設定。
-	m_spotLight.SetAngleAffectPowParam(0.7f);
+	m_spotLight.SetRangeAffectPowParam(2.0f);
+	
 
 	Vector3 color;
 	float a, b;
@@ -36,7 +35,7 @@ bool GlowingObject::Start()
 	color.y = int(fabsf(b)) % 2 + 1;
 	color.z = int(fabsf(a * b)) % 2 + 1;
 	//ライトの色を設定。
-	m_spotLight.SetColor(color);
+	m_spotLight.SetColor(color * 3.0f);
 	Vector3 direction = Vector3::AxisY;
 	//ライトの方向を設定。
 	m_spotLight.SetDirection(direction);
