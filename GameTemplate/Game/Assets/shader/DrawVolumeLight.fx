@@ -82,20 +82,20 @@ float3 CalcWorldPosFromUVZ( float2 uv, float zInScreen, float4x4 mViewProjInv )
 struct SpotLight
 {
     float3 position;        // 座標
-    int isUse;              // 使用中フラグ
-    float3 positionInView;  // カメラ空間での座標
-    int no;                 // ライトの番号。
-    float3 color;           // カラー
-    float range;            // 射出角度。
+    int isUse;              // 使用中フラグ。
+    float3 positionInView;  // カメラ空間での座標。
+    int no ;                // ライトの番号。
     float3 direction;       // 射出方向。
-    float rangePow;         // 距離による光の影響率に累乗するパラメータ。
-    float3 directionInView; // カメラ空間での射出方向。
-    float anglePow;
-    float3 angle;           // 射出角度(単位：ラジアン。xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー)。
+    float range;            // 影響範囲。
+    float3 color;           // ライトのカラー。
     float3 color2;          // 二つ目のカラー。
     float3 color3;          // 三つ目のカラー。
-    float2 attn2;           // 二つ目のカラーの減衰パラメータ。
-    float2 attn3;           // 三つ目のカラーの減衰パラメータ。
+    float3 directionInView; // カメラ空間での射出方向。
+    float3 rangePow;        // 距離による光の影響率に累乗するパラメーター。1.0で線形の変化をする。
+                            // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
+    float3 angle;           // 射出角度(単位：ラジアン。xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー)。
+    float3 anglePow;        // スポットライトとの角度による光の影響率に累乗するパラメータ。1.0で線形に変化する。
+                            // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
 };
 
 // ポイントライト
@@ -187,9 +187,9 @@ float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
     float distance = length(ligDir);
     ligDir = normalize(ligDir);
     float affectBase = 1.0f - min(1.0f, distance / spotLight.range);
-    float affect = pow( affectBase, spotLight.rangePow);
-    float affect2 = pow( affectBase, spotLight.attn2.x );
-    float affect3 = pow( affectBase, spotLight.attn3.x );
+    float affect = pow( affectBase, spotLight.rangePow.x);
+    float affect2 = pow( affectBase, spotLight.rangePow.y );
+    float affect3 = pow( affectBase, spotLight.rangePow.z );
     
     
 
@@ -202,15 +202,15 @@ float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
     // 一つ目の光の角度による減衰を計算。
     float angleAffectBase = max( 0.0f, 1.0f - 1.0f / spotLight.angle.x * angleLigToPixel );
     angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
-    float angleAffect = pow( angleAffectBase, spotLight.anglePow);
+    float angleAffect = pow( angleAffectBase, spotLight.anglePow.x);
     // 二つ目の光の角度による減衰を計算。
     angleAffectBase = max( 0.0f, 1.0f - 1.0f / ( spotLight.angle.y ) * angleLigToPixel );
     angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
-    float angleAffect2 = pow( angleAffectBase, spotLight.attn2.y);
+    float angleAffect2 = pow( angleAffectBase, spotLight.anglePow.y);
     // 三つ目の光の角度による減衰を計算。
     angleAffectBase = max( 0.0f, 1.0f - 1.0f / ( spotLight.angle.z ) * angleLigToPixel );
     angleAffectBase = min( 1.0f, angleAffectBase* 1.8f);
-    float angleAffect3 = pow( angleAffectBase, spotLight.attn3.y);
+    float angleAffect3 = pow( angleAffectBase, spotLight.anglePow.z);
 
     affect *= angleAffect;
     affect2 *= angleAffect2;

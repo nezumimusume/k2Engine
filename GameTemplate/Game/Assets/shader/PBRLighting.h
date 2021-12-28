@@ -39,20 +39,20 @@ struct PointLight
 struct SpotLight
 {
     float3 position;        // 座標
-    int isUse;              // 使用中フラグ
-    float3 positionInView;  // カメラ空間での座標
-    int no;                 // ライトの番号。
-    float3 color;           // カラー
-    float range;            // 射出角度。
+    int isUse;              // 使用中フラグ。
+    float3 positionInView;  // カメラ空間での座標。
+    int no ;                // ライトの番号。
     float3 direction;       // 射出方向。
-    float rangePow;         // 距離による光の影響率に累乗するパラメータ。
-    float3 directionInView; // カメラ空間での射出方向。
-    float anglePow;
-    float3 angle;           // 射出角度(単位：ラジアン。xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー)。
+    float range;            // 影響範囲。
+    float3 color;           // ライトのカラー。
     float3 color2;          // 二つ目のカラー。
     float3 color3;          // 三つ目のカラー。
-    float2 attn2;           // 二つ目のカラーの減衰パラメータ。
-    float2 attn3;           // 三つ目のカラーの減衰パラメータ。
+    float3 directionInView; // カメラ空間での射出方向。
+    float3 rangePow;        // 距離による光の影響率に累乗するパラメーター。1.0で線形の変化をする。
+                            // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
+    float3 angle;           // 射出角度(単位：ラジアン。xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー)。
+    float3 anglePow;        // スポットライトとの角度による光の影響率に累乗するパラメータ。1.0で線形に変化する。
+                            // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
 };
 
 ///////////////////////////////////////

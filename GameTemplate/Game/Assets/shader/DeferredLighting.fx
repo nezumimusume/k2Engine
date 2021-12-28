@@ -253,7 +253,7 @@ float3 CalcSpotLight(
         );
         // 3. 影響率を計算する。影響率は0.0～1.0の範囲で、
         //     指定した距離（pointsLights[i].range）を超えたら、影響率は0.0になる
-        float affect = pow( 1.0f - min(1.0f, distance / spotLight[ligNo].range), spotLight[ligNo].rangePow);
+        float affect = pow( 1.0f - min(1.0f, distance / spotLight[ligNo].range), spotLight[ligNo].rangePow.x);
 
         // 入射光と射出方向の角度による減衰を計算する
         // dot()を利用して内積を求める
@@ -262,7 +262,7 @@ float3 CalcSpotLight(
         angleLigToPixel = abs(acos(angleLigToPixel));
         // step-12 角度による影響率を求める
         // 角度に比例して小さくなっていく影響率を計算する
-        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].angle.x * angleLigToPixel ), spotLight[ligNo].anglePow);
+        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].angle.x * angleLigToPixel ), spotLight[ligNo].anglePow.x);
         affect *= angleAffect;
 
         
@@ -329,49 +329,6 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         worldPos,
         viewportPos
     );
-
-    // todo ボリュームライトのテスト
-  /*  
-    float volumeFrontZ = g_volumeLightMapFront.Sample(Sampler, In.uv).r;
-    float2 volumeBackZ_No = g_volumeLightMapBack.Sample(Sampler, In.uv).rg;
-    float volumeBackZ = volumeBackZ_No.r;
-    // このピクセルに影響を与えているスポットライトの番号を復元。
-    int spotLightNo = (int)(volumeBackZ_No.g / 100.0f);
-    if(volumeFrontZ > volumeBackZ){
-        volumeFrontZ = 0.0f;
-    }
-
-    float3 volumePosBack = CalcWorldPosFromUVZ( In.uv, volumeBackZ, mViewProjInv);
-    float3 volumePosFront = CalcWorldPosFromUVZ( In.uv, volumeFrontZ, mViewProjInv);
-    
-    
-    SpotLight spLig = spotLight[spotLightNo];
-
-    float t0 = dot( spLig.direction, volumePosFront - spLig.position);
-    float t1 = dot( spLig.direction, volumePosBack - spLig.position);
-    float t = t0 / (t0 + t1);
-    float3 volumeCenterPos = lerp( volumePosFront, volumePosBack, t);
-    float volume = length(volumePosBack - volumePosFront);
-    if( volume > 0.001f){
-        // 距離による減衰。
-        float3 ligDir = (volumeCenterPos - spLig.position);
-        float distance = length(ligDir);
-        ligDir = normalize(ligDir);
-        float affect = pow( 1.0f - min(1.0f, distance / spLig.attn.x), spLig.attn.y);
-        
-        // 続いて角度による減衰を計算する。
-        
-        // 角度に比例して小さくなっていく影響率を計算する
-        float angle = dot(ligDir, spLig.direction);
-        // dot()で求めた値をacos()に渡して角度を求める
-        angle = abs(acos(angle));
-        float angleAffect = max( 0.0f, 1.0f - 1.0f / spLig.attn.z * angle );
-        affect *= pow( angleAffect, spLig.attn.w);
-
-        // ボリュームライトの中央地点の光の量を計算する。
-        lig += albedoColor * spLig.color * affect * step( volumeFrontZ, albedoColor.w ) * log(volume) * 0.1f;
-    }
-*/
     
     if (isIBL == 1) {
         // 視線からの反射ベクトルを求める。
