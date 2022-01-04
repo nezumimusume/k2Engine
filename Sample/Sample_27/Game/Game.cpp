@@ -19,7 +19,7 @@ Game::~Game()
 
 bool Game::Start()
 {
-	g_renderingEngine->DisableTonemap();
+	
 	//ƒŒƒxƒ‹‚ğ\’z‚·‚éB
 	m_level.Init("Assets/level/sample.tkl", [&](LevelObjectData& objData) {
 		if (objData.EqualObjectName(L"unityChan") == true) 

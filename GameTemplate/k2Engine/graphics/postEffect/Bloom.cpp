@@ -33,6 +33,9 @@ namespace nsK2Engine {
             spriteInitData.m_height = mainRenderTarget.GetHeight();
             // テクスチャはメインレンダリングターゲットのカラーバッファー
             spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
+            // 輝度テクスチャ
+            spriteInitData.m_textures[1] = &g_renderingEngine->GetLuminanceAvgTextureInScene();
+
             // 描き込むレンダリングターゲットのフォーマットを指定する
             spriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 

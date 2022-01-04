@@ -138,6 +138,9 @@
     <ClCompile Include="graphics\light\VolumeLightBase.cpp">
       <Filter>graphics\light</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\postEffect\CalcSceneLuminance.cpp">
+      <Filter>graphics\postEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -247,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="graphics\light\VolumeLightBase.h">
       <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\postEffect\CalcSceneLuminance.h">
+      <Filter>graphics\postEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

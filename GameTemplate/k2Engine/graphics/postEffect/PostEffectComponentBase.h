@@ -33,7 +33,11 @@ namespace nsK2Engine {
 			RenderTarget& metallicSmoothRenderTarget,
 			RenderTarget& albedoRenderTarget) = 0;
 		virtual void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) = 0;
-		virtual Texture& GetResultTexture() = 0;
+		virtual Texture& GetResultTexture() 
+		{
+			static Texture nullTexture;
+			return nullTexture;
+		}
 		/// <summary>
 		/// ポストの結果をメインレンダリングターゲットにコピーする？
 		/// </summary>

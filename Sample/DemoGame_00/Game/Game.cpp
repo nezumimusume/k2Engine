@@ -88,71 +88,6 @@ void Game::InitSky()
 	// 現在の空を破棄。
 	DeleteGO(m_skyCube);
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
-	m_skyCubeType = enSkyCubeType_NightToon_2;
-	g_renderingEngine->EnableTonemap();
-	if (m_skyCubeType == enSkyCubeType_Night
-		|| m_skyCubeType == enSkyCubeType_Wild_Night
-		|| m_skyCubeType == enSkyCubeType_NightToon
-		|| m_skyCubeType == enSkyCubeType_NightToon_2
-		) {
-
-		g_renderingEngine->DisableTonemap();
-		m_skyCube->SetLuminance(1.0f);
-		Vector3 ligColor, ligDir;
-		ligColor.x = 0.6f;
-		ligColor.y = 0.6f;
-		ligColor.z = 0.6f;
-		ligDir.x = 1.0f;
-		ligDir.y = -1.0f;
-		ligDir.z = -1.0f;
-		ligDir.Normalize();
-		g_renderingEngine->SetSceneLuminance(0.18f);
-		g_renderingEngine->SetDirectionLight(0, ligDir, ligColor);
-	}
-	else if (m_skyCubeType == enSkyCubeType_Snow) {
-
-		m_skyCube->SetLuminance(1.0f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_Snow_2) {
-
-		m_skyCube->SetLuminance(1.0f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_Wild) {
-
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_Wild_2) {
-
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_Grass) {
-
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_Euro) {
-
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_DayToon) {
-		m_skyCube->SetLuminance(2.0f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_DayToon_2) {
-		m_skyCube->SetLuminance(0.2f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_DayToon_3) {
-		m_skyCube->SetLuminance(0.8f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_DayToon_4) {
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_SunriseToon) {
-		m_skyCube->SetLuminance(0.5f);
-	}
-	else if (m_skyCubeType == enSkyCubeType_SpaceToon
-		|| m_skyCubeType == enSkyCubeType_SpaceToon_2) {
-		m_skyCube->SetLuminance(0.2f);
-	}
-
 	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
 	// 環境光の計算のためのIBLテクスチャをセットする。
 	g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.1f);
@@ -222,10 +157,11 @@ bool Game::Start()
 			pointLight->SetRange(POINTLIGHT_RANGE);
 			pointLight->SetAffectPowParam(POINTLIGHT_ATTEN_POW);
 			m_pointLightList.push_back(pointLight);
+#ifdef USE_VOLUME_SPOTLIGHT
 			VolumePointLight* volumePointLight = new VolumePointLight;
 			volumePointLight->Init(*pointLight);
 			m_volumePointLightList.push_back(volumePointLight);
-
+#endif
 			/*SpotLight* spotLight = new SpotLight;
 			spotLight->Init();
 			spotLight->SetPosition(objData.position);

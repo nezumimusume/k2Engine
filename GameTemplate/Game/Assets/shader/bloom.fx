@@ -2,6 +2,8 @@
  * @brief ブルーム
  */
 
+#include "ColorSpace.h"
+
 cbuffer cb : register(b0)
 {
     float4x4 mvp;       // MVP行列
@@ -31,7 +33,8 @@ PSInput VSMain(VSInput In)
     return psIn;
 }
 
-Texture2D<float4> mainRenderTargetTexture : register(t0); // メインレンダリングターゲットのテクスチャ
+Texture2D<float4> mainRenderTargetTexture : register(t0);   // メインレンダリングターゲットのテクスチャ
+Texture2D<float4> luminanceAvgTexture : register(t1);       // シーンの平均輝度が記憶されているテクスチャ。
 sampler Sampler : register(s0);
 
 /////////////////////////////////////////////////////////
@@ -46,14 +49,20 @@ float4 PSSamplingLuminance(PSInput In) : SV_Target0
     float4 color = mainRenderTargetTexture.Sample(Sampler, In.uv);
 
     // サンプリングしたカラーの明るさを計算
-    float t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
-    // 強い光しかあふれは起きないように変更。
-    t = pow( t, 3.0f);
+    // メインシーンの輝度を求める。
+    float luminance = luminanceAvgTexture.Sample(Sampler, In.uv);
+    float3 hsv = Rgb2Hsv(color);
+    hsv.z = ( 0.18f / ( max(luminance, 0.001f ))) * hsv.z;
+    
     // clip()関数は引数の値がマイナスになると、以降の処理をスキップする
     // なので、マイナスになるとピクセルカラーは出力されない
-    // 今回の実装はカラーの明るさが1以下ならピクセルキルする
-    clip(t - 0.9f);
-
+    // 
+    // 
+    clip(hsv.z - 1.0f );
+    hsv.z -= 1.0f;
+    // カラーを元のカラーに戻す。
+    hsv.z *= ( max(luminance, 0.001f )) / 0.18f;
+    color.xyz = Hsv2Rgb(hsv);
     return color;
 }
 

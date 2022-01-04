@@ -115,6 +115,14 @@ namespace nsK2Engine {
             return m_mainRTSnapshots[(int)EnMainRTSnapshot::enDrawnOpacity].GetRenderTargetTexture();
         }
         /// <summary>
+        /// シーンの平均輝度テクスチャを取得。
+        /// </summary>
+        /// <returns></returns>o
+        Texture& GetLuminanceAvgTextureInScene()
+        {
+            return m_postEffect.GetLuminanceAvgTextureInScene();
+        }
+        /// <summary>
         /// レンダリングパイプラインを実行
         /// </summary>
         /// <param name="rc">レンダリングコンテキスト。</param>

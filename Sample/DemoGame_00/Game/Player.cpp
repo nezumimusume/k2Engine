@@ -6,8 +6,9 @@
 #include "sound/SoundSource.h"
 #include "sound/SoundEngine.h"
 
- #define ENABLE_PLAYER_SPOTLIGHT
-
+#ifdef USE_VOLUME_SPOTLIGHT
+	#define ENABLE_PLAYER_SPOTLIGHT
+#endif
 namespace
 {
 	float GAMEOVER_LIMITED_POSITION = -200.0f;

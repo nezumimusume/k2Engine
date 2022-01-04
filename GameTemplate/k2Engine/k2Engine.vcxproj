@@ -43,6 +43,7 @@
     <ClCompile Include="graphics\light\VolumeSpotLight.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\postEffect\Bloom.cpp" />
+    <ClCompile Include="graphics\postEffect\CalcSceneLuminance.cpp" />
     <ClCompile Include="graphics\postEffect\Dof.cpp" />
     <ClCompile Include="graphics\postEffect\Fxaa.cpp" />
     <ClCompile Include="graphics\postEffect\PostEffect.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\MyRenderer.h" />
     <ClInclude Include="graphics\postEffect\Bloom.h" />
+    <ClInclude Include="graphics\postEffect\CalcSceneLuminance.h" />
     <ClInclude Include="graphics\postEffect\Dof.h" />
     <ClInclude Include="graphics\postEffect\Fxaa.h" />
     <ClInclude Include="graphics\postEffect\PostEffect.h" />

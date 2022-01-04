@@ -24,6 +24,8 @@ namespace nsK2Engine {
         /// </summary>
         /// <param name="rc">レンダ―コンテキスト。</param>
         /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
+        
+        
         void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
         /// <summary>
         /// ポストエフェクトを実行した結果となるテクスチャを取得。
