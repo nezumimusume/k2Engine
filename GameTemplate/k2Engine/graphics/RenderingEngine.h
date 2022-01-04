@@ -281,14 +281,32 @@ namespace nsK2Engine {
             m_postEffect.EnableTonemap();
         }
         /// <summary>
-        /// シーンの明るさを設定。
+        /// トーンマップが有効か判定する。
+        /// </summary>
+        /// <returns></returns>
+        bool IsEnableTonemap() const
+        {
+            return m_postEffect.IsEnableTonemap();
+        }
+        /// <summary>
+        /// シーンの中間の明るさを示す明度率を指定する。
         /// </summary>
         /// <remark>
         /// この設定はポストエフェクトのトーンマップが有効なときに利用されます。
+        /// 慣習的に0.18が使われている。
+        /// https://en.wikipedia.org/wiki/Middle_gray
         /// </remark>
-        void SetSceneLuminance(float luminance)
+        void SetSceneMiddleGray(float luminance)
         {
             m_postEffect.SetTonemapMiddlegray(luminance);
+        }
+        /// <summary>
+        /// シーンの中間の明るさを示す明度率を取得する。
+        /// </summary>
+        /// <returns></returns>
+        float GetSceneMiddleGray() const
+        {
+            return m_postEffect.GetTonemapMiddlegray();
         }
         /// <summary>
         /// ボリュームスポットライトをシーンに追加

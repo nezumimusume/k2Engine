@@ -25,6 +25,14 @@ namespace nsK2Engine {
 		{
 			m_isEnable = true;
 		}
+		/// <summary>
+		/// ポストエフェクトが有効か判定。
+		/// </summary>
+		/// <returns></returns>
+		bool IsEnable() const
+		{
+			return m_isEnable;
+		}
 	private:
 		virtual void OnInit(
 			RenderTarget& mainRenderTarget,

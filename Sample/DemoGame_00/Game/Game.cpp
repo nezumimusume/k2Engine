@@ -87,14 +87,18 @@ void Game::InitSky()
 {
 	// 現在の空を破棄。
 	DeleteGO(m_skyCube);
+	// g_renderingEngine->DisableTonemap();
+
 	m_skyCube = NewGO<SkyCube>(0, "skycube");
 	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
+	
 	// 環境光の計算のためのIBLテクスチャをセットする。
 	g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.1f);
 }
 bool Game::Start()
 {
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+	
 
 	g_renderingEngine->NotifyChangeScene(0.5f);
 	//カスケードシャドウの近影エリア率を

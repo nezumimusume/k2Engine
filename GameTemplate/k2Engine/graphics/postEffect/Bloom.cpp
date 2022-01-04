@@ -28,6 +28,9 @@ namespace nsK2Engine {
             spriteInitData.m_vsEntryPointFunc = "VSMain";
             // ピクセルシェーダーのエントリーポイントを指定する
             spriteInitData.m_psEntryPoinFunc = "PSSamplingLuminance";
+            spriteInitData.m_expandConstantBuffer = &m_samplingLuminanceCB1;
+            spriteInitData.m_expandConstantBufferSize = sizeof(m_samplingLuminanceCB1);
+
             // スプライトの幅と高さはluminnceRenderTargetと同じ
             spriteInitData.m_width = mainRenderTarget.GetWidth();
             spriteInitData.m_height = mainRenderTarget.GetHeight();
@@ -75,6 +78,8 @@ namespace nsK2Engine {
     }
     void Bloom::OnRender(RenderContext& rc, RenderTarget& mainRenderTarget)
     {
+        m_samplingLuminanceCB1.isTonemap = g_renderingEngine->IsEnableTonemap() ? 1 : 0;
+        m_samplingLuminanceCB1.middlegray = g_renderingEngine->GetSceneMiddleGray();
         g_graphicsEngine->BeginGPUEvent("Bloom");
         // 輝度抽出
         // 輝度抽出用のレンダリングターゲットに変更

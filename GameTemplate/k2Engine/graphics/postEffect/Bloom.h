@@ -36,9 +36,17 @@ namespace nsK2Engine {
             return m_luminanceRenderTarget.GetRenderTargetTexture();
         }
     private:
+        /// <summary>
+        /// 輝度抽出パスの定数バッファ１に送る内容。
+        /// </summary>
+        struct SSamplingLuminanceCB1 {
+            int isTonemap;      // トーンマップが有効？
+            float middlegray;   // ミドルグレー。
+        };
         RenderTarget m_luminanceRenderTarget;	//輝度抽出用のレンダリングターゲット
         Sprite m_luminanceSprite;				//輝度抽出用のスプライト
         GaussianBlur m_gaussianBlur[4];			//ガウシアンブラー
         Sprite m_finalSprite;					//最終合成用のスプライト
+        SSamplingLuminanceCB1 m_samplingLuminanceCB1;
     };
 }

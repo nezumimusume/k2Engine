@@ -68,7 +68,8 @@ bool Game::Start()
 	m_gameCamera = NewGO<GameCamera>(0);
 
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/shiningstar.wav");
-	g_renderingEngine->SetSceneLuminance(0.05f);
+	g_renderingEngine->DisableTonemap();
+	g_renderingEngine->SetSceneMiddleGray(0.05f);
 	g_renderingEngine->SetAmbient({ 0.1f, 0.1f, 0.1f });
 	g_renderingEngine->SetDirectionLight(1, { -1, 1, 0 }, { 3.0, 3.0, 3.0 });
 	m_bgm = NewGO<SoundSource>(0);

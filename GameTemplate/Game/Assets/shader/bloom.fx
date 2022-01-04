@@ -40,6 +40,12 @@ sampler Sampler : register(s0);
 /////////////////////////////////////////////////////////
 // 輝度抽出用
 /////////////////////////////////////////////////////////
+cbuffer SamplingLuminanceCb : register(b1)
+{
+    int isEnableTonemap;
+    float middleGray;
+};
+
 /*!
  * @brief 輝度抽出用のピクセルシェーダー
  */
@@ -52,16 +58,20 @@ float4 PSSamplingLuminance(PSInput In) : SV_Target0
     // メインシーンの輝度を求める。
     float luminance = luminanceAvgTexture.Sample(Sampler, In.uv);
     float3 hsv = Rgb2Hsv(color);
-    hsv.z = ( 0.18f / ( max(luminance, 0.001f ))) * hsv.z;
-    
+    if(isEnableTonemap){
+        
+        hsv.z = ( middleGray / ( max(luminance, 0.001f ))) * hsv.z;
+    }
     // clip()関数は引数の値がマイナスになると、以降の処理をスキップする
     // なので、マイナスになるとピクセルカラーは出力されない
-    // 
-    // 
+    
     clip(hsv.z - 1.0f );
     hsv.z -= 1.0f;
-    // カラーを元のカラーに戻す。
-    hsv.z *= ( max(luminance, 0.001f )) / 0.18f;
+    
+    if(isEnableTonemap){
+        // カラーを元のカラーに戻す。
+        hsv.z *= ( max(luminance, 0.001f )) / 0.18f;
+    }
     color.xyz = Hsv2Rgb(hsv);
     return color;
 }

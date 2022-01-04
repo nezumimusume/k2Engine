@@ -48,6 +48,14 @@ namespace nsK2Engine {
 		{
 			m_cb1.midddleGray = middlegray;
 		}
+		/// <summary>
+		/// シーンの明るさの基準値を取得する。
+		/// </summary>
+		/// <param name="middlegray"></param>
+		float GetMiddlegray() const
+		{
+			return m_cb1.midddleGray;
+		}
 	private:
 		static const int MAX_SAMPLES = 16;
 		struct SCB_1 {
