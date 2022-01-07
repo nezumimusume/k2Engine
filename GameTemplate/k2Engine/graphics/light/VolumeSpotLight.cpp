@@ -15,7 +15,9 @@ namespace nsK2Engine {
 		/*angle = max(angle, m_lightData->GetAngle2());
 		angle = max(angle, m_lightData->GetAngle3());*/
 		// 角度からxyの拡大率を計算する。
-		float xyScale = tan(angle) * m_lightData->GetRange() ;
+		
+		// tan(90°)の結果が無限大になってしまうので、角度に制限を加える。
+		float xyScale = tan(std::min<float>(Math::PI * 0.49f, angle)) * m_lightData->GetRange();
 		scale.x = xyScale;
 		scale.y = xyScale;
 		m_modelBack.UpdateWorldMatrix(pos, rot, scale);
