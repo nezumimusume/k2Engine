@@ -7,7 +7,7 @@ namespace nsK2EngineLow {
 		static constexpr float PI = 3.14159265358979323846f;
 		//円周率の２乗
 		static constexpr float PI2 = PI * 2.0f;
-
+		
 		/// <summary>
 		/// 角度をDegree単位からRadian単位に変換する。
 		/// </summary>
