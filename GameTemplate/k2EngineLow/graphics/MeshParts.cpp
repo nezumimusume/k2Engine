@@ -141,6 +141,8 @@ namespace nsK2EngineLow {
 		mesh->skinFlags.reserve(tkmMesh.materials.size());
 		mesh->m_vertexBuffer.Init(vertexStride * numVertex, vertexStride);
 		mesh->m_vertexBuffer.Copy((void*)&tkmMesh.vertexBuffer[0]);
+		
+		mesh->m_animatedVertexBuffer.Init(mesh->m_vertexBuffer, false);
 
 		auto SetSkinFlag = [&](int index) {
 			if (tkmMesh.vertexBuffer[index].skinWeights.x > 0.0f) {

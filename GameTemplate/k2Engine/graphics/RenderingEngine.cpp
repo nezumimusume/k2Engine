@@ -291,10 +291,17 @@ namespace nsK2Engine {
         // シーンライトの更新。
         m_sceneLight.Update();
     }
+    void RenderingEngine::ComputeAnimatedVertex(RenderContext& rc)
+    {
+
+    }
     void RenderingEngine::Execute(RenderContext& rc)
     {
         // シーンライトのデータをコピー。
         m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
+
+        // アニメーション済み頂点の計算。
+        ComputeAnimatedVertex(rc);
 
         // シャドウマップへの描画
         RenderToShadowMap(rc);

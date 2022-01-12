@@ -22,10 +22,11 @@ namespace nsK2EngineLow {
 	/// メッシュ
 	/// </summary>
 	struct SMesh {
-		VertexBuffer m_vertexBuffer;						//頂点バッファ。
-		std::vector< IndexBuffer* >		m_indexBufferArray;	//インデックスバッファ。
-		std::vector< Material* >		m_materials;			//マテリアル。
-		std::vector<int>				skinFlags;				//スキンを持っているかどうかのフラグ。
+		VertexBuffer m_vertexBuffer;							// 頂点バッファ。
+		RWStructuredBuffer m_animatedVertexBuffer;				// アニメーション計算済み頂点バッファ。
+		std::vector< IndexBuffer* >		m_indexBufferArray;		// インデックスバッファ。
+		std::vector< Material* >		m_materials;			// マテリアル。
+		std::vector<int>				skinFlags;				// スキンを持っているかどうかのフラグ。
 	};
 
 	/// <summary>
