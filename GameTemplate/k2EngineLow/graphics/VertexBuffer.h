@@ -1,6 +1,7 @@
 #pragma once
 
 namespace nsK2EngineLow {
+	class RWStructuredBuffer;
 	/// <summary>
 	/// 頂点バッファ
 	/// </summary>
@@ -17,6 +18,11 @@ namespace nsK2EngineLow {
 		/// <param name="size">頂点バッファのサイズ</param>
 		/// <param name="stride">頂点バッファのストライド。一個の頂点のサイズ</param>
 		void Init(int size, int stride);
+		/// <summary>
+		/// RWストラクチャードバッファから初期化する。
+		/// </summary>
+		/// <param name="rwStructuredBuffer"></param>
+		void Init(RWStructuredBuffer& rwStructuredBuffer);
 		/// <summary>
 		/// 頂点データを頂点バッファにコピー。
 		/// </summary>

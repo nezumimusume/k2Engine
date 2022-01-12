@@ -66,7 +66,22 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <returns></returns>
 		void* GetResourceOnCPU();
-
+		/// <summary>
+		/// バッファサイズを取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetSize() const
+		{
+			return m_sizeOfElement * m_numElement;
+		}
+		/// <summary>
+		/// 1要素のサイズを取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetStride() const
+		{
+			return m_sizeOfElement;
+		}
 		ID3D12Resource* GetD3DResoruce();
 	private:
 		/// <summary>

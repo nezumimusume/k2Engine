@@ -32,6 +32,10 @@ namespace nsK2EngineLow {
 		bool m_isDepthWrite = true;										// 深度バッファに書き込む？
 		bool m_isDepthTest = true;										// 深度テストを行う？
 		D3D12_CULL_MODE m_cullMode = D3D12_CULL_MODE_BACK;				// カリングモード。
+		bool m_isUseComputedAnimatedVertexBuffer = false;				// アニメーション済み頂点バッファを使用する？
+																		// このフラグがtrueになっている場合は、
+																		// 毎フレームModel::DispatchComputeAnimatedVertexBuffer()を呼び出して、
+																		// アニメーション済み頂点バッファを計算する必要があります。
 		std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = {
 			DXGI_FORMAT_R8G8B8A8_UNORM,
 			DXGI_FORMAT_UNKNOWN,
@@ -42,6 +46,7 @@ namespace nsK2EngineLow {
 			DXGI_FORMAT_UNKNOWN,
 			DXGI_FORMAT_UNKNOWN,
 		};	//レンダリングするカラーバッファのフォーマット。
+		
 	};
 	/// <summary>
 	/// マテリアルを再初期化するためのデータ。
@@ -88,6 +93,11 @@ namespace nsK2EngineLow {
 		/// <param name="scale">拡大率</param>
 		/// <returns>ワールド行列</returns>
 		Matrix CalcWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale);
+		/// <summary>
+		/// アニメーション済み頂点バッファの計算処理をディスパッチ。
+		/// </summary>
+		/// <param name="rc">レンダリングコンテキスト</param>
+		void DispatchComputeAnimatedVertexBuffer(RenderContext& rc);
 		/// <summary>
 		/// 描画
 		/// </summary>
@@ -176,11 +186,11 @@ namespace nsK2EngineLow {
 		/// <param name="reInitData">再初期化データ。</param>
 		void ReInitMaterials(MaterialReInitData& reInitData);
 	private:
-		bool m_isInited = false;						//初期化されている？
-		Matrix m_worldMatrix;							//ワールド行列。
-		TkmFile* m_tkmFile;								//tkmファイル。
-		Skeleton m_skeleton;							//スケルトン。
-		MeshParts m_meshParts;							//メッシュパーツ。
-		EnModelUpAxis m_modelUpAxis = enModelUpAxisY;	//モデルの上方向。
+		bool m_isInited = false;							// 初期化されている？
+		Matrix m_worldMatrix;								// ワールド行列。
+		TkmFile* m_tkmFile;									// tkmファイル。
+		Skeleton m_skeleton;								// スケルトン。
+		MeshParts m_meshParts;								// メッシュパーツ。
+		EnModelUpAxis m_modelUpAxis = enModelUpAxisY;		// モデルの上方向。
 	};
 }

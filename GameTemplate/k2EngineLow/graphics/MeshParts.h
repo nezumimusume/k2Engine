@@ -23,7 +23,8 @@ namespace nsK2EngineLow {
 	/// </summary>
 	struct SMesh {
 		VertexBuffer m_vertexBuffer;							// 頂点バッファ。
-		RWStructuredBuffer m_animatedVertexBuffer;				// アニメーション計算済み頂点バッファ。
+		VertexBuffer m_animatedVertexBuffer;					// アニメーション計算済み頂点バッファ。
+		RWStructuredBuffer m_animatedVertexBufferRWSB;			// アニメーション計算済み頂点バッファのRWストラクチャードバッファ。
 		std::vector< IndexBuffer* >		m_indexBufferArray;		// インデックスバッファ。
 		std::vector< Material* >		m_materials;			// マテリアル。
 		std::vector<int>				skinFlags;				// スキンを持っているかどうかのフラグ。
@@ -60,7 +61,8 @@ namespace nsK2EngineLow {
 			AlphaBlendMode alphaBlendMode,
 			bool isDepthWrite,
 			bool isDepthTest,
-			D3D12_CULL_MODE cullMode
+			D3D12_CULL_MODE cullMode,
+			bool isUseComputedAnimatedVertexBuffer
 		);
 		/// <summary>
 		/// 描画。
@@ -128,7 +130,8 @@ namespace nsK2EngineLow {
 			AlphaBlendMode alphaBlendMode,
 			bool isDepthWrite,
 			bool isDepthTest,
-			D3D12_CULL_MODE cullMode
+			D3D12_CULL_MODE cullMode,
+			bool isUseComputedAnimatedVertexBuffer
 		);
 
 
@@ -159,5 +162,6 @@ namespace nsK2EngineLow {
 		DescriptorHeap m_descriptorHeap;					//ディスクリプタヒープ。
 		Skeleton* m_skeleton = nullptr;						//スケルトン。
 		void* m_expandData = nullptr;						//ユーザー拡張データ。
+		bool m_isUseComputedAnimatedVertexBuffer = false;	// アニメーション済み頂点バッファを使用する？
 	};
 }
