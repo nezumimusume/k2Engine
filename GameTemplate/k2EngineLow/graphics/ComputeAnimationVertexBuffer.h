@@ -11,8 +11,15 @@ namespace nsK2EngineLow {
 		/// 初期化
 		/// </summary>
 		/// <param name="tkmFilePath">tkmファイルのファイルパス</param>
+		/// <param name="numBone">ボーンの数</param>
+		/// <param name="boneMatrixTopAddress">ボーン行列の配列</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
-		void Init(const char* tkmFilePath, EnModelUpAxis enModelUpAxis);
+		void Init(
+			const char* tkmFilePath, 
+			int numBone,
+			void* boneMatrixArray, 
+			EnModelUpAxis enModelUpAxis
+		);
 		/// <summary>
 		/// ディスパッチ
 		/// </summary>
@@ -37,10 +44,19 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void CreateDescriptorHeaps();
 	private:
+		/// <summary>
+		/// b0レジスタにバインドされるデータ。
+		/// </summary>
+		struct CB_0 {
+			int numVertex;
+		};
 		int m_numMesh = 0;														// メッシュの数。
+		void* m_boneMatrixArray = nullptr;										// ボーン行列の配列の先頭アドレス。
 		DescriptorHeap m_descriptorHeap;										// ディスクリプタヒープ。
 		Shader m_shader;														// シェーダー。
 		TkmFile m_tkmFile;														// tkmファイル。
+		StructuredBuffer m_boneMatricesStructureBuffer;							// ボーン行列の構造化バッファ。
+		std::unique_ptr<ConstantBuffer[]> m_cb0Array;							// b0レジスタにバインドされる定数バッファの配列。
 		std::unique_ptr< PipelineState[]> m_pipilineStateArray;					// パイプラインステートの配列。
 		std::unique_ptr<RootSignature[]> m_rootSignatureArray;					// ルートシグネチャの配列。
 		std::unique_ptr<VertexBuffer[]> m_vertexBufferArray;					// 頂点バッファの配列。配列のインデックスはtkmファイルのメッシュ番号に対応しています。

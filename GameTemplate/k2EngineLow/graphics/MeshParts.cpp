@@ -265,6 +265,7 @@ namespace nsK2EngineLow {
 		int meshNo = 0;
 		for (auto& mesh : m_meshs) {
 			//1. 頂点バッファを設定。
+			rc.SetVertexBuffer(mesh->m_vertexBuffer);
 			if (m_computedAnimationVertexBuffer){
 				// アニメーション計算済みモデルが指定されている。
 				rc.SetVertexBuffer(m_computedAnimationVertexBuffer->GetAnimatedVertexBuffer(meshNo));

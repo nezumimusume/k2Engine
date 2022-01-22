@@ -30,6 +30,10 @@ namespace nsK2EngineLow {
 	{
 		Release();
 		auto d3dDevice = g_graphicsEngine->GetD3DDevice();
+		// 0ÇÕÉ_ÉÅÅB
+		maxCbvDescriptor = max(1, maxCbvDescriptor);
+		maxSrvDescriptor = max(1, maxSrvDescriptor);
+		maxUavDescritor = max(1, maxUavDescritor);
 
 		CD3DX12_DESCRIPTOR_RANGE1 ranges[enNumDescriptorHeap];
 		CD3DX12_ROOT_PARAMETER1 rootParameters[enNumDescriptorHeap];

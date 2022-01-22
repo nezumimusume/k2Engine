@@ -20,6 +20,9 @@ namespace nsK2EngineLow {
 	void StructuredBuffer::Init(int sizeOfElement, int numElement, void* initData)
 	{
 		Release();
+		if (numElement == 0) {
+			return;
+		}
 		m_sizeOfElement = sizeOfElement;
 		m_numElement = numElement;
 		auto device = g_graphicsEngine->GetD3DDevice();

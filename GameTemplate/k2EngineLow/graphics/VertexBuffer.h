@@ -64,6 +64,14 @@ namespace nsK2EngineLow {
 		{
 			return m_vertexBuffer;
 		}
+		/// <summary>
+		/// ’¸“_”‚ğæ“¾B
+		/// </summary>
+		/// <returns></returns>
+		int GetNumVertex() const
+		{
+			return GetSizeInBytes() / GetStrideInBytes();
+		}
 	private:
 		void Release();
 	private:

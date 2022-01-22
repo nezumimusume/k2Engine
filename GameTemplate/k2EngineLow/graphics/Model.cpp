@@ -65,6 +65,7 @@ namespace nsK2EngineLow {
 			//Z-up
 			mBias.MakeRotationX(Math::PI * -0.5f);
 		}
+
 		Matrix mTrans, mRot, mScale;
 		mTrans.MakeTranslation(pos);
 		mRot.MakeRotationFromQuaternion(rot);

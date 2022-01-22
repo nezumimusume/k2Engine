@@ -293,7 +293,9 @@ namespace nsK2Engine {
     }
     void RenderingEngine::ComputeAnimatedVertex(RenderContext& rc)
     {
-
+        for (auto& renderObj : m_renderObjects) {
+            renderObj->OnComputeVertex(rc);
+        }
     }
     void RenderingEngine::Execute(RenderContext& rc)
     {
