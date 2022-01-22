@@ -45,5 +45,8 @@ void CSMain(
         skinning += g_boneMatrix[inVertex.indices[3]] * (1.0f - w);
         g_outputVertexBuffer[dispatchThreadId.x] = inVertex;
         g_outputVertexBuffer[dispatchThreadId.x].pos = mul( skinning, float4(inVertex.pos, 1.0f) );
+        g_outputVertexBuffer[dispatchThreadId.x].normal = mul( skinning, inVertex.normal);
+        g_outputVertexBuffer[dispatchThreadId.x].tangent = mul( skinning, inVertex.tangent);
+        g_outputVertexBuffer[dispatchThreadId.x].binormal = mul( skinning, inVertex.binormal);
     }
 }
