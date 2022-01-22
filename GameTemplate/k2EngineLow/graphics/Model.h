@@ -6,12 +6,8 @@
 
 namespace nsK2EngineLow {
 	class IShaderResource;
+	class ComputeAnimationVertexBuffer;
 
-	//モデルの上方向
-	enum EnModelUpAxis {
-		enModelUpAxisY,		//モデルの上方向がY軸。
-		enModelUpAxisZ,		//モデルの上方向がZ軸。
-	};
 
 	/// <summary>
 	/// モデルの初期化データ
@@ -32,10 +28,8 @@ namespace nsK2EngineLow {
 		bool m_isDepthWrite = true;										// 深度バッファに書き込む？
 		bool m_isDepthTest = true;										// 深度テストを行う？
 		D3D12_CULL_MODE m_cullMode = D3D12_CULL_MODE_BACK;				// カリングモード。
-		bool m_isUseComputedAnimatedVertexBuffer = false;				// アニメーション済み頂点バッファを使用する？
-																		// このフラグがtrueになっている場合は、
-																		// 毎フレームModel::DispatchComputeAnimatedVertexBuffer()を呼び出して、
-																		// アニメーション済み頂点バッファを計算する必要があります。
+		ComputeAnimationVertexBuffer* m_computedAnimationVertexBuffer = nullptr;	// アニメーション済み頂点バッファを計算する処理。
+
 		std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = {
 			DXGI_FORMAT_R8G8B8A8_UNORM,
 			DXGI_FORMAT_UNKNOWN,
@@ -152,6 +146,19 @@ namespace nsK2EngineLow {
 			m_meshParts.QueryMeshAndDescriptorHeap(queryFunc);
 		}
 		/// <summary>
+		/// メッシュを取得。
+		/// </summary>
+		/// <param name="meshNo">メッシュ番号</param>
+		/// <returns>メッシュ</returns>
+		const SMesh& GetMesh(int meshNo) const
+		{
+			return m_meshParts.GetMesh(meshNo);
+		}
+		SMesh& GetMesh(int meshNo) 
+		{
+			return m_meshParts.GetMesh(meshNo);
+		}
+		/// <summary>
 		/// アルベドマップを変更。
 		/// </summary>
 		/// <remarks>
@@ -192,5 +199,6 @@ namespace nsK2EngineLow {
 		Skeleton m_skeleton;								// スケルトン。
 		MeshParts m_meshParts;								// メッシュパーツ。
 		EnModelUpAxis m_modelUpAxis = enModelUpAxisY;		// モデルの上方向。
+		Model* m_computedAnimationVertexBuffer = nullptr;	// アニメーション後頂点バッファを計算済みのモデル。
 	};
 }

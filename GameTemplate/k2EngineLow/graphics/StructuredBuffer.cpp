@@ -52,6 +52,27 @@ namespace nsK2EngineLow {
 		}
 		m_isInited = true;
 	}
+	void StructuredBuffer::Init(const VertexBuffer& vb, bool isUpdateByCPU)
+	{
+		Release();
+		m_sizeOfElement = vb.GetStrideInBytes();
+		m_numElement = vb.GetSizeInBytes() / m_sizeOfElement;
+		if (isUpdateByCPU) {
+			//未対応。
+			std::abort();
+		}
+		else {
+			for (auto& gpuBuffer : m_buffersOnGPU) {
+				gpuBuffer = vb.GetID3DResourceAddress();
+				gpuBuffer->AddRef();
+			}
+			//CPUからは変更できないのでマップしない。
+			for (auto& cpuBuffer : m_buffersOnCPU) {
+				cpuBuffer = nullptr;
+			}
+		}
+		m_isInited = true;
+	}
 	void StructuredBuffer::Update(void* data)
 	{
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();

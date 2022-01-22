@@ -3,6 +3,7 @@
 #include "Skeleton.h"
 #include "Material.h"
 #include "IndexBuffer.h"
+#include "ComputeAnimationVertexBuffer.h"
 
 namespace nsK2EngineLow {
 	MeshParts::~MeshParts()
@@ -34,7 +35,7 @@ namespace nsK2EngineLow {
 		bool isDepthWrite,
 		bool isDepthTest,
 		D3D12_CULL_MODE cullMode,
-		bool isUseComputedAnimatedVertexBuffer
+		ComputeAnimationVertexBuffer* computedAnimationVertexBuffer
 	)
 	{
 		m_meshs.resize(tkmFile.GetNumMesh());
@@ -55,7 +56,7 @@ namespace nsK2EngineLow {
 				isDepthWrite,
 				isDepthTest,
 				cullMode,
-				isUseComputedAnimatedVertexBuffer
+				computedAnimationVertexBuffer
 			);
 			meshNo++;
 		});
@@ -135,7 +136,7 @@ namespace nsK2EngineLow {
 		bool isDepthWrite,
 		bool isDepthTest,
 		D3D12_CULL_MODE cullMode,
-		bool isUseComputedAnimatedVertexBuffer
+		ComputeAnimationVertexBuffer* computedAnimationVertexBuffer
 	) {
 		//1. 頂点バッファを作成。
 		int numVertex = (int)tkmMesh.vertexBuffer.size();
@@ -145,14 +146,17 @@ namespace nsK2EngineLow {
 
 		mesh->m_vertexBuffer.Init(vertexStride * numVertex, vertexStride);
 		mesh->m_vertexBuffer.Copy((void*)&tkmMesh.vertexBuffer[0]);
-		if (isUseComputedAnimatedVertexBuffer) {
+		/*
+		if (dispatchComputedAnimationVertexBuffer) {
 			// アニメーション済み頂点を記憶するためのバッファを作成。
 			mesh->m_animatedVertexBuffer.Init(vertexStride * numVertex, vertexStride);
 			mesh->m_animatedVertexBuffer.Copy((void*)&tkmMesh.vertexBuffer[0]);
 			// アニメーション済み頂点バッファのRWStructuredBufferを初期化。
 			mesh->m_animatedVertexBufferRWSB.Init(mesh->m_animatedVertexBuffer, false);
 		}
-		m_isUseComputedAnimatedVertexBuffer = isUseComputedAnimatedVertexBuffer;
+		*/
+		m_computedAnimationVertexBuffer = computedAnimationVertexBuffer;
+		
 		auto SetSkinFlag = [&](int index) {
 			if (tkmMesh.vertexBuffer[index].skinWeights.x > 0.0f) {
 				//スキンがある。
@@ -258,10 +262,12 @@ namespace nsK2EngineLow {
 			m_boneMatricesStructureBuffer.Update(m_skeleton->GetBoneMatricesTopAddress());
 		}
 		int descriptorHeapNo = 0;
+		int meshNo = 0;
 		for (auto& mesh : m_meshs) {
 			//1. 頂点バッファを設定。
-			if (m_isUseComputedAnimatedVertexBuffer) {
-				rc.SetVertexBuffer(mesh->m_animatedVertexBuffer);
+			if (m_computedAnimationVertexBuffer){
+				// アニメーション計算済みモデルが指定されている。
+				rc.SetVertexBuffer(m_computedAnimationVertexBuffer->GetAnimatedVertexBuffer(meshNo));
 			}
 			else {
 				rc.SetVertexBuffer(mesh->m_vertexBuffer);
@@ -280,6 +286,7 @@ namespace nsK2EngineLow {
 				rc.DrawIndexedInstance(ib->GetCount(), numInstance);
 				descriptorHeapNo++;
 			}
+			meshNo++;
 		}
 	}
 }

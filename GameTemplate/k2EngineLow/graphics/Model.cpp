@@ -46,7 +46,7 @@ namespace nsK2EngineLow {
 			initData.m_isDepthWrite,
 			initData.m_isDepthTest,
 			initData.m_cullMode,
-			initData.m_isUseComputedAnimatedVertexBuffer
+			initData.m_computedAnimationVertexBuffer
 		);
 
 		UpdateWorldMatrix(g_vec3Zero, g_quatIdentity, g_vec3One);

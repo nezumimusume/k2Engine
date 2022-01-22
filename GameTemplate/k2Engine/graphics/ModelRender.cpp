@@ -46,14 +46,14 @@ namespace nsK2Engine {
 		else {
 			modelInitData.m_vsEntryPointFunc = "VSMain";
 		}
-		if (m_animationClips != nullptr) {
+		/*if (m_animationClips != nullptr) {
 			if (m_isEnableInstancingDraw) {
 				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinInstancing";
 			}
 			else {
 				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkin";
 			}
-		}
+		}*/
 	}
 	void ModelRender::IniTranslucent(
 		const char* filePath,
@@ -69,6 +69,8 @@ namespace nsK2Engine {
 		InitSkeleton(filePath);
 		//アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
+		// アニメーション済み頂点バッファの計算処理を初期化。
+		InitComputeAnimatoinVertexBuffer(filePath, enModelUpAxis);
 		//半透明オブジェクト描画パスで使用されるモデルを初期化。
 		InitModelOnTranslucent(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
 		//ZPrepass描画用のモデルを初期化。
@@ -86,6 +88,9 @@ namespace nsK2Engine {
 		//インスタンシング描画用のデータを初期化。
 		InitInstancingDraw(1);
 		InitSkeleton(initData.m_tkmFilePath);
+
+		// todo アニメーション済み頂点バッファの計算処理を初期化。
+		InitComputeAnimatoinVertexBuffer(initData.m_tkmFilePath, initData.m_modelUpAxis);
 
 		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		//作成した初期化データをもとにモデルを初期化する。
@@ -113,6 +118,8 @@ namespace nsK2Engine {
 		InitSkeleton(filePath);
 		// アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationClips, enModelUpAxis);
+		// アニメーション済み頂点バッファの計算処理を初期化。
+		InitComputeAnimatoinVertexBuffer(filePath, enModelUpAxis);
 		// GBuffer描画用のモデルを初期化。
 		InitModelOnRenderGBuffer(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
 		// ZPrepass描画用のモデルを初期化。
@@ -203,6 +210,7 @@ namespace nsK2Engine {
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		modelInitData.m_colorBufferFormat[1] = DXGI_FORMAT_R8G8B8A8_SNORM;
 		modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 
 		if (m_isEnableInstancingDraw) {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
@@ -211,7 +219,13 @@ namespace nsK2Engine {
 		m_renderToGBufferModel.Init(modelInitData);
 
 	}
+	void ModelRender::InitComputeAnimatoinVertexBuffer(
+		const char* tkmFilePath,
+		EnModelUpAxis enModelUpAxis)
+	{
+		m_computeAnimationVertexBuffer.Init(tkmFilePath, enModelUpAxis);
 
+	}
 	void ModelRender::InitModelOnTranslucent(
 		RenderingEngine& renderingEngine,
 		const char* tkmFilePath,
@@ -247,6 +261,8 @@ namespace nsK2Engine {
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		modelInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
+		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
+
 		int expandSRVNo = 0;
 		if (m_isEnableInstancingDraw) {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
@@ -293,6 +309,8 @@ namespace nsK2Engine {
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
 
+		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
+
 		for (int ligNo = 0; ligNo < MAX_DIRECTIONAL_LIGHT; ligNo++)
 		{
 			ConstantBuffer* cameraParamCBArray = m_drawShadowMapCameraParamCB[ligNo];
@@ -330,6 +348,7 @@ namespace nsK2Engine {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
+		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 
 		m_zprepassModel.Init(modelInitData);
 	}
@@ -416,6 +435,10 @@ namespace nsK2Engine {
 				m_fixNumInstanceOnFrame = 1;
 			}
 		}
+	}
+	void ModelRender::OnComputeVertex(RenderContext& rc)
+	{
+		m_computeAnimationVertexBuffer.Dispatch(rc);
 	}
 	void ModelRender::OnRenderShadowMap(
 		RenderContext& rc,
