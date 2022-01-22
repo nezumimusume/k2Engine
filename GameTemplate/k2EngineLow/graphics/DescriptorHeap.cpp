@@ -54,7 +54,7 @@ namespace nsK2EngineLow {
 		}
 
 	}
-	int g_numDescriptorHeap = 0;
+	
 	void DescriptorHeap::Commit()
 	{
 		Release();
@@ -67,7 +67,7 @@ namespace nsK2EngineLow {
 
 
 		auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_descriptorHeap));
-		g_numDescriptorHeap++;
+		
 		if (FAILED(hr)) {
 			MessageBox(nullptr, L"DescriptorHeap::Commit ディスクリプタヒープの作成に失敗しました。", L"エラー", MB_OK);
 			std::abort();

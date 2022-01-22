@@ -3,6 +3,7 @@
 #include "MyRenderer.h"
 #include "geometry/AABB.h"
 #include "geometry/geometryData.h"
+#include "graphics/ComputeAnimationVertexBuffer.h"
 
 namespace nsK2Engine {
 	class RenderingEngine;
@@ -271,6 +272,11 @@ namespace nsK2Engine {
 			int numAnimationClips,
 			EnModelUpAxis enModelUpAxis);
 		/// <summary>
+		/// 頂点計算パスから呼び出される処理。
+		/// </summary>
+		/// <param name="rc"></param>
+		void OnComputeVertex(RenderContext& rc);
+		/// <summary>
 		/// シャドウマップへの描画パスから呼ばれる処理。
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
@@ -337,6 +343,14 @@ namespace nsK2Engine {
 		/// <param name="maxInstance">最大インスタンス数</param>
 		void InitInstancingDraw(int maxInstance);
 		/// <summary>
+		/// アニメーション済み頂点バッファの計算処理を初期化。
+		/// </summary>
+		/// <param name="tkmFilePath">tkmファイルのファイルパス</param>
+		/// <param name="enModelUpAxis">モデルの上軸</param>
+		void InitComputeAnimatoinVertexBuffer(
+			const char* tkmFilePath,
+			EnModelUpAxis enModelUpAxis);
+		/// <summary>
 		/// GBuffer描画用のモデルを初期化。
 		/// </summary>
 		/// <param name="renderingEngine">レンダリングエンジン</param>
@@ -383,6 +397,7 @@ namespace nsK2Engine {
 		Vector3						m_scale = Vector3::One;				// 拡大率。
 		EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		// FBXの上方向。
 		Animation					m_animation;						// アニメーション。
+		ComputeAnimationVertexBuffer m_computeAnimationVertexBuffer;	// アニメーション済み頂点バッファの計算処理。
 		Model						m_zprepassModel;					// ZPrepassで描画されるモデル
 		Model						m_forwardRenderModel;				// フォワードレンダリングの描画パスで描画されるモデル
 		Model						m_translucentModel;					// 半透明モデル。

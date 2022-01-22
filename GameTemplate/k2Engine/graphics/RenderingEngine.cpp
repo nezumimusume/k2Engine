@@ -217,13 +217,15 @@ namespace nsK2Engine {
         m_pointLightNoListInTileUAV.Init(
             sizeof(int),
             MAX_POINT_LIGHT * NUM_TILE,
-            nullptr
+            nullptr,
+            false
         );
         // タイルごとのスポットライトの番号を記憶するリストのUAVを作成。
         m_spotLightNoListInTileUAV.Init(
             sizeof(int),
             MAX_SPOT_LIGHT * NUM_TILE,
-            nullptr
+            nullptr,
+            false
         );
         // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
         InitDefferedLighting_Sprite();
@@ -291,10 +293,19 @@ namespace nsK2Engine {
         // シーンライトの更新。
         m_sceneLight.Update();
     }
+    void RenderingEngine::ComputeAnimatedVertex(RenderContext& rc)
+    {
+        for (auto& renderObj : m_renderObjects) {
+            renderObj->OnComputeVertex(rc);
+        }
+    }
     void RenderingEngine::Execute(RenderContext& rc)
     {
         // シーンライトのデータをコピー。
         m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
+
+        // アニメーション済み頂点の計算。
+        ComputeAnimatedVertex(rc);
 
         // シャドウマップへの描画
         RenderToShadowMap(rc);

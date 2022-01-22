@@ -47,6 +47,7 @@ namespace nsK2Engine {
         // レンダリングパス
         enum class EnRenderingPass
         {
+            enComputeAnimatedVertex,    // アニメーション済み頂点計算。
             enRenderToShadowMap,        // シャドウマップへの描画パス
             enZPrepass,                 // ZPrepass
             enRenderToVolumeLightMap,   // ボリュームライトマップへの描画
@@ -389,6 +390,13 @@ namespace nsK2Engine {
         /// </summary>
         void InitDefferedLighting_Sprite();
         /// <summary>
+        /// アニメーション済み頂点の計算。
+        /// </summary>
+        /// <remark>
+        /// </remark>
+        /// <param name="rc">レンダリングコンテキスト</param>
+        void ComputeAnimatedVertex(RenderContext& rc);
+        /// <summary>
         /// シャドウマップに描画
         /// </summary>
         /// <param name="rc">レンダリングコンテキスト</param>
@@ -476,6 +484,7 @@ namespace nsK2Engine {
             Texture m_texture;          // IBLテクスチャ
             float m_luminance = 1.0f;   // 明るさ。
         };
+      
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
         VolumeLightRender m_volumeLightRender;                          // ボリュームライトレンダラー。

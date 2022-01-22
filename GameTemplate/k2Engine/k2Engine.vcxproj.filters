@@ -113,7 +113,6 @@
     <ClCompile Include="geometry\SceneGeometryData.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\preRender\CalcAnimatedVertex.cpp" />
     <ClCompile Include="dbg\dbgVectorRenderer.cpp">
       <Filter>dbg</Filter>
     </ClCompile>
@@ -226,7 +225,6 @@
     <ClInclude Include="geometry\SceneGeometryData.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\preRender\CalcAnimatedVertex.h" />
     <ClInclude Include="dbg\dbgVectorRenderer.h">
       <Filter>dbg</Filter>
     </ClInclude>

@@ -22,6 +22,13 @@ namespace nsK2Engine {
 
 		}
 		/// <summary>
+		/// 頂点計算パスから呼ばれる処理。
+		/// </summary>
+		/// <param name="rc"></param>
+		virtual void OnComputeVertex( RenderContext& rc )
+		{
+		}
+		/// <summary>
 		/// ZPrepassから呼ばれる処理。
 		/// </summary>
 		/// <param name="rc"></param>

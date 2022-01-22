@@ -18,7 +18,13 @@ namespace nsK2EngineLow {
 		/// <param name="numElement">エレメントの数。</param>
 		/// <param name="initData">初期データ。</param>
 		void Init(int sizeOfElement, int numElement, void* initData);
-
+		/// <summary>
+		/// 頂点バッファを使って構造化バッファを初期化する。
+		/// </summary>
+		/// <param name="vb"></param>
+		/// <param name="isUpdateByCPU"></param>
+		void Init(const VertexBuffer& vb, bool isUpdateByCPU);
+		
 		/// <summary>
 		/// SRVに登録。
 		/// </summary>

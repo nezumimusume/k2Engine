@@ -31,6 +31,16 @@ namespace nsK2EngineLow {
 		m_vertexBufferView.SizeInBytes = size;
 		m_vertexBufferView.StrideInBytes = stride;
 	}
+	void VertexBuffer::Init(RWStructuredBuffer& rwStructuredBuffer)
+	{
+		Release();
+		m_vertexBuffer = rwStructuredBuffer.GetD3DResoruce();
+		m_vertexBuffer->AddRef();
+		//頂点バッファのビューを作成。
+		m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+		m_vertexBufferView.SizeInBytes = rwStructuredBuffer.GetSize();
+		m_vertexBufferView.StrideInBytes = rwStructuredBuffer.GetStride();
+	}
 	void VertexBuffer::Copy(void* srcVertices)
 	{
 		uint8_t* pData;
