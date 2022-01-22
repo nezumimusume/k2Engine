@@ -50,6 +50,7 @@ namespace nsK2EngineLow {
 		struct CB_0 {
 			int numVertex;
 		};
+		bool m_isFirstDispatch = true;											
 		int m_numMesh = 0;														// メッシュの数。
 		void* m_boneMatrixArray = nullptr;										// ボーン行列の配列の先頭アドレス。
 		DescriptorHeap m_descriptorHeap;										// ディスクリプタヒープ。

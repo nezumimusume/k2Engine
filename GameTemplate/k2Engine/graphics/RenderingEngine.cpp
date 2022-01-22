@@ -217,13 +217,15 @@ namespace nsK2Engine {
         m_pointLightNoListInTileUAV.Init(
             sizeof(int),
             MAX_POINT_LIGHT * NUM_TILE,
-            nullptr
+            nullptr,
+            false
         );
         // タイルごとのスポットライトの番号を記憶するリストのUAVを作成。
         m_spotLightNoListInTileUAV.Init(
             sizeof(int),
             MAX_SPOT_LIGHT * NUM_TILE,
-            nullptr
+            nullptr,
+            false
         );
         // ポストエフェクト的にディファードライティングを行うためのスプライトを初期化
         InitDefferedLighting_Sprite();

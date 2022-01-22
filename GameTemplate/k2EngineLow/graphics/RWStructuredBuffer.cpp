@@ -9,7 +9,7 @@ namespace nsK2EngineLow {
 	}
 	void RWStructuredBuffer::Release()
 	{
-		//アンマーップ
+		//アンマップ
 		CD3DX12_RANGE readRange(0, 0);
 		for (auto& buffer : m_buffersOnGPU) {
 			if (buffer) {
@@ -18,7 +18,7 @@ namespace nsK2EngineLow {
 			}
 		}
 	}
-	void RWStructuredBuffer::Init(int sizeOfElement, int numElement, void* initData)
+	void RWStructuredBuffer::Init(int sizeOfElement, int numElement, void* initData, bool isAccessCPU)
 	{
 		Release();
 		m_sizeOfElement = sizeOfElement;
@@ -29,12 +29,22 @@ namespace nsK2EngineLow {
 		int bufferNo = 0;
 
 		D3D12_HEAP_PROPERTIES prop{};
-		prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-		prop.CreationNodeMask = 1;
-		prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-		prop.Type = D3D12_HEAP_TYPE_CUSTOM;
-		prop.VisibleNodeMask = 1;
-
+		if (isAccessCPU) {
+			// CPUアクセスする？
+			prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+			prop.CreationNodeMask = 1;
+			prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+			prop.Type = D3D12_HEAP_TYPE_CUSTOM;
+			prop.VisibleNodeMask = 1;
+		}
+		else {
+			// CPUアクセスしない。
+			prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+			prop.CreationNodeMask = 1;
+			prop.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+			prop.Type = D3D12_HEAP_TYPE_DEFAULT;
+			prop.VisibleNodeMask = 1;
+		}
 		for (auto& buffer : m_buffersOnGPU) {
 			device->CreateCommittedResource(
 				&prop,
@@ -46,13 +56,14 @@ namespace nsK2EngineLow {
 			);
 			//構造化バッファをCPUからアクセス可能な仮想アドレス空間にマッピングする。
 			//マップ、アンマップのオーバーヘッドを軽減するためにはこのインスタンスが生きている間は行わない。
+			if(isAccessCPU)
 			{
+				// 初期データのコピーができるのは
 				CD3DX12_RANGE readRange(0, 0);        //     intend to read from this resource on the CPU.
 				buffer->Map(0, &readRange, reinterpret_cast<void**>(&m_buffersOnCPU[bufferNo]));
-			}
-			if (initData != nullptr) {
 				memcpy(m_buffersOnCPU[bufferNo], initData, m_sizeOfElement * m_numElement);
 			}
+
 			bufferNo++;
 		}
 		m_isInited = true;
@@ -105,10 +116,6 @@ namespace nsK2EngineLow {
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
 		return m_buffersOnGPU[backBufferIndex];
 	}
-	/// <summary>
-	/// CPUからアクセス可能なリソースを取得する。
-	/// </summary>
-	/// <returns></returns>
 	void* RWStructuredBuffer::GetResourceOnCPU()
 	{
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();

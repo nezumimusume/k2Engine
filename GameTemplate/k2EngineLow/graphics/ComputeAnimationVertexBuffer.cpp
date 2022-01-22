@@ -4,10 +4,10 @@
 
 namespace nsK2EngineLow {
 	namespace {
-		const int NUM_CB_ONE_DISPATCH = 1;	// 1回のディスパッチで使用される定数バッファの数。
-		const int NUM_SRV_ONE_DISPATCH = 2; // 1回のディスパッチで使用されるSRVの数
-		const int NUM_UAV_ONE_DISPATCH = 1; // 1回のディスパッチで使用されるUAVの数
-		const int NUM_THREAD_IN_GROUP = 64;	// 1スレッドグループに含まれるスレッドの数。
+		const int NUM_CB_ONE_DISPATCH = 1;		// 1回のディスパッチで使用される定数バッファの数。
+		const int NUM_SRV_ONE_DISPATCH = 2;		// 1回のディスパッチで使用されるSRVの数
+		const int NUM_UAV_ONE_DISPATCH = 1;		// 1回のディスパッチで使用されるUAVの数
+		const int NUM_THREAD_IN_GROUP = 256;	// 1スレッドグループに含まれるスレッドの数。
 	}
 	void ComputeAnimationVertexBuffer::Init(
 		const char* tkmFilePath,
@@ -39,7 +39,8 @@ namespace nsK2EngineLow {
 			m_animatedVertexBufferRWSBArray[meshNo].Init(
 				vertexStride,
 				numVertex,
-				(void*)&mesh.vertexBuffer[0]
+				nullptr,
+				false
 			);
 			// アニメーション済み頂点を記憶するためのバッファを作成。
 			 m_animatedVertexBufferArray[meshNo].Init(m_animatedVertexBufferRWSBArray[meshNo]);
@@ -114,6 +115,16 @@ namespace nsK2EngineLow {
 	{
 		BeginGPUEvent("ComputeAnimationVertexBuffer");
 
+		if (!m_isFirstDispatch) {
+			for (int meshNo = 0; meshNo < m_numMesh; meshNo++) {
+				rc.TransitionResourceState(
+					m_animatedVertexBufferArray[meshNo].GetID3DResourceAddress(),
+					D3D12_RESOURCE_STATE_GENERIC_READ,
+					D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+				);
+			}
+			m_isFirstDispatch = false;
+		}
 		if (m_boneMatrixArray) {
 			// ボーン行列が指定されている。
 			m_boneMatricesStructureBuffer.Update(m_boneMatrixArray);
@@ -128,9 +139,17 @@ namespace nsK2EngineLow {
 				cb0.numVertex = numVertex;
 				m_cb0Array[meshNo].CopyToVRAM(&cb0);
 				rc.Dispatch(numThreadGround, 1, 1);
+
 			}
 		}
-		
+		// リソースステートを遷移させる。
+		for (int meshNo = 0; meshNo < m_numMesh; meshNo++) {
+			rc.TransitionResourceState(
+				m_animatedVertexBufferArray[meshNo].GetID3DResourceAddress(),
+				D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+				D3D12_RESOURCE_STATE_GENERIC_READ
+			);
+		}
 		EndGPUEvent();
 	}
 }

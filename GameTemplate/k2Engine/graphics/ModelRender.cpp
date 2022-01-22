@@ -2,7 +2,7 @@
 #include "ModelRender.h"
 #include "RenderingEngine.h"
 
-// #define USE_COMPUTED_ANIMATED_VERTEX	// 定義でアニメーション計算済み頂点バッファを利用する。
+#define USE_COMPUTED_ANIMATED_VERTEX	// 定義でアニメーション計算済み頂点バッファを利用する。
 
 namespace nsK2Engine {
 	ModelRender::ModelRender()
@@ -44,20 +44,17 @@ namespace nsK2Engine {
 		if (m_isEnableInstancingDraw) {
 			//インスタンシング描画。
 			modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
+			
 		}
 		else {
 			modelInitData.m_vsEntryPointFunc = "VSMain";
 		}
-#ifndef USE_COMPUTED_ANIMATED_VERTEX
+
 		if (m_animationClips != nullptr) {
 			if (m_isEnableInstancingDraw) {
 				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinInstancing";
 			}
-			else {
-				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkin";
-			}
 		}
-#endif
 	}
 	void ModelRender::IniTranslucent(
 		const char* filePath,
@@ -78,7 +75,7 @@ namespace nsK2Engine {
 		//半透明オブジェクト描画パスで使用されるモデルを初期化。
 		InitModelOnTranslucent(*g_renderingEngine, filePath, enModelUpAxis, isShadowReciever);
 		//ZPrepass描画用のモデルを初期化。
-		//InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
+		// InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 		//シャドウマップ描画用のモデルを初期化。
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 		// 幾何学データを初期化。
@@ -202,6 +199,7 @@ namespace nsK2Engine {
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
+			modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 		}
 
 		if (isShadowReciever) {
@@ -214,9 +212,7 @@ namespace nsK2Engine {
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		modelInitData.m_colorBufferFormat[1] = DXGI_FORMAT_R8G8B8A8_SNORM;
 		modelInitData.m_colorBufferFormat[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
-#ifdef USE_COMPUTED_ANIMATED_VERTEX
-		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
+
 		if (m_isEnableInstancingDraw) {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
@@ -228,14 +224,12 @@ namespace nsK2Engine {
 		const char* tkmFilePath,
 		EnModelUpAxis enModelUpAxis)
 	{
-#ifdef USE_COMPUTED_ANIMATED_VERTEX
 		m_computeAnimationVertexBuffer.Init(
 			tkmFilePath, 
 			m_skeleton.GetNumBones(),
 			m_skeleton.GetBoneMatricesTopAddress(),
 			enModelUpAxis
 		);
-#endif
 	}
 	void ModelRender::InitModelOnTranslucent(
 		RenderingEngine& renderingEngine,
@@ -253,6 +247,7 @@ namespace nsK2Engine {
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
+			modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 		}
 
 		/*if (isShadowReciever) {
@@ -272,9 +267,7 @@ namespace nsK2Engine {
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		modelInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
-#ifdef USE_COMPUTED_ANIMATED_VERTEX
-		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
+
 		int expandSRVNo = 0;
 		if (m_isEnableInstancingDraw) {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
@@ -306,6 +299,7 @@ namespace nsK2Engine {
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
+			modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 		}
 
 		modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
@@ -320,9 +314,7 @@ namespace nsK2Engine {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
-#ifdef USE_COMPUTED_ANIMATED_VERTEX
-		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
+
 		for (int ligNo = 0; ligNo < MAX_DIRECTIONAL_LIGHT; ligNo++)
 		{
 			ConstantBuffer* cameraParamCBArray = m_drawShadowMapCameraParamCB[ligNo];
@@ -353,6 +345,7 @@ namespace nsK2Engine {
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
+			modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
 		}
 
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -360,9 +353,7 @@ namespace nsK2Engine {
 			// インスタンシング描画を行う場合は、拡張SRVにインスタンシング描画用のデータを設定する。
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
-#ifdef USE_COMPUTED_ANIMATED_VERTEX
-		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
+
 		m_zprepassModel.Init(modelInitData);
 	}
 	void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
@@ -371,10 +362,18 @@ namespace nsK2Engine {
 		if (!m_isEnableInstancingDraw) {
 			return;
 		}
-		auto wlorldMatrix = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
+		Matrix worldMatrix;
+		if (m_translucentModel.IsInited()) {
+			// 半透明モデルはZPrepassモデルを初期化していないので、こちらを使う。
+			worldMatrix = m_translucentModel.CalcWorldMatrix(pos, rot, scale);
+		}
+		else {
+			worldMatrix = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
+		} 
+		
 
 		// インスタンシング描画を行う。
-		m_worldMatrixArray[m_numInstance] = wlorldMatrix;
+		m_worldMatrixArray[m_numInstance] = worldMatrix;
 		if (m_numInstance == 0) {
 			//インスタンス数が0の場合のみアニメーション関係の更新を行う。
 			// スケルトンを更新。
@@ -414,11 +413,7 @@ namespace nsK2Engine {
 		UpdateWorldMatrixInModes();
 
 		if (m_skeleton.IsInited()) {
-#ifdef USE_COMPUTED_ANIMATED_VERTEX
 			m_skeleton.Update(g_matIdentity);
-#else
-			m_skeleton.Update(m_zprepassModel.GetWorldMatrix());
-#endif
 		}
 
 		//アニメーションを進める。

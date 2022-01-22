@@ -25,7 +25,7 @@ RWStructuredBuffer<SVertex> g_outputVertexBuffer : register(u0);
 /*!
  * @brief CSMain
  */
-[numthreads(64, 1, 1)]
+[numthreads(256, 1, 1)]
 void CSMain(
     uint3 groupId          : SV_GroupID,
     uint3 dispatchThreadId : SV_DispatchThreadID,
@@ -43,6 +43,7 @@ void CSMain(
         }
 
         skinning += g_boneMatrix[inVertex.indices[3]] * (1.0f - w);
+        g_outputVertexBuffer[dispatchThreadId.x] = inVertex;
         g_outputVertexBuffer[dispatchThreadId.x].pos = mul( skinning, float4(inVertex.pos, 1.0f) );
     }
 }
