@@ -3,6 +3,10 @@
 
 
 namespace nsK2EngineLow {
+	namespace {
+		const int NUM_SRV_ONE_DISPATCH = 1; // 1回のディスパッチで使用されるSRVの数
+		const int NUM_UAV_ONE_DISPATCH = 1; // 1回のディスパッチで使用されるUAVの数
+	}
 	void ComputeAnimationVertexBuffer::Init(
 		const char* tkmFilePath,
 		EnModelUpAxis enModelUpAxis
@@ -14,6 +18,9 @@ namespace nsK2EngineLow {
 		m_vertexBufferSBArray = std::make_unique<StructuredBuffer[]>(m_numMesh);
 		m_animatedVertexBufferArray = std::make_unique<VertexBuffer[]>(m_numMesh);
 		m_animatedVertexBufferRWSBArray = std::make_unique<RWStructuredBuffer[]>(m_numMesh);
+		m_rootSignatureArray = std::make_unique<RootSignature[]>(m_numMesh);
+		m_pipilineStateArray = std::make_unique<PipelineState[]>(m_numMesh);
+
 		int meshNo = 0;
 		m_tkmFile.QueryMeshParts([&](const TkmFile::SMesh& mesh) {
 			int numVertex = (int)mesh.vertexBuffer.size();
@@ -40,28 +47,32 @@ namespace nsK2EngineLow {
 		m_shader.LoadCS("Assets/shader/ComputeAnimationVertexBuffer.fx", "CSMain");
 
 		// ルートシグネチャを初期化。
-		m_rootSignature.Init(
-			D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP);
-		// パイプラインステートを初期化。
-		D3D12_COMPUTE_PIPELINE_STATE_DESC  psoDesc = { 0 };
-		psoDesc.pRootSignature = m_rootSignature.Get();
-		psoDesc.CS = CD3DX12_SHADER_BYTECODE(m_shader.GetCompiledBlob());
-		psoDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-		psoDesc.NodeMask = 0;
-		m_pipelineState.Init(psoDesc);
+		for (int meshNo = 0; meshNo < m_numMesh; meshNo++) {
+			m_rootSignatureArray[meshNo].Init(
+				nullptr,
+				0,
+				0,
+				NUM_SRV_ONE_DISPATCH,
+				NUM_UAV_ONE_DISPATCH,
+				0,
+				NUM_SRV_ONE_DISPATCH * meshNo,
+				NUM_UAV_ONE_DISPATCH * meshNo
+			);
+
+			// パイプラインステートを初期化。
+			D3D12_COMPUTE_PIPELINE_STATE_DESC  psoDesc = { 0 };
+			psoDesc.pRootSignature = m_rootSignatureArray[meshNo].Get();
+			psoDesc.CS = CD3DX12_SHADER_BYTECODE(m_shader.GetCompiledBlob());
+			psoDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+			psoDesc.NodeMask = 0;
+			m_pipilineStateArray[meshNo].Init(psoDesc);
+		}
 		
 		// ディスクリプタヒープを作成。
 		CreateDescriptorHeaps();
-		// カリカリカリ。
-		//m_descriptorHeap.Commit();
 	}
 	void ComputeAnimationVertexBuffer::CreateDescriptorHeaps()
 	{
-		const int NUM_SRV_ONE_DISPATCH = 1; // 1回のディスパッチで使用されるSRVの数
-		const int NUM_UAV_ONE_DISPATCH = 1; // 1回のディスパッチで使用されるUAVの数
 		// SRVとUAVの総数を計算する。
 		int numSrvTotal = NUM_SRV_ONE_DISPATCH * m_numMesh;
 		int numUavTotal = NUM_UAV_ONE_DISPATCH * m_numMesh;

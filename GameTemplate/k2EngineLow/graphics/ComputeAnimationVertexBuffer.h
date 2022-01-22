@@ -38,11 +38,11 @@ namespace nsK2EngineLow {
 		void CreateDescriptorHeaps();
 	private:
 		int m_numMesh = 0;														// メッシュの数。
-		RootSignature m_rootSignature;											// ルートシグネチャ。
-		PipelineState m_pipelineState;											// パイプラインステート。
 		DescriptorHeap m_descriptorHeap;										// ディスクリプタヒープ。
 		Shader m_shader;														// シェーダー。
 		TkmFile m_tkmFile;														// tkmファイル。
+		std::unique_ptr< PipelineState[]> m_pipilineStateArray;					// パイプラインステートの配列。
+		std::unique_ptr<RootSignature[]> m_rootSignatureArray;					// ルートシグネチャの配列。
 		std::unique_ptr<VertexBuffer[]> m_vertexBufferArray;					// 頂点バッファの配列。配列のインデックスはtkmファイルのメッシュ番号に対応しています。
 		std::unique_ptr<VertexBuffer[]> m_animatedVertexBufferArray;			// アニメーション計算済み頂点バッファの配列。配列のインデックスはtkmファイルのメッシュ番号に対応しています。
 		std::unique_ptr<StructuredBuffer[]> m_vertexBufferSBArray;				// 頂点バッファのストラクチャードバッファの配列。
