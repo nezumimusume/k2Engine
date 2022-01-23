@@ -10,10 +10,14 @@ namespace nsK2EngineLow {
 	{
 		//アンマーップ
 		CD3DX12_RANGE readRange(0, 0);
-		for (auto& buffer : m_buffersOnGPU) {
-			if (buffer) {
-				buffer->Unmap(0, &readRange);
-				ReleaseD3D12Object(buffer);
+		for (int i = 0; i < 2; i++) {
+			if (m_buffersOnGPU[i]) {
+				if (m_buffersOnCPU[i]) {
+					// メインメモリにマップしているのでアンマップを行う。
+					m_buffersOnGPU[i]->Unmap(0, &readRange);
+				}
+				ReleaseD3D12Object(m_buffersOnGPU[i]);
+				m_buffersOnGPU[i] = nullptr;
 			}
 		}
 	}
