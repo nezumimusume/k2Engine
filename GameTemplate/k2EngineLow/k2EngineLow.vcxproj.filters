@@ -225,7 +225,7 @@
     <ClCompile Include="graphics\FrameBuffer.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GameTemplate\k2EngineLow\graphics\ComputeAnimationVertexBuffer.cpp">
+    <ClCompile Include="graphics\ComputeAnimationVertexBuffer.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -502,7 +502,7 @@
     <ClInclude Include="graphics\FrameBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\graphics\ComputeAnimationVertexBuffer.h">
+    <ClInclude Include="graphics\ComputeAnimationVertexBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>

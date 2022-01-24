@@ -250,7 +250,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\GameTemplate\k2EngineLow\graphics\ComputeAnimationVertexBuffer.cpp" />
     <ClCompile Include="AI\PathFinding\Cell.cpp" />
     <ClCompile Include="AI\PathFinding\NaviMesh.cpp" />
     <ClCompile Include="AI\PathFinding\Path.cpp" />
@@ -263,6 +262,7 @@
     <ClCompile Include="graphics\AnimationClip.cpp" />
     <ClCompile Include="graphics\AnimationPlayController.cpp" />
     <ClCompile Include="graphics\Camera.cpp" />
+    <ClCompile Include="graphics\ComputeAnimationVertexBuffer.cpp" />
     <ClCompile Include="graphics\ConstantBuffer.cpp" />
     <ClCompile Include="graphics\DescriptorHeap.cpp" />
     <ClCompile Include="graphics\effect\Effect.cpp" />
@@ -333,7 +333,6 @@
     <ClCompile Include="tkFile\TksFile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\GameTemplate\k2EngineLow\graphics\ComputeAnimationVertexBuffer.h" />
     <ClInclude Include="AI\PathFinding\Cell.h" />
     <ClInclude Include="AI\PathFinding\NaviMesh.h" />
     <ClInclude Include="AI\PathFinding\Path.h" />
@@ -348,6 +347,7 @@
     <ClInclude Include="graphics\AnimationClip.h" />
     <ClInclude Include="graphics\AnimationPlayController.h" />
     <ClInclude Include="graphics\Camera.h" />
+    <ClInclude Include="graphics\ComputeAnimationVertexBuffer.h" />
     <ClInclude Include="graphics\ConstantBuffer.h" />
     <ClInclude Include="graphics\d3dx12.h" />
     <ClInclude Include="graphics\DescriptorHeap.h" />
