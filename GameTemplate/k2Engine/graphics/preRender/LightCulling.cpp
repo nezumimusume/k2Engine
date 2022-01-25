@@ -25,7 +25,8 @@ namespace nsK2Engine {
         m_descriptorHeap.Commit();
 
         // ルートシグネチャを作成。
-        m_rootSignature.Init(D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+        m_rootSignature.Init(
+            D3D12_FILTER_MIN_MAG_MIP_LINEAR,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP,
             D3D12_TEXTURE_ADDRESS_MODE_WRAP);

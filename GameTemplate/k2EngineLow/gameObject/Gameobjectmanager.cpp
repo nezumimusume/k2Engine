@@ -39,7 +39,6 @@ namespace nsK2EngineLow {
 			}
 		}
 
-
 		for (auto& goList : m_gameObjectListArray) {
 			for (auto& go : goList) {
 				go->UpdateWrapper();

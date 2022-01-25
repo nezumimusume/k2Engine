@@ -225,6 +225,9 @@
     <ClCompile Include="graphics\FrameBuffer.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\ComputeAnimationVertexBuffer.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -497,6 +500,9 @@
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
     <ClInclude Include="graphics\FrameBuffer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\ComputeAnimationVertexBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>

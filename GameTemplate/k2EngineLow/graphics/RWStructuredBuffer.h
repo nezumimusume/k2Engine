@@ -20,7 +20,8 @@ namespace nsK2EngineLow {
 		/// <param name="sizeOfElement">エレメントのサイズ。</param>
 		/// <param name="numElement">エレメントの数。</param>
 		/// <param name="initData">初期データ。</param>
-		void Init(int sizeOfElement, int numElement, void* initData);
+		/// <param name="isAccessCPU">CPUからアクセスする？</param>
+		void Init(int sizeOfElement, int numElement, void* initData, bool isAccessCPU);
 		/// <summary>
 		/// 頂点バッファを使用して構造化バッファを初期化。
 		/// </summary>
@@ -66,7 +67,22 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <returns></returns>
 		void* GetResourceOnCPU();
-
+		/// <summary>
+		/// バッファサイズを取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetSize() const
+		{
+			return m_sizeOfElement * m_numElement;
+		}
+		/// <summary>
+		/// 1要素のサイズを取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetStride() const
+		{
+			return m_sizeOfElement;
+		}
 		ID3D12Resource* GetD3DResoruce();
 	private:
 		/// <summary>

@@ -3,6 +3,7 @@
 #include "Skeleton.h"
 #include "Material.h"
 #include "IndexBuffer.h"
+#include "ComputeAnimationVertexBuffer.h"
 
 namespace nsK2EngineLow {
 	MeshParts::~MeshParts()
@@ -33,7 +34,8 @@ namespace nsK2EngineLow {
 		AlphaBlendMode alphaBlendMode,
 		bool isDepthWrite,
 		bool isDepthTest,
-		D3D12_CULL_MODE cullMode
+		D3D12_CULL_MODE cullMode,
+		ComputeAnimationVertexBuffer* computedAnimationVertexBuffer
 	)
 	{
 		m_meshs.resize(tkmFile.GetNumMesh());
@@ -53,7 +55,8 @@ namespace nsK2EngineLow {
 				alphaBlendMode,
 				isDepthWrite,
 				isDepthTest,
-				cullMode
+				cullMode,
+				computedAnimationVertexBuffer
 			);
 			meshNo++;
 		});
@@ -132,16 +135,28 @@ namespace nsK2EngineLow {
 		AlphaBlendMode alphaBlendMode,
 		bool isDepthWrite,
 		bool isDepthTest,
-		D3D12_CULL_MODE cullMode
+		D3D12_CULL_MODE cullMode,
+		ComputeAnimationVertexBuffer* computedAnimationVertexBuffer
 	) {
 		//1. 頂点バッファを作成。
 		int numVertex = (int)tkmMesh.vertexBuffer.size();
 		int vertexStride = sizeof(TkmFile::SVertex);
 		auto mesh = new SMesh;
 		mesh->skinFlags.reserve(tkmMesh.materials.size());
+
 		mesh->m_vertexBuffer.Init(vertexStride * numVertex, vertexStride);
 		mesh->m_vertexBuffer.Copy((void*)&tkmMesh.vertexBuffer[0]);
-
+		/*
+		if (dispatchComputedAnimationVertexBuffer) {
+			// アニメーション済み頂点を記憶するためのバッファを作成。
+			mesh->m_animatedVertexBuffer.Init(vertexStride * numVertex, vertexStride);
+			mesh->m_animatedVertexBuffer.Copy((void*)&tkmMesh.vertexBuffer[0]);
+			// アニメーション済み頂点バッファのRWStructuredBufferを初期化。
+			mesh->m_animatedVertexBufferRWSB.Init(mesh->m_animatedVertexBuffer, false);
+		}
+		*/
+		m_computedAnimationVertexBuffer = computedAnimationVertexBuffer;
+		
 		auto SetSkinFlag = [&](int index) {
 			if (tkmMesh.vertexBuffer[index].skinWeights.x > 0.0f) {
 				//スキンがある。
@@ -247,9 +262,17 @@ namespace nsK2EngineLow {
 			m_boneMatricesStructureBuffer.Update(m_skeleton->GetBoneMatricesTopAddress());
 		}
 		int descriptorHeapNo = 0;
+		int meshNo = 0;
 		for (auto& mesh : m_meshs) {
 			//1. 頂点バッファを設定。
 			rc.SetVertexBuffer(mesh->m_vertexBuffer);
+			if (m_computedAnimationVertexBuffer){
+				// アニメーション計算済みモデルが指定されている。
+				rc.SetVertexBuffer(m_computedAnimationVertexBuffer->GetAnimatedVertexBuffer(meshNo));
+			}
+			else {
+				rc.SetVertexBuffer(mesh->m_vertexBuffer);
+			}
 			//マテリアルごとにドロー。
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 				//このマテリアルが貼られているメッシュの描画開始。
@@ -264,6 +287,7 @@ namespace nsK2EngineLow {
 				rc.DrawIndexedInstance(ib->GetCount(), numInstance);
 				descriptorHeapNo++;
 			}
+			meshNo++;
 		}
 	}
 }

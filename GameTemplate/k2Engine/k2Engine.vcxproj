@@ -51,7 +51,6 @@
     <ClCompile Include="graphics\postEffect\Ssao.cpp" />
     <ClCompile Include="graphics\postEffect\Ssr.cpp" />
     <ClCompile Include="graphics\postEffect\ToneMap.cpp" />
-    <ClCompile Include="graphics\preRender\CalcAnimatedVertex.cpp" />
     <ClCompile Include="graphics\preRender\CascadeShadowMapMatrix.cpp" />
     <ClCompile Include="graphics\preRender\LightCulling.cpp" />
     <ClCompile Include="graphics\preRender\ShadowMapRender.cpp" />
@@ -96,7 +95,6 @@
     <ClInclude Include="graphics\postEffect\Ssao.h" />
     <ClInclude Include="graphics\postEffect\Ssr.h" />
     <ClInclude Include="graphics\postEffect\ToneMap.h" />
-    <ClInclude Include="graphics\preRender\CalcAnimatedVertex.h" />
     <ClInclude Include="graphics\preRender\CascadeShadowMapMatrix.h" />
     <ClInclude Include="graphics\preRender\LightCulling.h" />
     <ClInclude Include="graphics\preRender\ShadowMapRender.h" />

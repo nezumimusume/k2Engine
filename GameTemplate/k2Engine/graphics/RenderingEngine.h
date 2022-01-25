@@ -26,7 +26,7 @@ namespace nsK2Engine {
 
     class RenderingEngine : public Noncopyable
     {
-    
+
     public:
         // ディファードライティング用の定数バッファ
         struct SDeferredLightingCB
@@ -47,6 +47,7 @@ namespace nsK2Engine {
         // レンダリングパス
         enum class EnRenderingPass
         {
+            enComputeAnimatedVertex,    // アニメーション済み頂点計算。
             enRenderToShadowMap,        // シャドウマップへの描画パス
             enZPrepass,                 // ZPrepass
             enRenderToVolumeLightMap,   // ボリュームライトマップへの描画
@@ -226,11 +227,11 @@ namespace nsK2Engine {
         /// </summary>
         void RemoveEventListener(void* pListenerObj)
         {
-            
+
             auto it = std::find_if(
                 m_eventListeners.begin(),
                 m_eventListeners.end(),
-                [&](const SEventListenerData& listenerData){return listenerData.pListenerObj == pListenerObj;}
+                [&](const SEventListenerData& listenerData) {return listenerData.pListenerObj == pListenerObj; }
             );
             if (it != m_eventListeners.end()) {
                 m_eventListeners.erase(it);
@@ -315,7 +316,7 @@ namespace nsK2Engine {
         void AddVolumeSpotLight(VolumeLightBase& lig)
         {
             m_volumeLightRender.AddVolumeSpotLight(lig);
-            
+
         }
         /// <summary>
         /// ボリュームスポットライトをシーンから削除
@@ -388,6 +389,13 @@ namespace nsK2Engine {
         /// ディファードライティングで使用するスプライトを初期化。
         /// </summary>
         void InitDefferedLighting_Sprite();
+        /// <summary>
+        /// アニメーション済み頂点の計算。
+        /// </summary>
+        /// <remark>
+        /// </remark>
+        /// <param name="rc">レンダリングコンテキスト</param>
+        void ComputeAnimatedVertex(RenderContext& rc);
         /// <summary>
         /// シャドウマップに描画
         /// </summary>
@@ -465,10 +473,10 @@ namespace nsK2Engine {
             enGBufferNormal,                // 法線
             enGBufferMetaricShadowSmooth,   // メタリック、影パラメータ、スムース。
                                             // メタリックがr、影パラメータがg、スムースがa。gは未使用。
-            enGBufferNum,                   // G-Bufferの数
+                                            enGBufferNum,                   // G-Bufferの数
         };
 
-        
+
         /// <summary>
         /// IBLデータ
         /// </summary>
@@ -476,6 +484,7 @@ namespace nsK2Engine {
             Texture m_texture;          // IBLテクスチャ
             float m_luminance = 1.0f;   // 明るさ。
         };
+
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
         VolumeLightRender m_volumeLightRender;                          // ボリュームライトレンダラー。
@@ -487,6 +496,7 @@ namespace nsK2Engine {
         RenderTarget m_mainRTSnapshots[(int)EnMainRTSnapshot::enNum];   // メインレンダリングターゲットのスナップショット
         RenderTarget m_gBuffer[enGBufferNum];                           // G-Buffer
         PostEffect m_postEffect;                                        // ポストエフェクト
+        raytracing::Engine m_raytracingEngine;                          // レイトレエンジン。
         RWStructuredBuffer m_pointLightNoListInTileUAV;                 // タイルごとのポイントライトのリストのUAV。
         RWStructuredBuffer m_spotLightNoListInTileUAV;                  // タイルごとのスポットライトのリストのUAV。
         std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。

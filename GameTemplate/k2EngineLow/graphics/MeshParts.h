@@ -13,6 +13,7 @@ namespace nsK2EngineLow {
 	class Skeleton;
 	class Material;
 	class IShaderResource;
+	class ComputeAnimationVertexBuffer;
 	struct MaterialReInitData;
 
 
@@ -22,10 +23,12 @@ namespace nsK2EngineLow {
 	/// メッシュ
 	/// </summary>
 	struct SMesh {
-		VertexBuffer m_vertexBuffer;						//頂点バッファ。
-		std::vector< IndexBuffer* >		m_indexBufferArray;	//インデックスバッファ。
-		std::vector< Material* >		m_materials;			//マテリアル。
-		std::vector<int>				skinFlags;				//スキンを持っているかどうかのフラグ。
+		VertexBuffer m_vertexBuffer;							// 頂点バッファ。
+		VertexBuffer m_animatedVertexBuffer;					// アニメーション計算済み頂点バッファ。
+		RWStructuredBuffer m_animatedVertexBufferRWSB;			// アニメーション計算済み頂点バッファのRWストラクチャードバッファ。
+		std::vector< IndexBuffer* >		m_indexBufferArray;		// インデックスバッファ。
+		std::vector< Material* >		m_materials;			// マテリアル。
+		std::vector<int>				skinFlags;				// スキンを持っているかどうかのフラグ。
 	};
 
 	/// <summary>
@@ -37,15 +40,24 @@ namespace nsK2EngineLow {
 		/// デストラクタ。
 		/// </summary>
 		~MeshParts();
+		
 		/// <summary>
 		/// tkmファイルから初期化
 		/// </summary>
-		/// <param name="tkmFile">tkmファイル。</param>
-		/// /// <param name="fxFilePath">fxファイルのファイルパス</param>
-		/// <param name="vsEntryPointFunc">頂点シェーダーのエントリーポイントの関数名</param>
-		/// <param name="vsSkinEntryPointFunc">スキンありマテリアル用の頂点シェーダーのエントリーポイントの関数名</param>
-		/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイントの関数名</param>
-		/// <param name="colorBufferFormat">このモデルをレンダリングするカラーバッファのフォーマット</param>
+		/// <param name="tkmFile">tkmファイルのファイルパス</param>
+		/// <param name="fxFilePath">シェーダーファイルのファイルパス</param>
+		/// <param name="vsEntryPointFunc">スキンなし頂点シェーダーのエントリーポイント名</param>
+		/// <param name="vsSkinEntryPointFunc">スキンあり頂点シェーダーのエントリーポイント名</param>
+		/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイント名</param>
+		/// <param name="expandData">拡張定数バッファ。b1にバインドされます。</param>
+		/// <param name="expandDataSize">拡張定数バッファのサイズ</param>
+		/// <param name="expandShaderResourceView">拡張シェーダーリソースビューの配列</param>
+		/// <param name="colorBufferFormat">レンダリングターゲットのカラーバッファフォーマットの配列。</param>
+		/// <param name="alphaBlendMode">アルファブレンディングモード</param>
+		/// <param name="isDepthWrite">深度バッファに書き込むかどうかのフラグ</param>
+		/// <param name="isDepthTest">深度テストを行うか同課のフラグ。</param>
+		/// <param name="cullMode">カリングモード</param>
+		/// <param name="computedAnimationVertexBuffer">アニメーション済み頂点バッファを計算する処理。</param>
 		void InitFromTkmFile(
 			const TkmFile& tkmFile,
 			const char* fxFilePath,
@@ -59,7 +71,8 @@ namespace nsK2EngineLow {
 			AlphaBlendMode alphaBlendMode,
 			bool isDepthWrite,
 			bool isDepthTest,
-			D3D12_CULL_MODE cullMode
+			D3D12_CULL_MODE cullMode,
+			ComputeAnimationVertexBuffer* computedAnimationVertexBuffer
 		);
 		/// <summary>
 		/// 描画。
@@ -104,6 +117,19 @@ namespace nsK2EngineLow {
 		/// マテリアルを再初期化。
 		/// </summary>
 		void ReInitMaterials(const MaterialReInitData& reInitData);
+		/// <summary>
+		/// メッシュを取得。
+		/// </summary>
+		/// <param name="meshNo">メッシュ番号</param>
+		/// <returns>メッシュ</returns>
+		const SMesh& GetMesh(int meshNo) const
+		{
+			return *m_meshs.at(meshNo);
+		}
+		SMesh& GetMesh(int meshNo)
+		{
+			return *m_meshs.at(meshNo);
+		}
 	private:
 		/// <summary>
 		/// tkmメッシュからメッシュを作成。
@@ -114,7 +140,12 @@ namespace nsK2EngineLow {
 		/// <param name="vsEntryPointFunc">頂点シェーダーのエントリーポイントの関数名</param>
 		/// <param name="vsSkinEntryPointFunc">スキンありマテリアル用の頂点シェーダーのエントリーポイントの関数名</param>
 		/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイントの関数名</param>
-		/// <param name="colorBufferFormat">このモデルをレンダリングするカラーバッファのフォーマット</param>
+		/// <param name="colorBufferFormat">このモデルをレンダリングするカラーバッファのフォーマットの配列</param>
+		/// <param name="alphaBlendMode">アルファブレンディングモード</param>
+		/// <param name="isDepthWrite">深度値を深度バッファに書き込むかのフラグ</param>
+		/// <param name="isDepthTest">深度テストを行うかどうかのフラグ</param>
+		/// <param name="cullMode">カリングモード</param>
+		/// <param name="computedAnimationVertexBuffer">アニメーション済み頂点バッファを計算する処理。</param>
 		void CreateMeshFromTkmMesh(
 			const TkmFile::SMesh& mesh,
 			int meshNo,
@@ -127,7 +158,8 @@ namespace nsK2EngineLow {
 			AlphaBlendMode alphaBlendMode,
 			bool isDepthWrite,
 			bool isDepthTest,
-			D3D12_CULL_MODE cullMode
+			D3D12_CULL_MODE cullMode,
+			ComputeAnimationVertexBuffer* computedAnimationVertexBuffer
 		);
 
 
@@ -149,14 +181,15 @@ namespace nsK2EngineLow {
 			Matrix mView;		//ビュー行列。
 			Matrix mProj;		//プロジェクション行列。
 		};
-		ConstantBuffer m_commonConstantBuffer;					//メッシュ共通の定数バッファ。
-		ConstantBuffer m_expandConstantBuffer;					//ユーザー拡張用の定数バッファ
+		ConstantBuffer m_commonConstantBuffer;					// メッシュ共通の定数バッファ。
+		ConstantBuffer m_expandConstantBuffer;					// ユーザー拡張用の定数バッファ
 		std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResourceView = { nullptr };	//ユーザー拡張シェーダーリソースビュー。
-		StructuredBuffer m_boneMatricesStructureBuffer;	//ボーン行列の構造化バッファ。
-		std::vector< SMesh* > m_meshs;						//メッシュ。
-		//std::vector< DescriptorHeap > m_descriptorHeap;	//ディスクリプタヒープ。
-		DescriptorHeap m_descriptorHeap;					//ディスクリプタヒープ。
-		Skeleton* m_skeleton = nullptr;						//スケルトン。
-		void* m_expandData = nullptr;						//ユーザー拡張データ。
+		StructuredBuffer m_boneMatricesStructureBuffer;			// ボーン行列の構造化バッファ。
+		std::vector< SMesh* > m_meshs;							// メッシュ。
+		//std::vector< DescriptorHeap > m_descriptorHeap;		// ディスクリプタヒープ。
+		DescriptorHeap m_descriptorHeap;						// ディスクリプタヒープ。
+		Skeleton* m_skeleton = nullptr;							// スケルトン。
+		void* m_expandData = nullptr;							// ユーザー拡張データ。
+		ComputeAnimationVertexBuffer* m_computedAnimationVertexBuffer = nullptr;	// アニメーション済み頂点バッファを計算する処理。
 	};
 }

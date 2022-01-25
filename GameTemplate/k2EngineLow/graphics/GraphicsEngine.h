@@ -18,6 +18,13 @@
 
 namespace nsK2EngineLow {
 	/// <summary>
+	/// モデルの上方向。
+	/// </summary>
+	enum EnModelUpAxis {
+		enModelUpAxisY,		//モデルの上方向がY軸。
+		enModelUpAxisZ,		//モデルの上方向がZ軸。
+	};
+	/// <summary>
 	/// アルファブレンディングモード
 	/// </summary>
 	enum AlphaBlendMode {
