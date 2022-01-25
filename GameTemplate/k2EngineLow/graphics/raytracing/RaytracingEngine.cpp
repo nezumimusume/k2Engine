@@ -62,6 +62,9 @@ namespace nsK2EngineLow {
 
 		void Engine::Dispatch(RenderContext& rc)
 		{
+			if (!m_isReady) {
+				return;
+			}
 			//カリカリ
 			Camera cam;
 			cam.pos = g_camera3D->GetPosition();
@@ -134,18 +137,23 @@ namespace nsK2EngineLow {
 
 		void Engine::CommitRegistGeometry(RenderContext& rc)
 		{
-			g_graphicsEngine->BeginRender();
-			m_world.CommitRegistGeometry(rc);
-			//シェーダーリソースを作成。
-			CreateShaderResources();
-			//各種リソースをディスクリプタヒープに登録する。
-			m_descriptorHeaps.Init(m_world, m_outputResource, m_rayGenerationCB);
-			//PSOを作成。
-			m_pipelineStateObject.Init(m_descriptorHeaps);
-			//シェーダーテーブルを作成。
-			m_shaderTable.Init(m_world, m_pipelineStateObject, m_descriptorHeaps);
+			if (!m_isDirty) {
+				return;
+			}
 
-			g_graphicsEngine->EndRender();
+			m_world.CommitRegistGeometry(rc);
+			// シェーダーリソースを作成。
+			CreateShaderResources();
+			// 各種リソースをディスクリプタヒープに登録する。
+			m_descriptorHeaps.Init(m_world, m_outputResource, m_rayGenerationCB);
+			// PSOを作成。
+			m_pipelineStateObject.Init(m_descriptorHeaps);
+			// シェーダーテーブルを作成。
+			m_shaderTable.Init(m_world, m_pipelineStateObject, m_descriptorHeaps);
+			// ジオメトリをコミットしたので準備完了。
+			m_isReady = true;
+			// ダーティフラグをオフにする。
+			m_isDirty = false;
 		}
 	}//namespace raytracing
 }//namespace nsK2EngineLow 

@@ -2,7 +2,6 @@
 #include "ModelRender.h"
 #include "RenderingEngine.h"
 
-#define USE_COMPUTED_ANIMATED_VERTEX	// 定義でアニメーション計算済み頂点バッファを利用する。
 
 namespace nsK2Engine {
 	ModelRender::ModelRender()
@@ -80,8 +79,11 @@ namespace nsK2Engine {
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
+		
+		g_renderingEngine->AddHoge(m_translucentModel);
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
+
 	}
 
 	void ModelRender::InitForwardRendering(ModelInitData& initData)
@@ -102,6 +104,9 @@ namespace nsK2Engine {
 		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(1);
+
+		g_renderingEngine->AddHoge(m_forwardRenderModel);
+
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
 	}
@@ -131,7 +136,7 @@ namespace nsK2Engine {
 		InitGeometryDatas(maxInstance);
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
-
+		g_renderingEngine->AddHoge(m_renderToGBufferModel);
 	}
 
 	void ModelRender::InitGeometryDatas(int maxInstance)

@@ -82,6 +82,10 @@ namespace nsK2Engine {
         {
             m_renderObjects.push_back(renderObject);
         }
+        void AddHoge(Model& model) 
+        {
+            g_graphicsEngine->RegistModelToRaytracingWorld(model);
+        }
         /// <summary>
         /// ZPrepassで作成された深度テクスチャを取得
         /// </summary>

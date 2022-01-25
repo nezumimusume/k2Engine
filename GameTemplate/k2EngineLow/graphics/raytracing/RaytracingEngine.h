@@ -16,6 +16,11 @@ namespace nsK2EngineLow {
 		class Engine : public Noncopyable
 		{
 		public:
+			
+			/// <summary>
+			/// 初期化。
+			/// </summary>
+			void Init();
 			/// <summary>
 			/// レイトレーシングをディスパッチ。
 			/// </summary>
@@ -29,6 +34,7 @@ namespace nsK2EngineLow {
 			{
 				//レイトレワールドにジオメトリを登録。
 				m_world.RegistGeometry(model);
+				m_isDirty = true;
 			}
 			/// <summary>
 			/// ジオメトリの登録を確定。
@@ -57,12 +63,14 @@ namespace nsK2EngineLow {
 				float fFar;		//遠平面。
 				float fNear;	//近平面。
 			};
-			ConstantBuffer m_rayGenerationCB;			//レイジェネレーションの定数バッファ。
-			World m_world;								//レイトレワールド。
-			PSO m_pipelineStateObject;					//パイプラインステートオブジェクト
-			ShaderTable m_shaderTable;					//シェーダーテーブル。
-			DescriptorHeaps m_descriptorHeaps;			//レイトレで使用するディスクリプタヒープの管理者。
-			GPUBuffer m_outputResource;					//レイトレースの結果の出力先。
+			ConstantBuffer m_rayGenerationCB;			// レイジェネレーションの定数バッファ。
+			World m_world;								// レイトレワールド。
+			PSO m_pipelineStateObject;					// パイプラインステートオブジェクト
+			ShaderTable m_shaderTable;					// シェーダーテーブル。
+			DescriptorHeaps m_descriptorHeaps;			// レイトレで使用するディスクリプタヒープの管理者。
+			GPUBuffer m_outputResource;					// レイトレースの結果の出力先。
+			bool m_isReady = false;						// 準備完了フラグ。
+			bool m_isDirty = false;						// ダーティフラグ。
 		};
 	}//namespace raytracing
 }//namespace nsK2EngineLow 

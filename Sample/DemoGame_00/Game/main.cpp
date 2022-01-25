@@ -36,7 +36,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//////////////////////////////////////
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
-	
+
 	//Titleクラスのオブジェクトを作成。
 	NewGO<Title>(0, "title");
 	//NewGO<Game>(0, "game");

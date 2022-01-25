@@ -328,6 +328,9 @@ namespace nsK2Engine {
         // フォワードレンダリング
         ForwardRendering(rc);
 
+        // g_graphicsEngine->BuildRaytracingWorld(rc);
+        // g_graphicsEngine->DispatchRaytracing(rc);
+
         // ポストエフェクトを実行
         m_postEffect.Render(rc, m_mainRenderTarget);
 
@@ -336,6 +339,10 @@ namespace nsK2Engine {
 
         // メインレンダリングターゲットの内容をフレームバッファにコピー
         CopyMainRenderTargetToFrameBuffer(rc);
+
+        // レイトレのテストのためにこのタイミングで実施する。
+        g_graphicsEngine->BuildRaytracingWorld(rc);
+        g_graphicsEngine->DispatchRaytracing(rc);
 
         // 登録されている描画オブジェクトをクリア
         m_renderObjects.clear();
