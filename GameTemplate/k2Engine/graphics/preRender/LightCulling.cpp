@@ -58,10 +58,13 @@ namespace nsK2Engine {
         rc.SetComputeDescriptorHeap(m_descriptorHeap);
         rc.SetPipelineState(m_pipelineState);
 
+        // フレームバッファの幅と高さをTILE_WIDTH、TILE_HEIGHTの倍数に切り上げる。
+        UINT FRAME_BUFFER_W_ROUNDUP = ((FRAME_BUFFER_W + TILE_WIDTH -1) / TILE_WIDTH) * TILE_WIDTH;
+        UINT FRAME_BUFFER_H_ROUNDUP = ((FRAME_BUFFER_H + TILE_HEIGHT -1) / TILE_HEIGHT) * TILE_HEIGHT;
         // グループの数はタイルの数
         rc.Dispatch(
-            FRAME_BUFFER_W / TILE_WIDTH,
-            FRAME_BUFFER_H / TILE_HEIGHT,
+            FRAME_BUFFER_W_ROUNDUP / TILE_WIDTH,
+            FRAME_BUFFER_H_ROUNDUP / TILE_HEIGHT,
             1);
 
         // リソースバリア

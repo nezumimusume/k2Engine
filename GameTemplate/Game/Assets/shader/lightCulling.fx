@@ -250,7 +250,7 @@ void CSMain(
     uint3 groupId          : SV_GroupID,
     uint3 dispatchThreadId : SV_DispatchThreadID,
     uint3 groupThreadId    : SV_GroupThreadID)
-{
+{   
     // step-7 タイル内でのインデックスを求める
     // groupThreadIdはグループ内でのスレッド番号
     // これを使って、グループ内でのスレッド番号を計算する
@@ -274,30 +274,34 @@ void CSMain(
     // すべてのスレッドがここに到達するまで同期を取る
     GroupMemoryBarrierWithGroupSync();
 
-    // タイルの最大・最小深度を求める
-    // この処理は並列するスレッドすべてで排他的に処理される
-    InterlockedMin(sMinZ, asuint(posInView.z));
-    InterlockedMax(sMaxZ, asuint(posInView.z));
-
+    if(groupThreadId.x <= screenParam.z && groupThreadId.y <= screenParam.w){
+        // タイルの最大・最小深度を求める
+        // この処理は並列するスレッドすべてで排他的に処理される
+        InterlockedMin(sMinZ, asuint(posInView.z));
+        InterlockedMax(sMaxZ, asuint(posInView.z));
+    }
+    
     // ここで同期を取ることでタイルの最大・最小深度を正しいものにする
     GroupMemoryBarrierWithGroupSync();
 
-    // タイルの視錘台を構成する6つの平面を求める
-    float4 frustumPlanes[6];
+    if(groupThreadId.x <= screenParam.z && groupThreadId.y <= screenParam.w){
+        // タイルの視錘台を構成する6つの平面を求める
+        float4 frustumPlanes[6];
 
-    // この関数の中で、錘台を構成する6つ平面を計算している
-    GetTileFrustumPlane(frustumPlanes, groupId);
+        // この関数の中で、錘台を構成する6つ平面を計算している
+        GetTileFrustumPlane(frustumPlanes, groupId);
 
-    // タイルに含まれているポイントライトのインデックスの配列を作成する。
-    CreatePointLightIndexArrayInTile( groupIndex, frustumPlanes);
-    // タイルに含まれているスポットライトのインデックスの配列を作成する。
-    CreateSpotLightIndexArrayInTile( groupIndex, frustumPlanes);
-
+        // タイルに含まれているポイントライトのインデックスの配列を作成する。
+        CreatePointLightIndexArrayInTile( groupIndex, frustumPlanes);
+        // タイルに含まれているスポットライトのインデックスの配列を作成する。
+        CreateSpotLightIndexArrayInTile( groupIndex, frustumPlanes);
+    }
     // ここで同期を取ると、sTileSpotLightIndicesとsTilePointLightIndicesに
     // タイルと衝突しているライトのインデックスが積まれている
     GroupMemoryBarrierWithGroupSync();
 
-    // ライトインデックスを出力バッファーに出力
-    WriteLightIindexInTileToList( groupIndex, frameUV);
-    
+    if(groupThreadId.x <= screenParam.z && groupThreadId.y <= screenParam.w){
+        // ライトインデックスを出力バッファーに出力
+        WriteLightIindexInTileToList( groupIndex, frameUV);
+    }
 }
