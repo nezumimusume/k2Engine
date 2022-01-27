@@ -14,6 +14,7 @@ namespace nsK2EngineLow {
 			/// <param name="outputBuffer"></param>
 			/// <param name="rayGeneCB"></param>
 			void Init(
+				int bufferNo,
 				World& world,
 				GPUBuffer& outputBuffer,
 				ConstantBuffer& rayGeneCB

@@ -389,7 +389,7 @@ namespace nsK2EngineLow {
 	{
 		// レンダリングターゲットへの描き込み完了待ち
 		m_renderContext.WaitUntilFinishDrawingToRenderTarget(m_frameBuffer.GetCurrentRenderTarget());
-		
+			
 		if (m_isExecuteCommandList)
 		{
 #ifdef USE_FPS_LIMITTER

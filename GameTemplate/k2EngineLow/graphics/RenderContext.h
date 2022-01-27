@@ -150,6 +150,7 @@ namespace nsK2EngineLow {
 				m_descriptorHeaps[i] = descHeaps[i]->Get();
 			}
 			m_commandList->SetDescriptorHeaps(numDescriptorHeap, m_descriptorHeaps);
+
 		}
 		/// <summary>
 		/// 定数バッファを設定。
@@ -398,10 +399,6 @@ namespace nsK2EngineLow {
 		{
 			m_commandList->CopyResource(pDst, pSrc);
 		}
-
-
-	private:
-
 		/// <summary>
 		/// ディスクリプタテーブルを設定。
 		/// </summary>
@@ -430,6 +427,10 @@ namespace nsK2EngineLow {
 				BaseDescriptor
 			);
 		}
+	private:
+
+		
+		
 	private:
 		enum { MAX_DESCRIPTOR_HEAP = 4 };	//ディスクリプタヒープの最大数。
 		enum { MAX_CONSTANT_BUFFER = 8 };	//定数バッファの最大数。足りなくなったら増やしてね。

@@ -48,11 +48,11 @@ namespace nsK2EngineLow {
 		/// データをVRAMにコピーする。
 		/// </summary>
 		/// <param name="data"></param>
-		void CopyToVRAM(const void* data);
+		void CopyToVRAM(void* data);
 		template< class T>
-		void CopyToVRAM(const T& data)
+		void CopyToVRAM(T& data)
 		{
-			CopyToVRAM((const void*)&data);
+			CopyToVRAM(&data);
 		}
 		/// <summary>
 		/// ディスクリプタヒープにConstantBufferViewを登録。

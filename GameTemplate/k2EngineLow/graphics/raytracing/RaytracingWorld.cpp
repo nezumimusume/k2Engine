@@ -6,10 +6,8 @@
 #define align_to(_alignment, _val) (((_val + _alignment - 1) / _alignment) * _alignment)
 namespace nsK2EngineLow {
 	namespace raytracing {
-
-		void World::RegistGeometry(Model& model)
+		void World::CreateRaytracingInstance(Model& model, int bufferNo)
 		{
-			
 			model.QueryMeshAndDescriptorHeap([&](const SMesh& mesh, const DescriptorHeap& ds) {
 
 				for (int i = 0; i < mesh.m_materials.size(); i++) {
@@ -21,7 +19,7 @@ namespace nsK2EngineLow {
 					else {
 						vertexBufferView = &mesh.m_vertexBuffer.GetView();
 					}
-					
+
 					const auto& indexBufferView = mesh.m_indexBufferArray[i]->GetView();
 					D3D12_RAYTRACING_GEOMETRY_DESC desc;
 					memset(&desc, 0, sizeof(desc));
@@ -43,26 +41,37 @@ namespace nsK2EngineLow {
 					instance->m_worldMatrixCB.Init(sizeof(Matrix), nullptr);
 					instance->geometoryDesc.Triangles.Transform3x4 = instance->m_worldMatrixCB.GetGPUVirtualAddress();
 					instance->m_model = &model;
-					m_instances.emplace_back(std::move(instance));
+					m_instances[bufferNo].emplace_back(std::move(instance));
 				}
 			});
+		}
+		void World::RegistGeometry(Model& model)
+		{
+			for (int bufferNo = 0; bufferNo < 2; bufferNo++) {
+				// レイトレのインスタンスを作成する。
+				CreateRaytracingInstance(model, bufferNo);
+				
+			}
 		}
 		static bool isCommit = false;
 		void World::CommitRegistGeometry(RenderContext& rc)
 		{
 			isCommit = true;
-			//BLASを構築。
-			m_blasBuffer.Init(rc, m_instances);
-			//TLASを構築。
-			m_topLevelASBuffers.Init(rc, m_instances);
+			for (int bufferNo = 0; bufferNo < 2; bufferNo++) {
+				//BLASを構築。
+				m_blasBuffer[bufferNo].Init(rc, m_instances[bufferNo]);
+				//TLASを構築。
+				m_topLevelASBuffers[bufferNo].Init(rc, m_instances[bufferNo]);
+			}
 		}
 		void World::Build(RenderContext& rc)
 		{
 			if (isCommit) {
+				int backBufferNo = g_graphicsEngine->GetBackBufferIndex();
 				// BLASを構築。
-				m_blasBuffer.Build(rc, m_instances);
+				m_blasBuffer[backBufferNo].Build(rc, m_instances[backBufferNo]);
 				// TLASを構築。
-				m_topLevelASBuffers.Build(rc, m_instances);
+				m_topLevelASBuffers[backBufferNo].Build(rc, m_instances[backBufferNo]);
 			}
 		}
 	}//namespace raytracing

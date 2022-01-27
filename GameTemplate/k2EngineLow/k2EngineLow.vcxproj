@@ -377,6 +377,7 @@
     <ClInclude Include="graphics\raytracing\RaytracingPSO.h" />
     <ClInclude Include="graphics\raytracing\RaytracingShaderTable.h" />
     <ClInclude Include="graphics\raytracing\RaytracingWorld.h" />
+    <ClInclude Include="graphics\raytracing\RaytracingWorld_Inline.h" />
     <ClInclude Include="graphics\raytracing\TLASBuffer.h" />
     <ClInclude Include="graphics\RenderContext.h" />
     <ClInclude Include="graphics\RenderContext_inline.h" />

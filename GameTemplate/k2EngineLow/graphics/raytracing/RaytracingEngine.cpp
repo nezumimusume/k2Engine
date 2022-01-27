@@ -56,8 +56,7 @@ namespace nsK2EngineLow {
 			cam.aspect = g_camera3D->GetAspect();
 			cam.fNear = g_camera3D->GetNear();
 			cam.fFar = g_camera3D->GetFar();
-			m_rayGenerationCB.Init(sizeof(Camera), &cam);
-
+			m_rayGenerationCB.Init(sizeof(Camera), &cam);			
 		}
 
 		void Engine::Dispatch(RenderContext& rc)
@@ -66,6 +65,7 @@ namespace nsK2EngineLow {
 				return;
 			}
 
+			int backBufferNo = g_graphicsEngine->GetBackBufferIndex();
 			// レイトレワールドを構築する。
 			m_world.Build(rc);
 
@@ -92,39 +92,50 @@ namespace nsK2EngineLow {
 			raytraceDesc.Depth = 1;
 
 
-			auto shaderTableEntrySize = m_shaderTable.GetShaderTableEntrySize();
-			auto numRayGenShader = m_shaderTable.GetNumRayGenShader();
-			auto numMissShader = m_shaderTable.GetNumMissShader();
-			auto numHitShader = m_shaderTable.GetNumHitShader();
+			auto shaderTableEntrySize = m_shaderTable[backBufferNo].GetShaderTableEntrySize();
+			auto numRayGenShader = m_shaderTable[backBufferNo].GetNumRayGenShader();
+			auto numMissShader = m_shaderTable[backBufferNo].GetNumMissShader();
+			auto numHitShader = m_shaderTable[backBufferNo].GetNumHitShader();
 
 			// レイ生成シェーダーのシェーダーテーブルの開始アドレスとサイズを設定。
-			raytraceDesc.RayGenerationShaderRecord.StartAddress = m_shaderTable.GetGPUVirtualAddress();
+			raytraceDesc.RayGenerationShaderRecord.StartAddress = m_shaderTable[backBufferNo].GetGPUVirtualAddress();
 			raytraceDesc.RayGenerationShaderRecord.SizeInBytes = shaderTableEntrySize;
 
 			// ミスシェーダーのシェーダーテーブルの開始アドレスとサイズを設定。
 			size_t missOffset = numRayGenShader * shaderTableEntrySize;
-			raytraceDesc.MissShaderTable.StartAddress = m_shaderTable.GetGPUVirtualAddress() + missOffset;
+			raytraceDesc.MissShaderTable.StartAddress = m_shaderTable[backBufferNo].GetGPUVirtualAddress() + missOffset;
 			raytraceDesc.MissShaderTable.StrideInBytes = shaderTableEntrySize;
 			raytraceDesc.MissShaderTable.SizeInBytes = shaderTableEntrySize * numMissShader;
 
 			// ヒットグループシェーダーの開始アドレスとサイズを設定。
 			size_t hitOffset = (numRayGenShader + numMissShader) * shaderTableEntrySize;
-			raytraceDesc.HitGroupTable.StartAddress = m_shaderTable.GetGPUVirtualAddress() + hitOffset;
+			raytraceDesc.HitGroupTable.StartAddress = m_shaderTable[backBufferNo].GetGPUVirtualAddress() + hitOffset;
 			raytraceDesc.HitGroupTable.StrideInBytes = shaderTableEntrySize;
 			raytraceDesc.HitGroupTable.SizeInBytes = shaderTableEntrySize * numHitShader * m_world.GetNumInstance();
 
 			// グローバルルートシグネチャを設定。
-			rc.SetComputeRootSignature(m_pipelineStateObject.GetGlobalRootSignature());
+			rc.SetComputeRootSignature(m_pipelineStateObject[backBufferNo].GetGlobalRootSignature());
 
 			// Dispatch
 			//グローバルルートシグネチチャに登録されているディスクリプタヒープを登録する。
 			const DescriptorHeap* descriptorHeaps[] = {
-				&m_descriptorHeaps.GetSrvUavCbvDescriptorHeap(),
-				&m_descriptorHeaps.GetSamplerDescriptorHeap()
+				&m_descriptorHeaps[backBufferNo].GetSrvUavCbvDescriptorHeap(),
+				&m_descriptorHeaps[backBufferNo].GetSamplerDescriptorHeap()
 			};
 			rc.SetDescriptorHeaps(ARRAYSIZE(descriptorHeaps), descriptorHeaps);
 
-			rc.SetPipelineState(m_pipelineStateObject);
+			//ディスクリプタテーブルに登録する。
+			if (descriptorHeaps[0]->IsRegistConstantBuffer()) {
+				rc.SetGraphicsRootDescriptorTable(0, descriptorHeaps[0]->GetConstantBufferGpuDescritorStartHandle());
+			}
+			if (descriptorHeaps[0]->IsRegistShaderResource()) {
+				rc.SetGraphicsRootDescriptorTable(1, descriptorHeaps[0]->GetShaderResourceGpuDescritorStartHandle());
+			}
+			if (descriptorHeaps[0]->IsRegistUavResource()) {
+				rc.SetGraphicsRootDescriptorTable(2, descriptorHeaps[0]->GetUavResourceGpuDescritorStartHandle());
+			}
+
+			rc.SetPipelineState(m_pipelineStateObject[backBufferNo]);
 			rc.DispatchRays(raytraceDesc);
 
 			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -148,12 +159,14 @@ namespace nsK2EngineLow {
 			m_world.CommitRegistGeometry(rc);
 			// シェーダーリソースを作成。
 			CreateShaderResources();
-			// 各種リソースをディスクリプタヒープに登録する。
-			m_descriptorHeaps.Init(m_world, m_outputResource, m_rayGenerationCB);
-			// PSOを作成。
-			m_pipelineStateObject.Init(m_descriptorHeaps);
-			// シェーダーテーブルを作成。
-			m_shaderTable.Init(m_world, m_pipelineStateObject, m_descriptorHeaps);
+			for (int i = 0; i < 2; i++) {
+				// 各種リソースをディスクリプタヒープに登録する。
+				m_descriptorHeaps[i].Init(i, m_world, m_outputResource, m_rayGenerationCB);
+				// PSOを作成。
+				m_pipelineStateObject[i].Init(m_descriptorHeaps[i]);
+				// シェーダーテーブルを作成。
+				m_shaderTable[i].Init(i, m_world, m_pipelineStateObject[i], m_descriptorHeaps[i]);
+			}
 			// ジオメトリをコミットしたので準備完了。
 			m_isReady = true;
 			// ダーティフラグをオフにする。

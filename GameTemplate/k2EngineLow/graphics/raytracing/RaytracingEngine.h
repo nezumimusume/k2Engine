@@ -66,12 +66,13 @@ namespace nsK2EngineLow {
 			};
 			ConstantBuffer m_rayGenerationCB;			// レイジェネレーションの定数バッファ。
 			World m_world;								// レイトレワールド。
-			PSO m_pipelineStateObject;					// パイプラインステートオブジェクト
-			ShaderTable m_shaderTable;					// シェーダーテーブル。
-			DescriptorHeaps m_descriptorHeaps;			// レイトレで使用するディスクリプタヒープの管理者。
+			PSO m_pipelineStateObject[2];				// パイプラインステートオブジェクト
+			ShaderTable m_shaderTable[2];				// シェーダーテーブル。
+			DescriptorHeaps m_descriptorHeaps[2];		// レイトレで使用するディスクリプタヒープの管理者。
 			GPUBuffer m_outputResource;					// レイトレースの結果の出力先。
 			bool m_isReady = false;						// 準備完了フラグ。
 			bool m_isDirty = false;						// ダーティフラグ。
 		};
 	}//namespace raytracing
 }//namespace nsK2EngineLow 
+

@@ -19,6 +19,7 @@ namespace nsK2EngineLow {
 			/// シェーダーテーブルを初期化。
 			/// </summary>
 			void Init(
+				int bufferNo,
 				const World& world,
 				const PSO& pso,
 				const DescriptorHeaps& descriptorHeaps

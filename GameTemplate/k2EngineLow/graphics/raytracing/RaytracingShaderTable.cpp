@@ -31,6 +31,7 @@ namespace nsK2EngineLow {
 			m_shaderTableEntrySize = align_to(D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT, m_shaderTableEntrySize);
 		}
 		void ShaderTable::Init(
+			int bufferNo,
 			const World& world,
 			const PSO& pso,
 			const DescriptorHeaps& descriptorHeaps
@@ -104,7 +105,7 @@ namespace nsK2EngineLow {
 				RegistShaderTblFunc(shader, eShaderCategory_Miss, nullptr);
 			}
 			//最後にヒットシェーダー。ヒットシェーダーはヒットシェーダーの数　×　インスタンスの数だけ登録する。
-			world.QueryInstances([&](Instance& instance) {
+			world.QueryInstances(bufferNo, [&](Instance& instance) {
 				for (auto& shader : shaderDatas) {
 					RegistShaderTblFunc(shader, eShaderCategory_ClosestHit, &instance);
 				};

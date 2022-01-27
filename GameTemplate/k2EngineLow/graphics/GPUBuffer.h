@@ -37,6 +37,7 @@ namespace nsK2EngineLow {
 		{
 			return m_buffer;
 		}
+
 	private:
 		/// <summary>
 		/// ‰ğ•úB

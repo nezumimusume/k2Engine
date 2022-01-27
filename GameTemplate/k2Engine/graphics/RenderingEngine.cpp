@@ -328,8 +328,8 @@ namespace nsK2Engine {
         // フォワードレンダリング
         ForwardRendering(rc);
 
-        // g_graphicsEngine->BuildRaytracingWorld(rc);
-        // g_graphicsEngine->DispatchRaytracing(rc);
+        //g_graphicsEngine->BuildRaytracingWorld(rc);
+        //g_graphicsEngine->DispatchRaytracing(rc);
 
         // ポストエフェクトを実行
         m_postEffect.Render(rc, m_mainRenderTarget);

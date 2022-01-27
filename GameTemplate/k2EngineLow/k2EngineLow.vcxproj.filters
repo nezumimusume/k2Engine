@@ -505,6 +505,9 @@
     <ClInclude Include="graphics\ComputeAnimationVertexBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\raytracing\RaytracingWorld_Inline.h">
+      <Filter>graphics\raytracing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

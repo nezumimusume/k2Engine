@@ -5,6 +5,7 @@
 namespace nsK2EngineLow {
 	namespace raytracing {
 		void DescriptorHeaps::Init(
+			int bufferNo,
 			World& world,
 			GPUBuffer& outputBuffer,
 			ConstantBuffer& rayGeneCB
@@ -15,7 +16,7 @@ namespace nsK2EngineLow {
 			m_srvUavCbvHeap.RegistUnorderAccessResource(0, outputBuffer);
 			m_srvUavCbvHeap.RegistConstantBuffer(0, rayGeneCB);
 			int regNo = 0;
-			world.QueryInstances([&](Instance& instance)
+			world.QueryInstances(bufferNo, [&](Instance& instance)
 			{
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eTLAS,

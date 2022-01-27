@@ -13,6 +13,8 @@ namespace nsK2EngineLow {
 				Matrix mWorld = instance->m_model->GetWorldMatrix();
 				mWorld.Transpose();
 				instance->m_worldMatrixCB.CopyToVRAM(mWorld);
+				
+				instance->geometoryDesc.Triangles.Transform3x4 = instance->m_worldMatrixCB.GetGPUVirtualAddress();
 				D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS inputs = {};
 				inputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
 				inputs.Flags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_NONE;
