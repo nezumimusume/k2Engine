@@ -159,6 +159,27 @@ namespace nsK2EngineLow {
 			return m_meshParts.GetMesh(meshNo);
 		}
 		/// <summary>
+		/// アニメーション済み頂点バッファの計算処理を行っている？
+		/// </summary>
+		/// <returns></returns>
+		bool IsComputedAnimationVertexBuffer() const
+		{
+			return m_meshParts.IsComputedAnimationVertexBuffer();
+		}
+		/// <summary>
+		/// アニメーション計算済み頂点バッファを取得。
+		/// </summary>
+		/// <param name="meshNo">メッシュの番号</param>
+		/// <returns>頂点バッファ</returns>
+		const VertexBuffer& GetAnimatedVertexBuffer(int meshNo) const
+		{
+			return m_meshParts.GetAnimatedVertexBuffer(meshNo);
+		}
+		VertexBuffer& GetAnimatedVertexBuffer(int meshNo)
+		{
+			return m_meshParts.GetAnimatedVertexBuffer(meshNo);
+		}
+		/// <summary>
 		/// アルベドマップを変更。
 		/// </summary>
 		/// <remarks>

@@ -16,7 +16,7 @@ namespace nsK2EngineLow {
 			}
 		}
 	}
-	void ConstantBuffer::Init(int size, void* srcData)
+	void ConstantBuffer::Init(int size, const void* srcData)
 	{
 		Release();
 		m_size = size;
@@ -68,7 +68,7 @@ namespace nsK2EngineLow {
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
 		RegistConstantBufferView(descriptorHandle, backBufferIndex);
 	}
-	void ConstantBuffer::CopyToVRAM(void* data)
+	void ConstantBuffer::CopyToVRAM(const void* data)
 	{
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
 		memcpy(m_constBufferCPU[backBufferIndex], data, m_size);

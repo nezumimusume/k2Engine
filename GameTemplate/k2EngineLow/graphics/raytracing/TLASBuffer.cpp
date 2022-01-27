@@ -17,54 +17,59 @@ namespace nsK2EngineLow {
 
 		void TLASBuffer::Init(
 			RenderContext& rc,
-			const std::vector<InstancePtr>& instances,
-			const std::vector< AccelerationStructureBuffers>& bottomLevelASBuffers
+			const std::vector<InstancePtr>& instances
 		)
 		{
+			// 最大インスタンス数
+			const int maxInstance = 1000;
 			uint64_t tlasSize;
 			auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 
-			int numInstance = static_cast<int>(instances.size());
-			D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS inputs = {};
-			inputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
-			inputs.Flags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE;
-			inputs.NumDescs = numInstance;
-			inputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
+			m_inputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
+			m_inputs.Flags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE;
+			m_inputs.NumDescs = maxInstance;
+			m_inputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
 
 			D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO info;
-			d3dDevice->GetRaytracingAccelerationStructurePrebuildInfo(&inputs, &info);
+			d3dDevice->GetRaytracingAccelerationStructurePrebuildInfo(&m_inputs, &info);
 
 			/*if (update) {
 				//更新？
 			}
-			else*/ {
-			//新規？
+			else*/
+			if (m_topLevelASBuffers.pScratch == nullptr) {
+				//新規？
 				m_topLevelASBuffers.pScratch = CreateBuffer(d3dDevice, info.ScratchDataSizeInBytes, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, kDefaultHeapProps);
 				m_topLevelASBuffers.pResult = CreateBuffer(d3dDevice, info.ResultDataMaxSizeInBytes, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE, kDefaultHeapProps);
 				m_topLevelASBuffers.pInstanceDesc = CreateBuffer(
 					d3dDevice,
-					sizeof(D3D12_RAYTRACING_INSTANCE_DESC) * numInstance,
+					sizeof(D3D12_RAYTRACING_INSTANCE_DESC) * maxInstance,
 					D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ,
 					kUploadHeapProps
 				);
 				tlasSize = info.ResultDataMaxSizeInBytes;
 			}
-
+		}
+		void TLASBuffer::Build(
+			RenderContext& rc,
+			const std::vector<InstancePtr>& instances)
+		{
+			
+			int numInstance = static_cast<int>(instances.size());
+			m_inputs.NumDescs = numInstance;
 			//Map the instance desc buffer
 			D3D12_RAYTRACING_INSTANCE_DESC* instanceDescs;
 			m_topLevelASBuffers.pInstanceDesc->Map(0, nullptr, (void**)&instanceDescs);
 			ZeroMemory(instanceDescs, sizeof(D3D12_RAYTRACING_INSTANCE_DESC) * numInstance);
 
-			Matrix mRot;
-			mRot.MakeRotationX(Math::PI * -0.5f);
-			mRot.Transpose();
+			
 
 			for (int i = 0; i < numInstance; i++) {
 				instanceDescs[i].InstanceID = i;
 				instanceDescs[i].InstanceContributionToHitGroupIndex = (int)eHitGroup_Num * i + eHitGroup_PBRCameraRay;
 				instanceDescs[i].Flags = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-				instanceDescs[i].AccelerationStructure = bottomLevelASBuffers[i].pResult->GetGPUVirtualAddress();
-				memcpy(instanceDescs[i].Transform, &mRot, sizeof(instanceDescs[i].Transform));
+				instanceDescs[i].AccelerationStructure = instances[i]->m_blasStructuredBuffers.pResult->GetGPUVirtualAddress();
+				memcpy(instanceDescs[i].Transform, &g_matIdentity, sizeof(instanceDescs[i].Transform));
 				instanceDescs[i].InstanceMask = 0xFF;
 			}
 
@@ -72,7 +77,7 @@ namespace nsK2EngineLow {
 
 			//TopLevelASを作成。
 			D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC asDesc = {};
-			asDesc.Inputs = inputs;
+			asDesc.Inputs = m_inputs;
 			asDesc.Inputs.InstanceDescs = m_topLevelASBuffers.pInstanceDesc->GetGPUVirtualAddress();
 			asDesc.DestAccelerationStructureData = m_topLevelASBuffers.pResult->GetGPUVirtualAddress();
 			asDesc.ScratchAccelerationStructureData = m_topLevelASBuffers.pScratch->GetGPUVirtualAddress();

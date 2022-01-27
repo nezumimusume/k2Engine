@@ -43,7 +43,7 @@ struct SVertex
 // 定数バッファーなので16バイトアライメントに気を付けること
 struct Camera
 {
-    float4x4 mCameraRot;    // カメラの回転行列
+    float4x4 mViewProjInv;  // ビュープロジェクション行列の逆行列
     float3 pos;             // カメラ座標
     float aspect;           // アスペクト比
     float far;              // 遠平面
@@ -200,15 +200,18 @@ void rayGen()
 
     float2 crd = float2(launchIndex.xy);
     float2 dims = float2(launchDim.xy);
-
-    float2 d = ((crd / dims) * 2.f - 1.f);
-    float aspectRatio = 16.0f / 9.0f;
+    
+    float4 worldPos;
+    worldPos.xy = float2(crd/dims) * float2(2.0, -2.0) - float2(1.0, -1.0);
+    worldPos.zw = float2( 1.0f, 1.0f );
+    worldPos = mul( g_camera.mViewProjInv, worldPos );
+    worldPos.xyz /= worldPos.w;
 
     // ピクセル方向に打ち出すレイを作成する
     RayDesc ray;
     ray.Origin = g_camera.pos;
-    ray.Direction = normalize(float3(d.x * g_camera.aspect, -d.y, -1));
-    ray.Direction = mul(g_camera.mCameraRot, ray.Direction);
+    ray.Direction = normalize( worldPos.xyz - ray.Origin);
+
 
     ray.TMin = 0;
     ray.TMax = 10000;

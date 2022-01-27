@@ -224,7 +224,14 @@ namespace nsK2EngineLow {
 		m_meshs[meshNo] = mesh;
 
 	}
-
+	const VertexBuffer& MeshParts::GetAnimatedVertexBuffer(int meshNo)  const
+	{
+		return m_computedAnimationVertexBuffer->GetAnimatedVertexBuffer(meshNo);
+	}
+	VertexBuffer& MeshParts::GetAnimatedVertexBuffer(int meshNo)
+	{
+		return m_computedAnimationVertexBuffer->GetAnimatedVertexBuffer(meshNo);
+	}
 	void MeshParts::BindSkeleton(Skeleton& skeleton)
 	{
 		m_skeleton = &skeleton;

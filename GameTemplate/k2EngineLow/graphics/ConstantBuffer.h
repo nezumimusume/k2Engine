@@ -35,7 +35,7 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="size">定数バッファのサイズ。</param>
 		/// <param name="srcData">ソースデータ。nullを指定することも可能。</param>
-		void Init(int size, void* srcData = nullptr);
+		void Init(int size, const void* srcData = nullptr);
 		/// <summary>
 		/// 利用可能なバッファかどうかを判定。
 		/// </summary>
@@ -48,11 +48,11 @@ namespace nsK2EngineLow {
 		/// データをVRAMにコピーする。
 		/// </summary>
 		/// <param name="data"></param>
-		void CopyToVRAM(void* data);
+		void CopyToVRAM(const void* data);
 		template< class T>
-		void CopyToVRAM(T& data)
+		void CopyToVRAM(const T& data)
 		{
-			CopyToVRAM(&data);
+			CopyToVRAM((const void*)&data);
 		}
 		/// <summary>
 		/// ディスクリプタヒープにConstantBufferViewを登録。

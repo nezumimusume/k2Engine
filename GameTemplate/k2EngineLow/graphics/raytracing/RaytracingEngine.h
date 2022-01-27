@@ -54,14 +54,15 @@ namespace nsK2EngineLow {
 
 		private:
 			/// <summary>
-			/// カメラ
+			/// レイトレーシングで使用するカメラ構造体。
+			/// この中身を変更したら、Assets/shader/raytracing.fxも変更するように。
 			/// </summary>
 			struct Camera {
-				Matrix mRot;	//回転行列
-				Vector3 pos;	//視点。
-				float aspect;	//アスペクト比。
-				float fFar;		//遠平面。
-				float fNear;	//近平面。
+				Matrix mViewProjInv;	// ビュープロジェクション行列の逆行列
+				Vector3 pos;			// 視点。
+				float aspect;			// アスペクト比。
+				float fFar;				// 遠平面。
+				float fNear;			// 近平面。
 			};
 			ConstantBuffer m_rayGenerationCB;			// レイジェネレーションの定数バッファ。
 			World m_world;								// レイトレワールド。

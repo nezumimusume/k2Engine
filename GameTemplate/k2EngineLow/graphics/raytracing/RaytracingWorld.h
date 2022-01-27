@@ -27,6 +27,12 @@ namespace nsK2EngineLow {
 			/// ジオメトリの登録を確定。
 			/// </summary>
 			void CommitRegistGeometry(RenderContext& rc);
+			
+			/// <summary>
+			/// レイトレワールドを構築。
+			/// </summary>
+			void Build( RenderContext& rc );
+
 			/// <summary>
 			/// レイトレワールドのインスタンスに対してクエリを行う。
 			/// </summary>

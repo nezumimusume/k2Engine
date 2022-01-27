@@ -28,6 +28,12 @@ namespace nsK2EngineLow {
 			{
 				return m_bottomLevelASBuffers;
 			}
+			/// <summary>
+			/// BLASの構築。
+			/// </summary>
+			/// <param name="rc">レンダリングコンテキスト</param>
+			/// <param name="instances">インスタンスの配列</param>
+			void Build(RenderContext& rc, const std::vector<InstancePtr>& instances);
 		private:
 
 			std::vector< AccelerationStructureBuffers> m_bottomLevelASBuffers;	//BLASBuffer

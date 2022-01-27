@@ -24,8 +24,6 @@ namespace nsK2EngineLow {
 	/// </summary>
 	struct SMesh {
 		VertexBuffer m_vertexBuffer;							// 頂点バッファ。
-		VertexBuffer m_animatedVertexBuffer;					// アニメーション計算済み頂点バッファ。
-		RWStructuredBuffer m_animatedVertexBufferRWSB;			// アニメーション計算済み頂点バッファのRWストラクチャードバッファ。
 		std::vector< IndexBuffer* >		m_indexBufferArray;		// インデックスバッファ。
 		std::vector< Material* >		m_materials;			// マテリアル。
 		std::vector<int>				skinFlags;				// スキンを持っているかどうかのフラグ。
@@ -93,6 +91,21 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="skeleton">スケルトン</param>
 		void BindSkeleton(Skeleton& skeleton);
+		/// <summary>
+		/// アニメーション済み頂点バッファの計算処理を行っている？
+		/// </summary>
+		/// <returns></returns>
+		bool IsComputedAnimationVertexBuffer() const
+		{
+			return m_computedAnimationVertexBuffer != nullptr;
+		}
+		/// <summary>
+		/// アニメーション計算済み頂点バッファを取得。
+		/// </summary>
+		/// <param name="meshNo">メッシュの番号</param>
+		/// <returns>頂点バッファ</returns>
+		const VertexBuffer& GetAnimatedVertexBuffer(int meshNo) const;
+		VertexBuffer& GetAnimatedVertexBuffer(int meshNo);
 		/// <summary>
 		/// メッシュに対して問い合わせを行う。
 		/// </summary>

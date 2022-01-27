@@ -52,7 +52,7 @@ namespace nsK2EngineLow {
 			//レイジェネレーション用の定数バッファ。
 			Camera cam;
 			cam.pos = g_camera3D->GetPosition();
-			cam.mRot = g_camera3D->GetCameraRotation();
+			cam.mViewProjInv = g_camera3D->GetViewProjectionMatrixInv();
 			cam.aspect = g_camera3D->GetAspect();
 			cam.fNear = g_camera3D->GetNear();
 			cam.fFar = g_camera3D->GetFar();
@@ -65,10 +65,14 @@ namespace nsK2EngineLow {
 			if (!m_isReady) {
 				return;
 			}
+
+			// レイトレワールドを構築する。
+			m_world.Build(rc);
+
 			//カリカリ
 			Camera cam;
 			cam.pos = g_camera3D->GetPosition();
-			cam.mRot = g_camera3D->GetCameraRotation();
+			cam.mViewProjInv = g_camera3D->GetViewProjectionMatrixInv();
 			cam.aspect = g_camera3D->GetAspect();
 			cam.fNear = g_camera3D->GetNear();
 			cam.fFar = g_camera3D->GetFar();
