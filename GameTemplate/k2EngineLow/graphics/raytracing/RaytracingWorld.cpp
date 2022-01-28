@@ -6,6 +6,18 @@
 #define align_to(_alignment, _val) (((_val + _alignment - 1) / _alignment) * _alignment)
 namespace nsK2EngineLow {
 	namespace raytracing {
+		void AccelerationStructureBuffers::Release()
+		{
+			if (pScratch) {
+				ReleaseD3D12Object(pScratch);
+			}
+			if (pResult) {
+				ReleaseD3D12Object(pResult);
+			}
+			if (pInstanceDesc) {
+				ReleaseD3D12Object(pInstanceDesc);
+			}
+		}
 		void World::CreateRaytracingInstance(Model& model, int bufferNo)
 		{
 			model.QueryMeshAndDescriptorHeap([&](const SMesh& mesh, const DescriptorHeap& ds) {

@@ -11,6 +11,12 @@ namespace nsK2EngineLow {
 		);
 
 		struct AccelerationStructureBuffers {
+			~AccelerationStructureBuffers()
+			{
+				Release();
+			}
+			void Release();
+			
 			ID3D12Resource* pScratch = nullptr;
 			ID3D12Resource* pResult = nullptr;
 			ID3D12Resource* pInstanceDesc = nullptr;

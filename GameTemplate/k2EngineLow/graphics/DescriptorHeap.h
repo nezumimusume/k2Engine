@@ -128,12 +128,16 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// ディスクリプタヒープへの登録を確定。
 		/// </summary>
-		void Commit();
+		void Commit(bool isDoubleBuffer = true);
 		/// <summary>
 		/// サンプラステート用のディスクリプタヒープへの登録。
 		/// </summary>
-		void CommitSamperHeap();
-
+		void CommitSamperHeap(bool isDoubleBuffer = true);
+		/// <summary>
+		/// バックバッファの番号を取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetBackBufferNo() const;
 		/// <summary>
 		/// 定数バッファのディスクリプタの開始ハンドルを取得。
 		/// </summary>
@@ -258,7 +262,8 @@ namespace nsK2EngineLow {
 		int m_numConstantBuffer = 0;	//定数バッファの数。
 		int m_numUavResource = 0;		//アンオーダーアクセスリソースの数。
 		int m_numSamplerDesc = 0;		//サンプラの数。
-		ID3D12DescriptorHeap* m_descriptorHeap = { nullptr };					//ディスクリプタヒープ。
+		bool m_isDoubleBuffer = true;	// ダブルバッファ？
+		ID3D12DescriptorHeap* m_descriptorHeap = { nullptr };	//ディスクリプタヒープ。
 		std::vector<IShaderResource*> m_shaderResources;		//シェーダーリソース。
 		std::vector < IUnorderAccessResrouce*> m_uavResoruces;	//UAVリソース。
 		std::vector < ConstantBuffer*> m_constantBuffers;		//定数バッファ。

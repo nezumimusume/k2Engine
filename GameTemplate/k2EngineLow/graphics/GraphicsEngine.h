@@ -169,13 +169,7 @@ namespace nsK2EngineLow {
 		{
 			m_raytracingEngine.RegistGeometry(model);
 		}
-		/// <summary>
-		/// ここまで登録されたモデルを使ってレイトレワールドを構築。
-		/// </summary>
-		void BuildRaytracingWorld(RenderContext& rc)
-		{
-			m_raytracingEngine.CommitRegistGeometry(rc);
-		}
+		
 		/// <summary>
 		/// レイトレーシングをディスパッチ。
 		/// </summary>
@@ -364,7 +358,8 @@ namespace nsK2EngineLow {
 	/// D3D12オブジェクトを解放。
 	/// </summary>
 	/// <param name="obj">開放したいオブジェクト</param>
-	static inline void ReleaseD3D12Object(IUnknown* obj)
+	template < class TD3D12Obj > 
+	static inline void ReleaseD3D12Object(TD3D12Obj*& obj)
 	{
 		if (obj == nullptr) {
 			return;
@@ -375,6 +370,7 @@ namespace nsK2EngineLow {
 		else {
 			obj->Release();
 		}
+		obj = nullptr;
 	}
 	static inline void BeginGPUEvent(const char* eventName)
 	{

@@ -30,6 +30,13 @@ namespace nsK2EngineLow {
 			//アライメントをそろえる。
 			m_shaderTableEntrySize = align_to(D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT, m_shaderTableEntrySize);
 		}
+		void ShaderTable::Release()
+		{
+			if (m_shaderTable) {
+				ReleaseD3D12Object(m_shaderTable);
+				m_shaderTable = nullptr;
+			}
+		}
 		void ShaderTable::Init(
 			int bufferNo,
 			const World& world,
@@ -37,6 +44,7 @@ namespace nsK2EngineLow {
 			const DescriptorHeaps& descriptorHeaps
 		)
 		{
+			Release();
 
 			//各シェーダーの数をカウントする。
 			CountupNumGeyGenAndMissAndHitShader();
@@ -48,9 +56,11 @@ namespace nsK2EngineLow {
 			int shaderTableSize = m_shaderTableEntrySize * (m_numRayGenShader + m_numMissShader + (m_numHitShader * world.GetNumInstance()));
 
 			auto d3dDevice = g_graphicsEngine->GetD3DDevice();
+			
 			//シェーダーテーブル用のバッファを作成。
 			m_shaderTable = CreateBuffer(d3dDevice, shaderTableSize, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ, kUploadHeapProps);
 
+			
 			//バッファをシステムメモリにマップする。
 			uint8_t* pData;
 			m_shaderTable->Map(0, nullptr, (void**)&pData);

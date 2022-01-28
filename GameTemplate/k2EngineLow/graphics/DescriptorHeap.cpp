@@ -24,9 +24,13 @@ namespace nsK2EngineLow {
 	void DescriptorHeap::Release()
 	{
 		ReleaseD3D12Object(m_descriptorHeap);
+		m_descriptorHeap = nullptr;
 	}
-	void DescriptorHeap::CommitSamperHeap()
+	void DescriptorHeap::CommitSamperHeap(bool isDoubleBuffer)
 	{
+		Release();
+
+		m_isDoubleBuffer = isDoubleBuffer;
 		const auto& d3dDevice = g_graphicsEngine->GetD3DDevice();
 		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 
@@ -34,15 +38,14 @@ namespace nsK2EngineLow {
 		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
 		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-
 		auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_descriptorHeap));
 		if (FAILED(hr)) {
 			MessageBox(nullptr, L"DescriptorHeap::Commit ディスクリプタヒープの作成に失敗しました。", L"エラー", MB_OK);
 			std::abort();
 		}
 
-
-		for (int bufferNo = 0; bufferNo < 2; bufferNo++) {
+		int numBuffer = isDoubleBuffer ? 2 : 1;
+		for (int bufferNo = 0; bufferNo < numBuffer; bufferNo++) {
 			auto cpuHandle = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 			auto gpuHandle = m_descriptorHeap->GetGPUDescriptorHandleForHeapStart();
 			for (int i = 0; i < m_numSamplerDesc; i++) {
@@ -54,10 +57,19 @@ namespace nsK2EngineLow {
 		}
 
 	}
-	
-	void DescriptorHeap::Commit()
+	int DescriptorHeap::GetBackBufferNo() const
+	{
+		if (m_isDoubleBuffer) {
+			// 内部でダブルバッファ化している場合はエンジンのバックバッファの番号と合わせる。
+			return g_graphicsEngine->GetBackBufferIndex();
+		}
+		// ダブルバッファ化していない。
+		return 0;
+	}
+	void DescriptorHeap::Commit(bool isDoubleBuffer)
 	{
 		Release();
+		m_isDoubleBuffer = isDoubleBuffer;
 		const auto& d3dDevice = g_graphicsEngine->GetD3DDevice();
 		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 
@@ -76,10 +88,11 @@ namespace nsK2EngineLow {
 		//定数バッファやシェーダーリソースのディスクリプタをヒープに書き込んでいく。
 		auto cpuHandle = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 		auto gpuHandle = m_descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-		for (int bufferNo = 0; bufferNo < 2; bufferNo++) {
+
+		int numBuffer = isDoubleBuffer ? 2 : 1;
+		for (int bufferNo = 0; bufferNo < numBuffer; bufferNo++) {
 			//定数バッファを登録していく。
 			for (int i = 0; i < m_numConstantBuffer; i++) {
-				//@todo bug
 				if (m_constantBuffers[i] != nullptr) {
 					m_constantBuffers[i]->RegistConstantBufferView(cpuHandle, bufferNo);
 				}

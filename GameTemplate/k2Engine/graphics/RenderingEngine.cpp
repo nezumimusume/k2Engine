@@ -341,7 +341,6 @@ namespace nsK2Engine {
         CopyMainRenderTargetToFrameBuffer(rc);
 
         // レイトレのテストのためにこのタイミングで実施する。
-        g_graphicsEngine->BuildRaytracingWorld(rc);
         g_graphicsEngine->DispatchRaytracing(rc);
 
         // 登録されている描画オブジェクトをクリア

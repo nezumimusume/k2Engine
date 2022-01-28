@@ -81,8 +81,9 @@ namespace nsK2EngineLow {
 
 			//サンプラステートをディスクリプタヒープに登録する。
 			m_samplerDescriptorHeap.RegistSamplerDesc(0, samplerDesc);
-			m_samplerDescriptorHeap.CommitSamperHeap();
-			m_srvUavCbvHeap.Commit();
+			// レイトレのエンジン側でダブルバッファ化しているので、DescriptorHeapの内部でダブルバッファにはしない。
+			m_samplerDescriptorHeap.CommitSamperHeap(false);
+			m_srvUavCbvHeap.Commit(false);
 		}
 	}
 }

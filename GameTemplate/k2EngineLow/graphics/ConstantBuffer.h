@@ -35,7 +35,8 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="size">定数バッファのサイズ。</param>
 		/// <param name="srcData">ソースデータ。nullを指定することも可能。</param>
-		void Init(int size, const void* srcData = nullptr);
+		/// <param name="isDoubleBuffer">内部でダブルバッファ化する？</param>
+		void Init(int size, const void* srcData = nullptr, bool isDoubleBuffer = true);
 		/// <summary>
 		/// 利用可能なバッファかどうかを判定。
 		/// </summary>
@@ -48,11 +49,11 @@ namespace nsK2EngineLow {
 		/// データをVRAMにコピーする。
 		/// </summary>
 		/// <param name="data"></param>
-		void CopyToVRAM(void* data, bool isAll = false);
+		void CopyToVRAM(void* data);
 		template< class T>
-		void CopyToVRAM(T& data, bool isAll = false)
+		void CopyToVRAM(T& data)
 		{
-			CopyToVRAM(&data, isAll);
+			CopyToVRAM(&data);
 		}
 		/// <summary>
 		/// ディスクリプタヒープにConstantBufferViewを登録。
@@ -70,11 +71,17 @@ namespace nsK2EngineLow {
 		/// 解放。
 		/// </summary>
 		void Release();
+		/// <summary>
+		/// バックバッファの番号を取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetBackBufferNo() const;
 	private:
-		ID3D12Resource* m_constantBuffer[2] = { nullptr };//定数バッファ。
-		void* m_constBufferCPU[2] = { nullptr };		//CPU側からアクセスできるする定数バッファのアドレス。
-		int m_size = 0;									//定数バッファのサイズ。
+		ID3D12Resource* m_constantBuffer[2] = { nullptr };	// 定数バッファ。
+		void* m_constBufferCPU[2] = { nullptr };			// CPU側からアクセスできるする定数バッファのアドレス。
+		int m_size = 0;										// 定数バッファのサイズ。
 		int m_allocSize = 0;
-		bool m_isValid = false;							//利用可能？
+		bool m_isValid = false;								// 利用可能？
+		bool m_isDoubleBuffer = false;						// 定数バッファをダブルバッファにする？
 	};
 }

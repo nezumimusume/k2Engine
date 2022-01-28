@@ -13,13 +13,10 @@ namespace nsK2EngineLow {
 		struct Instance {
 			~Instance()
 			{
-				if (m_blasStructuredBuffers.pScratch) {
-					m_blasStructuredBuffers.pScratch->Release();
-				}
-				if (m_blasStructuredBuffers.pScratch) {
-					m_blasStructuredBuffers.pResult->Release();
-				}
+				Release();
 			}
+			void Release();
+			
 			D3D12_RAYTRACING_GEOMETRY_DESC geometoryDesc;			// ジオメトリ情報。
 			RWStructuredBuffer m_vertexBufferRWSB;					// 頂点バッファ。
 			RWStructuredBuffer m_indexBufferRWSB;					// インデックスバッファ。

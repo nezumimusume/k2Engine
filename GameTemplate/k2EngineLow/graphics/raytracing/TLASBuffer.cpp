@@ -36,12 +36,7 @@ namespace nsK2EngineLow {
 				D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO info;
 				d3dDevice->GetRaytracingAccelerationStructurePrebuildInfo(&m_inputs, &info);
 				// TLASの再構築が必要。
-				if (m_topLevelASBuffers.pScratch) {
-					m_topLevelASBuffers.pScratch->Release();
-				}
-				if (m_topLevelASBuffers.pResult) {
-					m_topLevelASBuffers.pResult->Release();
-				}
+				m_topLevelASBuffers.Release();
 				m_topLevelASBuffers.pScratch = CreateBuffer(d3dDevice, info.ScratchDataSizeInBytes, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, kDefaultHeapProps);
 				m_topLevelASBuffers.pResult = CreateBuffer(d3dDevice, info.ResultDataMaxSizeInBytes, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE, kDefaultHeapProps);
 				m_topLevelASBuffers.pInstanceDesc = CreateBuffer(

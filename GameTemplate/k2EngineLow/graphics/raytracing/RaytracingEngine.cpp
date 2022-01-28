@@ -56,13 +56,17 @@ namespace nsK2EngineLow {
 			cam.aspect = g_camera3D->GetAspect();
 			cam.fNear = g_camera3D->GetNear();
 			cam.fFar = g_camera3D->GetFar();
-			m_rayGenerationCB[0].Init(sizeof(Camera), &cam);
-			m_rayGenerationCB[1].Init(sizeof(Camera), &cam);
+			// レイトレエンジン側でダブルバッファにしているので、内部ではダブルバッファにしない。
+			m_rayGenerationCB[0].Init(sizeof(Camera), &cam, false );
+			m_rayGenerationCB[1].Init(sizeof(Camera), &cam, false );
 		}
 
 		void Engine::Dispatch(RenderContext& rc)
 		{
+			CommitRegistGeometry(rc);
+
 			if (!m_isReady) {
+				// 準備ができていない。
 				return;
 			}
 
@@ -77,7 +81,7 @@ namespace nsK2EngineLow {
 			cam.aspect = g_camera3D->GetAspect();
 			cam.fNear = g_camera3D->GetNear();
 			cam.fFar = g_camera3D->GetFar();
-			m_rayGenerationCB[backBufferNo].CopyToVRAM(cam, true);
+			m_rayGenerationCB[backBufferNo].CopyToVRAM(cam);
 
 			D3D12_RESOURCE_BARRIER barrier = {};
 			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -125,18 +129,7 @@ namespace nsK2EngineLow {
 			};
 			rc.SetDescriptorHeaps(ARRAYSIZE(descriptorHeaps), descriptorHeaps);
 
-			//ディスクリプタテーブルに登録する。
-#if 0
-			if (descriptorHeaps[0]->IsRegistConstantBuffer()) {
-				rc.SetGraphicsRootDescriptorTable(0, descriptorHeaps[0]->GetConstantBufferGpuDescritorStartHandle());
-			}
-			if (descriptorHeaps[0]->IsRegistShaderResource()) {
-				rc.SetGraphicsRootDescriptorTable(1, descriptorHeaps[0]->GetShaderResourceGpuDescritorStartHandle());
-			}
-			if (descriptorHeaps[0]->IsRegistUavResource()) {
-				rc.SetGraphicsRootDescriptorTable(2, descriptorHeaps[0]->GetUavResourceGpuDescritorStartHandle());
-			}
-#endif
+			
 			rc.SetPipelineState(m_pipelineStateObject[backBufferNo]);
 			rc.DispatchRays(raytraceDesc);
 
@@ -167,7 +160,7 @@ namespace nsK2EngineLow {
 				// PSOを作成。
 				m_pipelineStateObject[i].Init(m_descriptorHeaps[i]);
 				// シェーダーテーブルを作成。
-				m_shaderTable[i].Init(i, m_world, m_pipelineStateObject[i], m_descriptorHeaps[i]);
+				m_shaderTable[i].Init(i, m_world, m_pipelineStateObject[i], m_descriptorHeaps[i]); 
 			}
 			// ジオメトリをコミットしたので準備完了。
 			m_isReady = true;
