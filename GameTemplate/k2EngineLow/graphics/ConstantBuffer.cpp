@@ -68,10 +68,16 @@ namespace nsK2EngineLow {
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
 		RegistConstantBufferView(descriptorHandle, backBufferIndex);
 	}
-	void ConstantBuffer::CopyToVRAM(void* data)
+	void ConstantBuffer::CopyToVRAM(void* data, bool isAll)
 	{
-		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
-		memcpy(m_constBufferCPU[backBufferIndex], data, m_size);
+		if (isAll) {
+			memcpy(m_constBufferCPU[0], data, m_size);
+			memcpy(m_constBufferCPU[1], data, m_size);
+		}
+		else {
+			auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
+			memcpy(m_constBufferCPU[backBufferIndex], data, m_size);
+		}
 	}
 	D3D12_GPU_VIRTUAL_ADDRESS ConstantBuffer::GetGPUVirtualAddress()
 	{

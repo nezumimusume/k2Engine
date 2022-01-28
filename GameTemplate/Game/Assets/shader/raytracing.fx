@@ -290,7 +290,7 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     TraceReflectionRay(refPayload, normal);
 
     // このプリミティブの反射率を取得
-    float reflectRate = g_reflectionMap.SampleLevel(s, uv, 0.0f).r;
+    float reflectRate = g_specularMap.SampleLevel(s, uv, 0.0f).a;
     float3 color = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
     color *= lig;
     payload.color = lerp(color, refPayload.color, reflectRate);

@@ -388,4 +388,3 @@ namespace nsK2EngineLow {
 
 }
 
-#include "graphics/raytracing/RaytracingWorld_Inline.h"

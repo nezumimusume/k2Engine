@@ -42,16 +42,9 @@ namespace nsK2EngineLow {
 			void CommitRegistGeometry(RenderContext& rc);
 		private:
 			/// <summary>
-			/// シェーダーテーブルを作成。
-			/// </summary>
-			/// <param name="rc"></param>
-			void CreateShaderTable(RenderContext& rc);
-
-			/// <summary>
 			/// シェーダーリソースを作成。
 			/// </summary>
 			void CreateShaderResources();
-
 		private:
 			/// <summary>
 			/// レイトレーシングで使用するカメラ構造体。
@@ -64,7 +57,7 @@ namespace nsK2EngineLow {
 				float fFar;				// 遠平面。
 				float fNear;			// 近平面。
 			};
-			ConstantBuffer m_rayGenerationCB;			// レイジェネレーションの定数バッファ。
+			ConstantBuffer m_rayGenerationCB[2];		// レイジェネレーションの定数バッファ。
 			World m_world;								// レイトレワールド。
 			PSO m_pipelineStateObject[2];				// パイプラインステートオブジェクト
 			ShaderTable m_shaderTable[2];				// シェーダーテーブル。

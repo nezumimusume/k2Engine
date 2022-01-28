@@ -20,7 +20,7 @@ namespace nsK2EngineLow {
 			{
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eTLAS,
-					world.GetTLASBuffer()
+					world.GetTLASBuffer(bufferNo)
 				);
 				//アルベドマップをディスクリプタヒープに登録。
 				m_srvUavCbvHeap.RegistShaderResource(

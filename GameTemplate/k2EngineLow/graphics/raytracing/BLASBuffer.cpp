@@ -3,21 +3,25 @@
 
 namespace nsK2EngineLow {
 	namespace raytracing {
-		void BLASBuffer::Init(nsK2EngineLow::RenderContext& rc, const std::vector<InstancePtr>& instances)
-		{
-			
-		}
-		void BLASBuffer::Build(RenderContext& rc, const std::vector<InstancePtr>& instances)
+		 
+		void BLASBuffer::Build(RenderContext& rc, const std::vector<InstancePtr>& instances, bool isUpdate)
 		{
 			for (auto& instance : instances) {
 				Matrix mWorld = instance->m_model->GetWorldMatrix();
 				mWorld.Transpose();
 				instance->m_worldMatrixCB.CopyToVRAM(mWorld);
-				
 				instance->geometoryDesc.Triangles.Transform3x4 = instance->m_worldMatrixCB.GetGPUVirtualAddress();
 				D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS inputs = {};
 				inputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
-				inputs.Flags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_NONE;
+				if (isUpdate) {
+					// 更新のみでOK。
+					inputs.Flags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE | D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE;				
+				}
+				else {
+					// BLASの再構築が必要。
+					inputs.Flags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE;
+					
+				}
 				inputs.NumDescs = 1;
 				inputs.pGeometryDescs = &instance->geometoryDesc;
 				inputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL;
@@ -46,7 +50,15 @@ namespace nsK2EngineLow {
 				asDesc.Inputs = inputs;
 				asDesc.DestAccelerationStructureData = instance->m_blasStructuredBuffers.pResult->GetGPUVirtualAddress();
 				asDesc.ScratchAccelerationStructureData = instance->m_blasStructuredBuffers.pScratch->GetGPUVirtualAddress();
-
+				if (isUpdate) {
+					// 更新であれば、元データを使用する。
+					asDesc.SourceAccelerationStructureData = instance->m_blasStructuredBuffers.pResult->GetGPUVirtualAddress();
+					
+				}
+				else {
+					// 再構築が必要なので元データはいらないのでnullptrを設定する。
+					asDesc.SourceAccelerationStructureData = 0;
+				}
 				rc.BuildRaytracingAccelerationStructure(asDesc);
 
 				//レイトレーシングアクセラレーション構造のビルド完了待ちのバリアを入れる。

@@ -57,11 +57,10 @@ namespace nsK2EngineLow {
 		void World::CommitRegistGeometry(RenderContext& rc)
 		{
 			isCommit = true;
+			// ジオメトリがコミットされたので、BLASとTLASを再構築する。
 			for (int bufferNo = 0; bufferNo < 2; bufferNo++) {
-				//BLASを構築。
-				m_blasBuffer[bufferNo].Init(rc, m_instances[bufferNo]);
-				//TLASを構築。
-				m_topLevelASBuffers[bufferNo].Init(rc, m_instances[bufferNo]);
+				m_blasBuffer[bufferNo].Build(rc, m_instances[bufferNo], false);				
+				m_topLevelASBuffers[bufferNo].Build(rc, m_instances[bufferNo], false);
 			}
 		}
 		void World::Build(RenderContext& rc)
@@ -69,10 +68,38 @@ namespace nsK2EngineLow {
 			if (isCommit) {
 				int backBufferNo = g_graphicsEngine->GetBackBufferIndex();
 				// BLASを構築。
-				m_blasBuffer[backBufferNo].Build(rc, m_instances[backBufferNo]);
+				m_blasBuffer[backBufferNo].Build(rc, m_instances[backBufferNo], true);
 				// TLASを構築。
-				m_topLevelASBuffers[backBufferNo].Build(rc, m_instances[backBufferNo]);
+				m_topLevelASBuffers[backBufferNo].Build(rc, m_instances[backBufferNo], true);
 			}
+		}
+	
+		void World::QueryInstances(int bufferNo, std::function<void(Instance&)> queryFunc) const
+		{
+			for (auto& instance : m_instances[g_graphicsEngine->GetBackBufferIndex()]) {
+				queryFunc(*instance);
+			}
+		}
+
+	
+		int World::GetNumInstance() const
+		{
+			int bufferNo = g_graphicsEngine->GetBackBufferIndex();
+			return m_instances[bufferNo].size();
+		}
+
+	
+		const BLASBuffer& World::GetBLASBuffer(int bufferNo)
+		{
+			int backBufferNo = bufferNo == -1 ? g_graphicsEngine->GetBackBufferIndex() : bufferNo;
+			return m_blasBuffer[backBufferNo];
+		}
+
+	
+		TLASBuffer& World::GetTLASBuffer(int bufferNo)
+		{
+			int backBufferNo = bufferNo == -1 ? g_graphicsEngine->GetBackBufferIndex() : bufferNo;
+			return m_topLevelASBuffers[backBufferNo];
 		}
 	}//namespace raytracing
 }

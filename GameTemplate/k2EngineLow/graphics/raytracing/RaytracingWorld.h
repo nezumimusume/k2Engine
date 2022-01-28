@@ -50,13 +50,13 @@ namespace nsK2EngineLow {
 			/// BLASバッファーを取得。
 			/// </summary>
 			/// <returns></returns>
-			const BLASBuffer& GetBLASBuffer();
+			const BLASBuffer& GetBLASBuffer(int bufferNo);
 			
 			/// <summary>
 			/// TLASバッファーを取得。
 			/// </summary>
 			/// <returns></returns>
-			TLASBuffer& GetTLASBuffer();
+			TLASBuffer& GetTLASBuffer(int bufferNo);
 			
 		private:
 			/// <summary>

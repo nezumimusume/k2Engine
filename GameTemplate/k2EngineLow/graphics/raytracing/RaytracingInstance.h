@@ -11,6 +11,15 @@ namespace nsK2EngineLow {
 		/// レイトレのインスタンスデータ。
 		/// </summary>
 		struct Instance {
+			~Instance()
+			{
+				if (m_blasStructuredBuffers.pScratch) {
+					m_blasStructuredBuffers.pScratch->Release();
+				}
+				if (m_blasStructuredBuffers.pScratch) {
+					m_blasStructuredBuffers.pResult->Release();
+				}
+			}
 			D3D12_RAYTRACING_GEOMETRY_DESC geometoryDesc;			// ジオメトリ情報。
 			RWStructuredBuffer m_vertexBufferRWSB;					// 頂点バッファ。
 			RWStructuredBuffer m_indexBufferRWSB;					// インデックスバッファ。

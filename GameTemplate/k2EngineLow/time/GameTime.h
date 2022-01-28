@@ -56,8 +56,8 @@ namespace nsK2EngineLow {
 				return m_fixedFrameDeltaTime;
 			}
 			
-			// return m_frameDeltaTime;
-			return 1.0f / 60.0f;
+			return m_frameDeltaTime;
+			// return 1.0f / 60.0f;
 		}
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace nsK2EngineLow {
 					totalTime += time;
 				}
 				//ïΩãœílÇÇ∆ÇÈÅB
-				m_frameDeltaTime = min(1.0f / 30.0f, totalTime / m_frameDeltaTimeQue.size());
+				m_frameDeltaTime = min(1.0f / 10.0f, totalTime / m_frameDeltaTimeQue.size());
 				m_frameDeltaTimeQue.pop_front();
 			}
 		}

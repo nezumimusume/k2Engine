@@ -22,13 +22,10 @@ namespace nsK2EngineLow {
 			/// </summary>
 			/// <param name="rc"></param>
 			/// <param name="instances"></param>
-			void Init(
-				RenderContext& rc,
-				const std::vector<InstancePtr>& instances
-			);
 			void Build(
 				RenderContext& rc,
-				const std::vector<InstancePtr>& instances);
+				const std::vector<InstancePtr>& instances,
+				bool isUpdate);
 			/// <summary>
 			/// SRVÇ…ìoò^ÅB
 			/// </summary>
