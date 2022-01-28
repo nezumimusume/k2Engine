@@ -398,6 +398,7 @@ namespace nsK2Engine {
 		EnModelUpAxis				m_enFbxUpAxis = enModelUpAxisZ;		// FBXの上方向。
 		Animation					m_animation;						// アニメーション。
 		ComputeAnimationVertexBuffer m_computeAnimationVertexBuffer;	// アニメーション済み頂点バッファの計算処理。
+		Model*						m_addRaytracingWorldModel = nullptr;// レイトレワールドに登録したモデル。				
 		Model						m_zprepassModel;					// ZPrepassで描画されるモデル
 		Model						m_forwardRenderModel;				// フォワードレンダリングの描画パスで描画されるモデル
 		Model						m_translucentModel;					// 半透明モデル。

@@ -82,9 +82,22 @@ namespace nsK2Engine {
         {
             m_renderObjects.push_back(renderObject);
         }
-        void AddHoge(Model& model) 
+        /// <summary>
+        /// レイトレワールドにモデルを追加。
+        /// </summary>
+        /// <param name="model"></param>
+        void AddModelToRaytracingWorld(Model& model) 
         {
             g_graphicsEngine->RegistModelToRaytracingWorld(model);
+        }
+        /// <summary>
+        /// レイトレワールドからモデルを削除。
+        /// </summary>
+        /// <param name="model"></param>
+        void RemoveModelFromRaytracingWorld(Model& model) 
+        {
+            
+            K2_ASSERT(false, "未実装");
         }
         /// <summary>
         /// ZPrepassで作成された深度テクスチャを取得
@@ -500,7 +513,6 @@ namespace nsK2Engine {
         RenderTarget m_mainRTSnapshots[(int)EnMainRTSnapshot::enNum];   // メインレンダリングターゲットのスナップショット
         RenderTarget m_gBuffer[enGBufferNum];                           // G-Buffer
         PostEffect m_postEffect;                                        // ポストエフェクト
-        raytracing::Engine m_raytracingEngine;                          // レイトレエンジン。
         RWStructuredBuffer m_pointLightNoListInTileUAV;                 // タイルごとのポイントライトのリストのUAV。
         RWStructuredBuffer m_spotLightNoListInTileUAV;                  // タイルごとのスポットライトのリストのUAV。
         std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。

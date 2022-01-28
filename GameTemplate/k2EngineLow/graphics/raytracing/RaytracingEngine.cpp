@@ -31,8 +31,7 @@ namespace nsK2EngineLow {
 			pDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &bufDesc, initState, nullptr, IID_PPV_ARGS(&pBuffer));
 			return pBuffer;
 		}
-
-		void Engine::CreateShaderResources()
+		void Engine::Init()
 		{
 			auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 
@@ -57,10 +56,30 @@ namespace nsK2EngineLow {
 			cam.fNear = g_camera3D->GetNear();
 			cam.fFar = g_camera3D->GetFar();
 			// レイトレエンジン側でダブルバッファにしているので、内部ではダブルバッファにしない。
-			m_rayGenerationCB[0].Init(sizeof(Camera), &cam, false );
-			m_rayGenerationCB[1].Init(sizeof(Camera), &cam, false );
+			m_rayGenerationCB[0].Init(sizeof(Camera), &cam, false);
+			m_rayGenerationCB[1].Init(sizeof(Camera), &cam, false);
 		}
+		void Engine::CommitRegistGeometry(RenderContext& rc)
+		{
+			if (!m_isDirty) {
+				return;
+			}
 
+			m_world.CommitRegistGeometry(rc);
+			
+			for (int i = 0; i < 2; i++) {
+				// 各種リソースをディスクリプタヒープに登録する。
+				m_descriptorHeaps[i].Init(i, m_world, m_outputResource, m_rayGenerationCB[i]);
+				// PSOを作成。
+				m_pipelineStateObject[i].Init(m_descriptorHeaps[i]);
+				// シェーダーテーブルを作成。
+				m_shaderTable[i].Init(i, m_world, m_pipelineStateObject[i], m_descriptorHeaps[i]); 
+			}
+			// ジオメトリをコミットしたので準備完了。
+			m_isReady = true;
+			// ダーティフラグをオフにする。
+			m_isDirty = false;
+		}
 		void Engine::Dispatch(RenderContext& rc)
 		{
 			CommitRegistGeometry(rc);
@@ -129,7 +148,6 @@ namespace nsK2EngineLow {
 			};
 			rc.SetDescriptorHeaps(ARRAYSIZE(descriptorHeaps), descriptorHeaps);
 
-			
 			rc.SetPipelineState(m_pipelineStateObject[backBufferNo]);
 			rc.DispatchRays(raytraceDesc);
 
@@ -141,31 +159,7 @@ namespace nsK2EngineLow {
 			rc.ResourceBarrier(barrier);
 
 			//レイトレの結果をフレームバッファに書き戻す。
-			g_graphicsEngine->CopyToFrameBuffer(rc, m_outputResource.Get());
-
-		}
-
-		void Engine::CommitRegistGeometry(RenderContext& rc)
-		{
-			if (!m_isDirty) {
-				return;
-			}
-
-			m_world.CommitRegistGeometry(rc);
-			// シェーダーリソースを作成。
-			CreateShaderResources();
-			for (int i = 0; i < 2; i++) {
-				// 各種リソースをディスクリプタヒープに登録する。
-				m_descriptorHeaps[i].Init(i, m_world, m_outputResource, m_rayGenerationCB[i]);
-				// PSOを作成。
-				m_pipelineStateObject[i].Init(m_descriptorHeaps[i]);
-				// シェーダーテーブルを作成。
-				m_shaderTable[i].Init(i, m_world, m_pipelineStateObject[i], m_descriptorHeaps[i]); 
-			}
-			// ジオメトリをコミットしたので準備完了。
-			m_isReady = true;
-			// ダーティフラグをオフにする。
-			m_isDirty = false;
+			// g_graphicsEngine->CopyToFrameBuffer(rc, m_outputResource.Get());
 		}
 	}//namespace raytracing
 }//namespace nsK2EngineLow 

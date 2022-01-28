@@ -150,7 +150,8 @@ namespace nsK2EngineLow {
 		m_directXTKGfxMemroy = std::make_unique<DirectX::GraphicsMemory>(m_d3dDevice);
 		//フォント描画エンジンを初期化。
 		m_fontEngine.Init();
-
+		//レイトレエンジンを初期化。
+		m_raytracingEngine.Init();
 		return true;
 	}
 

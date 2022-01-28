@@ -162,6 +162,14 @@ namespace nsK2EngineLow {
 			return m_frameBuffer.GetCurrentDepthStencilViewDescriptorHandle();
 		}
 		/// <summary>
+		/// レイトレの結果の出力先のバッファを取得。
+		/// </summary>
+		/// <returns></returns>
+		GPUBuffer& GetRaytracingOutputGPUBuffer()
+		{
+			return m_raytracingEngine.GetOutputGPUBuffer();
+		}
+		/// <summary>
 		/// 3DModelをレイトレワールドに登録。
 		/// </summary>
 		/// <param name="model"></param>

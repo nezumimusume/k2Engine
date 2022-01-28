@@ -19,6 +19,9 @@ namespace nsK2Engine {
 				// レンダリングエンジンから登録解除
 				g_renderingEngine->UnregisterGeometryData(&geomData);
 			}
+			if (m_addRaytracingWorldModel) {
+				g_renderingEngine->RemoveModelFromRaytracingWorld(*m_addRaytracingWorldModel);
+			}
 		}
 	}
 	void ModelRender::OnRecievedEventFromRenderingEngine(RenderingEngine::EnEvent enEvent)
@@ -79,8 +82,9 @@ namespace nsK2Engine {
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
-		
-		g_renderingEngine->AddHoge(m_translucentModel);
+		// レイトレワールドに追加。
+		g_renderingEngine->AddModelToRaytracingWorld(m_translucentModel);
+		m_addRaytracingWorldModel = &m_translucentModel;
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
 
@@ -104,9 +108,9 @@ namespace nsK2Engine {
 		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 		// 幾何学データを初期化。
 		InitGeometryDatas(1);
-
-		g_renderingEngine->AddHoge(m_forwardRenderModel);
-
+		// レイトレワールドに追加。
+		// g_renderingEngine->AddModelToRaytracingWorld(m_forwardRenderModel);
+		// m_addRaytracingWorldModel = &m_forwardRenderModel;
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
 	}
@@ -136,7 +140,9 @@ namespace nsK2Engine {
 		InitGeometryDatas(maxInstance);
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
-		g_renderingEngine->AddHoge(m_renderToGBufferModel);
+		// レイトレワールドに追加。
+		g_renderingEngine->AddModelToRaytracingWorld(m_renderToGBufferModel);
+		m_addRaytracingWorldModel = &m_renderToGBufferModel;
 	}
 
 	void ModelRender::InitGeometryDatas(int maxInstance)

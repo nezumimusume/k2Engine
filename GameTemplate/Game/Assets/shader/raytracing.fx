@@ -177,7 +177,7 @@ void TraceReflectionRay(inout RayPayload raypayload, float3 normal)
         ray.Origin = posW;
         ray.Direction = refDir;
         ray.TMin = 0.01f;
-        ray.TMax = 10000;
+        ray.TMax = 1000000;
 
         TraceRay(
             g_raytracingWorld,
@@ -214,7 +214,7 @@ void rayGen()
 
 
     ray.TMin = 0;
-    ray.TMax = 10000;
+    ray.TMax = 1000000;
 
     RayPayload payload;
     payload.depth = 0;
@@ -230,7 +230,7 @@ void rayGen()
 [shader("miss")]
 void miss(inout RayPayload payload)
 {
-    payload.color = float3(0.1, 0.0, 0.0);
+    payload.color = float3(0.0f, 0.0f, 0.0f);
 }
 
 [shader("closesthit")]
@@ -293,7 +293,11 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     float reflectRate = g_specularMap.SampleLevel(s, uv, 0.0f).a;
     float3 color = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
     color *= lig;
-    payload.color = lerp(color, refPayload.color, reflectRate);
+    if( payload.depth == 1){
+        payload.color = refPayload.color * reflectRate;
+    }else{
+        payload.color = lerp(color, refPayload.color, reflectRate);
+    }
 
     payload.depth--;
 }

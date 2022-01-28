@@ -49,6 +49,8 @@ TextureCube<float4> g_skyCubeMap : register(t15);
 StructuredBuffer<uint> pointLightListInTile : register(t20);
 // タイルごとのスポットライトのインデックスのリスト。
 StructuredBuffer<uint> spotLightListInTile : register(t21);
+// グローバルイルミネーションテクスチャ。
+Texture2D<float4> g_globalIlluminationTexture : register(t22);
 
 
 #include "PBRLighting.h"
@@ -335,6 +337,8 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         float3 v = reflect(toEye * -1.0f, normal);
         int level = lerp(0, 12, 1 - smooth);
         lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
+        // GLテクスチャ
+        lig += albedoColor * g_globalIlluminationTexture.Sample( Sampler, In.uv) * iblLuminance * 5.0f;
     }
     else {
         // 環境光による底上げ

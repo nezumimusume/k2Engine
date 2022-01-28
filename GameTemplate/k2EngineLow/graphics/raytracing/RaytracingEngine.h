@@ -40,11 +40,15 @@ namespace nsK2EngineLow {
 			/// ジオメトリの登録を確定。
 			/// </summary>
 			void CommitRegistGeometry(RenderContext& rc);
-		private:
 			/// <summary>
-			/// シェーダーリソースを作成。
+			/// レイトレの結果の出力先のバッファを取得。
 			/// </summary>
-			void CreateShaderResources();
+			/// <returns></returns>
+			GPUBuffer& GetOutputGPUBuffer()
+			{
+				return m_outputResource;
+			}
+		
 		private:
 			/// <summary>
 			/// レイトレーシングで使用するカメラ構造体。

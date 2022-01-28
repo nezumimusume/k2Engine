@@ -73,7 +73,7 @@ namespace nsK2EngineLow {
 					totalTime += time;
 				}
 				//ïΩãœílÇÇ∆ÇÈÅB
-				m_frameDeltaTime = min(1.0f / 10.0f, totalTime / m_frameDeltaTimeQue.size());
+				m_frameDeltaTime = min(1.0f / 30.0f, totalTime / m_frameDeltaTimeQue.size());
 				m_frameDeltaTimeQue.pop_front();
 			}
 		}

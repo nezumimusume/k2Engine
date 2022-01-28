@@ -64,7 +64,8 @@ namespace nsK2Engine {
         spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
         spriteInitData.m_expandShaderResoruceView[0] = &m_pointLightNoListInTileUAV;
         spriteInitData.m_expandShaderResoruceView[1] = &m_spotLightNoListInTileUAV;
-        
+        spriteInitData.m_expandShaderResoruceView[2] = &g_graphicsEngine->GetRaytracingOutputGPUBuffer();
+
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
         {
             for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
@@ -316,6 +317,9 @@ namespace nsK2Engine {
         // ライトカリング
         m_lightCulling.Execute(rc);
 
+        // レイトレで映り込み画像を作成する。
+        g_graphicsEngine->DispatchRaytracing(rc);
+
         // G-Bufferへのレンダリング
         RenderToGBuffer(rc);
 
@@ -328,9 +332,6 @@ namespace nsK2Engine {
         // フォワードレンダリング
         ForwardRendering(rc);
 
-        //g_graphicsEngine->BuildRaytracingWorld(rc);
-        //g_graphicsEngine->DispatchRaytracing(rc);
-
         // ポストエフェクトを実行
         m_postEffect.Render(rc, m_mainRenderTarget);
 
@@ -339,9 +340,6 @@ namespace nsK2Engine {
 
         // メインレンダリングターゲットの内容をフレームバッファにコピー
         CopyMainRenderTargetToFrameBuffer(rc);
-
-        // レイトレのテストのためにこのタイミングで実施する。
-        g_graphicsEngine->DispatchRaytracing(rc);
 
         // 登録されている描画オブジェクトをクリア
         m_renderObjects.clear();

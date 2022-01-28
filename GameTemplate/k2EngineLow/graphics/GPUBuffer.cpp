@@ -56,5 +56,12 @@ namespace nsK2EngineLow {
 	}
 	void GPUBuffer::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
 	{
+		auto device = g_graphicsEngine->GetD3DDevice();
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.Format = m_desc.Format;
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = m_desc.MipLevels;
+		device->CreateShaderResourceView(m_buffer, &srvDesc, descriptorHandle);
 	}
 }
