@@ -35,6 +35,11 @@ namespace nsK2EngineLow {
 		/// <param name="resrouce">D3Dリソース。</param>
 		void InitFromD3DResource(ID3D12Resource* texture);
 		/// <summary>
+		/// Textureクラスのオブジェクトからテクスチャを初期化。
+		/// </summary>
+		/// <param name="texture"></param>
+		void IniteFromTexture(Texture& texture);
+		/// <summary>
 		/// SRVに登録。
 		/// </summary>
 		/// <param name="descriptorHandle"></param>

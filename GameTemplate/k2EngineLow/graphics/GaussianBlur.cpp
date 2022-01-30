@@ -2,12 +2,30 @@
 #include "GaussianBlur.h"
 
 namespace nsK2EngineLow {
+	void GaussianBlur::Init(Texture* originalTexture, bool isBlurAlpha, int width, int height)
+	{
+		m_originalTexture = originalTexture;
+		m_bokeTextureWidth = width;
+		m_bokeTextureHeight = height;
+		//レンダリングターゲットを初期化。
+		InitRenderTargets();
+		//スプライトを初期化。
+		InitSprites(isBlurAlpha);
+	}
 	void GaussianBlur::Init(Texture* originalTexture, bool isBlurAlpha, bool isDownSample)
 	{
+		if (isDownSample) {
+			m_bokeTextureWidth = originalTexture->GetWidth() / 2.0f;
+			m_bokeTextureHeight = originalTexture->GetHeight() / 2.0f;
+		}
+		else {
+			m_bokeTextureWidth = originalTexture->GetWidth();
+			m_bokeTextureHeight = originalTexture->GetHeight();
+		}
 		m_originalTexture = originalTexture;
 
 		//レンダリングターゲットを初期化。
-		InitRenderTargets(isDownSample);
+		InitRenderTargets();
 		//スプライトを初期化。
 		InitSprites(isBlurAlpha);
 	}
@@ -41,13 +59,13 @@ namespace nsK2EngineLow {
 		rc.WaitUntilFinishDrawingToRenderTarget(m_yBlurRenderTarget);
 	}
 
-	void GaussianBlur::InitRenderTargets(bool isDownSample)
+	void GaussianBlur::InitRenderTargets()
 	{
 		int w = m_originalTexture->GetWidth();
 		int h = m_originalTexture->GetHeight();
 		//Xブラー用のレンダリングターゲットを作成する。
 		m_xBlurRenderTarget.Create(
-			isDownSample ? w / 2 : w,
+			m_bokeTextureWidth,
 			h,
 			1,
 			1,
@@ -57,8 +75,8 @@ namespace nsK2EngineLow {
 
 		//Yブラー用のレンダリングターゲットを作成する。
 		m_yBlurRenderTarget.Create(
-			isDownSample ? w / 2 : w,
-			isDownSample ? h / 2 : h,
+			m_bokeTextureWidth,
+			m_bokeTextureHeight,
 			1,
 			1,
 			m_originalTexture->GetFormat(),

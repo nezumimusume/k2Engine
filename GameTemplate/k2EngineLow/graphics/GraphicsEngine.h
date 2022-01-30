@@ -162,12 +162,12 @@ namespace nsK2EngineLow {
 			return m_frameBuffer.GetCurrentDepthStencilViewDescriptorHandle();
 		}
 		/// <summary>
-		/// レイトレの結果の出力先のバッファを取得。
+		/// レイトレの結果のテクスチャを取得。
 		/// </summary>
 		/// <returns></returns>
-		GPUBuffer& GetRaytracingOutputGPUBuffer()
+		Texture& GetRaytracingOutputTexture()
 		{
-			return m_raytracingEngine.GetOutputGPUBuffer();
+			return m_raytracingEngine.GetOutputTexture();
 		}
 		/// <summary>
 		/// 3DModelをレイトレワールドに登録。
@@ -175,7 +175,10 @@ namespace nsK2EngineLow {
 		/// <param name="model"></param>
 		void RegistModelToRaytracingWorld(Model& model)
 		{
-			m_raytracingEngine.RegistGeometry(model);
+			if (m_isPossibleRaytracing) {
+				// ハードウェアレイトレーシングがサポートされている場合のみ
+				m_raytracingEngine.RegistGeometry(model);
+			}
 		}
 		
 		/// <summary>
@@ -184,7 +187,18 @@ namespace nsK2EngineLow {
 		/// <param name="rc"></param>
 		void DispatchRaytracing(RenderContext& rc)
 		{
-			m_raytracingEngine.Dispatch(rc);
+			if (m_isPossibleRaytracing) {
+				// ハードウェアレイトレーシングがサポートされている場合のみ
+				m_raytracingEngine.Dispatch(rc);
+			}
+		}
+		/// <summary>
+		/// レイトレ用のスカイキューブボックスを設定。
+		/// </summary>
+		/// <param name="skycubeBox"></param>
+		void SetRaytracingSkyCubeBox(Texture& skycubeBox)
+		{
+			m_raytracingEngine.SetSkyCubeBox(skycubeBox);
 		}
 		/// <summary>
 		/// フレームバッファにコピー。
@@ -242,6 +256,14 @@ namespace nsK2EngineLow {
 			// 描画コマンドは１フレーム遅れて実行されるように実装されているため、即座に開放すると描画中に
 			// リソースが解放されてしまう。そのため、１フレーム遅延して開放する必要がある。
 			m_reqDelayRelease3d12ObjectList.push_back({ res, 1 });
+		}
+		/// <summary>
+		/// レイトレーシングを行うことが可能か判定。
+		/// </summary>
+		/// <returns>trueが返ってきたらレイトレを行える。</returns>
+		bool IsPossibleRaytracing() const 
+		{
+			return m_isPossibleRaytracing;
 		}
 #ifdef K2_DEBUG
 		void BeginGPUEvent(const char* eventName)
@@ -347,16 +369,17 @@ namespace nsK2EngineLow {
 		HANDLE m_fenceEvent = nullptr;
 		ID3D12Fence* m_fence = nullptr;
 		UINT64 m_fenceValue = 0;
-		UINT m_frameBufferWidth = 0;				//フレームバッファの幅。
-		UINT m_frameBufferHeight = 0;				//フレームバッファの高さ。
-		Camera m_camera2D;							//2Dカメラ。
-		Camera m_camera3D;							//3Dカメラ。
-		raytracing::Engine m_raytracingEngine;		//レイトレエンジン。
-		NullTextureMaps m_nullTextureMaps;			//ヌルテクスチャマップ。
-		FontEngine m_fontEngine;					//フォントエンジン。
+		UINT m_frameBufferWidth = 0;				// フレームバッファの幅。
+		UINT m_frameBufferHeight = 0;				// フレームバッファの高さ。
+		Camera m_camera2D;							// 2Dカメラ。
+		Camera m_camera3D;							// 3Dカメラ。
+		raytracing::Engine m_raytracingEngine;		// レイトレエンジン。
+		NullTextureMaps m_nullTextureMaps;			// ヌルテクスチャマップ。
+		FontEngine m_fontEngine;					// フォントエンジン。
 		std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;					//DirectXTKのグラフィックメモリシステム。
 		bool m_isExecuteCommandList = false;											//コマンドリストをGPUに流した？
 		std::list< RequestDelayReleaseD3D12Object > m_reqDelayRelease3d12ObjectList;	// D3D12オブジェクトの遅延解放リクエストのリスト。
+		bool m_isPossibleRaytracing = false;		// レイトレーシングを行うことが可能？
 	};
 	extern GraphicsEngine* g_graphicsEngine;	//グラフィックスエンジン
 	extern Camera* g_camera2D;					//2Dカメラ。

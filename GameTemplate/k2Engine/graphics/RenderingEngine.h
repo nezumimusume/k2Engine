@@ -31,10 +31,11 @@ namespace nsK2Engine {
         // ディファードライティング用の定数バッファ
         struct SDeferredLightingCB
         {
-            Light m_light;          // ライト
+            Light m_light;              // ライト
             Matrix mlvp[MAX_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP]; // ライトビュープロジェクション行列。
-            float m_iblLuminance;   // IBLの明るさ。
-            int m_isIBL;            // IBLを行う。
+            float m_iblLuminance;       // IBLの明るさ。
+            int m_isIBL;                // IBLを行う。
+            int m_isEnableRaytracing;   // レイトレが行われている。
         };
 
         //メインレンダリングターゲットのスナップショット
@@ -387,6 +388,30 @@ namespace nsK2Engine {
         {
             m_sceneLight.SetAmbinet(ambient);
         }
+        /// <summary>
+        /// レイトレーシングが有効かどうかを判定する。
+        /// </summary>
+        /// <returns></returns>
+        bool IsEnableRaytracing() const
+        {
+            return m_isEnableRaytracing && g_graphicsEngine->IsPossibleRaytracing();
+        }
+        /// <summary>
+        /// レイトレーシングを有効にします。
+        /// この設定はハードウェアレイトレーシングが無効な場合は無視されます。
+        /// </summary>
+        void EnableRaytracing()
+        {
+            m_isEnableRaytracing = true;
+        }
+        /// <summary>
+        /// レイトレーシングを無効にします。
+        /// この設定はハードウェアレイトレーシングが無効な場合は無視されます。
+        /// </summary>
+        void DisableRaytracing()
+        {
+            m_isEnableRaytracing = false;
+        }
     private:
         /// <summary>
         /// イメージベースドライティング(IBL)のためのデータを初期化する。
@@ -492,8 +517,6 @@ namespace nsK2Engine {
                                             // メタリックがr、影パラメータがg、スムースがa。gは未使用。
                                             enGBufferNum,                   // G-Bufferの数
         };
-
-
         /// <summary>
         /// IBLデータ
         /// </summary>
@@ -501,7 +524,20 @@ namespace nsK2Engine {
             Texture m_texture;          // IBLテクスチャ
             float m_luminance = 1.0f;   // 明るさ。
         };
-
+        /// <summary>
+        /// GIテクスチャを作るためのブラー処理。
+        /// </summary>
+        enum EGITextureBlur {
+            eGITextureBlur_1024x1024,   // 1024×1024
+            eGITextureBlur_512x512,     // 512×512
+            eGITextureBlur_256x256,     // 256×256
+            eGITextureBlur_128x128,     // 128×128
+            eGITextureBlur_32x32,       // 32×32
+            eGITextureBlur_8x8,         // 8×8
+            eGITextureBlur_2x2,         // 2×2
+            eGITextureBlur_1x1,         // 1×1
+            eGITextureBlur_Num,     
+        };
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
         VolumeLightRender m_volumeLightRender;                          // ボリュームライトレンダラー。
@@ -525,7 +561,8 @@ namespace nsK2Engine {
         Sprite m_2DSprite;                                              // 2D合成用のスプライト。
         Sprite m_mainSprite;
         SIBLData m_iblData;                                             // IBLデータ。
-
+        bool m_isEnableRaytracing = true;                               // レイトレーシングが有効？
+        GaussianBlur m_giTextureBlur[eGITextureBlur_Num];                                // GIテクスチャにブラーをかける処理。
         /// <summary>
         /// イベントリスナーのデータ。
         /// </summary>

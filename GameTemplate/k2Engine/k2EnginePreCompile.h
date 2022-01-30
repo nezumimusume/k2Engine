@@ -18,4 +18,3 @@ using namespace nsK2EngineLow;
 #include "graphics/light/PointLight.h"
 #include "graphics/light/VolumeSpotLight.h"
 #include "graphics/light/VolumePointLight.h"
-

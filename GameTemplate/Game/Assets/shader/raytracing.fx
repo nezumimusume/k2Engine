@@ -56,13 +56,14 @@ cbuffer rayGenCB :register(b0)
 };
 
 RaytracingAccelerationStructure g_raytracingWorld : register(t0);    // レイトレワールド
-Texture2D<float4> gAlbedoTexture : register(t1);    // アルベドマップ
-Texture2D<float4> g_normalMap : register(t2);       // 法線マップ
-Texture2D<float4> g_specularMap : register(t3);     // スペキュラマップ
-Texture2D<float4> g_reflectionMap : register(t4);   // リフレクションマップ
-Texture2D<float4> g_refractionMap : register(t5);   // 屈折マップ
-StructuredBuffer<SVertex> g_vertexBuffers : register(t6);   // 頂点バッファー
-StructuredBuffer<int> g_indexBuffers : register(t7);        // インデックスバッファー
+Texture2D<float4> gAlbedoTexture : register(t1);            // アルベドマップ
+Texture2D<float4> g_normalMap : register(t2);               // 法線マップ
+Texture2D<float4> g_specularMap : register(t3);             // スペキュラマップ
+Texture2D<float4> g_reflectionMap : register(t4);           // リフレクションマップ
+Texture2D<float4> g_refractionMap : register(t5);           // 屈折マップ
+StructuredBuffer<SVertex> g_vertexBuffers : register(t6);   // 頂点バッファー。
+StructuredBuffer<int> g_indexBuffers : register(t7);        // インデックスバッファー。
+TextureCube<float4> g_skyCubeMap : register(t8);            // スカイキューブマップ。
 
 RWTexture2D<float4> gOutput : register(u0);
 
@@ -185,7 +186,7 @@ void TraceReflectionRay(inout RayPayload raypayload, float3 normal)
             0xFF,
             0,
             0,
-            1,
+            0,
             ray,
             raypayload
         );
@@ -230,7 +231,8 @@ void rayGen()
 [shader("miss")]
 void miss(inout RayPayload payload)
 {
-    payload.color = float3(0.0f, 0.0f, 0.0f);
+    float3 rayDirW = WorldRayDirection();
+    payload.color = g_skyCubeMap.SampleLevel(s, rayDirW, 0.0f);
 }
 
 [shader("closesthit")]
@@ -294,7 +296,7 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     float3 color = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
     color *= lig;
     if( payload.depth == 1){
-        payload.color = refPayload.color * reflectRate;
+        payload.color = refPayload.color;
     }else{
         payload.color = lerp(color, refPayload.color, reflectRate);
     }

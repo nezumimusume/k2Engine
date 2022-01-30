@@ -6,7 +6,22 @@ namespace nsK2EngineLow {
 	GraphicsEngine* g_graphicsEngine = nullptr;	//グラフィックスエンジン
 	Camera* g_camera2D = nullptr;				//2Dカメラ。
 	Camera* g_camera3D = nullptr;				//3Dカメラ。
+	/// <summary>
+	/// DXRがサポートされているかを調べる。
+	/// </summary>
+	/// <param name="pDevice"></param>
+	/// <returns></returns>
+	bool IsSupportDXR(ID3D12Device5* pDevice)
+	{
+		D3D12_FEATURE_DATA_D3D12_OPTIONS5 options = {};
+		auto hr = pDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &options, sizeof(options));
+		if (FAILED(hr))
+		{
+			return false;
+		}
 
+		return options.RaytracingTier != D3D12_RAYTRACING_TIER_NOT_SUPPORTED;
+	}
 	GraphicsEngine::~GraphicsEngine()
 	{
 		WaitDraw();
@@ -80,6 +95,11 @@ namespace nsK2EngineLow {
 			//D3Dデバイスの作成に失敗した。
 			MessageBox(hwnd, TEXT("D3Dデバイスの作成に失敗しました。"), TEXT("エラー"), MB_OK);
 			return false;
+		}
+		// DXRのサポートを調べる。
+		if (IsSupportDXR(m_d3dDevice)) {
+			// DXRがサポートされている。
+			m_isPossibleRaytracing = true;
 		}
 		//コマンドキューの作成。
 		if (!CreateCommandQueue()) {

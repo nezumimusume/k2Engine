@@ -85,7 +85,7 @@ namespace nsK2EngineLow {
 		const ShaderData shaderDatas[] = {
 			//entryPointName	useLocalRootSignature				category						hitgroup
 			{ L"rayGen",		eLocalRootSignature_Raygen,			eShaderCategory_RayGenerator,	eHitGroup_Undef },
-			{ L"miss",			eLocalRootSignature_Empty,			eShaderCategory_Miss,			eHitGroup_Undef },
+			{ L"miss",			eLocalRootSignature_PBRMaterialHit,	eShaderCategory_Miss,			eHitGroup_Undef },
 			{ L"chs",			eLocalRootSignature_PBRMaterialHit,	eShaderCategory_ClosestHit,		eHitGroup_PBRCameraRay },
 			{ L"shadowChs",		eLocalRootSignature_PBRMaterialHit,	eShaderCategory_ClosestHit,		eHitGroup_PBRShadowRay },
 			{ L"shadowMiss",	eLocalRootSignature_Empty,			eShaderCategory_Miss,			eHitGroup_Undef },
@@ -125,6 +125,7 @@ namespace nsK2EngineLow {
 			eRefractionMap,						//屈折マップ。
 			eVertexBuffer,						//頂点バッファ。
 			eIndexBuffer,						//インデックスバッファ。
+			eSkyCubeBox,						// スカイキューブボックス
 			eNum,			//SRVの数。
 			eNumRayGenerationSRV = eEndRayGenerationSRV - eStartRayGenerationSRV,	//レイジェネレーションシェーダーで使用するSRVの数。
 		};

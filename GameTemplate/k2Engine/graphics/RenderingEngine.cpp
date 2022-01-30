@@ -64,7 +64,18 @@ namespace nsK2Engine {
         spriteInitData.m_expandConstantBufferSize = sizeof(m_deferredLightingCB);
         spriteInitData.m_expandShaderResoruceView[0] = &m_pointLightNoListInTileUAV;
         spriteInitData.m_expandShaderResoruceView[1] = &m_spotLightNoListInTileUAV;
-        spriteInitData.m_expandShaderResoruceView[2] = &g_graphicsEngine->GetRaytracingOutputGPUBuffer();
+        if (g_graphicsEngine->IsPossibleRaytracing()) {
+            // レイトレを行うことが可能。
+            spriteInitData.m_expandShaderResoruceView[2] = &g_graphicsEngine->GetRaytracingOutputTexture();
+            spriteInitData.m_expandShaderResoruceView[3] = &m_giTextureBlur[eGITextureBlur_1024x1024].GetBokeTexture();
+            spriteInitData.m_expandShaderResoruceView[4] = &m_giTextureBlur[eGITextureBlur_512x512].GetBokeTexture();
+            spriteInitData.m_expandShaderResoruceView[5] = &m_giTextureBlur[eGITextureBlur_256x256].GetBokeTexture();
+            spriteInitData.m_expandShaderResoruceView[6] = &m_giTextureBlur[eGITextureBlur_128x128].GetBokeTexture();
+            spriteInitData.m_expandShaderResoruceView[7] = &m_giTextureBlur[eGITextureBlur_32x32].GetBokeTexture();
+            spriteInitData.m_expandShaderResoruceView[8] = &m_giTextureBlur[eGITextureBlur_8x8].GetBokeTexture();
+            spriteInitData.m_expandShaderResoruceView[9] = &m_giTextureBlur[eGITextureBlur_2x2].GetBokeTexture();
+            spriteInitData.m_expandShaderResoruceView[10] = &m_giTextureBlur[eGITextureBlur_1x1].GetBokeTexture();
+        }
 
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
         {
@@ -208,9 +219,20 @@ namespace nsK2Engine {
     {
         m_iblData.m_texture.InitFromDDSFile(iblTexFilePath);
         m_iblData.m_luminance = luminance;
+        g_graphicsEngine->SetRaytracingSkyCubeBox(m_iblData.m_texture);
     }
     void RenderingEngine::InitDeferredLighting()
     {
+        // GIテクスチャを作成するためのブラー処理を初期化する。
+        m_giTextureBlur[eGITextureBlur_1024x1024].Init(&g_graphicsEngine->GetRaytracingOutputTexture(), 1024, 1024);
+        m_giTextureBlur[eGITextureBlur_512x512].Init(&m_giTextureBlur[eGITextureBlur_1024x1024].GetBokeTexture(), 512, 512);
+        m_giTextureBlur[eGITextureBlur_256x256].Init(&m_giTextureBlur[eGITextureBlur_512x512].GetBokeTexture(), 256, 256);
+        m_giTextureBlur[eGITextureBlur_128x128].Init(&m_giTextureBlur[eGITextureBlur_256x256].GetBokeTexture(), 128, 128);
+        m_giTextureBlur[eGITextureBlur_32x32].Init(&m_giTextureBlur[eGITextureBlur_128x128].GetBokeTexture(), 32, 32 );
+        m_giTextureBlur[eGITextureBlur_8x8].Init(&m_giTextureBlur[eGITextureBlur_32x32].GetBokeTexture(), 8, 8 ); 
+        m_giTextureBlur[eGITextureBlur_2x2].Init(&m_giTextureBlur[eGITextureBlur_8x8].GetBokeTexture(), 2, 2);
+        m_giTextureBlur[eGITextureBlur_1x1].Init(&m_giTextureBlur[eGITextureBlur_2x2].GetBokeTexture(), 1, 1);
+
         // シーンライトを初期化する。
         m_sceneLight.Init();
 
@@ -304,6 +326,7 @@ namespace nsK2Engine {
     {
         // シーンライトのデータをコピー。
         m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
+        m_deferredLightingCB.m_isEnableRaytracing = m_isEnableRaytracing ? 1 : 0;
 
         // アニメーション済み頂点の計算。
         ComputeAnimatedVertex(rc);
@@ -317,11 +340,16 @@ namespace nsK2Engine {
         // ライトカリング
         m_lightCulling.Execute(rc);
 
-        // レイトレで映り込み画像を作成する。
-        g_graphicsEngine->DispatchRaytracing(rc);
-
         // G-Bufferへのレンダリング
         RenderToGBuffer(rc);
+
+        // レイトレで映り込み画像を作成する。
+        if (IsEnableRaytracing()) {
+            g_graphicsEngine->DispatchRaytracing(rc);
+            for (auto& blur : m_giTextureBlur) {
+                blur.ExecuteOnGPU(rc, 5);
+            }
+        }
 
         // ディファードライティング
         DeferredLighting(rc);
@@ -340,6 +368,8 @@ namespace nsK2Engine {
 
         // メインレンダリングターゲットの内容をフレームバッファにコピー
         CopyMainRenderTargetToFrameBuffer(rc);
+
+        // g_graphicsEngine->DispatchRaytracing(rc);
 
         // 登録されている描画オブジェクトをクリア
         m_renderObjects.clear();

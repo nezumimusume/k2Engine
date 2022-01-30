@@ -70,8 +70,10 @@ namespace nsK2Engine {
         BeginGPUEvent("PostEffect");
         //m_ssao.Render(rc, mainRenderTarget);
         
-        // SSR
-        m_ssr.Render(rc, mainRenderTarget);
+        if (g_renderingEngine->IsEnableRaytracing() == false) {
+            // レイトレをしていないならSSRを行う。
+            m_ssr.Render(rc, mainRenderTarget);
+        }
         // シーンの輝度を計算する。
         m_calsSceneLuminance.Render(rc, mainRenderTarget);
 

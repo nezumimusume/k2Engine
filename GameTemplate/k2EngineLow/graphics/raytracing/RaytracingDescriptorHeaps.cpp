@@ -8,7 +8,8 @@ namespace nsK2EngineLow {
 			int bufferNo,
 			World& world,
 			GPUBuffer& outputBuffer,
-			ConstantBuffer& rayGeneCB
+			ConstantBuffer& rayGeneCB,
+			Texture& skycubeBox
 		)
 		{
 
@@ -22,43 +23,49 @@ namespace nsK2EngineLow {
 					regNo + (int)ESRV_OneEntry::eTLAS,
 					world.GetTLASBuffer(bufferNo)
 				);
-				//アルベドマップをディスクリプタヒープに登録。
+				// アルベドマップをディスクリプタヒープに登録。
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eAlbedoMap,
 					instance.m_material->GetAlbedoMap()
 				);
-				//法線マップをディスクリプタヒープに登録。
+				// 法線マップをディスクリプタヒープに登録。
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eNormalMap,
 					instance.m_material->GetNormalMap()
 				);
-				//スペキュラマップをディスクリプタヒープに登録。
+				// スペキュラマップをディスクリプタヒープに登録。
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eSpecularMap,
 					instance.m_material->GetSpecularMap()
 				);
 
-				//リフレクションマップをディスクリプタヒープに登録。
+				// リフレクションマップをディスクリプタヒープに登録。
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eReflectionMap,
 					instance.m_material->GetReflectionMap()
 				);
 
-				//屈折マップをディスクリプタヒープに登録。
+				// 屈折マップをディスクリプタヒープに登録。
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eRefractionMap,
 					instance.m_material->GetRefractionMap()
 				);
-				//頂点バッファをディスクリプタヒープに登録。
+				// 頂点バッファをディスクリプタヒープに登録。
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eVertexBuffer,
 					instance.m_vertexBufferRWSB
 				);
-				//インデックスバッファをディスクリプタヒープに登録。
+				// インデックスバッファをディスクリプタヒープに登録。
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eIndexBuffer,
 					instance.m_indexBufferRWSB
 				);
+				// スカイキューブボックス
+				m_srvUavCbvHeap.RegistShaderResource(
+					regNo + (int)ESRV_OneEntry::eSkyCubeBox,
+					skycubeBox
+				);
+				
 				regNo += (int)ESRV_OneEntry::eNum;
 
 			});

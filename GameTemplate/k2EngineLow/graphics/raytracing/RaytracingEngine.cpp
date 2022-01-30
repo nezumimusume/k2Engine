@@ -47,6 +47,7 @@ namespace nsK2EngineLow {
 			resDesc.SampleDesc.Count = 1;
 			resDesc.Width = g_graphicsEngine->GetFrameBufferWidth();
 			m_outputResource.Init(resDesc);
+			m_outputTexture.InitFromD3DResource(m_outputResource.Get());
 
 			//レイジェネレーション用の定数バッファ。
 			Camera cam;
@@ -69,7 +70,7 @@ namespace nsK2EngineLow {
 			
 			for (int i = 0; i < 2; i++) {
 				// 各種リソースをディスクリプタヒープに登録する。
-				m_descriptorHeaps[i].Init(i, m_world, m_outputResource, m_rayGenerationCB[i]);
+				m_descriptorHeaps[i].Init(i, m_world, m_outputResource, m_rayGenerationCB[i], m_skycubeBox);
 				// PSOを作成。
 				m_pipelineStateObject[i].Init(m_descriptorHeaps[i]);
 				// シェーダーテーブルを作成。

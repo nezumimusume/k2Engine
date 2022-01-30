@@ -37,16 +37,27 @@ namespace nsK2EngineLow {
 				m_isDirty = true;
 			}
 			/// <summary>
+			/// スカイキューブボックスを設定。
+			/// </summary>
+			/// <param name="skycubeBox"></param>
+			void SetSkyCubeBox(Texture& skycubeBox)
+			{
+				if (skycubeBox.Get() != nullptr) {
+					m_skycubeBox.IniteFromTexture(skycubeBox);
+					m_isDirty = true;
+				}
+			}
+			/// <summary>
 			/// ジオメトリの登録を確定。
 			/// </summary>
 			void CommitRegistGeometry(RenderContext& rc);
 			/// <summary>
-			/// レイトレの結果の出力先のバッファを取得。
+			/// レイトレの結果の出力先となるテクスチャを取得。
 			/// </summary>
 			/// <returns></returns>
-			GPUBuffer& GetOutputGPUBuffer()
+			Texture& GetOutputTexture()
 			{
-				return m_outputResource;
+				return m_outputTexture;
 			}
 		
 		private:
@@ -67,6 +78,8 @@ namespace nsK2EngineLow {
 			ShaderTable m_shaderTable[2];				// シェーダーテーブル。
 			DescriptorHeaps m_descriptorHeaps[2];		// レイトレで使用するディスクリプタヒープの管理者。
 			GPUBuffer m_outputResource;					// レイトレースの結果の出力先。
+			Texture m_outputTexture;					// レイトレースの結果の出力先(テクスチャ)
+			Texture m_skycubeBox;						// スカイキューブボックス。
 			bool m_isReady = false;						// 準備完了フラグ。
 			bool m_isDirty = false;						// ダーティフラグ。
 		};

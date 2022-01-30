@@ -6,11 +6,20 @@ namespace nsK2EngineLow {
 	/// </summary>
 	class GaussianBlur : public Noncopyable {
 	public:
+		
 		/// <summary>
 		/// 初期化。
 		/// </summary>
 		/// <param name="originalTexture">ガウシアンブラーをかけるオリジナルテクスチャ。</param>
 		void Init(Texture* originalTexture, bool isBlurAlpha = false, bool isDownSample = true);
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		/// <param name="originalTexture"></param>
+		/// <param name="isBlurAlpha">αにブラーをかける？</param>
+		/// <param name="width">ブラーの結果を出力するテクスチャの幅</param>
+		/// <param name="height">ブラーの結果を出力するテクスチャの高さ</param>
+		void Init(Texture* originalTexture, bool isBlurAlpha, int width, int height);
 		/// <summary>
 		/// ガウシアンブラーをGPU上で実行。
 		/// </summary>
@@ -32,7 +41,7 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// レンダリングターゲットを初期化。
 		/// </summary>
-		void InitRenderTargets(bool isDownSample);
+		void InitRenderTargets();
 		/// <summary>
 		/// スプライトを初期化。
 		/// </summary>
@@ -42,12 +51,14 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void UpdateWeightsTable(float blurPower);
 	private:
-		enum { NUM_WEIGHTS = 8 };				//重みの数。
-		float m_weights[NUM_WEIGHTS];			//重みテーブル。
-		Texture* m_originalTexture = nullptr;	//オリジナルテクスチャ。
-		RenderTarget m_xBlurRenderTarget;		//横ボケ画像を描画するレンダリングターゲット。
-		RenderTarget m_yBlurRenderTarget;		//縦ボケ画像を描画するレンダリングターゲット。
-		Sprite m_xBlurSprite;					//横ボケ画像を描画するためのスプライト。
-		Sprite m_yBlurSprite;					//縦ボケ画像を描画するためのスプライト。
+		enum { NUM_WEIGHTS = 8 };				// 重みの数。
+		float m_weights[NUM_WEIGHTS];			// 重みテーブル。
+		int m_bokeTextureWidth = 0;				// ボケテクスチャの幅。
+		int m_bokeTextureHeight = 0;			// ボケテクスチャの高さ。
+		Texture* m_originalTexture = nullptr;	// オリジナルテクスチャ。
+		RenderTarget m_xBlurRenderTarget;		// 横ボケ画像を描画するレンダリングターゲット。
+		RenderTarget m_yBlurRenderTarget;		// 縦ボケ画像を描画するレンダリングターゲット。
+		Sprite m_xBlurSprite;					// 横ボケ画像を描画するためのスプライト。
+		Sprite m_yBlurSprite;					// 縦ボケ画像を描画するためのスプライト。
 	};
 }

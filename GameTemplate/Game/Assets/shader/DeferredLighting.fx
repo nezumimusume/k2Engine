@@ -8,7 +8,7 @@
 ///////////////////////////////////////
 static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
 static const int NUM_SHADOW_MAP = 3;        // シャドウマップの枚数。
-
+static const int NUM_GI_TEXTURE = 9;        // GIテクスチャ。
 ///////////////////////////////////////
 // 構造体。
 ///////////////////////////////////////
@@ -50,7 +50,7 @@ StructuredBuffer<uint> pointLightListInTile : register(t20);
 // タイルごとのスポットライトのインデックスのリスト。
 StructuredBuffer<uint> spotLightListInTile : register(t21);
 // グローバルイルミネーションテクスチャ。
-Texture2D<float4> g_globalIlluminationTexture : register(t22);
+Texture2D<float4> g_globalIlluminationTextureArray[NUM_GI_TEXTURE] : register(t22);
 
 
 #include "PBRLighting.h"
@@ -68,7 +68,48 @@ PSInput VSMain(VSInput In)
     return psIn;
 }
 
+/*!
+ *@brief	GIライトをサンプリング
+ *@param[in]	uv				uv座標
+ *@param[in]	level           GIレベル
+ */
+float4 SampleGILight( float2 uv, float level )
+{
+    int iLevel = (int)level;
+    float4 col_0;
+    float4 col_1;
+    if( iLevel == 0){
+        col_0 = g_globalIlluminationTextureArray[0].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[1].Sample( Sampler, uv);
+        
+    }else if( iLevel == 1){
+        col_0 = g_globalIlluminationTextureArray[1].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[2].Sample( Sampler, uv);
+    }else if( iLevel == 2){
+        col_0 = g_globalIlluminationTextureArray[2].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[3].Sample( Sampler, uv);
+    }else if( iLevel == 3){
+        col_0 = g_globalIlluminationTextureArray[3].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[4].Sample( Sampler, uv);
+    }else if( iLevel == 4){
+        col_0 = g_globalIlluminationTextureArray[4].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[5].Sample( Sampler, uv);
+    }else if( iLevel == 5){
+        col_0 = g_globalIlluminationTextureArray[5].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[6].Sample( Sampler, uv);
+    }else if( iLevel == 6){
+        col_0 = g_globalIlluminationTextureArray[6].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[7].Sample( Sampler, uv);
+    }else if( iLevel == 7){
+        col_0 = g_globalIlluminationTextureArray[7].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[8].Sample( Sampler, uv);
+    }else if( iLevel == 8){
+        col_0 = g_globalIlluminationTextureArray[8].Sample( Sampler, uv);
+        col_1 = g_globalIlluminationTextureArray[8].Sample( Sampler, uv);
+    }
 
+    return lerp( col_0, col_1, frac(level));
+}
 /*!
  * @brief	UV座標と深度値からワールド座標を計算する。
  *@param[in]	uv				uv座標
@@ -332,13 +373,16 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         viewportPos
     );
     
-    if (isIBL == 1) {
+    if(isEnableRaytracing){
+        // レイトレを行う場合はレイトレで作ったテクスチャをGIテクスチャとして扱う。
+        // GLテクスチャ
+        float level = lerp(0.0f, (float)NUM_GI_TEXTURE-1, pow(1 - smooth, 2.0f));
+        lig += albedoColor * SampleGILight(In.uv, level) * iblLuminance ;
+    }else if (isIBL == 1) {
         // 視線からの反射ベクトルを求める。
         float3 v = reflect(toEye * -1.0f, normal);
         int level = lerp(0, 12, 1 - smooth);
         lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
-        // GLテクスチャ
-        lig += albedoColor * g_globalIlluminationTexture.Sample( Sampler, In.uv) * iblLuminance * 5.0f;
     }
     else {
         // 環境光による底上げ

@@ -73,6 +73,7 @@ cbuffer LightCb : register(b1)
     float4x4 mlvp[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
     float iblLuminance;     // IBLの明るさ。
     int isIBL;              // IBLを行う。
+    int isEnableRaytracing; // レイトレが有効。
 };
 
 ///////////////////////////////////////
