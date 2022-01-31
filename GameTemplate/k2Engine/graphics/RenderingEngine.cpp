@@ -71,10 +71,6 @@ namespace nsK2Engine {
             spriteInitData.m_expandShaderResoruceView[4] = &m_giTextureBlur[eGITextureBlur_512x512].GetBokeTexture();
             spriteInitData.m_expandShaderResoruceView[5] = &m_giTextureBlur[eGITextureBlur_256x256].GetBokeTexture();
             spriteInitData.m_expandShaderResoruceView[6] = &m_giTextureBlur[eGITextureBlur_128x128].GetBokeTexture();
-            spriteInitData.m_expandShaderResoruceView[7] = &m_giTextureBlur[eGITextureBlur_32x32].GetBokeTexture();
-            spriteInitData.m_expandShaderResoruceView[8] = &m_giTextureBlur[eGITextureBlur_8x8].GetBokeTexture();
-            spriteInitData.m_expandShaderResoruceView[9] = &m_giTextureBlur[eGITextureBlur_2x2].GetBokeTexture();
-            spriteInitData.m_expandShaderResoruceView[10] = &m_giTextureBlur[eGITextureBlur_1x1].GetBokeTexture();
         }
 
         for (int i = 0; i < MAX_DIRECTIONAL_LIGHT; i++)
@@ -228,10 +224,6 @@ namespace nsK2Engine {
         m_giTextureBlur[eGITextureBlur_512x512].Init(&m_giTextureBlur[eGITextureBlur_1024x1024].GetBokeTexture(), 512, 512);
         m_giTextureBlur[eGITextureBlur_256x256].Init(&m_giTextureBlur[eGITextureBlur_512x512].GetBokeTexture(), 256, 256);
         m_giTextureBlur[eGITextureBlur_128x128].Init(&m_giTextureBlur[eGITextureBlur_256x256].GetBokeTexture(), 128, 128);
-        m_giTextureBlur[eGITextureBlur_32x32].Init(&m_giTextureBlur[eGITextureBlur_128x128].GetBokeTexture(), 32, 32 );
-        m_giTextureBlur[eGITextureBlur_8x8].Init(&m_giTextureBlur[eGITextureBlur_32x32].GetBokeTexture(), 8, 8 ); 
-        m_giTextureBlur[eGITextureBlur_2x2].Init(&m_giTextureBlur[eGITextureBlur_8x8].GetBokeTexture(), 2, 2);
-        m_giTextureBlur[eGITextureBlur_1x1].Init(&m_giTextureBlur[eGITextureBlur_2x2].GetBokeTexture(), 1, 1);
 
         // シーンライトを初期化する。
         m_sceneLight.Init();

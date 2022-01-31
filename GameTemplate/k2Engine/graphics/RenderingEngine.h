@@ -532,10 +532,6 @@ namespace nsK2Engine {
             eGITextureBlur_512x512,     // 512Å~512
             eGITextureBlur_256x256,     // 256Å~256
             eGITextureBlur_128x128,     // 128Å~128
-            eGITextureBlur_32x32,       // 32Å~32
-            eGITextureBlur_8x8,         // 8Å~8
-            eGITextureBlur_2x2,         // 2Å~2
-            eGITextureBlur_1x1,         // 1Å~1
             eGITextureBlur_Num,     
         };
         LightCulling m_lightCulling;                                    // ÉâÉCÉgÉJÉäÉìÉOÅB 

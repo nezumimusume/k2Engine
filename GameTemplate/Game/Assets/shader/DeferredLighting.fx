@@ -6,9 +6,9 @@
 ///////////////////////////////////////
 // 定数
 ///////////////////////////////////////
-static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
-static const int NUM_SHADOW_MAP = 3;        // シャドウマップの枚数。
-static const int NUM_GI_TEXTURE = 9;        // GIテクスチャ。
+static const int NUM_DIRECTIONAL_LIGHT = 4;     // ディレクションライトの本数
+static const int NUM_SHADOW_MAP = 3;            // シャドウマップの枚数。
+static const int NUM_REFLECTION_TEXTURE = 5;    // 反射テクスチャ。
 ///////////////////////////////////////
 // 構造体。
 ///////////////////////////////////////
@@ -50,7 +50,7 @@ StructuredBuffer<uint> pointLightListInTile : register(t20);
 // タイルごとのスポットライトのインデックスのリスト。
 StructuredBuffer<uint> spotLightListInTile : register(t21);
 // リフレクションテクスチャ。
-Texture2D<float4> g_reflectionTextureArray[NUM_GI_TEXTURE] : register(t22);
+Texture2D<float4> g_reflectionTextureArray[NUM_REFLECTION_TEXTURE] : register(t22);
 
 
 #include "PBRLighting.h"
@@ -81,7 +81,6 @@ float4 SampleReflectionColor( float2 uv, float level )
     if( iLevel == 0){
         col_0 = g_reflectionTextureArray[0].Sample( Sampler, uv);
         col_1 = g_reflectionTextureArray[1].Sample( Sampler, uv);
-        
     }else if( iLevel == 1){
         col_0 = g_reflectionTextureArray[1].Sample( Sampler, uv);
         col_1 = g_reflectionTextureArray[2].Sample( Sampler, uv);
@@ -367,8 +366,9 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
     if(isEnableRaytracing){
         // レイトレを行う場合はレイトレで作った反射テクスチャとIBLテクスチャを合成する。
         // GLテクスチャ
-        float level = lerp(0.0f, (float)NUM_GI_TEXTURE-1, pow(1 - smooth, 2.0f));
-        if( level < 4){
+        float reflectionRate = 1.0f - ( ( smooth - 0.5f ) * 2.0f );
+        float level = lerp(0.0f, (float)(NUM_REFLECTION_TEXTURE - 1 ), pow( reflectionRate, 3.0f ));
+        if( level < NUM_REFLECTION_TEXTURE-1){
             lig += albedoColor * SampleReflectionColor(In.uv, level) * iblLuminance ;
         }else if (isIBL == 1) {
             // IBLがあるなら。
