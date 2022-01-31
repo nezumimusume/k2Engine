@@ -4,18 +4,13 @@
 namespace nsK2EngineLow {
 	DescriptorHeap::DescriptorHeap()
 	{
-		m_shaderResources.resize(MAX_SHADER_RESOURCE);
-		m_uavResoruces.resize(MAX_SHADER_RESOURCE);
-		m_constantBuffers.resize(MAX_CONSTANT_BUFFER);
-		for (auto& srv : m_shaderResources) {
-			srv = nullptr;
-		}
-		for (auto& uav : m_uavResoruces) {
-			uav = nullptr;
-		}
-		for (auto& cbv : m_constantBuffers) {
-			cbv = nullptr;
-		}
+		Init(
+			DEFAULT_MAX_SRV,
+			DEFAULT_MAX_UAV,
+			DEFAULT_MAX_CONSTANT_BUFFER,
+			DEFAULT_MAX_SAMPLER_STATE
+		);
+		
 	}
 	DescriptorHeap::~DescriptorHeap()
 	{
@@ -25,6 +20,34 @@ namespace nsK2EngineLow {
 	{
 		ReleaseD3D12Object(m_descriptorHeap);
 		m_descriptorHeap = nullptr;
+	}
+	void DescriptorHeap::Init(
+		int maxSRV,
+		int maxUAV,
+		int maxConstantBuffer,
+		int maxSamplerState
+	)
+	{
+		Release();
+
+		m_maxSRV = maxSRV;
+		m_maxUAV = maxUAV;
+		m_maxConstantBuffer = maxConstantBuffer;
+		m_maxSamplerState = maxSamplerState;
+
+		m_shaderResources.resize(m_maxSRV);
+		m_uavResoruces.resize(m_maxUAV);
+		m_constantBuffers.resize(m_maxConstantBuffer);
+		m_samplerDescs.resize(m_maxSamplerState);
+		for (auto& srv : m_shaderResources) {
+			srv = nullptr;
+		}
+		for (auto& uav : m_uavResoruces) {
+			uav = nullptr;
+		}
+		for (auto& cbv : m_constantBuffers) {
+			cbv = nullptr;
+		}
 	}
 	void DescriptorHeap::CommitSamperHeap(bool isDoubleBuffer)
 	{
@@ -73,7 +96,7 @@ namespace nsK2EngineLow {
 		const auto& d3dDevice = g_graphicsEngine->GetD3DDevice();
 		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 
-		srvHeapDesc.NumDescriptors = (m_numShaderResource + m_numConstantBuffer + m_numUavResource) * 2;
+		srvHeapDesc.NumDescriptors = (m_numSRV + m_numConstantBuffer + m_numUAV) * 2;
 		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
@@ -101,7 +124,7 @@ namespace nsK2EngineLow {
 			}
 
 			//続いてシェーダーリソース。
-			for (int i = 0; i < m_numShaderResource; i++) {
+			for (int i = 0; i < m_numSRV; i++) {
 				if (m_shaderResources[i] != nullptr) {
 					m_shaderResources[i]->RegistShaderResourceView(cpuHandle, bufferNo);
 				}
@@ -110,7 +133,7 @@ namespace nsK2EngineLow {
 			}
 
 			//続いてUAV。
-			for (int i = 0; i < m_numUavResource; i++) {
+			for (int i = 0; i < m_numUAV; i++) {
 				if (m_uavResoruces[i] != nullptr) {
 					m_uavResoruces[i]->RegistUnorderAccessView(cpuHandle, bufferNo);
 				}
@@ -125,9 +148,9 @@ namespace nsK2EngineLow {
 			m_srGpuDescriptorStart[bufferNo].ptr += (UINT64)g_graphicsEngine->GetCbrSrvDescriptorSize() * m_numConstantBuffer;
 			//UAVリソースのディスクリプタヒープの開始ハンドルを計算。
 			m_uavGpuDescriptorStart[bufferNo] = gpuHandle;
-			m_uavGpuDescriptorStart[bufferNo].ptr += (UINT64)g_graphicsEngine->GetCbrSrvDescriptorSize() * (m_numShaderResource + m_numConstantBuffer);
+			m_uavGpuDescriptorStart[bufferNo].ptr += (UINT64)g_graphicsEngine->GetCbrSrvDescriptorSize() * (m_numSRV + m_numConstantBuffer);
 
-			gpuHandle.ptr += (UINT64)g_graphicsEngine->GetCbrSrvDescriptorSize() * (m_numShaderResource + m_numConstantBuffer + m_numUavResource);
+			gpuHandle.ptr += (UINT64)g_graphicsEngine->GetCbrSrvDescriptorSize() * (m_numSRV + m_numConstantBuffer + m_numUAV);
 		}
 	}
 }

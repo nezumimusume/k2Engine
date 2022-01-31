@@ -14,6 +14,12 @@ namespace nsK2EngineLow {
 		{
 
 			//レイトレの出力先をディスクリプタヒープに登録する。
+			m_srvUavCbvHeap.Init(
+				world.GetNumInstance() * (int)ESRV_OneEntry::eNum,
+				1,
+				1,
+				1
+			);
 			m_srvUavCbvHeap.RegistUnorderAccessResource(0, outputBuffer);
 			m_srvUavCbvHeap.RegistConstantBuffer(0, rayGeneCB);
 			int regNo = 0;
