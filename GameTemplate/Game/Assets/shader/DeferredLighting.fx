@@ -49,8 +49,8 @@ TextureCube<float4> g_skyCubeMap : register(t15);
 StructuredBuffer<uint> pointLightListInTile : register(t20);
 // タイルごとのスポットライトのインデックスのリスト。
 StructuredBuffer<uint> spotLightListInTile : register(t21);
-// グローバルイルミネーションテクスチャ。
-Texture2D<float4> g_globalIlluminationTextureArray[NUM_GI_TEXTURE] : register(t22);
+// リフレクションテクスチャ。
+Texture2D<float4> g_reflectionTextureArray[NUM_GI_TEXTURE] : register(t22);
 
 
 #include "PBRLighting.h"
@@ -71,44 +71,35 @@ PSInput VSMain(VSInput In)
 /*!
  *@brief	GIライトをサンプリング
  *@param[in]	uv				uv座標
- *@param[in]	level           GIレベル
+ *@param[in]	level           反射レベル
  */
-float4 SampleGILight( float2 uv, float level )
+float4 SampleReflectionColor( float2 uv, float level )
 {
     int iLevel = (int)level;
     float4 col_0;
     float4 col_1;
     if( iLevel == 0){
-        col_0 = g_globalIlluminationTextureArray[0].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[1].Sample( Sampler, uv);
+        col_0 = g_reflectionTextureArray[0].Sample( Sampler, uv);
+        col_1 = g_reflectionTextureArray[1].Sample( Sampler, uv);
         
     }else if( iLevel == 1){
-        col_0 = g_globalIlluminationTextureArray[1].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[2].Sample( Sampler, uv);
+        col_0 = g_reflectionTextureArray[1].Sample( Sampler, uv);
+        col_1 = g_reflectionTextureArray[2].Sample( Sampler, uv);
     }else if( iLevel == 2){
-        col_0 = g_globalIlluminationTextureArray[2].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[3].Sample( Sampler, uv);
+        col_0 = g_reflectionTextureArray[2].Sample( Sampler, uv);
+        col_1 = g_reflectionTextureArray[3].Sample( Sampler, uv);
     }else if( iLevel == 3){
-        col_0 = g_globalIlluminationTextureArray[3].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[4].Sample( Sampler, uv);
-    }else if( iLevel == 4){
-        col_0 = g_globalIlluminationTextureArray[4].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[5].Sample( Sampler, uv);
-    }else if( iLevel == 5){
-        col_0 = g_globalIlluminationTextureArray[5].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[6].Sample( Sampler, uv);
-    }else if( iLevel == 6){
-        col_0 = g_globalIlluminationTextureArray[6].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[7].Sample( Sampler, uv);
-    }else if( iLevel == 7){
-        col_0 = g_globalIlluminationTextureArray[7].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[8].Sample( Sampler, uv);
-    }else if( iLevel == 8){
-        col_0 = g_globalIlluminationTextureArray[8].Sample( Sampler, uv);
-        col_1 = g_globalIlluminationTextureArray[8].Sample( Sampler, uv);
+        col_0 = g_reflectionTextureArray[3].Sample( Sampler, uv);
+        col_1 = g_reflectionTextureArray[4].Sample( Sampler, uv);
     }
 
     return lerp( col_0, col_1, frac(level));
+}
+float4 SampleIBLColor(float3 toEye, float3 normal, float smooth)
+{
+    float3 v = reflect(toEye * -1.0f, normal);
+    int level = lerp(0, 12, 1 - smooth);
+    return g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
 }
 /*!
  * @brief	UV座標と深度値からワールド座標を計算する。
@@ -374,15 +365,18 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
     );
     
     if(isEnableRaytracing){
-        // レイトレを行う場合はレイトレで作ったテクスチャをGIテクスチャとして扱う。
+        // レイトレを行う場合はレイトレで作った反射テクスチャとIBLテクスチャを合成する。
         // GLテクスチャ
         float level = lerp(0.0f, (float)NUM_GI_TEXTURE-1, pow(1 - smooth, 2.0f));
-        lig += albedoColor * SampleGILight(In.uv, level) * iblLuminance ;
+        if( level < 4){
+            lig += albedoColor * SampleReflectionColor(In.uv, level) * iblLuminance ;
+        }else if (isIBL == 1) {
+            // IBLがあるなら。
+            lig += albedoColor * SampleIBLColor(toEye, normal, smooth );
+        }
     }else if (isIBL == 1) {
         // 視線からの反射ベクトルを求める。
-        float3 v = reflect(toEye * -1.0f, normal);
-        int level = lerp(0, 12, 1 - smooth);
-        lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
+        lig += albedoColor * SampleIBLColor(toEye, normal, smooth );
     }
     else {
         // 環境光による底上げ
