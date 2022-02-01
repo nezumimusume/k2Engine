@@ -125,7 +125,8 @@ float CalcShadowRate(int ligNo, float3 worldPos, int isSoftShadow)
         shadowMapUV += 0.5f;
         // シャドウマップUVが範囲内か判定
         if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f
-            && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
+            && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f
+            && zInLVP < 0.98f && zInLVP > 0.02f)
         {
             // シャドウマップから値をサンプリング
             float4 shadowValue = g_shadowMap[ligNo][cascadeIndex].Sample(Sampler, shadowMapUV);

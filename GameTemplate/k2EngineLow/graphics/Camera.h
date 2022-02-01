@@ -62,6 +62,20 @@ namespace nsK2EngineLow {
 			Move(m_forward * moveForward);
 		}
 		/// <summary>
+		/// カメラをY軸回転させる。
+		/// </summary>
+		/// <param name="angle"></param>
+		void RotateY(float angle)
+		{
+			// 視点から注視点に向かって伸びるベクトルを計算する。
+			Vector3 toTarget = m_target - m_position;
+			Quaternion qRotY;
+			qRotY.SetRotationY(angle);
+			qRotY.Apply(toTarget);
+			m_target = m_position + toTarget;
+			m_isDirty = true;
+		}
+		/// <summary>
 		/// カメラの右方向に移動。
 		/// </summary>
 		/// <param name="moveRight"></param>

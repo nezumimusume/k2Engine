@@ -64,7 +64,8 @@ namespace nsK2Engine {
 		int numAnimationClips,
 		EnModelUpAxis enModelUpAxis,
 		bool isShadowReciever,
-		int maxInstance)
+		int maxInstance,
+		bool isFrontCullingOnDrawShadowMap)
 	{
 		//インスタンシング描画用のデータを初期化。
 		InitInstancingDraw(maxInstance);
@@ -79,7 +80,7 @@ namespace nsK2Engine {
 		//ZPrepass描画用のモデルを初期化。
 		// InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 		//シャドウマップ描画用のモデルを初期化。
-		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
+		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis, isFrontCullingOnDrawShadowMap);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
 		// レイトレワールドに追加。
@@ -105,7 +106,7 @@ namespace nsK2Engine {
 		//ZPrepass描画用のモデルを初期化。
 		//InitModelOnZprepass(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
 		//シャドウマップ描画用のモデルを初期化。
-		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis);
+		InitModelOnShadowMap(*g_renderingEngine, initData.m_tkmFilePath, initData.m_modelUpAxis, true);
 		// 幾何学データを初期化。
 		InitGeometryDatas(1);
 		// レイトレワールドに追加。
@@ -120,7 +121,8 @@ namespace nsK2Engine {
 		int numAnimationClips,
 		EnModelUpAxis enModelUpAxis,
 		bool isShadowReciever,
-		int maxInstance)
+		int maxInstance,
+		bool isFrontCullingOnDrawShadowMap)
 	{
 		// インスタンシング描画用のデータを初期化。
 		InitInstancingDraw(maxInstance);
@@ -135,7 +137,7 @@ namespace nsK2Engine {
 		// ZPrepass描画用のモデルを初期化。
 		InitModelOnZprepass(*g_renderingEngine, filePath, enModelUpAxis);
 		// シャドウマップ描画用のモデルを初期化。
-		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis);
+		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis, isFrontCullingOnDrawShadowMap);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
 		// 各種ワールド行列を更新する。
@@ -297,12 +299,14 @@ namespace nsK2Engine {
 	void ModelRender::InitModelOnShadowMap(
 		RenderingEngine& renderingEngine,
 		const char* tkmFilePath,
-		EnModelUpAxis modelUpAxis
+		EnModelUpAxis modelUpAxis,
+		bool isFrontCullingOnDrawShadowMap
 	)
 	{
 		ModelInitData modelInitData;
 		modelInitData.m_tkmFilePath = tkmFilePath;
 		modelInitData.m_modelUpAxis = modelUpAxis;
+		modelInitData.m_cullMode = isFrontCullingOnDrawShadowMap ? D3D12_CULL_MODE_FRONT : D3D12_CULL_MODE_BACK;
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
 

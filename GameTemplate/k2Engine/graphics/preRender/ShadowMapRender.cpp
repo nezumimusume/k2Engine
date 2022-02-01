@@ -4,6 +4,7 @@
 namespace nsK2Engine {
     void ShadowMapRender::Init(bool isSoftShadow)
     {
+ 
         float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
         DXGI_FORMAT colorFormat;

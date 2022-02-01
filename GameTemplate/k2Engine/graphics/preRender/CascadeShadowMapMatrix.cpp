@@ -9,14 +9,14 @@ namespace nsK2Engine {
         const Vector3& sceneMinPosition
     )
     {
-        // 最大ファーは150m
-        float maxFar = 15000.0f;
+        // 最大ファーは
+        float maxFar = g_camera3D->GetFar() * cascadeAreaRateTbl[NUM_SHADOW_MAP-1];
         //ビュー行列を計算する。
         Matrix viewMatrix;
-        Vector3 lightTarget = (sceneMaxPosition + sceneMinPosition) * 0.5f;
+        Vector3 lightTarget = g_camera3D->GetPosition();
         Vector3 lightPos = lightTarget;
         // ライトの高さは50m決め打ち。
-        float lightMaxHeight = 5000.0f;
+        float lightMaxHeight = 10000.0f;
         lightPos += (lightDirection) * (lightMaxHeight / lightDirection.y);
         //上方向を設定
         if (fabsf(lightDirection.y) > 0.9999f) {

@@ -29,13 +29,21 @@ namespace nsK2Engine {
 		/// インスタンシング描画を行う際は描画したいインスタンスの数分だけ、UpdateInstancingDraw()を呼び出す必要があります。
 		/// インスタンシング描画の詳細はSmaple_XXを参照してください。
 		/// </param>
+		/// <param name="isFrontCullingOnDrawShadowMap">
+		/// シャドウマップを描画する際にフロントカリングを行う？
+		/// フロントカリングを行うとシャドウアクネが軽減できます。
+		/// しかし、板ポリのような閉じていないモデルをフロントカリングで描画すると、
+		/// シャドウマップに描画されなくなってしまうため、その場合はこのフラグをfalseにしてください。
+		/// 例)地面など。
+		/// </param>
 		void Init(
 			const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isShadowReciever = true,
-			int maxInstance = 1);
+			int maxInstance = 1,
+			bool isFrontCullingOnDrawShadowMap = true);
 		/// <summary>
 		/// 半透明描画を行うオブジェクトを初期化。
 		/// </summary>
@@ -49,13 +57,21 @@ namespace nsK2Engine {
 		/// インスタンシング描画を行う際は描画したいインスタンスの数分だけ、UpdateInstancingDraw()を呼び出す必要があります。
 		/// インスタンシング描画の詳細はSmaple_XXを参照してください。
 		/// </param>	
+		/// <param name="isFrontCullingOnDrawShadowMap">
+		/// シャドウマップを描画する際にフロントカリングを行う？
+		/// フロントカリングを行うとシャドウアクネが軽減できます。
+		/// しかし、板ポリのような閉じていないモデルをフロントカリングで描画すると、
+		/// シャドウマップに描画されなくなってしまうため、その場合はこのフラグをfalseにしてください。
+		/// 例)地面など。
+		/// </param>
 		void IniTranslucent(
 			const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isShadowReciever = true,
-			int maxInstance = 1);
+			int maxInstance = 1,
+			bool isFrontCullingOnDrawShadowMap = true);
 		/// <summary>
 		/// 特殊なシェーディングを行いたい場合の初期化処理。
 		/// </summary>
@@ -321,10 +337,12 @@ namespace nsK2Engine {
 		/// </summary>
 		/// <param name="renderingEngine">レンダリングエンジン</param>
 		/// <param name="tkmFilePath">tkmファイルパス</param>
+		/// <param name="modelUpAxis">モデルの上軸</param>
 		void InitModelOnShadowMap(
 			RenderingEngine& renderingEngine,
 			const char* tkmFilePath,
-			EnModelUpAxis modelUpAxis
+			EnModelUpAxis modelUpAxis,
+			bool isFrontCullingOnDrawShadowMap
 		);
 		/// <summary>
 		/// ZPrepass描画用のモデルを初期化。
