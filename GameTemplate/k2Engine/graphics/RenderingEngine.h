@@ -169,6 +169,18 @@ namespace nsK2Engine {
             return m_isSoftShadow;
         }
         /// <summary>
+        /// 影生成のパラメータを設定する
+        /// </summary>
+        /// <remark>
+        /// 影生成はカスケードシャドウ技法で行っています。
+        ///  
+        /// </renmark>
+        /// <param name=""></param>
+        /// <param name="middle"></param>
+        /// <param name=""></param>
+        /// <param name="lightHeght"></param>
+        void SetShadowParameter(float near, float middle, float far, float lightHeght);
+        /// <summary>
         /// カスケードシャドウのエリア率を設定。
         /// </summary>
         /// <remark>
