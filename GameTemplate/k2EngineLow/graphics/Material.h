@@ -33,7 +33,14 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
 		/// <param name="hasSkin">スキンがあるかどうかのフラグ</param>
-		void BeginRender(RenderContext& rc, int hasSkin);
+		/// <param name="vb">頂点バッファ</param>
+		/// <param name="computeAnimationVertexBuffer">事前計算済み頂点バッファ。</param>
+		void BeginRender(
+			RenderContext& rc, 
+			int hasSkin,
+			VertexBuffer* vb, 
+			VertexBuffer* preComputedVb
+		);
 
 		/// <summary>
 		/// アルベドマップを取得。

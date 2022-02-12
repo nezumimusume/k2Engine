@@ -1,8 +1,3 @@
-///////////////////////////////////////
-// 3Dモデル用のGBufferへの描画シェーダー。
-///////////////////////////////////////
-
-#include "ModelVSCommon.h"
 
 ///////////////////////////////////////
 // 構造体。
@@ -22,6 +17,11 @@ cbuffer SkyCubeCb : register(b1)
 {
     float luminance;	// 明るさ。
 };
+
+///////////////////////////////////////
+// 頂点シェーダーの共通処理をインクルードする。
+///////////////////////////////////////
+#include "ModelVSCommon.h"
 
 ///////////////////////////////////////
 // シェーダーリソース
@@ -53,39 +53,32 @@ float3 GetNormalFromNormalMap(float3 normal, float3 tangent, float3 biNormal, fl
 }
 
 // モデル用の頂点シェーダーのエントリーポイント
-SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
+SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal, uniform bool isUsePreComputedVertexBuffer)
 {
 	SPSIn psIn;
-	float4x4 m;
-	if (hasSkin) {
-		m = CalcSkinMatrix(vsIn);
-	}
-	else {
-		m = mWorld;
-	}
+	// 頂点座標をワールド座標系に変換する。
+    psIn.pos = CalcVertexPositionInWorldSpace(vsIn.pos, mWorldLocal, isUsePreComputedVertexBuffer);
 
-	psIn.pos = mul(m, vsIn.pos); // モデルの頂点をワールド座標系に変換
 	// 頂点シェーダーからワールド座標を出力
 	psIn.worldPos = (float3)psIn.pos;
 	psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
 	psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
 
-	// 法線の回転には平行移動成分は不要なので、3x3行列にキャストする。
-	float3x3 m3x3 = (float3x3)m;
-	psIn.normal = normalize(mul(m3x3, vsIn.normal));
-	psIn.tangent = normalize(mul(m3x3, vsIn.tangent));
-	psIn.biNormal = normalize(mul(m3x3, vsIn.biNormal));
+	// ワールド空間の法線、接ベクトル、従ベクトルを計算する。
+	CalcVertexNormalTangentBiNormalInWorldSpace(
+		psIn.normal,
+		psIn.tangent,
+		psIn.biNormal,
+		mWorldLocal,
+		vsIn.normal,
+		vsIn.tangent,
+		vsIn.biNormal,
+		isUsePreComputedVertexBuffer
+	);
+	
 	psIn.uv = vsIn.uv;
 	
 	return psIn;
-}
-SPSIn VSMain(SVSIn vsIn)
-{
-	return VSMainCore(vsIn, false);
-}
-SPSIn VSMainSkin(SVSIn vsIn)
-{
-	return VSMainCore(vsIn, true);
 }
 
 /// <summary>

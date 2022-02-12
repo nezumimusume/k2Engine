@@ -25,6 +25,7 @@ namespace nsK2EngineLow {
 	void RWStructuredBuffer::Init(int sizeOfElement, int numElement, void* initData, bool isAccessCPU)
 	{
 		Release();
+		m_isAccessCPU = isAccessCPU;
 		m_sizeOfElement = sizeOfElement;
 		m_numElement = numElement;
 		auto device = g_graphicsEngine->GetD3DDevice();
@@ -33,7 +34,7 @@ namespace nsK2EngineLow {
 		int bufferNo = 0;
 
 		D3D12_HEAP_PROPERTIES prop{};
-		if (isAccessCPU) {
+		if (m_isAccessCPU) {
 			// CPUアクセスする？
 			prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 			prop.CreationNodeMask = 1;
@@ -49,7 +50,11 @@ namespace nsK2EngineLow {
 			prop.Type = D3D12_HEAP_TYPE_DEFAULT;
 			prop.VisibleNodeMask = 1;
 		}
-		for (auto& buffer : m_buffersOnGPU) {
+		// CPUからアクセスする場合はGPUがアクセスしているバッファを書き換える可能性があるので、
+		// ダブルバッファにする。
+		int numBuffer = m_isAccessCPU ? 2 : 1;
+		for (int bufferNo = 0; bufferNo < numBuffer; bufferNo++ ) {
+			auto& buffer = m_buffersOnGPU[bufferNo];
 			device->CreateCommittedResource(
 				&prop,
 				D3D12_HEAP_FLAG_NONE,
@@ -60,7 +65,7 @@ namespace nsK2EngineLow {
 			);
 			//構造化バッファをCPUからアクセス可能な仮想アドレス空間にマッピングする。
 			//マップ、アンマップのオーバーヘッドを軽減するためにはこのインスタンスが生きている間は行わない。
-			if(isAccessCPU)
+			if(m_isAccessCPU)
 			{
 				// 初期データのコピーができるのは
 				CD3DX12_RANGE readRange(0, 0);        //     intend to read from this resource on the CPU.
@@ -118,11 +123,15 @@ namespace nsK2EngineLow {
 	ID3D12Resource* RWStructuredBuffer::GetD3DResoruce()
 	{
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
+		// CPUからアクセスができない場合は0番目しか使わない。
+		backBufferIndex = m_isAccessCPU ? backBufferIndex : 0;
 		return m_buffersOnGPU[backBufferIndex];
 	}
 	void* RWStructuredBuffer::GetResourceOnCPU()
 	{
 		auto backBufferIndex = g_graphicsEngine->GetBackBufferIndex();
+		// CPUからアクセスができない場合は0番目しか使わない。
+		backBufferIndex = m_isAccessCPU ? backBufferIndex : 0;
 		return m_buffersOnCPU[backBufferIndex];
 	}
 	void RWStructuredBuffer::RegistUnorderAccessView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
@@ -130,8 +139,9 @@ namespace nsK2EngineLow {
 		if (!m_isInited) {
 			return;
 		}
+		// CPUからアクセスができない場合は0番目しか使わない。
+		bufferNo = m_isAccessCPU ? bufferNo : 0;
 		auto device = g_graphicsEngine->GetD3DDevice();
-
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
 		desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 		desc.Format = DXGI_FORMAT_UNKNOWN;
@@ -149,8 +159,9 @@ namespace nsK2EngineLow {
 		if (!m_isInited) {
 			return;
 		}
+		// CPUからアクセスができない場合は0番目しか使わない。
+		bufferNo = m_isAccessCPU ? bufferNo : 0;
 		auto device = g_graphicsEngine->GetD3DDevice();
-
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
 		ZeroMemory(&srvDesc, sizeof(srvDesc));
 		srvDesc.Format = DXGI_FORMAT_UNKNOWN;

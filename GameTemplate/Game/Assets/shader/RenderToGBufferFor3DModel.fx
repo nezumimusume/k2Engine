@@ -1,10 +1,4 @@
 ///////////////////////////////////////
-// 3Dモデル用のGBufferへの描画シェーダー。
-///////////////////////////////////////
-
-#include "ModelVSCommon.h"
-
-///////////////////////////////////////
 // 構造体。
 ///////////////////////////////////////
 
@@ -25,6 +19,13 @@ struct SPSOut
     float4 normal : SV_Target1;         // 法線
     float4 metaricShadowSmooth : SV_Target2;  // メタリック、影パラメータ、スムース。rにメタリック、gに影パラメータ、aにスムース。
 };
+
+///////////////////////////////////////
+// 頂点シェーダーの共通処理をインクルードする。
+///////////////////////////////////////
+
+#include "ModelVSCommon.h"
+
 
 ///////////////////////////////////////
 // シェーダーリソース
@@ -56,40 +57,28 @@ float3 GetNormalFromNormalMap(float3 normal, float3 tangent, float3 biNormal, fl
 
 
 // モデル用の頂点シェーダーのエントリーポイント
-SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal)
+SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal, uniform bool isUsePreComputedVertexBuffer)
 {
     SPSIn psIn;
-    
-    psIn.pos = mul(mWorldLocal, vsIn.pos); // モデルの頂点をワールド座標系に変換
+    psIn.pos = CalcVertexPositionInWorldSpace(vsIn.pos, mWorldLocal, isUsePreComputedVertexBuffer);
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
 
-    // 法線の回転には平行移動成分は不要なので、3x3行列にキャストする。
-    float3x3 mWorldLocal3x3 = (float3x3)mWorldLocal;
-    psIn.normal = normalize(mul(mWorldLocal3x3, vsIn.normal));
-    psIn.tangent = normalize(mul(mWorldLocal3x3, vsIn.tangent));
-    psIn.biNormal = normalize(mul(mWorldLocal3x3, vsIn.biNormal));
+    // ワールド空間の法線、接ベクトル、従ベクトルを計算する。
+    CalcVertexNormalTangentBiNormalInWorldSpace(
+		psIn.normal,
+		psIn.tangent,
+		psIn.biNormal,
+		mWorldLocal,
+		vsIn.normal,
+		vsIn.tangent,
+		vsIn.biNormal,
+		isUsePreComputedVertexBuffer
+	);
+
     psIn.uv = vsIn.uv;
     
     return psIn;
-}
-SPSIn VSMain( SVSIn vsIn )
-{
-    return VSMainCore(vsIn, mWorld);
-}
-SPSIn VSMainSkin( SVSIn vsIn )
-{
-    return VSMainCore(vsIn, CalcSkinMatrix(vsIn));
-}
-SPSIn VSMainInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
-{
-    return VSMainCore(vsIn, g_worldMatrixArray[instanceID]);
-}
-SPSIn VSMainSkinInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
-{
-    float4x4 mWorldLocal = CalcSkinMatrix(vsIn);
-    mWorldLocal = mul( g_worldMatrixArray[instanceID], mWorldLocal );
-    return VSMainCore(vsIn, mWorldLocal);
 }
 SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
 {

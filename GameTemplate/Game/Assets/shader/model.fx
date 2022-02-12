@@ -1,7 +1,7 @@
 /*!
  * @brief	シンプルなモデルシェーダー。
  */
-#include "ModelVSCommon.h"
+
 
 ///////////////////////////////////////
 // 定数
@@ -24,6 +24,11 @@ struct SPSIn
 	float3 worldPos : TEXCOORD1; // ワールド座標
 };
 
+///////////////////////////////////////
+// 頂点シェーダーの共通処理をインクルードする。
+///////////////////////////////////////
+#include "ModelVSCommon.h"
+
 ////////////////////////////////////////////////
 // グローバル変数。
 ////////////////////////////////////////////////
@@ -43,42 +48,35 @@ Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(
 ////////////////////////////////////////////////
 
 // モデル用の頂点シェーダーのエントリーポイント
-SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal)
+SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal, uniform bool isUsePreComputedVertexBuffer)
 {
 	SPSIn psIn;
     
-	psIn.pos = mul(mWorldLocal, vsIn.pos); // モデルの頂点をワールド座標系に変換
+    // 頂点座標をワールド座標系に変換する。
+    psIn.pos = CalcVertexPositionInWorldSpace(vsIn.pos, mWorldLocal, isUsePreComputedVertexBuffer);
+
     // 頂点シェーダーからワールド座標を出力
 	psIn.worldPos = psIn.pos;
 
 	psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
 	psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
-	psIn.normal = normalize(mul(mWorldLocal, vsIn.normal));
-	psIn.tangent = normalize(mul(mWorldLocal, vsIn.tangent));
-	psIn.biNormal = normalize(mul(mWorldLocal, vsIn.biNormal));
+    
+	// ワールド空間の法線、接ベクトル、従ベクトルを計算する。
+	CalcVertexNormalTangentBiNormalInWorldSpace(
+		psIn.normal,
+		psIn.tangent,
+		psIn.biNormal,
+		mWorldLocal,
+		vsIn.normal,
+		vsIn.tangent,
+		vsIn.biNormal,
+		isUsePreComputedVertexBuffer
+	);
+
 	psIn.uv = vsIn.uv;
 	
 	return psIn;
 }
-SPSIn VSMain(SVSIn vsIn)
-{
-	return VSMainCore(vsIn, mWorld);
-}
-SPSIn VSMainSkin(SVSIn vsIn)
-{
-	return VSMainCore(vsIn, CalcSkinMatrix(vsIn));
-}
-SPSIn VSMainInstancing(SVSIn vsIn, uint instanceID : SV_InstanceID)
-{
-	return VSMainCore(vsIn, g_worldMatrixArray[instanceID]);
-}
-SPSIn VSMainSkinInstancing(SVSIn vsIn, uint instanceID : SV_InstanceID)
-{
-	float4x4 mWorldLocal = CalcSkinMatrix(vsIn);
-	mWorldLocal = mul(g_worldMatrixArray[instanceID], mWorldLocal);
-	return VSMainCore(vsIn, mWorldLocal);
-}
-
 /// <summary>
 /// ピクセルシェーダーのエントリー関数。
 /// </summary>

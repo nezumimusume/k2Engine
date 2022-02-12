@@ -43,7 +43,7 @@ namespace nsK2Engine {
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isShadowReciever = true,
 			int maxInstance = 1,
-			bool isFrontCullingOnDrawShadowMap = true);
+			bool isFrontCullingOnDrawShadowMap = false);
 		/// <summary>
 		/// 半透明描画を行うオブジェクトを初期化。
 		/// </summary>

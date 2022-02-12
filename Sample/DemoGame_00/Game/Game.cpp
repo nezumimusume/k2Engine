@@ -99,7 +99,6 @@ bool Game::Start()
 {
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	
-	// g_renderingEngine->DisableRaytracing();
 	g_renderingEngine->NotifyChangeScene(0.5f);
 	
 	//カスケードシャドウの近影エリア率を

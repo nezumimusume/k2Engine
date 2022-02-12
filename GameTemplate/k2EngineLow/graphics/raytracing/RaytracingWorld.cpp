@@ -50,8 +50,14 @@ namespace nsK2EngineLow {
 					instance->m_material = mesh.m_materials[i];
 					instance->m_vertexBufferRWSB.Init(mesh.m_vertexBuffer, false);
 					instance->m_indexBufferRWSB.Init(*mesh.m_indexBufferArray[i], false);
-					instance->m_worldMatrixCB.Init(sizeof(Matrix), nullptr);
-					instance->geometoryDesc.Triangles.Transform3x4 = instance->m_worldMatrixCB.GetGPUVirtualAddress();
+					if (model.IsComputedAnimationVertexBuffer()) {
+						// アニメーション済み頂点バッファを利用する場合は、すでにワールド空間に変換済み。
+						instance->geometoryDesc.Triangles.Transform3x4 = 0;
+					}
+					else {
+						instance->m_worldMatrixCB.Init(sizeof(Matrix), nullptr);
+						instance->geometoryDesc.Triangles.Transform3x4 = instance->m_worldMatrixCB.GetGPUVirtualAddress();
+					}
 					instance->m_model = &model;
 					m_instances[bufferNo].emplace_back(std::move(instance));
 				}

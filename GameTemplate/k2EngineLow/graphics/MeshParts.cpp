@@ -271,19 +271,22 @@ namespace nsK2EngineLow {
 		int descriptorHeapNo = 0;
 		int meshNo = 0;
 		for (auto& mesh : m_meshs) {
-			//1. 頂点バッファを設定。
-			rc.SetVertexBuffer(mesh->m_vertexBuffer);
+			
+			VertexBuffer* preComputedVertexBuffer = nullptr;
 			if (m_computedAnimationVertexBuffer){
-				// アニメーション計算済みモデルが指定されている。
-				rc.SetVertexBuffer(m_computedAnimationVertexBuffer->GetAnimatedVertexBuffer(meshNo));
+				// 頂点バッファの事前計算処理が指定されているので、計算済み頂点バッファを取得する。
+				preComputedVertexBuffer = &m_computedAnimationVertexBuffer->GetAnimatedVertexBuffer(meshNo);
 			}
-			else {
-				rc.SetVertexBuffer(mesh->m_vertexBuffer);
-			}
+			
 			//マテリアルごとにドロー。
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 				//このマテリアルが貼られているメッシュの描画開始。
-				mesh->m_materials[matNo]->BeginRender(rc, mesh->skinFlags[matNo]);
+				mesh->m_materials[matNo]->BeginRender(
+					rc, 
+					mesh->skinFlags[matNo],
+					&mesh->m_vertexBuffer,
+					preComputedVertexBuffer
+				);
 				//2. ディスクリプタヒープを設定。
 				rc.SetDescriptorHeap(m_descriptorHeap);
 				//3. インデックスバッファを設定。
