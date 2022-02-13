@@ -360,9 +360,11 @@ namespace nsK2Engine {
 
         // メインレンダリングターゲットの内容をフレームバッファにコピー
         CopyMainRenderTargetToFrameBuffer(rc);
-
-        // g_graphicsEngine->DispatchRaytracing(rc);
-
+#ifdef COPY_RAYTRACING_FRAMEBUFFER
+        g_graphicsEngine->DispatchRaytracing(rc);
+        //レイトレの結果をフレームバッファに書き戻す。
+        g_graphicsEngine->CopyToFrameBuffer(rc, g_graphicsEngine->GetRaytracingOutputTexture().Get());
+#endif
         // 登録されている描画オブジェクトをクリア
         m_renderObjects.clear();
     }

@@ -158,9 +158,6 @@ namespace nsK2EngineLow {
 			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
 			rc.ResourceBarrier(barrier);
-
-			//レイトレの結果をフレームバッファに書き戻す。
-			// g_graphicsEngine->CopyToFrameBuffer(rc, m_outputResource.Get());
 		}
 	}//namespace raytracing
 }//namespace nsK2EngineLow 

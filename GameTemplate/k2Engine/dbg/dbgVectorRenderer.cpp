@@ -6,18 +6,19 @@ namespace nsK2Engine {
 		
 		bool VectorRenderer::Start()
 		{
-			m_modelRender.Init(
+			/*m_modelRender.Init(
 				"Assets/modelData/preset/vector.tkm",
 				nullptr,
 				0,
 				enModelUpAxisZ,
 				true,
 				MAX_VECTOR
-			);
+			);*/
 			return true;
 		}
 		bool VectorRenderer::IsRenderVector(const SRenderData& renderData) const
 		{
+			return false;
 			if (m_renderVectorNameList.empty() == true) {
 				//描画するベクトルの名前が指定されていない。
 				return true;
@@ -33,6 +34,7 @@ namespace nsK2Engine {
 		}
 		void VectorRenderer::Update()
 		{
+			return;
 			if (m_isRender == false) {
 				return;
 			}
@@ -53,6 +55,7 @@ namespace nsK2Engine {
 		
 		void VectorRenderer::Render(RenderContext& rc)
 		{
+			return;
 			if (m_isRender) {
 				m_modelRender.Draw(rc);
 			}

@@ -3,7 +3,6 @@
 #include "RenderingEngine.h"
 
 
-#define USE_PRE_COMPUTED_VERTEX_BUFFER
 
 namespace nsK2Engine {
 	ModelRender::ModelRender()

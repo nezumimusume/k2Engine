@@ -20,18 +20,20 @@ namespace nsK2EngineLow {
 		}
 		void World::CreateRaytracingInstance(Model& model, int bufferNo)
 		{
+			int meshNo = 0;
 			model.QueryMeshAndDescriptorHeap([&](const SMesh& mesh, const DescriptorHeap& ds) {
-
+				
 				for (int i = 0; i < mesh.m_materials.size(); i++) {
 					const D3D12_VERTEX_BUFFER_VIEW* vertexBufferView;
-					if (model.IsComputedAnimationVertexBuffer()) {
+					if (model.IsComputedAnimationVertexBuffer()
+						&& mesh.skinFlags[i]
+					) {
 						// アニメーション済み頂点バッファの計算が行われている。
-						vertexBufferView = &model.GetAnimatedVertexBuffer(i).GetView();
+						vertexBufferView = &model.GetAnimatedVertexBuffer(meshNo).GetView();
 					}
 					else {
 						vertexBufferView = &mesh.m_vertexBuffer.GetView();
 					}
-
 					const auto& indexBufferView = mesh.m_indexBufferArray[i]->GetView();
 					D3D12_RAYTRACING_GEOMETRY_DESC desc;
 					memset(&desc, 0, sizeof(desc));
@@ -48,9 +50,18 @@ namespace nsK2EngineLow {
 					InstancePtr instance = std::make_unique<Instance>();
 					instance->geometoryDesc = desc;
 					instance->m_material = mesh.m_materials[i];
-					instance->m_vertexBufferRWSB.Init(mesh.m_vertexBuffer, false);
+					if (model.IsComputedAnimationVertexBuffer()
+						&& mesh.skinFlags[i]
+						) {
+						instance->m_vertexBufferRWSB.Init(model.GetAnimatedVertexBuffer(meshNo), false);
+					}
+					else {
+						instance->m_vertexBufferRWSB.Init(mesh.m_vertexBuffer, false);
+					}
 					instance->m_indexBufferRWSB.Init(*mesh.m_indexBufferArray[i], false);
-					if (model.IsComputedAnimationVertexBuffer()) {
+					if (model.IsComputedAnimationVertexBuffer()
+						&& mesh.skinFlags[i]
+					) {
 						// アニメーション済み頂点バッファを利用する場合は、すでにワールド空間に変換済み。
 						instance->geometoryDesc.Triangles.Transform3x4 = 0;
 					}
@@ -61,6 +72,7 @@ namespace nsK2EngineLow {
 					instance->m_model = &model;
 					m_instances[bufferNo].emplace_back(std::move(instance));
 				}
+				meshNo++;
 			});
 		}
 		void World::RegistGeometry(Model& model)

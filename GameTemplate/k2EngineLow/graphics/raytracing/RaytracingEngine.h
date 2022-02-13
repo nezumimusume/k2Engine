@@ -59,7 +59,8 @@ namespace nsK2EngineLow {
 			{
 				return m_outputTexture;
 			}
-		
+			
+			
 		private:
 			/// <summary>
 			/// レイトレーシングで使用するカメラ構造体。

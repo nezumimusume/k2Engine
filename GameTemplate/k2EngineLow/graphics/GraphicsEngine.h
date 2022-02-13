@@ -192,6 +192,7 @@ namespace nsK2EngineLow {
 				m_raytracingEngine.Dispatch(rc);
 			}
 		}
+		
 		/// <summary>
 		/// レイトレ用のスカイキューブボックスを設定。
 		/// </summary>

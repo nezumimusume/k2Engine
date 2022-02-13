@@ -300,7 +300,7 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     }else{
         payload.color = lerp(color, refPayload.color, reflectRate);
     }
-
+    
     payload.depth--;
 }
 
