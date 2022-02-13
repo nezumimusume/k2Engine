@@ -316,6 +316,10 @@ namespace nsK2Engine {
     }
     void RenderingEngine::Execute(RenderContext& rc)
     {
+#ifndef USE_PRE_COMPUTED_VERTEX_BUFFER
+        // 事前計算済み頂点バッファを作っていない場合はレイトレは行えない。
+        DisableRaytracing();
+#endif
         // シーンライトのデータをコピー。
         m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
         m_deferredLightingCB.m_isEnableRaytracing = m_isEnableRaytracing ? 1 : 0;

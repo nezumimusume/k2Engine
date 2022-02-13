@@ -245,33 +245,6 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     // ヒットしたプリミティブの法線を取得
     float3 normal = GetNormal(attribs, uv);
 
-    // ワールド空間に変換するのがめんどいので、超適当に・・・。さーせん
-    float cs = cos(-1.57f);
-    float sn = sin(-1.57f);
-    float4x4 m;
-    m[0][0] = 1.0f;
-    m[0][1] = 0.0f;
-    m[0][2] = 0.0f;
-    m[0][3] = 0.0f;
-
-    m[1][0] = 0.0f;
-    m[1][1] = cs;
-    m[1][2] = sn;
-    m[1][3] = 0.0f;
-
-    m[2][0] = 0.0f;
-    m[2][1] = -sn;
-    m[2][2] = cs;
-    m[2][3] = 0.0f;
-
-    m[3][0] = 0.0f;
-    m[3][1] = 0.0f;
-    m[3][2] = 0.0f;
-    m[3][3] = 1.0f;
-
-    m = transpose(m);
-    normal = mul(m, normal);
-
     // 光源にむかってレイを飛ばす
     TraceLightRay(payload, normal);
     float lig = 0.0f;

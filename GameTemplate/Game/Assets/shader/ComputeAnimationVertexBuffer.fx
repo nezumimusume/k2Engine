@@ -15,7 +15,8 @@ struct SVertex{
 
 cbuffer cbParam : register(b0)
 {
-    int numVertex ; // 頂点数。    
+    float4x4 worldMatrix;   // ワールド行列。
+    int numVertex ;         // 頂点数。    
 }
 
 StructuredBuffer<SVertex> g_iputVertexBuffer : register(t0);
@@ -33,20 +34,26 @@ void CSMain(
 {
     if( dispatchThreadId.x < numVertex){
         SVertex inVertex = g_iputVertexBuffer[dispatchThreadId.x];
-        float4x4 skinning = 0;	
-        float w = 0.0f;
-        [unroll]
-        for (int i = 0; i < 3; i++)
-        {
-            skinning += g_boneMatrix[inVertex.indices[i]] * inVertex.skinWeights[i];
-            w += inVertex.skinWeights[i];
-        }
+        float4x4 worldMatrixLocal = 0;	
+        if( inVertex.skinWeights[0] > 0.0f){
+            // スキンあり。            
+            float w = 0.0f;
+            [unroll]
+            for (int i = 0; i < 3; i++)
+            {
+                worldMatrixLocal += g_boneMatrix[inVertex.indices[i]] * inVertex.skinWeights[i];
+                w += inVertex.skinWeights[i];
+            }
 
-        skinning += g_boneMatrix[inVertex.indices[3]] * (1.0f - w);
+            worldMatrixLocal += g_boneMatrix[inVertex.indices[3]] * (1.0f - w);
+        }else{
+            // スキンなし。
+            worldMatrixLocal = worldMatrix;
+        }
         g_outputVertexBuffer[dispatchThreadId.x] = inVertex;
-        g_outputVertexBuffer[dispatchThreadId.x].pos = mul( skinning, float4(inVertex.pos, 1.0f) );
-        g_outputVertexBuffer[dispatchThreadId.x].normal = mul( skinning, inVertex.normal);
-        g_outputVertexBuffer[dispatchThreadId.x].tangent = mul( skinning, inVertex.tangent);
-        g_outputVertexBuffer[dispatchThreadId.x].binormal = mul( skinning, inVertex.binormal);
+        g_outputVertexBuffer[dispatchThreadId.x].pos = mul( worldMatrixLocal, float4(inVertex.pos, 1.0f) );
+        g_outputVertexBuffer[dispatchThreadId.x].normal = mul( worldMatrixLocal, inVertex.normal);
+        g_outputVertexBuffer[dispatchThreadId.x].tangent = mul( worldMatrixLocal, inVertex.tangent);
+        g_outputVertexBuffer[dispatchThreadId.x].binormal = mul( worldMatrixLocal, inVertex.binormal);
     }
 }

@@ -355,24 +355,16 @@ namespace nsK2EngineLow {
 			g_engine->RegistShaderToBank(fxFilePath, psEntryPointFunc, m_psModel);
 		}
 	}
-	void Material::BeginRender(RenderContext& rc, int hasSkin, VertexBuffer* vb, VertexBuffer* preComputedVb)
+	void Material::BeginRender(RenderContext& rc, int hasSkin)
 	{
 		rc.SetRootSignature(m_rootSignature);
 
 		if (hasSkin) {
 			rc.SetPipelineState(m_skinModelPipelineState);
-			if (preComputedVb) {
-				// アニメーション計算済みモデルが指定されている。
-				rc.SetVertexBuffer(*preComputedVb);
-			}
-			else {
-				rc.SetVertexBuffer(*vb);
-			}
 			//	rc.SetPipelineState(m_transSkinModelPipelineState);
 		}
 		else {
 			rc.SetPipelineState(m_nonSkinModelPipelineState);
-			rc.SetVertexBuffer(*vb);
 			//	rc.SetPipelineState(m_transNonSkinModelPipelineState);
 		}
 	}

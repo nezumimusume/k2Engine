@@ -110,10 +110,19 @@ SPSIn VSMainSkinInstancing( SVSIn vsIn, uint instanceID : SV_InstanceID )
 }
 /// <summary>
 /// 事前計算済みの頂点バッファを使う頂点シェーダーのエントリー関数。
+/// スキンメッシュ用
+/// </summary>
+SPSIn VSMainSkinUsePreComputedVertexBuffer( SVSIn vsIn )
+{
+    return VSMainCore(vsIn, (float4x4)0, true);
+}
+/// <summary>
+/// 事前計算済みの頂点バッファを使う頂点シェーダーのエントリー関数。
+/// スキンなしメッシュ用
 /// </summary>
 SPSIn VSMainUsePreComputedVertexBuffer( SVSIn vsIn )
 {
-    return VSMainCore(vsIn, CalcSkinMatrix(vsIn), true);
+    return VSMainCore(vsIn, (float4x4)0, true);
 }
 /// <summary>
 /// ワールドスペースの法線、接ベクトル、従ベクトルを計算する。

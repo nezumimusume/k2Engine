@@ -49,7 +49,11 @@ namespace nsK2Engine {
 			modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
 		}
 		else {
+#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+			modelInitData.m_vsEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
+#else
 			modelInitData.m_vsEntryPointFunc = "VSMain";
+#endif
 		}
 
 		if (m_animationClips != nullptr) {
@@ -61,7 +65,7 @@ namespace nsK2Engine {
 			else {
 				// 
 #ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
-				modelInitData.m_vsSkinEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
+				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinUsePreComputedVertexBuffer";
 #else
 				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkin";
 #endif
@@ -220,13 +224,12 @@ namespace nsK2Engine {
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
 
+#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
+#endif
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
-			modelInitData.m_skeleton = &m_skeleton;
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
-			modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;						
-#endif
-		}
+			modelInitData.m_skeleton = &m_skeleton;		}
 
 		if (isShadowReciever) {
 			modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
@@ -269,19 +272,14 @@ namespace nsK2Engine {
 
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
-
+#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
+#endif
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
-			modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
 		}
 
-		/*if (isShadowReciever) {
-			modelInitData.m_psEntryPointFunc = "PSMainShadowReciever";
-		}
-		*/
 		if (g_renderingEngine->IsSoftShadow()) {
 			modelInitData.m_psEntryPointFunc = "PSMainSoftShadow";
 		}
@@ -325,13 +323,12 @@ namespace nsK2Engine {
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
 
-
+#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
+#endif
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
-			modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
 		}
 
 		modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
@@ -374,12 +371,12 @@ namespace nsK2Engine {
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
 
+#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
+#endif
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
-			modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
 		}
 
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -485,7 +482,7 @@ namespace nsK2Engine {
 	void ModelRender::OnComputeVertex(RenderContext& rc)
 	{
 #ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
-		m_computeAnimationVertexBuffer.Dispatch(rc);
+		m_computeAnimationVertexBuffer.Dispatch(rc, m_zprepassModel.GetWorldMatrix());
 #endif
 	}
 	void ModelRender::OnRenderShadowMap(

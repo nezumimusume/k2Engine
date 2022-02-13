@@ -2,8 +2,6 @@
 // ボリュームライト描画シェーダー。
 ///////////////////////////////////////
 
-#include "ModelVSCommon.h"
-
 
 
 // シーンの深度テクスチャ。
@@ -23,6 +21,12 @@ struct SPSIn
 	float4 posInProj : TEXCOORD0;
 	float3 worldPos : TEXCOORD1;    // ワールド座標
 };
+
+
+///////////////////////////////////////
+// 頂点シェーダーの共通処理をインクルードする。
+///////////////////////////////////////
+#include "ModelVSCommon.h"
 
 SPSIn VSMain(float4 pos : POSITION)
 {

@@ -20,14 +20,13 @@ namespace nsK2EngineLow {
 		}
 		void World::CreateRaytracingInstance(Model& model, int bufferNo)
 		{
+			
 			int meshNo = 0;
 			model.QueryMeshAndDescriptorHeap([&](const SMesh& mesh, const DescriptorHeap& ds) {
 				
 				for (int i = 0; i < mesh.m_materials.size(); i++) {
 					const D3D12_VERTEX_BUFFER_VIEW* vertexBufferView;
-					if (model.IsComputedAnimationVertexBuffer()
-						&& mesh.skinFlags[i]
-					) {
+					if (model.IsComputedAnimationVertexBuffer()) {
 						// アニメーション済み頂点バッファの計算が行われている。
 						vertexBufferView = &model.GetAnimatedVertexBuffer(meshNo).GetView();
 					}
@@ -50,18 +49,14 @@ namespace nsK2EngineLow {
 					InstancePtr instance = std::make_unique<Instance>();
 					instance->geometoryDesc = desc;
 					instance->m_material = mesh.m_materials[i];
-					if (model.IsComputedAnimationVertexBuffer()
-						&& mesh.skinFlags[i]
-						) {
+					if (model.IsComputedAnimationVertexBuffer()) {
 						instance->m_vertexBufferRWSB.Init(model.GetAnimatedVertexBuffer(meshNo), false);
 					}
 					else {
 						instance->m_vertexBufferRWSB.Init(mesh.m_vertexBuffer, false);
 					}
 					instance->m_indexBufferRWSB.Init(*mesh.m_indexBufferArray[i], false);
-					if (model.IsComputedAnimationVertexBuffer()
-						&& mesh.skinFlags[i]
-					) {
+					if (model.IsComputedAnimationVertexBuffer()	) {
 						// アニメーション済み頂点バッファを利用する場合は、すでにワールド空間に変換済み。
 						instance->geometoryDesc.Triangles.Transform3x4 = 0;
 					}

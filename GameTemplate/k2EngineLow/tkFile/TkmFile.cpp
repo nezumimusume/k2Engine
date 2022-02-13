@@ -456,10 +456,10 @@ namespace nsK2EngineLow {
 				vertex.binormal = g_vec3Zero;
 				vertex.uv.Set(vertexTmp.uv[0], vertexTmp.uv[1]);
 				vertex.skinWeights.Set(vertexTmp.weights[0], vertexTmp.weights[1], vertexTmp.weights[2], vertexTmp.weights[3]);
-				vertex.indices[0] = vertexTmp.indices[0] != -1 ? vertexTmp.indices[0] : 0;
-				vertex.indices[1] = vertexTmp.indices[1] != -1 ? vertexTmp.indices[1] : 0;
-				vertex.indices[2] = vertexTmp.indices[2] != -1 ? vertexTmp.indices[2] : 0;
-				vertex.indices[3] = vertexTmp.indices[3] != -1 ? vertexTmp.indices[3] : 0;
+				vertex.indices[0] = vertexTmp.indices[0];
+				vertex.indices[1] = vertexTmp.indices[1];
+				vertex.indices[2] = vertexTmp.indices[2];
+				vertex.indices[3] = vertexTmp.indices[3];
 
 				m_bpsOnVertexPosition.AddLeaf(vertex.pos, &vertex.normal);
 			}

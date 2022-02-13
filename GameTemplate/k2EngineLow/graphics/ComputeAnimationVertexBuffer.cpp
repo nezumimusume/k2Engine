@@ -111,7 +111,7 @@ namespace nsK2EngineLow {
 		}
 		m_descriptorHeap.Commit();
 	}
-	void ComputeAnimationVertexBuffer::Dispatch(RenderContext& rc)
+	void ComputeAnimationVertexBuffer::Dispatch(RenderContext& rc, const Matrix& worldMatrix)
 	{
 		BeginGPUEvent("ComputeAnimationVertexBuffer");
 
@@ -128,20 +128,21 @@ namespace nsK2EngineLow {
 		if (m_boneMatrixArray) {
 			// ボーン行列が指定されている。
 			m_boneMatricesStructureBuffer.Update(m_boneMatrixArray);
-			// アニメーション済み頂点の計算処理をディスパッチ
-			for (int meshNo = 0; meshNo < m_numMesh; meshNo++) {
-				rc.SetComputeRootSignature(m_rootSignatureArray[meshNo]);
-				rc.SetComputeDescriptorHeap(m_descriptorHeap);
-				rc.SetPipelineState(m_pipilineStateArray[meshNo]);
-				const int numVertex = m_vertexBufferArray[meshNo].GetNumVertex();
-				const int numThreadGround = (numVertex / NUM_THREAD_IN_GROUP) + 1;
-				CB_0 cb0;
-				cb0.numVertex = numVertex;
-				m_cb0Array[meshNo].CopyToVRAM(&cb0);
-				rc.Dispatch(numThreadGround, 1, 1);
-
-			}
 		}
+		// アニメーション済み頂点の計算処理をディスパッチ
+		for (int meshNo = 0; meshNo < m_numMesh; meshNo++) {
+			rc.SetComputeRootSignature(m_rootSignatureArray[meshNo]);
+			rc.SetComputeDescriptorHeap(m_descriptorHeap);
+			rc.SetPipelineState(m_pipilineStateArray[meshNo]);
+			const int numVertex = m_vertexBufferArray[meshNo].GetNumVertex();
+			const int numThreadGround = (numVertex / NUM_THREAD_IN_GROUP) + 1;
+			CB_0 cb0;
+			cb0.numVertex = numVertex;
+			cb0.worldMatrix = worldMatrix;
+			m_cb0Array[meshNo].CopyToVRAM(&cb0);
+			rc.Dispatch(numThreadGround, 1, 1);
+		}
+		
 		// リソースステートを遷移させる。
 		for (int meshNo = 0; meshNo < m_numMesh; meshNo++) {
 			rc.TransitionResourceState(

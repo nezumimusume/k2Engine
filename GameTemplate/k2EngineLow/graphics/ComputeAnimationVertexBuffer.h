@@ -24,7 +24,8 @@ namespace nsK2EngineLow {
 		/// ディスパッチ
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
-		void Dispatch(RenderContext& rc);
+		/// <param name="worldMatrix">ワールド行列</param>
+		void Dispatch(RenderContext& rc, const Matrix& worldMatrix);
 		/// <summary>
 		/// アニメーション計算済み頂点バッファを取得。
 		/// </summary>
@@ -48,7 +49,8 @@ namespace nsK2EngineLow {
 		/// b0レジスタにバインドされるデータ。
 		/// </summary>
 		struct CB_0 {
-			int numVertex;
+			Matrix worldMatrix;	// ワールド行列。
+			int numVertex;		// 頂点数。
 		};
 		bool m_isFirstDispatch = true;											
 		int m_numMesh = 0;														// メッシュの数。
