@@ -52,8 +52,8 @@ void CSMain(
         }
         g_outputVertexBuffer[dispatchThreadId.x] = inVertex;
         g_outputVertexBuffer[dispatchThreadId.x].pos = mul( worldMatrixLocal, float4(inVertex.pos, 1.0f) );
-        g_outputVertexBuffer[dispatchThreadId.x].normal = mul( worldMatrixLocal, inVertex.normal);
-        g_outputVertexBuffer[dispatchThreadId.x].tangent = mul( worldMatrixLocal, inVertex.tangent);
-        g_outputVertexBuffer[dispatchThreadId.x].binormal = mul( worldMatrixLocal, inVertex.binormal);
+        g_outputVertexBuffer[dispatchThreadId.x].normal = normalize( mul( worldMatrixLocal, inVertex.normal) );
+        g_outputVertexBuffer[dispatchThreadId.x].tangent = normalize( mul( worldMatrixLocal, inVertex.tangent) );
+        g_outputVertexBuffer[dispatchThreadId.x].binormal = normalize( mul( worldMatrixLocal, inVertex.binormal) );
     }
 }

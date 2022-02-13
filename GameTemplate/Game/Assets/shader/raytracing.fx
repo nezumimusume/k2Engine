@@ -120,15 +120,19 @@ float3 GetNormal(BuiltInTriangleIntersectionAttributes attribs, float2 uv)
     float3 tangent2 = g_vertexBuffers[v2_id].tangent;
     float3 tangent = barycentrics.x * tangent0 + barycentrics.y * tangent1 + barycentrics.z * tangent2;
     tangent = normalize(tangent);
+    
+    float3 binormal0 = g_vertexBuffers[v0_id].binormal;
+    float3 binormal1 = g_vertexBuffers[v1_id].binormal;
+    float3 binormal2 = g_vertexBuffers[v2_id].binormal;
+    float3 binormal = barycentrics.x * binormal0 + barycentrics.y * binormal1 + barycentrics.z * binormal2;
+    
 
-    float3 binormal = normalize(cross(tangent, normal));
-
-    float3 binSpaceNormal = g_normalMap.SampleLevel (s, uv, 0.0f).xyz;
+    float3 binSpaceNormal = g_normalMap.SampleLevel (s, uv, 0.0f).xyz;    
     binSpaceNormal = (binSpaceNormal * 2.0f) - 1.0f;
 
-    normal = tangent * binSpaceNormal.x + binormal * binSpaceNormal.y + normal * binSpaceNormal.z;
+    float3 newNormal = tangent * binSpaceNormal.x + binormal * binSpaceNormal.y + normal * binSpaceNormal.z ;
 
-    return normal;
+    return newNormal;
 }
 
 // 光源に向けてレイを飛ばす
@@ -244,7 +248,7 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
 
     // ヒットしたプリミティブの法線を取得
     float3 normal = GetNormal(attribs, uv);
-
+    
     // 光源にむかってレイを飛ばす
     TraceLightRay(payload, normal);
     float lig = 0.0f;
