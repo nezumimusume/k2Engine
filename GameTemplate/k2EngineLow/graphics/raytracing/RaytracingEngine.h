@@ -57,10 +57,6 @@ namespace nsK2EngineLow {
 				}
 			}
 			/// <summary>
-			/// ジオメトリの登録を確定。
-			/// </summary>
-			void CommitRegistGeometry(RenderContext& rc);
-			/// <summary>
 			/// レイトレの結果の出力先となるテクスチャを取得。
 			/// </summary>
 			/// <returns></returns>
@@ -68,9 +64,11 @@ namespace nsK2EngineLow {
 			{
 				return m_outputTexture;
 			}
-			
-			
 		private:
+			/// <summary>
+			/// ジオメトリの登録を確定。
+			/// </summary>
+			void CommitRegistGeometry(RenderContext& rc);
 			/// <summary>
 			/// レイトレーシングで使用するカメラ構造体。
 			/// この中身を変更したら、Assets/shader/raytracing.fxも変更するように。
@@ -90,7 +88,6 @@ namespace nsK2EngineLow {
 			GPUBuffer m_outputResource;					// レイトレースの結果の出力先。
 			Texture m_outputTexture;					// レイトレースの結果の出力先(テクスチャ)
 			Texture m_skycubeBox;						// スカイキューブボックス。
-			bool m_isReady = false;						// 準備完了フラグ。
 			bool m_isDirty = false;						// ダーティフラグ。
 		};
 	}//namespace raytracing

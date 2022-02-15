@@ -76,19 +76,18 @@ namespace nsK2EngineLow {
 				// シェーダーテーブルを作成。
 				m_shaderTable[i].Init(i, m_world, m_pipelineStateObject[i], m_descriptorHeaps[i]); 
 			}
-			// ジオメトリをコミットしたので準備完了。
-			m_isReady = true;
+			
 			// ダーティフラグをオフにする。
 			m_isDirty = false;
 		}
 		void Engine::Dispatch(RenderContext& rc)
 		{
-			CommitRegistGeometry(rc);
-
-			if (!m_isReady) {
-				// 準備ができていない。
+			if (m_world.GetNumInstance() == 0) {
+				// インスタンスが登録されていない。
 				return;
 			}
+			
+			CommitRegistGeometry(rc);
 
 			int backBufferNo = g_graphicsEngine->GetBackBufferIndex();
 			// レイトレワールドを構築する。
