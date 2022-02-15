@@ -71,7 +71,7 @@ namespace nsK2Engine {
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isShadowReciever = true,
 			int maxInstance = 1,
-			bool isFrontCullingOnDrawShadowMap = true);
+			bool isFrontCullingOnDrawShadowMap = false);
 		/// <summary>
 		/// 特殊なシェーディングを行いたい場合の初期化処理。
 		/// </summary>

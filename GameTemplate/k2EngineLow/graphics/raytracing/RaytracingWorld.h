@@ -21,8 +21,13 @@ namespace nsK2EngineLow {
 			/// <summary>
 			/// ジオメトリを登録。
 			/// </summary>
-			/// <param name="model">モデル</param>
+			/// <param name="model">ジオメトリの元となるモデル</param>
 			void RegistGeometry(Model& model);
+			/// <summary>
+			/// ジオメトリを削除
+			/// </summary>
+			/// <param name="model">ジオメトリの元となったモデル</param>
+			void RemoveGeometry(Model& model);
 			/// <summary>
 			/// ジオメトリの登録を確定。
 			/// </summary>

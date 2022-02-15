@@ -172,7 +172,7 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// 3DModelをレイトレワールドに登録。
 		/// </summary>
-		/// <param name="model"></param>
+		/// <param name="model">追加するモデル</param>
 		void RegistModelToRaytracingWorld(Model& model)
 		{
 			if (m_isPossibleRaytracing) {
@@ -180,7 +180,17 @@ namespace nsK2EngineLow {
 				m_raytracingEngine.RegistGeometry(model);
 			}
 		}
-		
+		/// <summary>
+		/// 3Dモデルをレイトレワールドから削除。
+		/// </summary>
+		/// <param name="model">削除するモデル</param>
+		void RemoveModelFromRaytracingWorld(Model& model)
+		{
+			if (m_isPossibleRaytracing) {
+				// ハードウェアレイトレーシングがサポートされている場合のみ。
+				m_raytracingEngine.RemoveGeometry(model);
+			}
+		}
 		/// <summary>
 		/// レイトレーシングをディスパッチ。
 		/// </summary>

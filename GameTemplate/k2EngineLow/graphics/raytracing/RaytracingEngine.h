@@ -29,11 +29,20 @@ namespace nsK2EngineLow {
 			/// <summary>
 			/// ジオメトリを登録。
 			/// </summary>
-			/// <param name="model">モデル</param>
+			/// <param name="model">ジオメトリの元となるモデル</param>
 			void RegistGeometry(Model& model)
 			{
 				//レイトレワールドにジオメトリを登録。
 				m_world.RegistGeometry(model);
+				m_isDirty = true;
+			}
+			/// <summary>
+			/// ジオメトリを削除
+			/// </summary>
+			/// <param name="model">ジオメトリの元となったモデル</param>
+			void RemoveGeometry(Model& model)
+			{
+				m_world.RemoveGeometry(model);
 				m_isDirty = true;
 			}
 			/// <summary>

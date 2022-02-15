@@ -53,6 +53,7 @@ struct Camera
 cbuffer rayGenCB :register(b0)
 {
     Camera g_camera; // カメラ
+    
 };
 
 RaytracingAccelerationStructure g_raytracingWorld : register(t0);    // レイトレワールド
