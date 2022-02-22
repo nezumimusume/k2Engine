@@ -3,7 +3,6 @@
 
 
 // #define COPY_RAYTRACING_FRAMEBUFFER		// 有効でレイトレの結果をフレームバッファに書き出す。
-#define USE_PRE_COMPUTED_VERTEX_BUFFER	// 有効で事前計算済み頂点バッファを使用する。
 
 #include "k2EngineLowPreCompile.h"
 using namespace nsK2EngineLow;

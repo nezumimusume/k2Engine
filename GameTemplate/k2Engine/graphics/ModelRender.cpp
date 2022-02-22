@@ -44,21 +44,14 @@ namespace nsK2Engine {
 	}
 	void ModelRender::SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData)
 	{
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
 		modelInitData.m_vsSkinEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
-#endif
 		if (m_isEnableInstancingDraw) {
 			//インスタンシング描画。
 			modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
 		}
 		else {
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
 			modelInitData.m_vsEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
-#else
-			modelInitData.m_vsEntryPointFunc = "VSMain";
-#endif
 		}
-
 		if (m_animationClips != nullptr) {
 			// アニメーションあり。
 			if (m_isEnableInstancingDraw) {
@@ -67,11 +60,7 @@ namespace nsK2Engine {
 			}
 			else {
 				// 
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
 				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinUsePreComputedVertexBuffer";
-#else
-				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkin";
-#endif
 			}
 
 		}
@@ -226,10 +215,8 @@ namespace nsK2Engine {
 
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
-
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		// 頂点の事前計算処理を使う。
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;		}
@@ -275,9 +262,9 @@ namespace nsK2Engine {
 
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		// 頂点の事前計算処理を使う。
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
+
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
@@ -326,9 +313,9 @@ namespace nsK2Engine {
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
 
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		// 頂点の事前計算処理を使う。
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
+
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
@@ -373,10 +360,9 @@ namespace nsK2Engine {
 
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
-
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		// 頂点の事前計算処理を使う。
 		modelInitData.m_computedAnimationVertexBuffer = &m_computeAnimationVertexBuffer;
-#endif
+
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
@@ -484,9 +470,8 @@ namespace nsK2Engine {
 	}
 	void ModelRender::OnComputeVertex(RenderContext& rc)
 	{
-#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		// 頂点の事前計算処理をディスパッチする。
 		m_computeAnimationVertexBuffer.Dispatch(rc, m_zprepassModel.GetWorldMatrix());
-#endif
 	}
 	void ModelRender::OnRenderShadowMap(
 		RenderContext& rc,
