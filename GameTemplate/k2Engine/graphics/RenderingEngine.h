@@ -86,7 +86,7 @@ namespace nsK2Engine {
         /// <summary>
         /// レイトレワールドにモデルを追加。
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">追加するモデル。</param>
         void AddModelToRaytracingWorld(Model& model) 
         {
             g_graphicsEngine->RegistModelToRaytracingWorld(model);
@@ -94,11 +94,11 @@ namespace nsK2Engine {
         /// <summary>
         /// レイトレワールドからモデルを削除。
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">削除するモデル。</param>
         void RemoveModelFromRaytracingWorld(Model& model) 
         {
+            g_graphicsEngine->RemoveModelFromRaytracingWorld(model);
             
-            K2_ASSERT(false, "未実装");
         }
         /// <summary>
         /// ZPrepassで作成された深度テクスチャを取得

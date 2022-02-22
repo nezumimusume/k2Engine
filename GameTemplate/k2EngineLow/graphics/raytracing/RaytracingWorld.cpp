@@ -78,6 +78,20 @@ namespace nsK2EngineLow {
 				
 			}
 		}
+		void World::RemoveGeometry(Model& model)
+		{
+			for (auto& instance : m_instances){
+				auto it = instance.begin();
+				while (it != instance.end()) {
+					if ((*it)->m_model == &model) {
+						it = instance.erase(it);
+					}
+					else {
+						it++;
+					}
+				}
+			}
+		}
 		static bool isCommit = false;
 		void World::CommitRegistGeometry(RenderContext& rc)
 		{

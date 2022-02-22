@@ -30,6 +30,13 @@ namespace nsK2EngineLow {
 	{
 		Release();
 
+		// Šeíƒƒ“ƒo•Ï”‚ğ‰Šú‰»‚·‚éB
+		m_descriptorHeap = nullptr;
+		m_numSRV = 0;
+		m_numConstantBuffer = 0;
+		m_numUAV = 0;
+		m_numSamplerDesc = 0;
+
 		m_maxSRV = maxSRV;
 		m_maxUAV = maxUAV;
 		m_maxConstantBuffer = maxConstantBuffer;

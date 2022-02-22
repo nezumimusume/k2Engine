@@ -14,9 +14,7 @@ public:
 	void Render(RenderContext& rc);
 
 private:
-	Vector3 pos;
 	ModelRender m_modelRender;
-	ModelRender m_bgRender;
-	ModelRender m_groundRender;
+	Vector3 m_pos;
 };
 

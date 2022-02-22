@@ -204,10 +204,14 @@ namespace nsK2EngineLow {
 			desc.desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE;
 			return desc;
 		}
-
+		void PSO::Release()
+		{
+			ReleaseD3D12Object(m_pipelineState);
+			m_pipelineState = nullptr;
+		}
 		void PSO::Init(const DescriptorHeaps& descriptorHeaps)
 		{
-			m_pipelineState.Release();
+			Release();
 			m_srvUavCbvHeap = &descriptorHeaps.GetSrvUavCbvDescriptorHeap();
 			using namespace BuildSubObjectHelper;
 

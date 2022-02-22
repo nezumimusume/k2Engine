@@ -44,6 +44,9 @@ namespace nsK2Engine {
 	}
 	void ModelRender::SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData)
 	{
+#ifdef USE_PRE_COMPUTED_VERTEX_BUFFER
+		modelInitData.m_vsSkinEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
+#endif
 		if (m_isEnableInstancingDraw) {
 			//インスタンシング描画。
 			modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
