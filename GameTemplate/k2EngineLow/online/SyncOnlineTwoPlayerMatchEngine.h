@@ -43,20 +43,17 @@ namespace nsK2EngineLow {
 	///			2.5.1 全てのプレイヤーがゲーム開始可能になると、Init()関数で指定されたonAllPlayerPossibleGameStart()関数を呼び出します。
 	///		2.5 パッド情報を3フレーム分バッファリング
 	///		2.6 バッファリング完了後、ゲームパッドの更新を毎フレーム行う。
-	///	
+	///
 	/// 本クラスの利用のサンプルとしてSample_24が提供されています。
 	/// </remark>
-	class SyncOnlineTwoPlayerMatchEngine : ExitGames::LoadBalancing::Listener, Noncopyable{
+	class SyncOnlineTwoPlayerMatchEngine : ExitGames::LoadBalancing::Listener{
 	public:
 
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
 		~SyncOnlineTwoPlayerMatchEngine();
-		/// <summary>
-		/// 初期化。
-		/// </summary>
-		
+
 		/// <summary>
 		/// 初期化
 		/// </summary>
@@ -104,11 +101,15 @@ namespace nsK2EngineLow {
 		/// <returns></returns>
 		int GetPlayerNo() const
 		{
+			//ホスト
 			if (m_playerType == enPlayerType_Host) {
 				return 0;
 			}
-			// クライアント。
-			return 1;
+			// クライアント
+			else
+			{
+				return 1;
+			}
 		}
 		/// <summary>
 		/// 対戦相手のプレイヤー番号を取得。
@@ -175,7 +176,7 @@ namespace nsK2EngineLow {
 		/// <param name="playerNr"></param>
 		/// <param name="isInactive"></param>
 		void leaveRoomEventAction(int playerNr, bool isInactive) override;
-		
+
 		/// <summary>
 		/// photonサーバーへの接続リクエストを実行した場合に呼び出されるコールバック関数。
 		/// </summary>
@@ -233,7 +234,7 @@ namespace nsK2EngineLow {
 		/// パッド情報をP2Pで直接送信。
 		/// </summary>
 		void SendPadDataDirect();
-		
+
 		/// <summary>
 		/// パッドデータの再送リクエストをP2Pで送信
 		/// </summary>
@@ -252,7 +253,11 @@ namespace nsK2EngineLow {
 		void OutputPlayPadDataLog();
 #endif
 	private:
+		/// <summary>
+		/// 列挙型
+		/// </summary>
 
+		//状態
 		enum State
 		{
 			INITIALIZED = 0,					// 初期化
@@ -265,54 +270,62 @@ namespace nsK2EngineLow {
 			IN_GAME_BUFFERING_PAD_DATA,			// パッドデータのバッファリング中
 			IN_GAME,							// ゲームプレイ中。
 			DISCONNECTING,						// サーバーから切断中。
-			DISCONNECTED						// サーバーから切断済み。
+			DISCONNECTED,						// サーバーから切断済み。
+			END,								// 終わり
+
 		};
-		/// <summary>
-		/// イベント
-		/// </summary>
-		enum EnEvent {
-			enEvent_SendInitDataForOtherPlayer,	  // 他プレイヤーの初期化情報を送る。
-			enEvent_PossibleGameStartOtherPlayer, // 他プレイヤーがゲーム開始可能になったことを通知・
+
+		//イベント
+		enum EnEvent
+		{
+			enEvent_SendInitDataForOtherPlayer,		// 他プレイヤーの初期化情報を送る。
+			enEvent_PossibleGameStartOtherPlayer	// 他プレイヤーがゲーム開始可能になったことを通知・
 		};
-		/// <summary>
-		/// sendDirect()関数で送られてくるメッセージの種類。
-		/// </summary>
-		enum EnDirectMessageType {
+
+		//sendDirect()関数で送られてくるメッセージの種類。
+		enum EnDirectMessageType
+		{
 			enDirectMessageType_PadData,				// パッドデータ
 			enDirectMessageType_RequestResendPadData,	// パッドデータの再送リクエスト
 		};
+
 		/// <summary>
-		/// パッドデータ
+		/// 構造体
 		/// </summary>
-		struct SPadData {
+
+		//パッドデータ
+		struct SPadData
+		{
 			int dataType;				// データの種類。
 			XINPUT_STATE xInputState;	// XInputステート
 			int frameNo;				// フレーム番号
 			unsigned int checksum;		// チェックサム用のデータ。
 		};
-		/// <summary>
-		/// パッドデータの再送リクエスト
-		/// </summary>
-		struct SRequestResendPadData {
+
+		//パッドデータの再送リクエスト
+		struct SRequestResendPadData
+		{
 			int dataType;
 			int frameNo;
 		};
-		/// <summary>
-		/// プレイヤータイプ
-		/// </summary>
-		enum EnPlayerType {
+
+		//プレイヤータイプ
+		enum EnPlayerType
+		{
 			enPlayerType_Host,		// ホスト(部屋を作った)
 			enPlayerType_Client,	// クライアント(既存の部屋に入った)
 			enPlayerType_Undef,		// 不明
 		};
+
 		// 他プレイヤーの状態。
-		enum EnOtherPlayerState {
-			enOtherPlayerState_Undef,				// 不明
+		enum EnOtherPlayerState
+		{
+			enOtherPlayerState_Undef,				// m_playerType
 			enOtherPlayerState_JoinedRoom,			// 部屋に入ってきた。
 			enOtherPlayerState_PossibleGameStart,	// ゲーム開始可能状態
 			enOtherPlayerState_LeftRoom,			// 部屋から抜けた。
-
 		};
+
 		using OnAllPlayerJoinedRoom = std::function<void(void* pRecvData, int dataSize)>;
 		using OnErrorFunc = std::function<void()>;
 		using OnAllPlayerNotifyPossibleGameStart = std::function<void()>;
@@ -323,7 +336,7 @@ namespace nsK2EngineLow {
 		int m_frameNo = 0;													// 現在のパッドのフレーム番号。
 		int m_playFrameNo = 0;												// 現在のゲーム進行フレーム番号。
 		bool m_isPossibleGameStart = false;									// ゲーム開始可能フラグ。
-		std::map< int, SPadData> m_padData[2];								// パッドデータ。	
+		std::map< int, SPadData> m_padData[2];								// パッドデータ。
 		GamePad m_pad[2];													// ゲームパッド。
 		OnAllPlayerJoinedRoom m_allPlayerJoinedRoomFunc = nullptr;			// すべてのプレイヤーがルームに参加した。
 		OnAllPlayerNotifyPossibleGameStart m_allPlayerNotifyPossibleGameStartFunc = nullptr;	// すべてのプレイヤーがゲーム開始可能であることを通知した。
@@ -338,7 +351,7 @@ namespace nsK2EngineLow {
 		EnPlayerType m_playerType = enPlayerType_Undef;						// プレイヤーのタイプ。
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
 		K2EngineLow::FrameRateInfo m_frameRateInfoBackup;								// フレームレートに関する情報のバックアップ。
-		
+
 		bool m_isHoge = false;
 #ifdef ENABLE_ONLINE_PAD_LOG
 		FILE* m_fpLog = nullptr;									// ログ出力用のファイルポインタ。
