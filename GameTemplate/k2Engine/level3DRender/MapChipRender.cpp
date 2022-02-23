@@ -63,10 +63,12 @@ namespace nsK2Engine {
 		}
 		else
 		{
+			int instanceNo = 0;
 			for (auto& mapChipData : m_mapChipDataVector)
 			{
 				//モデルレンダーのインスタンシング用のデータを更新。
-				m_modelRender.UpdateInstancingData(mapChipData.position, mapChipData.rotation, mapChipData.scale);
+				m_modelRender.UpdateInstancingData(instanceNo, mapChipData.position, mapChipData.rotation, mapChipData.scale);
+				instanceNo++;
 			}
 		}
 	}

@@ -92,6 +92,13 @@ namespace nsK2Engine {
             g_graphicsEngine->RegistModelToRaytracingWorld(model);
         }
         /// <summary>
+        /// レイトレワールドの再構築リクエストを送る。
+        /// </summary>
+        void RequestRebuildRaytracingWorld()
+        {
+            g_graphicsEngine->RequestRebuildRaytracingWorld();
+        }
+        /// <summary>
         /// レイトレワールドからモデルを削除。
         /// </summary>
         /// <param name="model">削除するモデル。</param>

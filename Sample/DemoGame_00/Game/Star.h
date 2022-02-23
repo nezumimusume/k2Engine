@@ -7,6 +7,7 @@ class StarRender;
 class Star : public IGameObject
 {
 public:
+	~Star();
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
@@ -27,6 +28,14 @@ public:
 	{
 		return m_position;
 	}
+	/// <summary>
+	/// インスタンス番号を設定。
+	/// </summary>
+	/// <param name="instanceNo"></param>
+	void SetInstanceNo(int instanceNo)
+	{
+		m_instanceNo = instanceNo;
+	}
 private:
 	Vector3				m_position;						//座用。
 	Vector3				m_scale = Vector3::One * 0.3f;	//大きさ。
@@ -36,5 +45,6 @@ private:
 	float				m_jumStartPosY = 0.0f;
 	Quaternion			m_rotation;
 	StarRender*			m_starRender = nullptr;
+	int					m_instanceNo = 0;				// インスタンス番号。
 };
 

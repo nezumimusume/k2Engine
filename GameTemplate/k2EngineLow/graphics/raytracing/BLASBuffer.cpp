@@ -8,6 +8,7 @@ namespace nsK2EngineLow {
 		{
 			for (auto& instance : instances) {
 				Matrix mWorld = instance->m_model->GetWorldMatrix();
+				instance->geometoryDesc.Triangles.IndexCount = instance->m_originalIndexBuffer->GetCount();
 				mWorld.Transpose();
 				if (instance->m_worldMatrixCB.IsValid()) {
 					instance->m_worldMatrixCB.CopyToVRAM(mWorld);

@@ -45,24 +45,11 @@ namespace nsK2Engine {
 	void ModelRender::SetupVertexShaderEntryPointFunc(ModelInitData& modelInitData)
 	{
 		modelInitData.m_vsSkinEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
-		if (m_isEnableInstancingDraw) {
-			//インスタンシング描画。
-			modelInitData.m_vsEntryPointFunc = "VSMainInstancing";
-		}
-		else {
-			modelInitData.m_vsEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
-		}
+		modelInitData.m_vsEntryPointFunc = "VSMainUsePreComputedVertexBuffer";
+		
 		if (m_animationClips != nullptr) {
 			// アニメーションあり。
-			if (m_isEnableInstancingDraw) {
-				// インスタンシング描画は事前コンピュート済み頂点バッファはまだ未対応。
-				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinInstancing";
-			}
-			else {
-				// 
-				modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinUsePreComputedVertexBuffer";
-			}
-
+			modelInitData.m_vsSkinEntryPointFunc = "VSMainSkinUsePreComputedVertexBuffer";
 		}
 	}
 	void ModelRender::IniTranslucent(
@@ -92,6 +79,7 @@ namespace nsK2Engine {
 		InitGeometryDatas(maxInstance);
 		// レイトレワールドに追加。
 		g_renderingEngine->AddModelToRaytracingWorld(m_translucentModel);
+		
 		m_addRaytracingWorldModel = &m_translucentModel;
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
@@ -149,8 +137,10 @@ namespace nsK2Engine {
 		InitGeometryDatas(maxInstance);
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
+		
 		// レイトレワールドに追加。
 		g_renderingEngine->AddModelToRaytracingWorld(m_renderToGBufferModel);
+		
 		m_addRaytracingWorldModel = &m_renderToGBufferModel;
 	}
 
@@ -200,6 +190,11 @@ namespace nsK2Engine {
 				nullptr
 			);
 			m_isEnableInstancingDraw = true;
+			// インスタンス番号からワールド行列の配列のインデックスに変換するテーブルを初期化する。
+			m_instanceNoToWorldMatrixArrayIndexTable = std::make_unique<int[]>(m_maxInstance);
+			for (int instanceNo = 0; instanceNo < m_maxInstance; instanceNo++) {
+				m_instanceNoToWorldMatrixArrayIndexTable[instanceNo] = instanceNo;
+			}
 		}
 	}
 
@@ -243,11 +238,18 @@ namespace nsK2Engine {
 		const char* tkmFilePath,
 		EnModelUpAxis enModelUpAxis)
 	{
+		StructuredBuffer* worldMatrxiArraySB = nullptr;
+		if (m_isEnableInstancingDraw) {
+			worldMatrxiArraySB = &m_worldMatrixArraySB;
+		}
+		
 		m_computeAnimationVertexBuffer.Init(
 			tkmFilePath, 
 			m_skeleton.GetNumBones(),
 			m_skeleton.GetBoneMatricesTopAddress(),
-			enModelUpAxis
+			enModelUpAxis,
+			m_maxInstance,
+			worldMatrxiArraySB
 		);
 	}
 	void ModelRender::InitModelOnTranslucent(
@@ -376,9 +378,9 @@ namespace nsK2Engine {
 
 		m_zprepassModel.Init(modelInitData);
 	}
-	void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
+	void ModelRender::UpdateInstancingData(int instanceNo, const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 	{
-		K2_ASSERT(m_numInstance < m_maxInstance, "インスタンスの数が多すぎです。");
+		K2_ASSERT(instanceNo < m_maxInstance, "インスタンス番号が不正です。");
 		if (!m_isEnableInstancingDraw) {
 			return;
 		}
@@ -390,10 +392,10 @@ namespace nsK2Engine {
 		else {
 			worldMatrix = m_zprepassModel.CalcWorldMatrix(pos, rot, scale);
 		} 
-		
-
+		// インスタンス番号から行列のインデックスを取得する。
+		int matrixArrayIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
 		// インスタンシング描画を行う。
-		m_worldMatrixArray[m_numInstance] = worldMatrix;
+		m_worldMatrixArray[matrixArrayIndex] = worldMatrix;
 		if (m_numInstance == 0) {
 			//インスタンス数が0の場合のみアニメーション関係の更新を行う。
 			// スケルトンを更新。
@@ -443,20 +445,9 @@ namespace nsK2Engine {
 	void ModelRender::Draw(RenderContext& rc)
 	{
 		if (m_isEnableInstancingDraw) {
-			// インスタンシング描画
-			m_fixNumInstanceOnFrame = 0;
-			// ビューフラスタムに含まれているインスタンスのみ描画する。
-			for (int instanceId = 0; instanceId < m_numInstance; instanceId++) {
-				if (m_geometryDatas[instanceId].IsInViewFrustum()) {
-					// ビューフラスタムに含まれている。
-					m_worldMatrixArray[m_fixNumInstanceOnFrame] = m_worldMatrixArray[instanceId];
-					m_fixNumInstanceOnFrame++;
-				}
-			}
-			if (m_fixNumInstanceOnFrame != 0) {
-				g_renderingEngine->AddRenderObject(this);
-				m_worldMatrixArraySB.Update(m_worldMatrixArray.get());
-			}
+			// インスタンシング描画はビューフラスタムカリングは行わない。
+			g_renderingEngine->AddRenderObject(this);
+			m_worldMatrixArraySB.Update(m_worldMatrixArray.get());
 			m_numInstance = 0;
 		}
 		else {
@@ -464,14 +455,25 @@ namespace nsK2Engine {
 			if (m_geometryDatas[0].IsInViewFrustum()) {
 				// ビューフラスタムに含まれている。
 				g_renderingEngine->AddRenderObject(this);
-				m_fixNumInstanceOnFrame = 1;
 			}
 		}
+	}
+	
+	void ModelRender::RemoveInstance(int instanceNo)
+	{		
+		int matrixIndex = m_instanceNoToWorldMatrixArrayIndexTable[instanceNo];
+		
+		m_worldMatrixArray[matrixIndex] = g_matZero;		
 	}
 	void ModelRender::OnComputeVertex(RenderContext& rc)
 	{
 		// 頂点の事前計算処理をディスパッチする。
-		m_computeAnimationVertexBuffer.Dispatch(rc, m_zprepassModel.GetWorldMatrix());
+		if (m_isEnableInstancingDraw) {
+			m_computeAnimationVertexBuffer.Dispatch(rc, m_zprepassModel.GetWorldMatrix(), m_maxInstance);
+		}
+		else {
+			m_computeAnimationVertexBuffer.Dispatch(rc, m_zprepassModel.GetWorldMatrix(), 1);
+		}
 	}
 	void ModelRender::OnRenderShadowMap(
 		RenderContext& rc,
@@ -489,31 +491,31 @@ namespace nsK2Engine {
 				rc,
 				g_matIdentity,
 				lvpMatrix,
-				m_fixNumInstanceOnFrame
+				1
 			);
 		}
 	}
 
 	void ModelRender::OnZPrepass(RenderContext& rc)
 	{
-		m_zprepassModel.Draw(rc, m_fixNumInstanceOnFrame);
+		m_zprepassModel.Draw(rc, 1);
 	}
 	void ModelRender::OnRenderToGBuffer(RenderContext& rc)
 	{
 		if (m_renderToGBufferModel.IsInited()) {
-			m_renderToGBufferModel.Draw(rc, m_fixNumInstanceOnFrame);
+			m_renderToGBufferModel.Draw(rc, 1);
 		}
 	}
 	void ModelRender::OnForwardRender(RenderContext& rc)
 	{
 		if (m_forwardRenderModel.IsInited()) {
-			m_forwardRenderModel.Draw(rc, m_fixNumInstanceOnFrame);
+			m_forwardRenderModel.Draw(rc, 1);
 		}
 	}
 	void ModelRender::OnTlanslucentRender(RenderContext& rc)
 	{
 		if (m_translucentModel.IsInited()) {
-			m_translucentModel.Draw(rc, m_fixNumInstanceOnFrame);
+			m_translucentModel.Draw(rc, 1);
 		}
 	}
 }

@@ -27,6 +27,13 @@ namespace nsK2EngineLow {
 			/// <param name="rc">レンダリングコンテキスト</param>
 			void Dispatch(RenderContext& rc);
 			/// <summary>
+			/// レイトレワールドの再構築リクエスト
+			/// </summary>
+			void RequestRebuildRaytracingWorld()
+			{
+				m_isDirty = true;
+			}
+			/// <summary>
 			/// ジオメトリを登録。
 			/// </summary>
 			/// <param name="model">ジオメトリの元となるモデル</param>
@@ -34,7 +41,7 @@ namespace nsK2EngineLow {
 			{
 				//レイトレワールドにジオメトリを登録。
 				m_world.RegistGeometry(model);
-				m_isDirty = true;
+				RequestRebuildRaytracingWorld();
 			}
 			/// <summary>
 			/// ジオメトリを削除
@@ -43,7 +50,7 @@ namespace nsK2EngineLow {
 			void RemoveGeometry(Model& model)
 			{
 				m_world.RemoveGeometry(model);
-				m_isDirty = true;
+				RequestRebuildRaytracingWorld();
 			}
 			/// <summary>
 			/// スカイキューブボックスを設定。
@@ -53,7 +60,7 @@ namespace nsK2EngineLow {
 			{
 				if (skycubeBox.Get() != nullptr) {
 					m_skycubeBox.IniteFromTexture(skycubeBox);
-					m_isDirty = true;
+					RequestRebuildRaytracingWorld();
 				}
 			}
 			/// <summary>

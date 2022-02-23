@@ -8,6 +8,14 @@
 #include "sound/SoundSource.h"
 #include "sound/SoundEngine.h"
 
+Pyramid::~Pyramid()
+{
+	// 先に死んでいるかもしれないので、検索してnullチェックをする。
+	auto pyramidRender = FindGO<PyramidRender>("PyramidRender");
+	if (pyramidRender) {
+		pyramidRender->RemoveInstance(m_instanceNo);
+	}
+}
 bool Pyramid::Start()
 {
 
@@ -47,6 +55,7 @@ void Pyramid::Update()
 	}
 
 	m_pyramidRender->UpdateInstancingData(
+		m_instanceNo,
 		m_position,
 		m_rotation,
 		m_scale

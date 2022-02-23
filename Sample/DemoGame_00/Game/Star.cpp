@@ -8,6 +8,14 @@
 #include "sound/SoundSource.h"
 #include "sound/SoundEngine.h"
 
+Star::~Star()
+{
+	// 先に死んでいるかもしれないので、検索してnullチェックをする。
+	auto starRender = FindGO<StarRender>("StarRender");
+	if (starRender) {
+		starRender->RemoveInstance(m_instanceNo);
+	}
+}
 bool Star::Start()
 {
 
@@ -47,6 +55,7 @@ void Star::Update()
 	}
 
 	m_starRender->UpdateInstancingData(
+		m_instanceNo,
 		m_position, 
 		m_rotation, 
 		m_scale

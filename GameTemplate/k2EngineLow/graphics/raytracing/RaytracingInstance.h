@@ -20,6 +20,7 @@ namespace nsK2EngineLow {
 			D3D12_RAYTRACING_GEOMETRY_DESC geometoryDesc;			// ジオメトリ情報。
 			RWStructuredBuffer m_vertexBufferRWSB;					// 頂点バッファ。
 			RWStructuredBuffer m_indexBufferRWSB;					// インデックスバッファ。
+			IndexBuffer* m_originalIndexBuffer = nullptr;			// オリジナルのインデックスバッファ。
 			ConstantBuffer m_worldMatrixCB;							// ワールド行列の定数バッファ。
 			Material* m_material = nullptr;							// マテリアル。		
 			AccelerationStructureBuffers m_blasStructuredBuffers;	// BLAS構築用のバッファ。

@@ -114,7 +114,7 @@ namespace nsK2EngineLow {
         m_vertexBuffer.Copy(vertices);
 
         m_indexBuffer.Init(sizeof(indices), sizeof(indices[0]));
-        m_indexBuffer.Copy(indices);
+        m_indexBuffer.Copy(indices, 0, 0, 0);
     }
     void Sprite::InitPipelineState(const SpriteInitData& initData)
     {

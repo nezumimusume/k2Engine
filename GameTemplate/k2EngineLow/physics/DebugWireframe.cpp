@@ -95,7 +95,7 @@ namespace nsK2EngineLow {
 		for (int i = 0; i < MAX_VERTEX; i++) {
 			indices[i] = i;
 		}
-		m_indexBuffer.Copy(indices);
+		m_indexBuffer.Copy(indices, 0, 0, 0);
 	}
 
 	void DebugWireframe::InitConstantBuffer()

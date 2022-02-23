@@ -326,8 +326,17 @@ namespace nsK2EngineLow {
 	/// </summary>
 	const Matrix g_matIdentity = {
 		1.0f, 0.0f, 0.0f, 0.0f ,
-			0.0f, 1.0f, 0.0f, 0.0f ,
-			0.0f, 0.0f, 1.0f, 0.0f ,
-			0.0f, 0.0f, 0.0f, 1.0f
+		0.0f, 1.0f, 0.0f, 0.0f ,
+		0.0f, 0.0f, 1.0f, 0.0f ,
+		0.0f, 0.0f, 0.0f, 1.0f
+	};
+	/// <summary>
+	/// óÎçsóÒ
+	/// </summary>
+	const Matrix g_matZero = {
+		0.0f, 0.0f, 0.0f, 0.0f ,
+		0.0f, 0.0f, 0.0f, 0.0f ,
+		0.0f, 0.0f, 0.0f, 0.0f ,
+		0.0f, 0.0f, 0.0f, 0.0f
 	};
 }

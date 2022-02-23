@@ -174,7 +174,7 @@ namespace nsK2EngineLow {
 			for (auto& tkIb : tkmMesh.indexBuffer16Array) {
 				auto ib = new IndexBuffer;
 				ib->Init(static_cast<int>(tkIb.indices.size()) * 2, 2);
-				ib->Copy((uint16_t*)&tkIb.indices.at(0));
+				ib->Copy((uint16_t*)&tkIb.indices.at(0), 0, 0, 0);
 
 				//スキンがあるかどうかを設定する。
 				SetSkinFlag(tkIb.indices[0]);
@@ -188,7 +188,7 @@ namespace nsK2EngineLow {
 			for (auto& tkIb : tkmMesh.indexBuffer32Array) {
 				auto ib = new IndexBuffer;
 				ib->Init(static_cast<int>(tkIb.indices.size()) * 4, 4);
-				ib->Copy((uint32_t*)&tkIb.indices.at(0));
+				ib->Copy((uint32_t*)&tkIb.indices.at(0), 0, 0, 0);
 
 				//スキンがあるかどうかを設定する。
 				SetSkinFlag(tkIb.indices[0]);
@@ -231,6 +231,14 @@ namespace nsK2EngineLow {
 	VertexBuffer& MeshParts::GetAnimatedVertexBuffer(int meshNo)
 	{
 		return m_computedAnimationVertexBuffer->GetAnimatedVertexBuffer(meshNo);
+	}
+	const IndexBuffer& MeshParts::GetAnimatedIndexBuffer(int meshNo, int matNo) const
+	{
+		return m_computedAnimationVertexBuffer->GetAnimatedIndexBuffer(meshNo, matNo);
+	}
+	IndexBuffer& MeshParts::GetAnimatedIndexBuffer(int meshNo, int matNo)
+	{
+		return m_computedAnimationVertexBuffer->GetAnimatedIndexBuffer(meshNo, matNo);
 	}
 	void MeshParts::BindSkeleton(Skeleton& skeleton)
 	{
@@ -289,9 +297,14 @@ namespace nsK2EngineLow {
 				//2. ディスクリプタヒープを設定。
 				rc.SetDescriptorHeap(m_descriptorHeap);
 				//3. インデックスバッファを設定。
-				auto& ib = mesh->m_indexBufferArray[matNo];
+				IndexBuffer* ib = nullptr;
+				if (m_computedAnimationVertexBuffer) {
+					ib = &m_computedAnimationVertexBuffer->GetAnimatedIndexBuffer(meshNo, matNo);
+				}
+				else {
+					ib = mesh->m_indexBufferArray[matNo];
+				}
 				rc.SetIndexBuffer(*ib);
-
 				//4. ドローコールを実行。
 				rc.DrawIndexedInstance(ib->GetCount(), numInstance);
 				descriptorHeapNo++;

@@ -19,6 +19,7 @@ namespace nsK2Engine {
 		bool VectorRenderer::IsRenderVector(const SRenderData& renderData) const
 		{
 			return false;
+#if 0 // 未対応
 			if (m_renderVectorNameList.empty() == true) {
 				//描画するベクトルの名前が指定されていない。
 				return true;
@@ -31,10 +32,12 @@ namespace nsK2Engine {
 			);
 			//終端まで行かなかった。
 			return it != m_renderVectorNameList.end();
+#endif
 		}
 		void VectorRenderer::Update()
 		{
 			return;
+#if 0 // 未対応
 			if (m_isRender == false) {
 				return;
 			}
@@ -51,18 +54,20 @@ namespace nsK2Engine {
 					);
 				}
 			}
+#endif
 		}
 		
 		void VectorRenderer::Render(RenderContext& rc)
 		{
 			return;
+#if 0 // 未対応
 			if (m_isRender) {
 				m_modelRender.Draw(rc);
 			}
 			// todo フォトの描画処理はいったん無効。
 			// 描画データはクリア。
 			m_renderData.clear();
-			
+#endif
 		}
 	}
 }

@@ -26,14 +26,19 @@ namespace nsK2EngineLow {
 				
 				for (int i = 0; i < mesh.m_materials.size(); i++) {
 					const D3D12_VERTEX_BUFFER_VIEW* vertexBufferView;
+					IndexBuffer* indexBuffer = nullptr;
+					UINT indexCount;
 					if (model.IsComputedAnimationVertexBuffer()) {
 						// アニメーション済み頂点バッファの計算が行われている。
 						vertexBufferView = &model.GetAnimatedVertexBuffer(meshNo).GetView();
+						indexBuffer = &model.GetAnimatedIndexBuffer(meshNo, i);
 					}
 					else {
 						vertexBufferView = &mesh.m_vertexBuffer.GetView();
+						indexBuffer = mesh.m_indexBufferArray[i];
+
 					}
-					const auto& indexBufferView = mesh.m_indexBufferArray[i]->GetView();
+					const auto& indexBufferView = indexBuffer->GetView();
 					D3D12_RAYTRACING_GEOMETRY_DESC desc;
 					memset(&desc, 0, sizeof(desc));
 					desc.Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
@@ -44,9 +49,10 @@ namespace nsK2EngineLow {
 					desc.Triangles.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 					desc.Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
 					desc.Triangles.IndexBuffer = indexBufferView.BufferLocation;
-					desc.Triangles.IndexCount = mesh.m_indexBufferArray[i]->GetCount();
+					desc.Triangles.IndexCount = indexBufferView.SizeInBytes / 4;
 					desc.Triangles.IndexFormat = indexBufferView.Format;
 					InstancePtr instance = std::make_unique<Instance>();
+					instance->m_originalIndexBuffer = indexBuffer;
 					instance->geometoryDesc = desc;
 					instance->m_material = mesh.m_materials[i];
 					if (model.IsComputedAnimationVertexBuffer()) {

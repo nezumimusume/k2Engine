@@ -181,6 +181,15 @@ namespace nsK2EngineLow {
 			}
 		}
 		/// <summary>
+		/// レイトレワールドに再構築リクエストを送る。
+		/// </summary>
+		void RequestRebuildRaytracingWorld()
+		{
+			if (m_isPossibleRaytracing) {
+				m_raytracingEngine.RequestRebuildRaytracingWorld();
+			}
+		}
+		/// <summary>
 		/// 3Dモデルをレイトレワールドから削除。
 		/// </summary>
 		/// <param name="model">削除するモデル</param>

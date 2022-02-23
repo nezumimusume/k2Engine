@@ -107,6 +107,14 @@ namespace nsK2EngineLow {
 		const VertexBuffer& GetAnimatedVertexBuffer(int meshNo) const;
 		VertexBuffer& GetAnimatedVertexBuffer(int meshNo);
 		/// <summary>
+		/// 事前計算済みインデックスバッファを取得
+		/// </summary>
+		/// <param name="meshNo">メッシュ番号</param>
+		/// <param name="matNo">マテリアル番号</param>
+		/// <returns></returns>
+		const IndexBuffer& GetAnimatedIndexBuffer(int meshNo, int matNo) const;
+		IndexBuffer& GetAnimatedIndexBuffer(int meshNo, int matNo);
+		/// <summary>
 		/// メッシュに対して問い合わせを行う。
 		/// </summary>
 		/// <param name="queryFunc">クエリ関数</param>

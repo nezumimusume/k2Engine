@@ -38,7 +38,7 @@ namespace
 
 Game::Game()
 {
-	
+	// g_renderingEngine->DisableRaytracing();
 }
 
 Game::~Game()
@@ -143,6 +143,7 @@ bool Game::Start()
 		else if (objData.ForwardMatchName(L"star") == true) {
 			auto star = NewGO<Star>(0, "star");
 			star->SetPosition(objData.position);
+			star->SetInstanceNo(numStar);
 			numStar++;
 			return true;
 		}
@@ -150,6 +151,7 @@ bool Game::Start()
 			auto pyramid = NewGO<Pyramid>(0, "pyramid");
 			pyramid->SetPosition(objData.position);
 			pyramid->SetScale(objData.scale);
+			pyramid->SetInstanceNo(numPyramid);
 			numPyramid++;
 			return true;
 		}

@@ -44,21 +44,31 @@ namespace nsK2EngineLow {
 
 		m_count = m_sizeInBytes / m_strideInBytes;
 	}
-	void IndexBuffer::Copy(uint16_t* srcIndecies)
+	void IndexBuffer::Copy(uint16_t* srcIndecies, int numCopy, uint32_t copyStartAddrOffset, uint32_t srcIndexBias)
 	{
-		uint32_t* pData;
+		uint8_t* pData;
+		uint32_t* pData32;
 		m_indexBuffer->Map(0, nullptr, reinterpret_cast<void**>(&pData));
-		for (int i = 0; i < m_count; i++) {
-			pData[i] = srcIndecies[i];
+		// コピー開始位置をオフセットする。
+		pData += copyStartAddrOffset;
+		pData32 = (uint32_t*)pData;
+		numCopy = numCopy == 0 ? m_count : numCopy;
+		for (int i = 0; i < numCopy; i++) {
+			pData32[i] = srcIndecies[i] + srcIndexBias;
 		}
 		m_indexBuffer->Unmap(0, nullptr);
 	}
-	void IndexBuffer::Copy(uint32_t* srcIndecies)
+	void IndexBuffer::Copy(uint32_t* srcIndecies, int numCopy, uint32_t copyStartAddrOffset, uint32_t srcIndexBias)
 	{
-		uint32_t* pData;
+		uint8_t* pData;
+		uint32_t* pData32;
 		m_indexBuffer->Map(0, nullptr, reinterpret_cast<void**>(&pData));
-		for (int i = 0; i < m_count; i++) {
-			pData[i] = srcIndecies[i];
+		// コピー開始位置をオフセットする。
+		pData += copyStartAddrOffset;
+		pData32 = (uint32_t*)pData;
+		numCopy = numCopy == 0 ? m_count : numCopy;
+		for (int i = 0; i < numCopy; i++) {
+			pData32[i] = srcIndecies[i] + srcIndexBias;
 		}
 		m_indexBuffer->Unmap(0, nullptr);
 	}

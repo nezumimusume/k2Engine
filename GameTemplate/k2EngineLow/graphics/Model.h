@@ -180,6 +180,20 @@ namespace nsK2EngineLow {
 			return m_meshParts.GetAnimatedVertexBuffer(meshNo);
 		}
 		/// <summary>
+		/// 事前計算済みインデックスバッファを取得
+		/// </summary>
+		/// <param name="meshNo">メッシュ番号</param>
+		/// <param name="matNo">マテリアル番号</param>
+		/// <returns></returns>
+		const IndexBuffer& GetAnimatedIndexBuffer(int meshNo, int matNo) const
+		{
+			return m_meshParts.GetAnimatedIndexBuffer(meshNo, matNo);
+		}
+		IndexBuffer& GetAnimatedIndexBuffer(int meshNo, int matNo)
+		{
+			return m_meshParts.GetAnimatedIndexBuffer(meshNo, matNo);
+		}
+		/// <summary>
 		/// アルベドマップを変更。
 		/// </summary>
 		/// <remarks>

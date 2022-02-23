@@ -84,10 +84,11 @@ namespace nsK2Engine {
 		/// <summary>
 		/// インスタンシングデータの更新。
 		/// </summary>
+		/// <param name="instanceNo">インスタンス番号</param>
 		/// <param name="pos">座標</param>
 		/// <param name="rot">回転</param>
 		/// <param name="scale">拡大率</param>
-		void UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale);
+		void UpdateInstancingData(int instanceNo, const Vector3& pos, const Quaternion& rot, const Vector3& scale);
 		/// <summary>
 		/// 描画処理。
 		/// </summary>
@@ -272,6 +273,14 @@ namespace nsK2Engine {
 			}
 			return m_zprepassModel.GetWorldMatrix();
 		}
+		/// <summary>
+		/// インスタンスを除去。
+		/// </summary>
+		/// <remark>
+		/// インスタンス描画を利用している際に、そのインスタンスをシーンから除去したい場合に利用してください。
+		/// </remark>
+		/// <param name="instanceNo">インスタンス番号</param>
+		void RemoveInstance(int instanceNo);
 	private:
 		/// <summary>
 		/// スケルトンの初期化。
@@ -429,11 +438,11 @@ namespace nsK2Engine {
 		float						m_animationSpeed = 1.0f;
 		int							m_numInstance = 0;					// インスタンスの数。
 		int							m_maxInstance = 1;					// 最大インスタンス数。
-		int							m_fixNumInstanceOnFrame = 0;		// このフレームに描画するインスタンスの数の確定数。。
 		bool						m_isEnableInstancingDraw = false;	// インスタンシング描画が有効？
 		std::unique_ptr<Matrix[]>	m_worldMatrixArray;					// ワールド行列の配列。
 		StructuredBuffer			m_worldMatrixArraySB;				// ワールド行列の配列のストラクチャードバッファ。
-		std::vector< GemometryData > m_geometryDatas;							// ジオメトリ情報。
+		std::vector< GemometryData > m_geometryDatas;					// ジオメトリ情報。
+		std::unique_ptr<int[]>		m_instanceNoToWorldMatrixArrayIndexTable;	// インスタンス番号からワールド行列の配列のインデックスに変換するテーブル。
 
 	};
 }
