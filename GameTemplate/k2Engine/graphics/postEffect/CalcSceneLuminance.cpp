@@ -81,7 +81,7 @@ namespace nsK2Engine {
 			initData.m_width = m_calcAvgRt[curRtNo].GetWidth();
 			initData.m_height = m_calcAvgRt[curRtNo].GetHeight();
 			initData.m_colorBufferFormat[0] = m_calcAvgRt[curRtNo].GetColorBufferFormat();
-			initData.m_fxFilePath = "Assets/shader/CalcSceneLuminance.fx";
+			initData.m_fxFilePath = "Assets/shader/postEffect/CalcSceneLuminance.fx";
 			initData.m_psEntryPoinFunc = "PSCalcLuminanceLogAvarage";
 			initData.m_expandConstantBuffer = m_avSampleOffsets;
 			initData.m_expandConstantBufferSize = sizeof(m_avSampleOffsets);
@@ -96,7 +96,7 @@ namespace nsK2Engine {
 			initData.m_width = m_calcAvgRt[curRtNo].GetWidth();
 			initData.m_height = m_calcAvgRt[curRtNo].GetHeight();
 			initData.m_colorBufferFormat[0] = m_calcAvgRt[curRtNo].GetColorBufferFormat();
-			initData.m_fxFilePath = "Assets/shader/CalcSceneLuminance.fx";
+			initData.m_fxFilePath = "Assets/shader/postEffect/CalcSceneLuminance.fx";
 			initData.m_psEntryPoinFunc = "PSCalcLuminanceAvarage";
 			initData.m_expandConstantBuffer = m_avSampleOffsets;
 			initData.m_expandConstantBufferSize = sizeof(m_avSampleOffsets);
@@ -111,7 +111,7 @@ namespace nsK2Engine {
 			initData.m_width = m_calcAvgRt[curRtNo].GetWidth();
 			initData.m_height = m_calcAvgRt[curRtNo].GetHeight();
 			initData.m_colorBufferFormat[0] = m_calcAvgRt[curRtNo].GetColorBufferFormat();
-			initData.m_fxFilePath = "Assets/shader/CalcSceneLuminance.fx";
+			initData.m_fxFilePath = "Assets/shader/postEffect/CalcSceneLuminance.fx";
 			initData.m_psEntryPoinFunc = "PSCalcLuminanceExpAvarage";
 			initData.m_expandConstantBuffer = m_avSampleOffsets;
 			initData.m_expandConstantBufferSize = sizeof(m_avSampleOffsets);
@@ -124,7 +124,7 @@ namespace nsK2Engine {
 			initData.m_width = 1;
 			initData.m_height = 1;
 			initData.m_colorBufferFormat[0] = m_calcAvgRt[enCalcAvgExp].GetColorBufferFormat();
-			initData.m_fxFilePath = "Assets/shader/CalcSceneLuminance.fx";
+			initData.m_fxFilePath = "Assets/shader/postEffect/CalcSceneLuminance.fx";
 			initData.m_psEntryPoinFunc = "PSCalcAdaptedLuminance";
 			initData.m_expandConstantBuffer = &m_cb1;
 			initData.m_expandConstantBufferSize = sizeof(m_cb1);
@@ -138,7 +138,7 @@ namespace nsK2Engine {
 			initData.m_width = 1;
 			initData.m_height = 1;
 			initData.m_colorBufferFormat[0] = m_calcAvgRt[enCalcAvgExp].GetColorBufferFormat();
-			initData.m_fxFilePath = "Assets/shader/CalcSceneLuminance.fx";
+			initData.m_fxFilePath = "Assets/shader/postEffect/CalcSceneLuminance.fx";
 			initData.m_psEntryPoinFunc = "PSCalcAdaptedLuminanceFirst";
 			initData.m_expandConstantBuffer = &m_cb1;
 			initData.m_expandConstantBufferSize = sizeof(m_cb1);

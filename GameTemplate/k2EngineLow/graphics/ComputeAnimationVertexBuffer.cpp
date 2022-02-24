@@ -102,7 +102,7 @@ namespace nsK2EngineLow {
 		});
 
 		// シェーダーをロード。
-		m_shader.LoadCS("Assets/shader/ComputeAnimationVertexBuffer.fx", "CSMain");
+		m_shader.LoadCS("Assets/shader/preProcess/ComputeAnimationVertexBuffer.fx", "CSMain");
 		
 		// ボーン行列を送るためのストラクチャードバッファを作成。
 		m_boneMatrixArray = boneMatrixArray;

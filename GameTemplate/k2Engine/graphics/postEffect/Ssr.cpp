@@ -17,7 +17,7 @@ namespace nsK2Engine {
 			SpriteInitData initData;
 			initData.m_width = w;
 			initData.m_height = h;
-			initData.m_fxFilePath = "Assets/shader/ssr.fx";
+			initData.m_fxFilePath = "Assets/shader/postEffect/ssr.fx";
 			initData.m_vsEntryPointFunc = "VSMain";
 			initData.m_psEntryPoinFunc = "PSMain";
 			initData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
@@ -61,7 +61,7 @@ namespace nsK2Engine {
 			initData.m_width = mainRenderTarget.GetWidth();
 			initData.m_height = mainRenderTarget.GetHeight();
 			// 2D用のシェーダーを使用する
-			initData.m_fxFilePath = "Assets/shader/ssr.fx";
+			initData.m_fxFilePath = "Assets/shader/postEffect/ssr.fx";
 			initData.m_vsEntryPointFunc = "VSMain";
 			initData.m_psEntryPoinFunc = "PSFinal";
 

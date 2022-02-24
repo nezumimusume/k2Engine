@@ -23,7 +23,7 @@ namespace nsK2Engine {
             // 初期化情報を作成する
             SpriteInitData spriteInitData;
             // 輝度抽出用のシェーダーのファイルパスを指定する
-            spriteInitData.m_fxFilePath = "Assets/shader/bloom.fx";
+            spriteInitData.m_fxFilePath = "Assets/shader/postEffect/bloom.fx";
             // 頂点シェーダーのエントリーポイントを指定する
             spriteInitData.m_vsEntryPointFunc = "VSMain";
             // ピクセルシェーダーのエントリーポイントを指定する
@@ -66,7 +66,7 @@ namespace nsK2Engine {
             spriteInitData.m_height = mainRenderTarget.GetHeight();
             // ぼかした画像を、通常の2Dとしてメインレンダリングターゲットに描画するので、
             // 2D用のシェーダーを使用する
-            spriteInitData.m_fxFilePath = "Assets/shader/bloom.fx";
+            spriteInitData.m_fxFilePath = "Assets/shader/postEffect/bloom.fx";
             spriteInitData.m_psEntryPoinFunc = "PSBloomFinal";
 
             // ただし、加算合成で描画するので、アルファブレンディングモードを加算にする

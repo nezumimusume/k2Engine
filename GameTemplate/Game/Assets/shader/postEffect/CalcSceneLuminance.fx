@@ -2,7 +2,7 @@
  * @brief	シーンの平均輝度計算用のシェーダー。
  */
 
-#include "ColorSpace.h"
+#include "../util/ColorSpace.h"
 
 /*!
  *@brief    頂点シェーダーへの入力

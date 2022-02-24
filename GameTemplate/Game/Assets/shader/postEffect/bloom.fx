@@ -2,7 +2,7 @@
  * @brief ブルーム
  */
 
-#include "ColorSpace.h"
+#include "../util/ColorSpace.h"
 
 cbuffer cb : register(b0)
 {

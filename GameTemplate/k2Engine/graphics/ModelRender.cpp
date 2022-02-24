@@ -323,7 +323,7 @@ namespace nsK2Engine {
 			modelInitData.m_skeleton = &m_skeleton;
 		}
 
-		modelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
+		modelInitData.m_fxFilePath = "Assets/shader/preProcess/DrawShadowMap.fx";
 		if (g_renderingEngine->IsSoftShadow()) {
 			modelInitData.m_colorBufferFormat[0] = g_softShadowMapFormat.colorBufferFormat;
 		}
@@ -357,7 +357,7 @@ namespace nsK2Engine {
 	{
 		ModelInitData modelInitData;
 		modelInitData.m_tkmFilePath = tkmFilePath;
-		modelInitData.m_fxFilePath = "Assets/shader/ZPrepass.fx";
+		modelInitData.m_fxFilePath = "Assets/shader/preProcess/ZPrepass.fx";
 		modelInitData.m_modelUpAxis = modelUpAxis;
 
 		// 頂点シェーダーのエントリーポイントをセットアップ。

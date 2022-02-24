@@ -6,7 +6,7 @@
 ///////////////////////////////////////
 // 定数
 ///////////////////////////////////////
-static const int NUM_DIRECTIONAL_LIGHT = 4;     // ディレクションライトの本数
+
 static const int NUM_SHADOW_MAP = 3;            // シャドウマップの枚数。
 static const int NUM_REFLECTION_TEXTURE = 5;    // 反射テクスチャ。
 ///////////////////////////////////////
@@ -25,6 +25,10 @@ struct PSInput
     float4 pos : SV_POSITION;
     float2 uv  : TEXCOORD0;
 };
+///////////////////////////////////////
+// オブジェクトライト
+///////////////////////////////////////
+#include "ObjectLight.h"
 
 ///////////////////////////////////////
 // 定数バッファ。

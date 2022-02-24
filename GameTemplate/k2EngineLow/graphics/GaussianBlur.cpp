@@ -96,7 +96,7 @@ namespace nsK2EngineLow {
 		//横ブラー用のスプライトを初期化する。
 		{
 			SpriteInitData xBlurSpriteInitData;
-			xBlurSpriteInitData.m_fxFilePath = "Assets/shader/gaussianBlur.fx";
+			xBlurSpriteInitData.m_fxFilePath = "Assets/shader/util/gaussianBlur.fx";
 			xBlurSpriteInitData.m_vsEntryPointFunc = "VSXBlur";
 			xBlurSpriteInitData.m_psEntryPoinFunc = psEntryFunc;
 			//スプライトの解像度はm_xBlurRenderTargetと同じ。
@@ -116,7 +116,7 @@ namespace nsK2EngineLow {
 		//縦ブラー用のスプライトを初期化する。
 		{
 			SpriteInitData yBlurSpriteInitData;
-			yBlurSpriteInitData.m_fxFilePath = "Assets/shader/gaussianBlur.fx";
+			yBlurSpriteInitData.m_fxFilePath = "Assets/shader/util/gaussianBlur.fx";
 			yBlurSpriteInitData.m_vsEntryPointFunc = "VSYBlur";
 			yBlurSpriteInitData.m_psEntryPoinFunc = psEntryFunc;
 			//スプライトの解像度はm_yBlurRenderTargetと同じ。

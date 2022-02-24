@@ -35,7 +35,7 @@ namespace nsK2Engine {
 		initData.m_width = mainRenderTarget.GetWidth();
 		initData.m_height = mainRenderTarget.GetHeight();
 		initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
-		initData.m_fxFilePath = "Assets/shader/tonemap.fx";
+		initData.m_fxFilePath = "Assets/shader/postEffect/tonemap.fx";
 		initData.m_psEntryPoinFunc = "PSFinal";
 		initData.m_expandConstantBuffer = &m_cb1;
 		initData.m_expandConstantBufferSize = sizeof(m_cb1);

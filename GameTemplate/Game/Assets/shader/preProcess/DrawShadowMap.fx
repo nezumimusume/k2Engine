@@ -15,7 +15,7 @@ static const int INFINITY = 40.0f;
 // 頂点シェーダーの共通処理をインクルードする。
 ///////////////////////////////////////
 
-#include "ModelVSCommon.h"
+#include "../ModelVSCommon.h"
 
 
 ///////////////////////////////////////////////////

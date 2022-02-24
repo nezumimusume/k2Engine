@@ -11,7 +11,7 @@ namespace nsK2Engine {
         m_pointLightNoListInTileUAV = &pointLightNoListInTileUAV;
         m_spotLightNoListInTileUAV = &spotLightNoListInTileUAV;
 
-        m_shader.LoadCS("Assets/shader/lightCulling.fx", "CSMain");
+        m_shader.LoadCS("Assets/shader/preProcess/lightCulling.fx", "CSMain");
 
         // ライトカリングのカメラ用の定数バッファーを作成
         m_cameraDataCB.Init(sizeof(CameraData), nullptr);

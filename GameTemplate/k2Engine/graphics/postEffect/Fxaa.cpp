@@ -16,7 +16,7 @@ namespace nsK2Engine {
         spriteInitData.m_width = mainRenderTarget.GetWidth();
         spriteInitData.m_height = mainRenderTarget.GetHeight();
         // 2D用のシェーダーを使用する
-        spriteInitData.m_fxFilePath = "Assets/shader/fxaa.fx";
+        spriteInitData.m_fxFilePath = "Assets/shader/postEffect/fxaa.fx";
         spriteInitData.m_vsEntryPointFunc = "VSMain";
         spriteInitData.m_psEntryPoinFunc = "PSMain";
 
