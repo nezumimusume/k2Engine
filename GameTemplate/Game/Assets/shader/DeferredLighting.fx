@@ -29,28 +29,12 @@ struct PSInput
 ///////////////////////////////////////
 // 定数バッファ。
 ///////////////////////////////////////
-//共通定数バッファ
-cbuffer cb : register(b0)
-{
-    float4x4 mvp; 
-    float4 mulColor;
-    float4 screenParam;
-};
+#include "DeferredLighting_cav_register.h"
 
 ///////////////////////////////////////
-// テクスチャ
+// SRV_UAVのレジスタ設定
 ///////////////////////////////////////
-Texture2D<float4> albedoTexture : register(t0);     // アルベド
-Texture2D<float4> normalTexture : register(t1);     // 法線
-Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
-Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t3);  //シャドウマップ。
-TextureCube<float4> g_skyCubeMap : register(t15);
-// タイルごとのポイントライトのインデックスのリスト
-StructuredBuffer<uint> pointLightListInTile : register(t20);
-// タイルごとのスポットライトのインデックスのリスト。
-StructuredBuffer<uint> spotLightListInTile : register(t21);
-// リフレクションテクスチャ。
-Texture2D<float4> g_reflectionTextureArray[NUM_REFLECTION_TEXTURE] : register(t22);
+#include "DeferredLighting_srv_uav_register.h"
 
 
 #include "PBRLighting.h"

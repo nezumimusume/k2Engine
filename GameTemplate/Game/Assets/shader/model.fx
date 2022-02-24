@@ -32,14 +32,12 @@ struct SPSIn
 ////////////////////////////////////////////////
 // グローバル変数。
 ////////////////////////////////////////////////
+
 ///////////////////////////////////////
 // シェーダーリソース
 ///////////////////////////////////////
-Texture2D<float4> albedoTexture : register(t0);     // アルベド
-Texture2D<float4> normalTexture : register(t1);     // 法線
-Texture2D<float4> metallicShadowSmoothTexture : register(t2);   // メタリック、シャドウ、スムーステクスチャ。rに金属度、gに影パラメータ、aに滑らかさ。
-TextureCube<float4> g_skyCubeMap : register(t11);
-Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t12);  //シャドウマップ。
+#include "model_srv_uav_register.h"
+
 
 #include "PBRLighting.h"
 
