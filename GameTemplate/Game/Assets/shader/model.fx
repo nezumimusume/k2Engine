@@ -30,9 +30,9 @@ struct SPSIn
 #include "ModelVSCommon.h"
 
 ///////////////////////////////////////
-// オブジェクトライト
+// PBRライティング関係の定数
 ///////////////////////////////////////
-#include "ObjectLight.h"
+#include "PBRLighting_const.h"
 
 ///////////////////////////////////////
 // シェーダーリソース
@@ -43,6 +43,12 @@ struct SPSIn
 // PBRライティング
 ///////////////////////////////////////
 #include "PBRLighting.h"
+
+///////////////////////////////////////
+// シャドウイング
+///////////////////////////////////////
+#include "Shadowing.h"
+
 
 ////////////////////////////////////////////////
 // 関数定義。
@@ -113,7 +119,7 @@ float4 PSMainCore( SPSIn In, uniform int isSoftShadow )
         float shadow = 0.0f;
         if( directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
-            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam;
+            shadow = CalcShadowRate( mlvp, ligNo, worldPos, isSoftShadow ) * shadowParam;
         }
         
         lig += CalcLighting(

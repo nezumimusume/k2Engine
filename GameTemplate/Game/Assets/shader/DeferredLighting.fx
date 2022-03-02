@@ -26,9 +26,9 @@ struct PSInput
     float2 uv  : TEXCOORD0;
 };
 ///////////////////////////////////////
-// オブジェクトライト
+// PBRライティング関係の定数
 ///////////////////////////////////////
-#include "ObjectLight.h"
+#include "PBRLighting_const.h"
 
 ///////////////////////////////////////
 // 定数バッファ。
@@ -40,8 +40,15 @@ struct PSInput
 ///////////////////////////////////////
 #include "DeferredLighting_srv_uav_register.h"
 
-
+///////////////////////////////////////
+// PBRライティング
+///////////////////////////////////////
 #include "PBRLighting.h"
+
+///////////////////////////////////////
+// シャドウイング
+///////////////////////////////////////
+#include "Shadowing.h"
 
 ///////////////////////////////////////
 // 関数
@@ -134,7 +141,7 @@ float3 CalcDirectionLight(
         float shadow = 0.0f;
         if( directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
-            shadow = CalcShadowRate( ligNo, worldPos, isSoftShadow ) * shadowParam;
+            shadow = CalcShadowRate( mlvp, ligNo, worldPos, isSoftShadow ) * shadowParam;
         }
         
         lig += CalcLighting(
