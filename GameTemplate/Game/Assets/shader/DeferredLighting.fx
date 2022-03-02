@@ -141,7 +141,7 @@ float3 CalcDirectionLight(
         float shadow = 0.0f;
         if( directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
-            shadow = CalcShadowRate( mlvp, ligNo, worldPos, isSoftShadow ) * shadowParam;
+            shadow = CalcShadowRate( g_shadowMap, mlvp, ligNo, worldPos, isSoftShadow ) * shadowParam;
         }
         
         lig += CalcLighting(
