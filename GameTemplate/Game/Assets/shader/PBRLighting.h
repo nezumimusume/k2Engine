@@ -9,12 +9,12 @@
 ///////////////////////////////////////
 // 定数
 ///////////////////////////////////////
-#include "PBRLighting_Const.h"
+#include "PBRLighting_const.h"
 
 ///////////////////////////////////////
 // 構造体
 ///////////////////////////////////////
-#include "PBRLighting_Struct.h"
+#include "PBRLighting_struct.h"
 
 // これらは3dsMaxでは不要。
 #ifndef _MAX_
@@ -26,7 +26,7 @@
 // ライト用の定数バッファー
 cbuffer cb_0 : register(b1)
 {
-    LightCB light;
+    LightCB light;  // ライトデータ
 };
 
 
