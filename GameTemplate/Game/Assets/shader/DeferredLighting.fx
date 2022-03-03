@@ -93,7 +93,7 @@ float4 SampleIBLColor(float3 toEye, float3 normal, float smooth)
 {
     float3 v = reflect(toEye * -1.0f, normal);
     int level = lerp(0, 12, 1 - smooth);
-    return g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
+    return g_skyCubeMap.SampleLevel(Sampler, v, level) * light.iblLuminance;
 }
 /*!
  * @brief	UV座標と深度値からワールド座標を計算する。
@@ -139,14 +139,19 @@ float3 CalcDirectionLight(
     {
         // 影の落ち具合を計算する。
         float shadow = 0.0f;
-        if( directionalLight[ligNo].castShadow == 1){
+        if( light.directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
-            shadow = CalcShadowRate( g_shadowMap, mlvp, ligNo, worldPos, isSoftShadow ) * shadowParam;
+            shadow = CalcShadowRate( 
+                g_shadowMap, 
+                light.mlvp, 
+                ligNo, 
+                worldPos, 
+                isSoftShadow ) * shadowParam;
         }
         
         lig += CalcLighting(
-            directionalLight[ligNo].direction,
-            directionalLight[ligNo].color,
+            light.directionalLight[ligNo].direction,
+            light.directionalLight[ligNo].color,
             normal,
             toEye,
             albedoColor,
@@ -189,8 +194,8 @@ float3 CalcPointLight(
     uint tileIndex = floor(viewportPos.x / TILE_WIDTH) + floor(viewportPos.y / TILE_HEIGHT) * numCellX;
 
     // 含まれるタイルの影響リストの開始位置と終了位置を計算する
-    uint lightStart = tileIndex * numPointLight;
-    uint lightEnd = lightStart + numPointLight;
+    uint lightStart = tileIndex * light.numPointLight;
+    uint lightEnd = lightStart + light.numPointLight;
     for (uint lightListIndex = lightStart; lightListIndex < lightEnd; lightListIndex++)
     {
         uint ligNo = pointLightListInTile[lightListIndex];
@@ -200,10 +205,10 @@ float3 CalcPointLight(
             break;
         }
         
-        float3 ligDir = normalize(worldPos - pointLight[ligNo].position);
+        float3 ligDir = normalize(worldPos - light.pointLight[ligNo].position);
         // 2. 光源からサーフェイスまでの距離を計算
-        float distance = length(worldPos - pointLight[ligNo].position);
-        float3 ligColor = pointLight[ligNo].color;
+        float distance = length(worldPos - light.pointLight[ligNo].position);
+        float3 ligColor = light.pointLight[ligNo].color;
         float3 ptLig = CalcLighting(
             ligDir,
             ligColor,
@@ -216,8 +221,8 @@ float3 CalcPointLight(
         );
         // 3. 影響率を計算する。影響率は0.0～1.0の範囲で、
         //     指定した距離（pointsLights[i].range）を超えたら、影響率は0.0になる
-        float affect = 1.0f - min(1.0f, distance / pointLight[ligNo].attn.x);
-        affect = pow( affect, pointLight[ligNo].attn.y );
+        float affect = 1.0f - min(1.0f, distance / light.pointLight[ligNo].attn.x);
+        affect = pow( affect, light.pointLight[ligNo].attn.y );
         lig += ptLig * affect;
     }
     return lig;
@@ -254,8 +259,8 @@ float3 CalcSpotLight(
     uint tileIndex = floor(viewportPos.x / TILE_WIDTH) + floor(viewportPos.y / TILE_HEIGHT) * numCellX;
 
     // 続いてスポットライト。
-    uint lightStart = tileIndex * numSpotLight;
-    uint lightEnd = lightStart + numSpotLight;
+    uint lightStart = tileIndex * light.numSpotLight;
+    uint lightEnd = lightStart + light.numSpotLight;
     for (uint lightListIndex = lightStart; lightListIndex < lightEnd; lightListIndex++)
     {
         uint ligNo = spotLightListInTile[lightListIndex];
@@ -265,10 +270,10 @@ float3 CalcSpotLight(
             break;
         }
         
-        float3 ligDir = normalize(worldPos - spotLight[ligNo].position);
+        float3 ligDir = normalize(worldPos - light.spotLight[ligNo].position);
         // 2. 光源からサーフェイスまでの距離を計算
-        float distance = length(worldPos - spotLight[ligNo].position);
-        float3 ligColor = spotLight[ligNo].color;
+        float distance = length(worldPos - light.spotLight[ligNo].position);
+        float3 ligColor = light.spotLight[ligNo].color;
         float3 ptLig = CalcLighting(
             ligDir,
             ligColor,
@@ -281,16 +286,16 @@ float3 CalcSpotLight(
         );
         // 3. 影響率を計算する。影響率は0.0～1.0の範囲で、
         //     指定した距離（pointsLights[i].range）を超えたら、影響率は0.0になる
-        float affect = pow( 1.0f - min(1.0f, distance / spotLight[ligNo].range), spotLight[ligNo].rangePow.x);
+        float affect = pow( 1.0f - min(1.0f, distance / light.spotLight[ligNo].range), light.spotLight[ligNo].rangePow.x);
 
         // 入射光と射出方向の角度による減衰を計算する
         // dot()を利用して内積を求める
-        float angleLigToPixel = dot(ligDir, spotLight[ligNo].direction);
+        float angleLigToPixel = dot(ligDir, light.spotLight[ligNo].direction);
         // dot()で求めた値をacos()に渡して角度を求める
         angleLigToPixel = abs(acos(angleLigToPixel));
         // step-12 角度による影響率を求める
         // 角度に比例して小さくなっていく影響率を計算する
-        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / spotLight[ligNo].angle.x * angleLigToPixel ), spotLight[ligNo].anglePow.x);
+        float angleAffect = pow( max( 0.0f, 1.0f - 1.0f / light.spotLight[ligNo].angle.x * angleLigToPixel ), light.spotLight[ligNo].anglePow.x);
         affect *= angleAffect;
 
         
@@ -307,7 +312,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
     //法線をサンプリング。
     float3 normal = normalTexture.Sample(Sampler, In.uv).xyz;
     //ワールド座標をサンプリング。
-    float3 worldPos = CalcWorldPosFromUVZ(In.uv, albedoColor.w, mViewProjInv);
+    float3 worldPos = CalcWorldPosFromUVZ(In.uv, albedoColor.w, light.mViewProjInv);
     //スペキュラカラーをサンプリング。
     float3 specColor = albedoColor.xyz;
     //金属度をサンプリング。
@@ -321,7 +326,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
     float2 viewportPos = In.pos.xy;
 
     // 視線に向かって伸びるベクトルを計算する
-    float3 toEye = normalize(eyePos - worldPos);
+    float3 toEye = normalize(light.eyePos - worldPos);
     
     // ディレクションライトを計算
     float3 lig = CalcDirectionLight(
@@ -358,24 +363,24 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         viewportPos
     );
     
-    if(isEnableRaytracing){
+    if(light.isEnableRaytracing){
         // レイトレを行う場合はレイトレで作った反射テクスチャとIBLテクスチャを合成する。
         // GLテクスチャ
         float reflectionRate = 1.0f - ( ( smooth - 0.5f ) * 2.0f );
         float level = lerp(0.0f, (float)(NUM_REFLECTION_TEXTURE - 1 ), pow( reflectionRate, 3.0f ));
         if( level < NUM_REFLECTION_TEXTURE-1){
-            lig += albedoColor * SampleReflectionColor(In.uv, level) * iblLuminance ;
-        }else if (isIBL == 1) {
+            lig += albedoColor * SampleReflectionColor(In.uv, level) * light.iblLuminance ;
+        }else if (light.isIBL == 1) {
             // IBLがあるなら。
             lig += albedoColor * SampleIBLColor(toEye, normal, smooth );
         }
-    }else if (isIBL == 1) {
+    }else if (light.isIBL == 1) {
         // 視線からの反射ベクトルを求める。
         lig += albedoColor * SampleIBLColor(toEye, normal, smooth );
     }
     else {
         // 環境光による底上げ
-        lig += ambientLight * albedoColor;
+        lig += light.ambientLight * albedoColor;
     }
    
     float4 finalColor = 1.0f;

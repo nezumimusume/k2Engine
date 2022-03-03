@@ -109,7 +109,7 @@ float4 PSMainCore( SPSIn In, uniform int isSoftShadow )
     float2 viewportPos = In.pos.xy;
 
 	 // 視線に向かって伸びるベクトルを計算する
-    float3 toEye = normalize(eyePos - worldPos);
+    float3 toEye = normalize(light.eyePos - worldPos);
 
     float3 lig = 0;
     
@@ -117,14 +117,14 @@ float4 PSMainCore( SPSIn In, uniform int isSoftShadow )
     {
         // 影の落ち具合を計算する。
         float shadow = 0.0f;
-        if( directionalLight[ligNo].castShadow == 1){
+        if( light.directionalLight[ligNo].castShadow == 1){
             //影を生成するなら。
-            shadow = CalcShadowRate( g_shadowMap, mlvp, ligNo, worldPos, isSoftShadow ) * shadowParam;
+            shadow = CalcShadowRate( g_shadowMap, light.mlvp, ligNo, worldPos, isSoftShadow ) * shadowParam;
         }
         
         lig += CalcLighting(
-            directionalLight[ligNo].direction,
-            directionalLight[ligNo].color,
+            light.directionalLight[ligNo].direction,
+            light.directionalLight[ligNo].color,
             normal,
             toEye,
             albedoColor,
@@ -134,15 +134,15 @@ float4 PSMainCore( SPSIn In, uniform int isSoftShadow )
         ) * ( 1.0f - shadow );
     }
 	
-	 if (isIBL == 1) {
+	 if (light.isIBL == 1) {
         // 視線からの反射ベクトルを求める。
         float3 v = reflect(toEye * -1.0f, normal);
         int level = lerp(0, 12, 1 - smooth);
-        lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * iblLuminance;
+        lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * light.iblLuminance;
     }
     else {
         // 環境光による底上げ
-        lig += ambientLight * albedoColor;
+        lig += light.ambientLight * albedoColor;
     }
    
 	float4 finalColor = 1.0f;

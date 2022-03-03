@@ -39,4 +39,20 @@ struct SpotLight
     float3 anglePow;        // スポットライトとの角度による光の影響率に累乗するパラメータ。1.0で線形に変化する。
                             // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
 };
+
+// 定数バッファで使用するデータをまとめた構造体。
+struct LightCB{
+    DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];
+    PointLight pointLight[MAX_POINT_LIGHT];
+    SpotLight spotLight[MAX_SPOT_LIGHT];
+    float4x4 mViewProjInv;  // ビュープロジェクション行列の逆行列
+    float3 eyePos;          // カメラの視点
+    int numPointLight;      // ポイントライトの数。    
+    float3 ambientLight;    // 環境光
+    int numSpotLight;       // スポットライトの数。
+    float4x4 mlvp[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
+    float iblLuminance;     // IBLの明るさ。
+    int isIBL;              // IBLを行う。
+    int isEnableRaytracing; // レイトレが有効。
+};
 #endif // _PBRLIGHTING_STRUCT_H_

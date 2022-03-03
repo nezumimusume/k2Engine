@@ -48,6 +48,7 @@ struct Camera
     float aspect;           // アスペクト比
     float far;              // 遠平面
     float near;             // 近平面
+    float pad[2];           // パディング
 };
 
 cbuffer rayGenCB :register(b0)
@@ -56,15 +57,15 @@ cbuffer rayGenCB :register(b0)
     
 };
 
-RaytracingAccelerationStructure g_raytracingWorld : register(t0);    // レイトレワールド
-Texture2D<float4> gAlbedoTexture : register(t1);            // アルベドマップ
-Texture2D<float4> g_normalMap : register(t2);               // 法線マップ
-Texture2D<float4> g_specularMap : register(t3);             // スペキュラマップ
-Texture2D<float4> g_reflectionMap : register(t4);           // リフレクションマップ
-Texture2D<float4> g_refractionMap : register(t5);           // 屈折マップ
-StructuredBuffer<SVertex> g_vertexBuffers : register(t6);   // 頂点バッファー。
-StructuredBuffer<int> g_indexBuffers : register(t7);        // インデックスバッファー。
-TextureCube<float4> g_skyCubeMap : register(t8);            // スカイキューブマップ。
+RaytracingAccelerationStructure g_raytracingWorld : register(t0);   // レイトレワールド
+Texture2D<float4> gAlbedoTexture : register(t1);                    // アルベドマップ
+Texture2D<float4> g_normalMap : register(t2);                       // 法線マップ
+Texture2D<float4> g_specularMap : register(t3);                     // スペキュラマップ
+Texture2D<float4> g_reflectionMap : register(t4);                   // リフレクションマップ
+Texture2D<float4> g_refractionMap : register(t5);                   // 屈折マップ
+StructuredBuffer<SVertex> g_vertexBuffers : register(t6);           // 頂点バッファー。
+StructuredBuffer<int> g_indexBuffers : register(t7);                // インデックスバッファー。
+TextureCube<float4> g_skyCubeMap : register(t8);                    // スカイキューブマップ。
 
 RWTexture2D<float4> gOutput : register(u0);
 

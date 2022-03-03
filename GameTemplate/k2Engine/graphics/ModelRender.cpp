@@ -206,7 +206,7 @@ namespace nsK2Engine {
 	)
 	{
 		ModelInitData modelInitData;
-		modelInitData.m_fxFilePath = "Assets/shader/RenderToGBufferFor3DModel.fx";
+		modelInitData.m_fxFilePath = "Assets/shader/preProcess/RenderToGBufferFor3DModel.fx";
 
 		// 頂点シェーダーのエントリーポイントをセットアップ。
 		SetupVertexShaderEntryPointFunc(modelInitData);
