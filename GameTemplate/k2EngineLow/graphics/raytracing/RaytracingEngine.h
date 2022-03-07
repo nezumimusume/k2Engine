@@ -86,6 +86,12 @@ namespace nsK2EngineLow {
 				float aspect;			// アスペクト比。
 				float fFar;				// 遠平面。
 				float fNear;			// 近平面。
+				float pad[2];			// パディング。
+			};
+			/// <summary>
+			/// 定数バッファ。b0に割り当てられる。
+			/// </summary>
+			struct CB_0 {
 			};
 			ConstantBuffer m_rayGenerationCB[2];		// レイジェネレーションの定数バッファ。
 			World m_world;								// レイトレワールド。

@@ -27,11 +27,13 @@ struct Camera
     float aspect;           // アスペクト比
     float far;              // 遠平面
     float near;             // 近平面
+    float pad[2];           // パディング
 };
 
 cbuffer rayGenCB :register(b0)
 {
-    Camera g_camera; // カメラ
+    Camera g_camera;    // カメラ。
+    LightCB g_light;    // ライト。
     
 };
 

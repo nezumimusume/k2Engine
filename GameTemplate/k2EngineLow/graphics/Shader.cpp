@@ -114,14 +114,12 @@ namespace nsK2EngineLow {
 		args.push_back(L"-I");
 		args.push_back(L"\\Assets\\shader");
 		
-		std::wstring filePathTmp = L".\\";
-		filePathTmp += filePath;
 
 		//コンパイル。
 		CComPtr<IDxcOperationResult> result;
 		hr = dxcCompiler->Compile(
 			sourceBlob,				// pSource
-			filePathTmp.c_str(),	// pSourceName
+			filePath,				// pSourceName
 			L"",					// pEntryPoint
 			L"lib_6_3",				// pTargetProfile
 			args.data(),			// pArguments 
