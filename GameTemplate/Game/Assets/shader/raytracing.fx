@@ -1,11 +1,12 @@
 
 ////////////////////////////////////////////////
-// PBRãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã‚’ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã€‚
+// PBRƒ‰ƒCƒeƒBƒ“ƒO‚ğƒCƒ“ƒNƒ‹[ƒhB
 ////////////////////////////////////////////////
+
 #include "PBRLighting.h"
 
-// é ‚ç‚¹æ§‹é€ 
-// ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã¯TkmFile.hã®SVertexã¨åŒã˜ã«ãªã£ã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚‹
+// ’¸“_\‘¢
+// ƒtƒH[ƒ}ƒbƒg‚ÍTkmFile.h‚ÌSVertex‚Æ“¯‚¶‚É‚È‚Á‚Ä‚¢‚é•K—v‚ª‚ ‚é
 struct SVertex
 {
     float3 pos;
@@ -17,33 +18,32 @@ struct SVertex
     float4 skinweigths;
 };
 
-// ã‚«ãƒ¡ãƒ©æ§‹é€ ä½“
-// å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ¼ãªã®ã§16ãƒã‚¤ãƒˆã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã«æ°—ã‚’ä»˜ã‘ã‚‹ã“ã¨
+// ƒJƒƒ‰\‘¢‘Ì
+// ’è”ƒoƒbƒtƒ@[‚È‚Ì‚Å16ƒoƒCƒgƒAƒ‰ƒCƒƒ“ƒg‚É‹C‚ğ•t‚¯‚é‚±‚Æ
 struct Camera
 {
-    float4x4 mViewProjInv;  // ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®é€†è¡Œåˆ—
-    float3 pos;             // ã‚«ãƒ¡ãƒ©åº§æ¨™
-    float aspect;           // ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”
-    float far;              // é å¹³é¢
-    float near;             // è¿‘å¹³é¢
-    float pad[2];           // ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+    float4x4 mViewProjInv;  // ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Ì‹ts—ñ
+    float3 pos;             // ƒJƒƒ‰À•W
+    float aspect;           // ƒAƒXƒyƒNƒg”ä
+    float far;              // ‰“•½–Ê
+    float near;             // ‹ß•½–Ê
 };
 
 cbuffer rayGenCB :register(b0)
 {
-    Camera g_camera; // ã‚«ãƒ¡ãƒ©
+    Camera g_camera; // ƒJƒƒ‰
     
 };
 
-RaytracingAccelerationStructure g_raytracingWorld : register(t0);   // ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¯ãƒ¼ãƒ«ãƒ‰
-Texture2D<float4> gAlbedoTexture : register(t1);                    // ã‚¢ãƒ«ãƒ™ãƒ‰ãƒãƒƒãƒ—
-Texture2D<float4> g_normalMap : register(t2);                       // æ³•ç·šãƒãƒƒãƒ—
-Texture2D<float4> g_specularMap : register(t3);                     // ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒãƒƒãƒ—
-Texture2D<float4> g_reflectionMap : register(t4);                   // ãƒªãƒ•ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒƒãƒ—
-Texture2D<float4> g_refractionMap : register(t5);                   // å±ˆæŠ˜ãƒãƒƒãƒ—
-StructuredBuffer<SVertex> g_vertexBuffers : register(t6);           // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ¼ã€‚
-StructuredBuffer<int> g_indexBuffers : register(t7);                // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ¼ã€‚
-TextureCube<float4> g_skyCubeMap : register(t8);                    // ã‚¹ã‚«ã‚¤ã‚­ãƒ¥ãƒ¼ãƒ–ãƒãƒƒãƒ—ã€‚
+RaytracingAccelerationStructure g_raytracingWorld : register(t0);   // ƒŒƒCƒgƒŒƒ[ƒ‹ƒh
+Texture2D<float4> gAlbedoTexture : register(t1);                    // ƒAƒ‹ƒxƒhƒ}ƒbƒv
+Texture2D<float4> g_normalMap : register(t2);                       // –@üƒ}ƒbƒv
+Texture2D<float4> g_specularMap : register(t3);                     // ƒXƒyƒLƒ…ƒ‰ƒ}ƒbƒv
+Texture2D<float4> g_reflectionMap : register(t4);                   // ƒŠƒtƒŒƒNƒVƒ‡ƒ“ƒ}ƒbƒv
+Texture2D<float4> g_refractionMap : register(t5);                   // ‹üÜƒ}ƒbƒv
+StructuredBuffer<SVertex> g_vertexBuffers : register(t6);           // ’¸“_ƒoƒbƒtƒ@[B
+StructuredBuffer<int> g_indexBuffers : register(t7);                // ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@[B
+TextureCube<float4> g_skyCubeMap : register(t8);                    // ƒXƒJƒCƒLƒ…[ƒuƒ}ƒbƒvB
 
 RWTexture2D<float4> gOutput : register(u0);
 
@@ -51,20 +51,20 @@ SamplerState  s : register(s0);
 
 struct RayPayload
 {
-    float3 color;               // ã‚«ãƒ©ãƒ¼
+    float3 color;               // ƒJƒ‰[
     int hit;
     int depth;
 };
 
-// UVåº§æ¨™ã‚’å–å¾—
+// UVÀ•W‚ğæ“¾
 float2 GetUV(BuiltInTriangleIntersectionAttributes attribs)
 {
     float3 barycentrics = float3(1.0 - attribs.barycentrics.x - attribs.barycentrics.y, attribs.barycentrics.x, attribs.barycentrics.y);
 
-    // ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–IDã‚’å–å¾—
+    // ƒvƒŠƒ~ƒeƒBƒuID‚ğæ“¾
     uint primID = PrimitiveIndex();
 
-    // ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–IDã‹ã‚‰é ‚ç‚¹ç•ªå·ã‚’å–å¾—ã™ã‚‹
+    // ƒvƒŠƒ~ƒeƒBƒuID‚©‚ç’¸“_”Ô†‚ğæ“¾‚·‚é
     uint v0_id = g_indexBuffers[primID * 3];
     uint v1_id = g_indexBuffers[primID * 3 + 1];
     uint v2_id = g_indexBuffers[primID * 3 + 2];
@@ -76,15 +76,15 @@ float2 GetUV(BuiltInTriangleIntersectionAttributes attribs)
     return uv;
 }
 
-// æ³•ç·šã‚’å–å¾—
+// –@ü‚ğæ“¾
 float3 GetNormal(BuiltInTriangleIntersectionAttributes attribs, float2 uv)
 {
     float3 barycentrics = float3(1.0 - attribs.barycentrics.x - attribs.barycentrics.y, attribs.barycentrics.x, attribs.barycentrics.y);
 
-    // ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–IDã‚’å–å¾—
+    // ƒvƒŠƒ~ƒeƒBƒuID‚ğæ“¾
     uint primID = PrimitiveIndex();
 
-    // ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–IDã‹ã‚‰é ‚ç‚¹ç•ªå·ã‚’å–å¾—ã™ã‚‹
+    // ƒvƒŠƒ~ƒeƒBƒuID‚©‚ç’¸“_”Ô†‚ğæ“¾‚·‚é
     uint v0_id = g_indexBuffers[primID * 3];
     uint v1_id = g_indexBuffers[primID * 3 + 1];
     uint v2_id = g_indexBuffers[primID * 3 + 2];
@@ -115,7 +115,7 @@ float3 GetNormal(BuiltInTriangleIntersectionAttributes attribs, float2 uv)
     return newNormal;
 }
 
-// å…‰æºã«å‘ã‘ã¦ãƒ¬ã‚¤ã‚’é£›ã°ã™
+// ŒõŒ¹‚ÉŒü‚¯‚ÄƒŒƒC‚ğ”ò‚Î‚·
 void TraceLightRay(inout RayPayload raypayload, float3 normal)
 {
     float hitT = RayTCurrent();
@@ -143,7 +143,7 @@ void TraceLightRay(inout RayPayload raypayload, float3 normal)
     );
 }
 
-// åå°„ãƒ¬ã‚¤ã‚’é£›ã°ã™
+// ”½ËƒŒƒC‚ğ”ò‚Î‚·
 void TraceReflectionRay(inout RayPayload raypayload, float3 normal)
 {
     if(raypayload.depth < 3)
@@ -152,7 +152,7 @@ void TraceReflectionRay(inout RayPayload raypayload, float3 normal)
         float3 rayDirW = WorldRayDirection();
         float3 rayOriginW = WorldRayOrigin();
 
-        // åå°„ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
+        // ”½ËƒxƒNƒgƒ‹‚ğ‹‚ß‚é
         float3 refDir = reflect(rayDirW, normal);
 
         // Find the world-space hit position
@@ -192,7 +192,7 @@ void rayGen()
     worldPos = mul( g_camera.mViewProjInv, worldPos );
     worldPos.xyz /= worldPos.w;
 
-    // ãƒ”ã‚¯ã‚»ãƒ«æ–¹å‘ã«æ‰“ã¡å‡ºã™ãƒ¬ã‚¤ã‚’ä½œæˆã™ã‚‹
+    // ƒsƒNƒZƒ‹•ûŒü‚É‘Å‚¿o‚·ƒŒƒC‚ğì¬‚·‚é
     RayDesc ray;
     ray.Origin = g_camera.pos;
     ray.Direction = normalize( worldPos.xyz - ray.Origin);
@@ -223,13 +223,13 @@ void miss(inout RayPayload payload)
 void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attribs)
 {
     payload.depth++;
-    // ãƒ’ãƒƒãƒˆã—ãŸãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã®UVåº§æ¨™ã‚’å–å¾—
+    // ƒqƒbƒg‚µ‚½ƒvƒŠƒ~ƒeƒBƒu‚ÌUVÀ•W‚ğæ“¾
     float2 uv = GetUV(attribs);
 
-    // ãƒ’ãƒƒãƒˆã—ãŸãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã®æ³•ç·šã‚’å–å¾—
+    // ƒqƒbƒg‚µ‚½ƒvƒŠƒ~ƒeƒBƒu‚Ì–@ü‚ğæ“¾
     float3 normal = GetNormal(attribs, uv);
     
-    // å…‰æºã«ã‚€ã‹ã£ã¦ãƒ¬ã‚¤ã‚’é£›ã°ã™
+    // ŒõŒ¹‚É‚Ş‚©‚Á‚ÄƒŒƒC‚ğ”ò‚Î‚·
     TraceLightRay(payload, normal);
     float lig = 0.0f;
     if(payload.hit == 0)
@@ -239,16 +239,16 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
         lig = t;
     }
 
-    //ç’°å¢ƒå…‰
+    //ŠÂ‹«Œõ
     lig += 0.5f;
     RayPayload refPayload;
     refPayload.depth = payload.depth;
     refPayload.color = 0;
 
-    // åå°„ãƒ¬ã‚¤
+    // ”½ËƒŒƒC
     TraceReflectionRay(refPayload, normal);
 
-    // ã“ã®ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã®åå°„ç‡ã‚’å–å¾—
+    // ‚±‚ÌƒvƒŠƒ~ƒeƒBƒu‚Ì”½Ë—¦‚ğæ“¾
     float reflectRate = g_specularMap.SampleLevel(s, uv, 0.0f).a;
     float3 color = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
     color *= lig;

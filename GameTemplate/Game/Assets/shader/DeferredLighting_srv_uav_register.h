@@ -1,19 +1,21 @@
 ///////////////////////////////////////
-// PBRãƒ™ãƒ¼ã‚¹ã®ãƒ‡ã‚£ãƒ•ã‚¡ãƒ¼ãƒ‰ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã®SRV_UAVãƒ¬ã‚¸ã‚¹ã‚¿è¨­å®š
+// PBRƒx[ƒX‚ÌƒfƒBƒtƒ@[ƒhƒ‰ƒCƒeƒBƒ“ƒO‚ÌSRV_UAVƒŒƒWƒXƒ^İ’è
 ///////////////////////////////////////
 
 
 #ifndef _DEFERREDLIGHTING_SRV_UAV_REGISTER_H_
 #define _DEFERREDLIGHTING_SRV_UAV_REGISTER_H_
 
-Texture2D<float4> albedoTexture : register(t0);                                         // ã‚¢ãƒ«ãƒ™ãƒ‰
-Texture2D<float4> normalTexture : register(t1);                                         // æ³•ç·š
-Texture2D<float4> metallicShadowSmoothTexture : register(t2);                           // ãƒ¡ã‚¿ãƒªãƒƒã‚¯ã€ã‚·ãƒ£ãƒ‰ã‚¦ã€ã‚¹ãƒ ãƒ¼ã‚¹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã€‚rã«é‡‘å±åº¦ã€gã«å½±ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€aã«æ»‘ã‚‰ã‹ã•ã€‚
-Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t3);    // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã€‚
-TextureCube<float4> g_skyCubeMap : register(t15);                                       // ã‚¹ã‚«ã‚¤ã‚­ãƒ¥ãƒ¼ãƒ–
-StructuredBuffer<uint> pointLightListInTile : register(t20);                            // ã‚¿ã‚¤ãƒ«ã”ã¨ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ãƒªã‚¹ãƒˆ
-StructuredBuffer<uint> spotLightListInTile : register(t21);                             // ã‚¿ã‚¤ãƒ«ã”ã¨ã®ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ãƒªã‚¹ãƒˆã€‚
-Texture2D<float4> g_reflectionTextureArray[NUM_REFLECTION_TEXTURE] : register(t22);     // ãƒªãƒ•ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãƒ†ã‚¯ã‚¹ãƒãƒ£ã€‚
+#include "Shadowing_const.h"
+
+Texture2D<float4> albedoTexture : register(t0);                                         // ƒAƒ‹ƒxƒh
+Texture2D<float4> normalTexture : register(t1);                                         // –@ü
+Texture2D<float4> metallicShadowSmoothTexture : register(t2);                           // ƒƒ^ƒŠƒbƒNAƒVƒƒƒhƒEAƒXƒ€[ƒXƒeƒNƒXƒ`ƒƒBr‚É‹à‘®“xAg‚É‰eƒpƒ‰ƒ[ƒ^Aa‚ÉŠŠ‚ç‚©‚³B
+Texture2D<float4> g_shadowMap[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP] : register(t3);    // ƒVƒƒƒhƒEƒ}ƒbƒvB
+TextureCube<float4> g_skyCubeMap : register(t15);                                       // ƒXƒJƒCƒLƒ…[ƒu
+StructuredBuffer<uint> pointLightListInTile : register(t20);                            // ƒ^ƒCƒ‹‚²‚Æ‚Ìƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌƒŠƒXƒg
+StructuredBuffer<uint> spotLightListInTile : register(t21);                             // ƒ^ƒCƒ‹‚²‚Æ‚ÌƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌƒCƒ“ƒfƒbƒNƒX‚ÌƒŠƒXƒgB
+Texture2D<float4> g_reflectionTextureArray[NUM_REFLECTION_TEXTURE] : register(t22);     // ƒŠƒtƒŒƒNƒVƒ‡ƒ“ƒeƒNƒXƒ`ƒƒB
 
 
 #endif // _DEFERREDLIGHTING_SRV_UAV_REGISTER_H_

@@ -1,58 +1,60 @@
 /////////////////////////////////////////////////////
-// PBRライティング関係の構造体をまとめたヘッダーファイル
+// PBR���C�e�B���O�֌W�̍\���̂��܂Ƃ߂��w�b�_�[�t�@�C��
 /////////////////////////////////////////////////////
 
 #ifndef _PBRLIGHTING_STRUCT_H_
 #define _PBRLIGHTING_STRUCT_H_
 
-// ディレクションライト構造体。
+#include "Shadowing_const.h"
+
+// �f�B���N�V�������C�g�\���́B
 struct DirectionalLight
 {
-    float3 direction;   // ライトの方向
-    int castShadow;     // 影をキャストする？
-    float4 color;       // ライトの色
+    float3 direction;   // ���C�g�̕���
+    int castShadow;     // �e���L���X�g����H
+    float4 color;       // ���C�g�̐F
 };
-// ポイントライト
+// �|�C���g���C�g
 struct PointLight
 {
-    float3 position;        // 座標
-    float3 positionInView;  // カメラ空間での座標
-    float3 color;           // カラー
-    float3 attn;            // 減衰パラメータ。
+    float3 position;        // ���W
+    float3 positionInView;  // �J������Ԃł̍��W
+    float3 color;           // �J���[
+    float3 attn;            // �����p�����[�^�B
 };
-// スポットライト
+// �X�|�b�g���C�g
 struct SpotLight
 {
-    float3 position;        // 座標
-    int isUse;              // 使用中フラグ。
-    float3 positionInView;  // カメラ空間での座標。
-    int no ;                // ライトの番号。
-    float3 direction;       // 射出方向。
-    float range;            // 影響範囲。
-    float3 color;           // ライトのカラー。
-    float3 color2;          // 二つ目のカラー。
-    float3 color3;          // 三つ目のカラー。
-    float3 directionInView; // カメラ空間での射出方向。
-    float3 rangePow;        // 距離による光の影響率に累乗するパラメーター。1.0で線形の変化をする。
-                            // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
-    float3 angle;           // 射出角度(単位：ラジアン。xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー)。
-    float3 anglePow;        // スポットライトとの角度による光の影響率に累乗するパラメータ。1.0で線形に変化する。
-                            // xが一つ目のカラー、yが二つ目のカラー、zが三つ目のカラー。
+    float3 position;        // ���W
+    int isUse;              // �g�p���t���O�B
+    float3 positionInView;  // �J������Ԃł̍��W�B
+    int no ;                // ���C�g�̔ԍ��B
+    float3 direction;       // �ˏo�����B
+    float range;            // �e���͈́B
+    float3 color;           // ���C�g�̃J���[�B
+    float3 color2;          // ��ڂ̃J���[�B
+    float3 color3;          // �O�ڂ̃J���[�B
+    float3 directionInView; // �J������Ԃł̎ˏo�����B
+    float3 rangePow;        // �����ɂ����̉e�����ɗݏ悷��p�����[�^�[�B1.0�Ő��`�̕ω�������B
+                            // x����ڂ̃J���[�Ay����ڂ̃J���[�Az���O�ڂ̃J���[�B
+    float3 angle;           // �ˏo�p�x(�P�ʁF���W�A���Bx����ڂ̃J���[�Ay����ڂ̃J���[�Az���O�ڂ̃J���[)�B
+    float3 anglePow;        // �X�|�b�g���C�g�Ƃ̊p�x�ɂ����̉e�����ɗݏ悷��p�����[�^�B1.0�Ő��`�ɕω�����B
+                            // x����ڂ̃J���[�Ay����ڂ̃J���[�Az���O�ڂ̃J���[�B
 };
 
-// 定数バッファで使用するデータをまとめた構造体。
+// �萔�o�b�t�@�Ŏg�p����f�[�^���܂Ƃ߂��\���́B
 struct LightCB{
     DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];
     PointLight pointLight[MAX_POINT_LIGHT];
     SpotLight spotLight[MAX_SPOT_LIGHT];
-    float4x4 mViewProjInv;  // ビュープロジェクション行列の逆行列
-    float3 eyePos;          // カメラの視点
-    int numPointLight;      // ポイントライトの数。    
-    float3 ambientLight;    // 環境光
-    int numSpotLight;       // スポットライトの数。
+    float4x4 mViewProjInv;  // �r���[�v���W�F�N�V�����s��̋t�s��
+    float3 eyePos;          // �J�����̎��_
+    int numPointLight;      // �|�C���g���C�g�̐��B    
+    float3 ambientLight;    // ����
+    int numSpotLight;       // �X�|�b�g���C�g�̐��B
     float4x4 mlvp[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
-    float iblLuminance;     // IBLの明るさ。
-    int isIBL;              // IBLを行う。
-    int isEnableRaytracing; // レイトレが有効。
+    float iblLuminance;     // IBL�̖��邳�B
+    int isIBL;              // IBL���s���B
+    int isEnableRaytracing; // ���C�g�����L���B
 };
 #endif // _PBRLIGHTING_STRUCT_H_

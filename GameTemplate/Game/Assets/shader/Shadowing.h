@@ -1,37 +1,37 @@
-// ã‚·ãƒ£ãƒ‰ã‚¦ã‚¤ãƒ³ã‚°é–¢ä¿‚ã®å‡¦ç†ã€‚
+// ƒVƒƒƒhƒEƒCƒ“ƒOŠÖŒW‚Ìˆ—B
 
 #ifndef _SHADOWING_H_
 #define _SHADOWING_H_
 
-
+#include "Shadowing_const.h"
 #include "PBRLighting_Const.h"
 
 static const int INFINITY = 40.0f; 
 
 ///////////////////////////////////////
-// ã‚µãƒ³ãƒ—ãƒ©ã‚¹ãƒ†ãƒ¼ãƒˆã€‚
+// ƒTƒ“ƒvƒ‰ƒXƒe[ƒgB
 ///////////////////////////////////////
 #include "Sampler.h"
 
-// ãƒã‚§ãƒ“ã‚·ã‚§ãƒ•ã®ä¸ç­‰å¼ã‚’åˆ©ç”¨ã—ã¦ã€å½±ã«ãªã‚‹å¯èƒ½æ€§ã‚’è¨ˆç®—ã™ã‚‹ã€‚
+// ƒ`ƒFƒrƒVƒFƒt‚Ì•s“™®‚ğ—˜—p‚µ‚ÄA‰e‚É‚È‚é‰Â”\«‚ğŒvZ‚·‚éB
 float Chebyshev(float2 moments, float depth)
 {
     if (depth <= moments.x) {
 		return 0.0;
 	}
-    // é®è”½ã•ã‚Œã¦ã„ã‚‹ãªã‚‰ã€ãƒã‚§ãƒ“ã‚·ã‚§ãƒ•ã®ä¸ç­‰å¼ã‚’åˆ©ç”¨ã—ã¦å…‰ãŒå½“ãŸã‚‹ç¢ºç‡ã‚’æ±‚ã‚ã‚‹
+    // Õ•Á‚³‚ê‚Ä‚¢‚é‚È‚çAƒ`ƒFƒrƒVƒFƒt‚Ì•s“™®‚ğ—˜—p‚µ‚ÄŒõ‚ª“–‚½‚éŠm—¦‚ğ‹‚ß‚é
     float depth_sq = moments.x * moments.x;
-    // ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã®åˆ†æ•£å…·åˆã‚’æ±‚ã‚ã‚‹
-    // åˆ†æ•£ãŒå¤§ãã„ã»ã©ã€varianceã®æ•°å€¤ã¯å¤§ãããªã‚‹
+    // ‚±‚ÌƒOƒ‹[ƒv‚Ì•ªU‹ï‡‚ğ‹‚ß‚é
+    // •ªU‚ª‘å‚«‚¢‚Ù‚ÇAvariance‚Ì”’l‚Í‘å‚«‚­‚È‚é
     float variance = moments.y - depth_sq;
-    // ã“ã®ãƒ”ã‚¯ã‚»ãƒ«ã®ãƒ©ã‚¤ãƒˆã‹ã‚‰è¦‹ãŸæ·±åº¦å€¤ã¨ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®å¹³å‡ã®æ·±åº¦å€¤ã®å·®ã‚’æ±‚ã‚ã‚‹
+    // ‚±‚ÌƒsƒNƒZƒ‹‚Ìƒ‰ƒCƒg‚©‚çŒ©‚½[“x’l‚ÆƒVƒƒƒhƒEƒ}ƒbƒv‚Ì•½‹Ï‚Ì[“x’l‚Ì·‚ğ‹‚ß‚é
     float md = depth - moments.x;
-    // å…‰ãŒå±Šãç¢ºç‡ã‚’æ±‚ã‚ã‚‹
+    // Œõ‚ª“Í‚­Šm—¦‚ğ‹‚ß‚é
     float lit_factor = variance / (variance + md * md);
     float lig_factor_min = 0.3f;
-    // å…‰ãŒå±Šãç¢ºç‡ã®ä¸‹é™ä»¥ä¸‹ã¯å½±ã«ãªã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚
+    // Œõ‚ª“Í‚­Šm—¦‚Ì‰ºŒÀˆÈ‰º‚Í‰e‚É‚È‚é‚æ‚¤‚É‚·‚éB
     lit_factor = saturate((lit_factor - lig_factor_min) / (1.0f - lig_factor_min));
-    // å…‰ãŒå±Šãç¢ºç‡ã‹ã‚‰å½±ã«ãªã‚‹ç¢ºç‡ã‚’æ±‚ã‚ã‚‹ã€‚
+    // Œõ‚ª“Í‚­Šm—¦‚©‚ç‰e‚É‚È‚éŠm—¦‚ğ‹‚ß‚éB
     return 1.0f - lit_factor;
 }
 float CalcShadowRate(
@@ -50,20 +50,20 @@ float CalcShadowRate(
         float zInLVP = posInLVP.z / posInLVP.w;
         shadowMapUV *= float2(0.5f, -0.5f);
         shadowMapUV += 0.5f;
-        // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—UVãŒç¯„å›²å†…ã‹åˆ¤å®š
+        // ƒVƒƒƒhƒEƒ}ƒbƒvUV‚ª”ÍˆÍ“à‚©”»’è
         if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f
             && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f
             && zInLVP < 0.98f && zInLVP > 0.02f)
         {
-            // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã‹ã‚‰å€¤ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
+            // ƒVƒƒƒhƒEƒ}ƒbƒv‚©‚ç’l‚ğƒTƒ“ƒvƒŠƒ“ƒO
             float4 shadowValue = shadowMap[ligNo][cascadeIndex].Sample(Sampler, shadowMapUV);
             zInLVP -= 0.001f;
             float pos = exp(INFINITY * zInLVP);
             if( isSoftShadow ){
-                // ã‚½ãƒ•ãƒˆã‚·ãƒ£ãƒ‰ã‚¦ã€‚
+                // ƒ\ƒtƒgƒVƒƒƒhƒEB
                 shadow = Chebyshev(shadowValue.xy, pos);
             }else if(pos >= shadowValue.r ){
-                // ãƒãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ã€‚
+                // ƒn[ƒhƒVƒƒƒhƒEB
                 shadow = 1.0f;
             }
            

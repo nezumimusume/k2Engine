@@ -7,6 +7,7 @@
 
 namespace nsK2EngineLow {
 
+
 	namespace {
 		const char* g_vsShaderModelName = "vs_5_0";	//頂点シェーダーのシェーダーモデル名。
 		const char* g_psShaderModelName = "ps_5_0";	//ピクセルシェーダーのシェーダモデル名。
@@ -64,6 +65,7 @@ namespace nsK2EngineLow {
 	{
 		Load(filePath, entryFuncName, g_csShaderModelName);
 	}
+
 	void Shader::LoadRaytracing(const wchar_t* filePath)
 	{
 		std::ifstream shaderFile(filePath);
@@ -86,6 +88,7 @@ namespace nsK2EngineLow {
 		}
 		CComPtr< IDxcIncludeHandler> includerHandler;
 		hr = dxclib->CreateIncludeHandler(&includerHandler);
+		
 		if (FAILED(hr)) {
 			MessageBox(nullptr, L"CreateIncludeHandlerに失敗しました。", L"エラー", MB_OK);
 			std::abort();
@@ -107,11 +110,10 @@ namespace nsK2EngineLow {
 			std::abort();
 		}
 
-		CComPtr<IDxcIncludeHandler> dxcIncludeHandler;
-		dxclib->CreateIncludeHandler(&dxcIncludeHandler);
-		const wchar_t* args[] = {
-			L"-I \\Assets\\shader",
-		};
+		std::vector<LPCWSTR> args;
+		args.push_back(L"-I");
+		args.push_back(L"\\Assets\\shader");
+		
 		std::wstring filePathTmp = L".\\";
 		filePathTmp += filePath;
 
@@ -122,9 +124,10 @@ namespace nsK2EngineLow {
 			filePathTmp.c_str(),	// pSourceName
 			L"",					// pEntryPoint
 			L"lib_6_3",				// pTargetProfile
-			args, 1,				// pArguments, argCount
+			args.data(),			// pArguments 
+			args.size(),			// argCount
 			nullptr, 0,				// pDefines, defineCount
-			dxcIncludeHandler,		// pIncludeHandler
+			includerHandler,		// pIncludeHandler
 			&result					// ppResult
 		);			
 		if (SUCCEEDED(hr)) {

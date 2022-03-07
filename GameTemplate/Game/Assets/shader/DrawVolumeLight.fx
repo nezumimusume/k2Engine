@@ -1,47 +1,47 @@
 ///////////////////////////////////////
-// ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆæç”»ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã€‚
+// ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒg•`‰æƒVƒF[ƒ_[B
 ///////////////////////////////////////
 
 
 
-// ã‚·ãƒ¼ãƒ³ã®æ·±åº¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã€‚
+// ƒV[ƒ“‚Ì[“xƒeƒNƒXƒ`ƒƒB
 Texture2D<float4> g_sceneDepthTexture : register(t10);
 
 sampler Sampler : register(s0);
 
 
 ///////////////////////////////////////
-// æ§‹é€ ä½“ã€‚
+// \‘¢‘ÌB
 ///////////////////////////////////////
 
-// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸ã®å…¥åŠ›
+// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ö‚Ì“ü—Í
 struct SPSIn
 {
-	float4 pos : SV_POSITION;       //åº§æ¨™ã€‚
+	float4 pos : SV_POSITION;       //À•WB
 	float4 posInProj : TEXCOORD0;
-	float3 worldPos : TEXCOORD1;    // ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™
+	float3 worldPos : TEXCOORD1;    // ƒ[ƒ‹ƒhÀ•W
 };
 
 
 ///////////////////////////////////////
-// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®å…±é€šå‡¦ç†ã‚’ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ã€‚
+// ’¸“_ƒVƒF[ƒ_[‚Ì‹¤’Êˆ—‚ğƒCƒ“ƒNƒ‹[ƒh‚·‚éB
 ///////////////////////////////////////
 #include "ModelVSCommon.h"
 
 SPSIn VSMain(float4 pos : POSITION)
 {
 	SPSIn psIn;
-	psIn.pos = mul(mWorld, pos); // ãƒ¢ãƒ‡ãƒ«ã®é ‚ç‚¹ã‚’ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã«å¤‰æ›
-	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‹ã‚‰ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å‡ºåŠ›
+	psIn.pos = mul(mWorld, pos); // ƒ‚ƒfƒ‹‚Ì’¸“_‚ğƒ[ƒ‹ƒhÀ•WŒn‚É•ÏŠ·
+	// ’¸“_ƒVƒF[ƒ_[‚©‚çƒ[ƒ‹ƒhÀ•W‚ğo—Í
 	psIn.worldPos = pos;
-	psIn.pos = mul(mView, psIn.pos); // ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã«å¤‰æ›
-	psIn.pos = mul(mProj, psIn.pos); // ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã‹ã‚‰ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã«å¤‰æ›
+	psIn.pos = mul(mView, psIn.pos); // ƒ[ƒ‹ƒhÀ•WŒn‚©‚çƒJƒƒ‰À•WŒn‚É•ÏŠ·
+	psIn.pos = mul(mProj, psIn.pos); // ƒJƒƒ‰À•WŒn‚©‚çƒXƒNƒŠ[ƒ“À•WŒn‚É•ÏŠ·
 	psIn.posInProj = psIn.pos;
 
 	return psIn;
 }
 /// <summary>
-/// æ›¸ãè¾¼ã‚€æ·±åº¦å€¤ã‚’è¨ˆç®—ã™ã‚‹ã€‚
+/// ‘‚«‚Ş[“x’l‚ğŒvZ‚·‚éB
 /// </summary>
 float CalcDrawDepth(SPSIn psIn)
 {
@@ -52,20 +52,20 @@ float CalcDrawDepth(SPSIn psIn)
 	return z;
 }
 /// <summary>
-/// å‰é¢/èƒŒé¢æç”»ç”¨ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚¨ãƒ³ãƒˆãƒªãƒ¼é–¢æ•°ã€‚
+/// ‘O–Ê/”w–Ê•`‰æ—p‚ÌƒsƒNƒZƒ‹ƒVƒF[ƒ_[ƒGƒ“ƒgƒŠ[ŠÖ”B
 /// </summary>
 float4 PSMainFrontBack(SPSIn psIn) : SV_Target0
 {
-	// ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒˆãƒãƒƒãƒ—ã«æ›¸ãè¾¼ã‚€æ·±åº¦å€¤ã‚’è¨ˆç®—ã™ã‚‹ã€‚
+	// ƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒgƒ}ƒbƒv‚É‘‚«‚Ş[“x’l‚ğŒvZ‚·‚éB
 	float z = CalcDrawDepth(psIn);
 	return float4( z, z, z, z);
 }
 
 /*!
- * @brief	UVåº§æ¨™ã¨æ·±åº¦å€¤ã‹ã‚‰ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’è¨ˆç®—ã™ã‚‹ã€‚
- *@param[in]	uv				uvåº§æ¨™
- *@param[in]	zInScreen		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã®æ·±åº¦å€¤
- *@param[in]	mViewProjInv	ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®é€†è¡Œåˆ—ã€‚
+ * @brief	UVÀ•W‚Æ[“x’l‚©‚çƒ[ƒ‹ƒhÀ•W‚ğŒvZ‚·‚éB
+ *@param[in]	uv				uvÀ•W
+ *@param[in]	zInScreen		ƒXƒNƒŠ[ƒ“À•WŒn‚Ì[“x’l
+ *@param[in]	mViewProjInv	ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Ì‹ts—ñB
  */
 float3 CalcWorldPosFromUVZ( float2 uv, float zInScreen, float4x4 mViewProjInv )
 {
@@ -78,61 +78,61 @@ float3 CalcWorldPosFromUVZ( float2 uv, float zInScreen, float4x4 mViewProjInv )
 	return worldPos.xyz;
 }
 ///////////////////////////////////////
-// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã€‚
+// ’è”ƒoƒbƒtƒ@B
 ///////////////////////////////////////
 
 
-// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆ
+// ƒXƒ|ƒbƒgƒ‰ƒCƒg
 struct SpotLight
 {
-    float3 position;        // åº§æ¨™
-    int isUse;              // ä½¿ç”¨ä¸­ãƒ•ãƒ©ã‚°ã€‚
-    float3 positionInView;  // ã‚«ãƒ¡ãƒ©ç©ºé–“ã§ã®åº§æ¨™ã€‚
-    int no ;                // ãƒ©ã‚¤ãƒˆã®ç•ªå·ã€‚
-    float3 direction;       // å°„å‡ºæ–¹å‘ã€‚
-    float range;            // å½±éŸ¿ç¯„å›²ã€‚
-    float3 color;           // ãƒ©ã‚¤ãƒˆã®ã‚«ãƒ©ãƒ¼ã€‚
-    float3 color2;          // äºŒã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€‚
-    float3 color3;          // ä¸‰ã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€‚
-    float3 directionInView; // ã‚«ãƒ¡ãƒ©ç©ºé–“ã§ã®å°„å‡ºæ–¹å‘ã€‚
-    float3 rangePow;        // è·é›¢ã«ã‚ˆã‚‹å…‰ã®å½±éŸ¿ç‡ã«ç´¯ä¹—ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã€‚1.0ã§ç·šå½¢ã®å¤‰åŒ–ã‚’ã™ã‚‹ã€‚
-                            // xãŒä¸€ã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€yãŒäºŒã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€zãŒä¸‰ã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€‚
-    float3 angle;           // å°„å‡ºè§’åº¦(å˜ä½ï¼šãƒ©ã‚¸ã‚¢ãƒ³ã€‚xãŒä¸€ã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€yãŒäºŒã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€zãŒä¸‰ã¤ç›®ã®ã‚«ãƒ©ãƒ¼)ã€‚
-    float3 anglePow;        // ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã¨ã®è§’åº¦ã«ã‚ˆã‚‹å…‰ã®å½±éŸ¿ç‡ã«ç´¯ä¹—ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€‚1.0ã§ç·šå½¢ã«å¤‰åŒ–ã™ã‚‹ã€‚
-                            // xãŒä¸€ã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€yãŒäºŒã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€zãŒä¸‰ã¤ç›®ã®ã‚«ãƒ©ãƒ¼ã€‚
+    float3 position;        // À•W
+    int isUse;              // g—p’†ƒtƒ‰ƒOB
+    float3 positionInView;  // ƒJƒƒ‰‹óŠÔ‚Å‚ÌÀ•WB
+    int no ;                // ƒ‰ƒCƒg‚Ì”Ô†B
+    float3 direction;       // Ëo•ûŒüB
+    float range;            // ‰e‹¿”ÍˆÍB
+    float3 color;           // ƒ‰ƒCƒg‚ÌƒJƒ‰[B
+    float3 color2;          // “ñ‚Â–Ú‚ÌƒJƒ‰[B
+    float3 color3;          // O‚Â–Ú‚ÌƒJƒ‰[B
+    float3 directionInView; // ƒJƒƒ‰‹óŠÔ‚Å‚ÌËo•ûŒüB
+    float3 rangePow;        // ‹——£‚É‚æ‚éŒõ‚Ì‰e‹¿—¦‚É—İæ‚·‚éƒpƒ‰ƒ[ƒ^[B1.0‚ÅüŒ`‚Ì•Ï‰»‚ğ‚·‚éB
+                            // x‚ªˆê‚Â–Ú‚ÌƒJƒ‰[Ay‚ª“ñ‚Â–Ú‚ÌƒJƒ‰[Az‚ªO‚Â–Ú‚ÌƒJƒ‰[B
+    float3 angle;           // ËoŠp“x(’PˆÊFƒ‰ƒWƒAƒ“Bx‚ªˆê‚Â–Ú‚ÌƒJƒ‰[Ay‚ª“ñ‚Â–Ú‚ÌƒJƒ‰[Az‚ªO‚Â–Ú‚ÌƒJƒ‰[)B
+    float3 anglePow;        // ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Æ‚ÌŠp“x‚É‚æ‚éŒõ‚Ì‰e‹¿—¦‚É—İæ‚·‚éƒpƒ‰ƒ[ƒ^B1.0‚ÅüŒ`‚É•Ï‰»‚·‚éB
+                            // x‚ªˆê‚Â–Ú‚ÌƒJƒ‰[Ay‚ª“ñ‚Â–Ú‚ÌƒJƒ‰[Az‚ªO‚Â–Ú‚ÌƒJƒ‰[B
 };
 
-// ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆ
+// ƒ|ƒCƒ“ƒgƒ‰ƒCƒg
 struct PointLight
 {
-    float3 position;        // åº§æ¨™
-    float3 positionInView;  // ã‚«ãƒ¡ãƒ©ç©ºé–“ã§ã®åº§æ¨™
-    float3 color;           // ã‚«ãƒ©ãƒ¼
-    float3 attn;            // æ¸›è¡°ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€‚
+    float3 position;        // À•W
+    float3 positionInView;  // ƒJƒƒ‰‹óŠÔ‚Å‚ÌÀ•W
+    float3 color;           // ƒJƒ‰[
+    float3 attn;            // Œ¸Šƒpƒ‰ƒ[ƒ^B
 };
 
 ///////////////////////////////////////
-// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã€‚
+// ’è”ƒoƒbƒtƒ@B
 ///////////////////////////////////////
 
 cbuffer cb : register(b0){
-	float4x4 mvp;		// ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
-	float4 mulColor;	// ä¹—ç®—ã‚«ãƒ©ãƒ¼
+	float4x4 mvp;		// ƒ‚ƒfƒ‹ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
+	float4 mulColor;	// æZƒJƒ‰[
 };
 
-// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆç”¨ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ¼
+// ƒXƒ|ƒbƒgƒ‰ƒCƒg—p‚Ì’è”ƒoƒbƒtƒ@[
 cbuffer finalSpotLightCb : register(b1){
-    SpotLight spotLight;    // ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã€‚
-    float4x4 mViewProjInv;  // ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®é€†è¡Œåˆ—
-    float randomSeed;   // ãƒ©ãƒ³ãƒ€ãƒ ã‚·ãƒ¼ãƒ‰ã€‚
+    SpotLight spotLight;    // ƒXƒ|ƒbƒgƒ‰ƒCƒgB
+    float4x4 mViewProjInv;  // ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Ì‹ts—ñ
+    float randomSeed;   // ƒ‰ƒ“ƒ_ƒ€ƒV[ƒhB
     
 };
 
-// ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆç”¨ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡ã€‚
+// ƒ|ƒCƒ“ƒgƒ‰ƒCƒg—p‚Ì’è”ƒoƒbƒtƒ@B
 cbuffer finalPointLightCb : register(b1){
-    PointLight pointLight;    // ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã€‚
-    float4x4 mViewProjInv2;   // ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®é€†è¡Œåˆ—
-    float randomSeed2;        // ãƒ©ãƒ³ãƒ€ãƒ ã‚·ãƒ¼ãƒ‰ã€‚
+    PointLight pointLight;    // ƒXƒ|ƒbƒgƒ‰ƒCƒgB
+    float4x4 mViewProjInv2;   // ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Ì‹ts—ñ
+    float randomSeed2;        // ƒ‰ƒ“ƒ_ƒ€ƒV[ƒhB
 };
 
 struct VSFinalInput{
@@ -145,7 +145,7 @@ struct PSFinalInput{
 	float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> albedoTexture : register(t0);	// ã‚¢ãƒ«ãƒ™ãƒ‰ã‚«ãƒ©ãƒ¼
+Texture2D<float4> albedoTexture : register(t0);	// ƒAƒ‹ƒxƒhƒJƒ‰[
 Texture2D<float4> g_volumeLightMapFront : register(t1);
 Texture2D<float4> g_volumeLightMapBack : register(t2);
 
@@ -181,40 +181,40 @@ float4 PSFinal_SpotLight( PSFinalInput In ) : SV_Target0
     float3 volumeCenterPos = lerp( volumePosFront, volumePosBack, t);
     float volume = length(volumePosBack - volumePosFront);
 
-    // ãƒœãƒªãƒ¥ãƒ¼ãƒ ãŒãªã„ç®‡æ‰€ã¯ãƒ”ã‚¯ã‚»ãƒ«ã‚­ãƒ«ã€‚
+    // ƒ{ƒŠƒ…[ƒ€‚ª‚È‚¢‰ÓŠ‚ÍƒsƒNƒZƒ‹ƒLƒ‹B
     clip( volume - 0.001f);
     
     float4 albedoColor = albedoTexture.Sample(Sampler, uv);
     
-    // è·é›¢ã«ã‚ˆã‚‹å…‰ã®å½±éŸ¿ç‡ã‚’è¨ˆç®—ã€‚
+    // ‹——£‚É‚æ‚éŒõ‚Ì‰e‹¿—¦‚ğŒvZB
     float3 ligDir = (volumeCenterPos - spotLight.position);
     float distance = length(ligDir);
     ligDir = normalize(ligDir);
     float3 affectBase = 1.0f - min(1.0f, distance / spotLight.range);
     float3 affect = pow( affectBase, spotLight.rangePow);     
 
-    // ç¶šã„ã¦è§’åº¦ã«ã‚ˆã‚‹æ¸›è¡°ã‚’è¨ˆç®—ã™ã‚‹ã€‚
-    // è§’åº¦ã«æ¯”ä¾‹ã—ã¦å°ã•ããªã£ã¦ã„ãå½±éŸ¿ç‡ã‚’è¨ˆç®—ã™ã‚‹
+    // ‘±‚¢‚ÄŠp“x‚É‚æ‚éŒ¸Š‚ğŒvZ‚·‚éB
+    // Šp“x‚É”ä—á‚µ‚Ä¬‚³‚­‚È‚Á‚Ä‚¢‚­‰e‹¿—¦‚ğŒvZ‚·‚é
     float angleLigToPixel = saturate(dot(ligDir, spotLight.direction) );
     
-    // dot()ã§æ±‚ã‚ãŸå€¤ã‚’acos()ã«æ¸¡ã—ã¦è§’åº¦ã‚’æ±‚ã‚ã‚‹
+    // dot()‚Å‹‚ß‚½’l‚ğacos()‚É“n‚µ‚ÄŠp“x‚ğ‹‚ß‚é
     angleLigToPixel = abs(acos(angleLigToPixel)) ;
     
-    // å…‰ã®è§’åº¦ã«ã‚ˆã‚‹æ¸›è¡°ã‚’è¨ˆç®—ã€‚
+    // Œõ‚ÌŠp“x‚É‚æ‚éŒ¸Š‚ğŒvZB
     float3 angleAffectBase = max( 0.0f, 1.0f - 1.0f / spotLight.angle * angleLigToPixel );
     angleAffectBase = min( 1.0f, angleAffectBase * 1.8f);
     float3 angleAffect = pow( angleAffectBase, spotLight.anglePow );    
     affect *= angleAffect;
 
-    // ä¸‰ã¤ã®å…‰ã‚’åˆæˆã€‚    
-    // å…‰ã®ãƒ™ãƒ¼ã‚¹ã‚’è¨ˆç®—ã€‚
+    // O‚Â‚ÌŒõ‚ğ‡¬B    
+    // Œõ‚Ìƒx[ƒX‚ğŒvZB
     float3 ligBase = albedoColor * step( volumeFrontZ, albedoColor.w ) * max( 0.0f, log(volume) ) * 0.1f;
-    // å…‰ã®ãƒ™ãƒ¼ã‚¹ã«å½±éŸ¿ç‡ã‚’ä¹—ç®—ã™ã‚‹ã€‚
+    // Œõ‚Ìƒx[ƒX‚É‰e‹¿—¦‚ğæZ‚·‚éB
     lig = ligBase * affect.x * spotLight.color; 
     lig += ligBase * affect.y * spotLight.color2;
     lig += ligBase * affect.z * spotLight.color3;
     
-    // ç©ºæ°—ä¸­ã®ãƒãƒªã®è¡¨ç¾ã¨ã—ã¦ãƒã‚¤ã‚ºã‚’åŠ ãˆã‚‹ã€‚
+    // ‹ó‹C’†‚Ìƒ`ƒŠ‚Ì•\Œ»‚Æ‚µ‚ÄƒmƒCƒY‚ğ‰Á‚¦‚éB
     lig *= lerp( 0.9f, 1.1f, GetRandomNumber(uv, randomSeed));
 
 	return float4( lig, 1.0f);
@@ -235,12 +235,12 @@ float4 PSFinal_PointLight( PSFinalInput In ) : SV_Target0
     float3 volumeCenterPos = (volumePosFront + volumePosBack ) * 0.5f;
     float volume = length(volumePosBack - volumePosFront);
 
-    // ãƒœãƒªãƒ¥ãƒ¼ãƒ ãŒãªã„ç®‡æ‰€ã¯ãƒ”ã‚¯ã‚»ãƒ«ã‚­ãƒ«ã€‚
+    // ƒ{ƒŠƒ…[ƒ€‚ª‚È‚¢‰ÓŠ‚ÍƒsƒNƒZƒ‹ƒLƒ‹B
     clip( volume - 0.001f);
 
 	 float4 albedoColor = albedoTexture.Sample(Sampler, uv);
     
-    // è·é›¢ã«ã‚ˆã‚‹æ¸›è¡°ã€‚
+    // ‹——£‚É‚æ‚éŒ¸ŠB
     float3 ligDir = (volumeCenterPos - pointLight.position);
     float distance = length(ligDir);
     ligDir = normalize(ligDir);

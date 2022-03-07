@@ -567,5 +567,8 @@
     <Filter Include="AI\PathFinding">
       <UniqueIdentifier>{72d94fe6-e599-4523-8e54-81df808c96fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dxc">
+      <UniqueIdentifier>{496d48ba-26ca-419f-9db8-b1cea244c1c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

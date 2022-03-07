@@ -1,17 +1,17 @@
 /// <summary>
-/// ssaoã€‚
+/// ssaoB
 /// </summary>
 
 
 cbuffer cb : register(b0) {
-    float4x4 mvp;       //ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
+    float4x4 mvp;       //ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
     float4 mulColor;
 };
 
 cbuffer ssaoBuffer : register(b1) {
-    float4x4 view;//ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã€‚
-    float4x4 proj;//ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
-    float4x4 invproj;//é€†ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
+    float4x4 view;//ƒrƒ…[s—ñB
+    float4x4 proj;//ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
+    float4x4 invproj;//‹tƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
 };
 
 struct VSInput {
@@ -24,12 +24,12 @@ struct PSInput {
     float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> zPrepassTexture : register(t0);     //æ·±åº¦å€¤ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ã€‚
-Texture2D<float4> ssaoTexture : register(t0);     //ssaoãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ã€‚
-Texture2D<float4> normalTexture : register(t1);       //æ³•ç·šãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ã€‚
-Texture2D<float4> worldTexture : register(t2);       //ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ãƒ¬ãƒ³ãƒ€â€•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ã€‚
+Texture2D<float4> zPrepassTexture : register(t0);     //[“x’lƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ÌƒVƒF[ƒ_[ƒŠƒ\[ƒXB
+Texture2D<float4> ssaoTexture : register(t0);     //ssaoƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ÌƒVƒF[ƒ_[ƒŠƒ\[ƒXB
+Texture2D<float4> normalTexture : register(t1);       //–@üƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚ÌƒVƒF[ƒ_[ƒŠƒ\[ƒXB
+Texture2D<float4> worldTexture : register(t2);       //ƒ[ƒ‹ƒhÀ•WƒŒƒ“ƒ_\ƒ^[ƒQƒbƒg‚ÌƒVƒF[ƒ_[ƒŠƒ\[ƒXB
 
-sampler Sampler : register(s0);     //ã‚µãƒ³ãƒ—ãƒ©ãƒ¼ã€‚
+sampler Sampler : register(s0);     //ƒTƒ“ƒvƒ‰[B
 
 PSInput VSMain(VSInput In)
 {
@@ -39,7 +39,7 @@ PSInput VSMain(VSInput In)
     return psIn;
 }
 
-//uvåº§æ¨™ã‹ã‚‰ä¹±æ•°ã‚’ç”Ÿæˆã€‚
+//uvÀ•W‚©‚ç—”‚ğ¶¬B
 float random(float2 uv) 
 {
 	return frac(sin(dot(uv, float2(12.9898f, 78.233f)))*43758.5453f);
@@ -48,9 +48,9 @@ float random(float2 uv)
 float4 PSMain(PSInput input) : SV_Target0
 {
 
-	const float SAMPLING_RATIO = 2.0;       // ã‚µãƒ³ãƒ—ãƒ«ç‚¹ã®æ•°ã®æ¯”è¼ƒä¿‚æ•°
+	const float SAMPLING_RATIO = 2.0;       // ƒTƒ“ƒvƒ‹“_‚Ì”‚Ì”äŠrŒW”
   
-	//æ·±åº¦å€¤ãƒãƒƒãƒ—ã‹ã‚‰æ·±åº¦å€¤ã‚²ãƒƒãƒˆã€‚
+	//[“x’lƒ}ƒbƒv‚©‚ç[“x’lƒQƒbƒgB
 	float dp = zPrepassTexture.Sample(Sampler, input.uv).x;
 
 	float w, h, miplevels;
@@ -58,19 +58,19 @@ float4 PSMain(PSInput input) : SV_Target0
 	float dx = 1.0f / w;
 	float dy = 1.0f / h;
 
-	//SSAOã€‚
-	//uvå€¤ã‹ã‚‰ã€å…ƒã®åº§æ¨™ã‚’å¾©å…ƒã€‚
+	//SSAOB
+	//uv’l‚©‚çAŒ³‚ÌÀ•W‚ğ•œŒ³B
 	//float4 respos = mul(invproj, float4(input.uv*float2(2, -2) + float2(-1, 1), dp, 1));
 	float4 respos = mul(view, worldTexture.Sample(Sampler, input.uv));
 	respos.xyz = respos.xyz / respos.w;
 
 	float div = 0.0f;
 	float ao = 0.0f;
-	//æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’æ³•ç·šãƒãƒƒãƒ—ã‹ã‚‰å–å¾—ã—ã¦ã€å…ƒã®æ³•ç·šã®å€¤ã«æˆ»ã—ã¦ã„ã‚‹ã€‚
+	//–@üƒxƒNƒgƒ‹‚ğ–@üƒ}ƒbƒv‚©‚çæ“¾‚µ‚ÄAŒ³‚Ì–@ü‚Ì’l‚É–ß‚µ‚Ä‚¢‚éB
 	float3 norm = normalize((normalTexture .Sample(Sampler, input.uv).xyz * 2) - 1);
-	//è¨ˆç®—ã™ã‚‹å›æ•°ã€‚
+	//ŒvZ‚·‚é‰ñ”B
 	const int trycnt = 30;
-	//åŠçƒã®åŠå¾„ã€‚
+	//”¼‹…‚Ì”¼ŒaB
 	const float radius = 30.5f;
 
 	float sumDepth = 0.0f;
@@ -81,46 +81,46 @@ float4 PSMain(PSInput input) : SV_Target0
 	int count = 0;
 	if (dp < 1.0f) {
 		for (int i = 0; i < trycnt; ++i) {
-			//ä¹±æ•°ã‹ã‚‰é©å½“ãªãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œæˆã™ã‚‹ã€‚
+			//—”‚©‚ç“K“–‚ÈƒxƒNƒgƒ‹‚ğì¬‚·‚éB
 			float rnd1 = random(float2(i*dx, i*dy)) * 2 - 1;
 			float rnd2 = random(float2(rnd1, i*dy)) * 2 - 1;
 			float rnd3 = random(float2(rnd2, rnd1)) * 2 - 1;
 			float3 omega = normalize(float3(rnd1,rnd2,rnd3));
-			//é©å½“ãªãƒ™ã‚¯ãƒˆãƒ«ã¨æ³•ç·šã®å†…ç©ã‚’å–ã‚‹ã€‚
+			//“K“–‚ÈƒxƒNƒgƒ‹‚Æ–@ü‚Ì“àÏ‚ğæ‚éB
 			float dt = dot(norm, omega);
-			//signã§å†…ç©ã®ç¬¦å·(+ã€-)ã‚’å–å¾—ã™ã‚‹ã€‚
+			//sign‚Å“àÏ‚Ì•„†(+A-)‚ğæ“¾‚·‚éB
 			float sgn = sign(dt);
-			//-ã®å ´åˆã¯+ã«å¤‰æ›ã™ã‚‹ã€‚
+			//-‚Ìê‡‚Í+‚É•ÏŠ·‚·‚éB
 			omega *= sgn;
 			
-			//å†…ç©ã®ç¬¦å·ã‚’-ãªã‚‰+ã«ã™ã‚‹ã€‚
+			//“àÏ‚Ì•„†‚ğ-‚È‚ç+‚É‚·‚éB
 			dt *= sgn;
-			//cosÎ˜ã®ç·å’Œã‚’æ±‚ã‚ãŸã„ã®ã§ã€åŠ ç®—ã™ã‚‹ã€‚
+			//cosƒ¦‚Ì‘˜a‚ğ‹‚ß‚½‚¢‚Ì‚ÅA‰ÁZ‚·‚éB
 			div += dt;
 			
 
-			//æ±‚ã‚ãŸå…ƒã®åº§æ¨™ã«é©å½“ãªãƒ™ã‚¯ãƒˆãƒ«ã‚’åŠ ç®—ã—ã€‚
-			//ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã¨ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã‚ˆã‚Šã€ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¸Šã®åº§æ¨™ã‚’æ±‚ã‚ã‚‹ã€‚
+			//‹‚ß‚½Œ³‚ÌÀ•W‚É“K“–‚ÈƒxƒNƒgƒ‹‚ğ‰ÁZ‚µB
+			//ƒrƒ…[s—ñ‚ÆƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚æ‚èAƒXƒNƒŠ[ƒ“ã‚ÌÀ•W‚ğ‹‚ß‚éB
 			rpos = mul(proj, float4(respos.xyz + omega * radius, 1));
 			//rpos = mul(proj, mul(view,float4(respos.xyz + omega * radius, 1)));
-			//wã§å‰²ã‚‹ã€‚
+			//w‚ÅŠ„‚éB
 			rpos.xyz /= rpos.w;
 
 			//rpos.xy *= float2(0.5f, -0.5f);
 			//rpos.xy += 0.5f;
-			//UVåº§æ¨™ã«å¤‰æ›ã€‚
+			//UVÀ•W‚É•ÏŠ·B
 			//rpos.xy = (rpos.xy + float2(1, -1))* float2(0.5f, -0.5f);
-			//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‚’UVåº§æ¨™ã«å¤‰æ›ã€‚
+			//ƒXƒNƒŠ[ƒ“À•W‚ğUVÀ•W‚É•ÏŠ·B
 			rpos.xy *= float2(0.5f, -0.5f);
 			rpos.xy += 0.5f;
 
 			if (rpos.x >= 0.0f && rpos.x <= 1.0f
 				&& rpos.y >= 0.0f && rpos.y <= 1.0f)
 			{
-				//å®Ÿéš›ã®æ·±åº¦å€¤ã‚’æŒã£ã¦ãã‚‹ã€‚
+				//ÀÛ‚Ì[“x’l‚ğ‚Á‚Ä‚­‚éB
 				realDepth = zPrepassTexture.Sample(Sampler, rpos.xy).x;
 
-				//æ·±åº¦å€¤ãƒãƒƒãƒ—ã‹ã‚‰å®Ÿéš›ã®æ·±åº¦å€¤ã‚’æ¯”è¼ƒã—ã¦ã€é®è”½ã•ã‚Œã¦ã„ãŸã‚‰1.0f*cosÎ˜ã‚’åŠ ç®—ã™ã‚‹ã€‚
+				//[“x’lƒ}ƒbƒv‚©‚çÀÛ‚Ì[“x’l‚ğ”äŠr‚µ‚ÄAÕ•Á‚³‚ê‚Ä‚¢‚½‚ç1.0f*cosƒ¦‚ğ‰ÁZ‚·‚éB
 				//ao += step(realDepth, rpos.z) * dt;
 				if (rpos.z < realDepth)
 				{
@@ -130,38 +130,38 @@ float4 PSMain(PSInput input) : SV_Target0
 				sumDepth += abs(realDepth - rpos.z);
 			}
 		}
-		//cosÎ˜ã®ç·å’Œ(å…¨ã¦ãŒé®è”½ã•ã‚Œã¦ã„ãŸæ™‚ã®å€¤)ã§å‰²ã‚‹ã€‚
+		//cosƒ¦‚Ì‘˜a(‘S‚Ä‚ªÕ•Á‚³‚ê‚Ä‚¢‚½‚Ì’l)‚ÅŠ„‚éB
 		// /= div;
 		sumDepth /= trycnt;
 	
 	}
 
-	// é®è”½ã•ã‚Œãªã„ãƒã‚¤ãƒ³ãƒˆã®æ•°ã‹ã‚‰ç’°å¢ƒé®è”½ä¿‚æ•°ã‚’æ±‚ã‚ã‚‹
+	// Õ•Á‚³‚ê‚È‚¢ƒ|ƒCƒ“ƒg‚Ì”‚©‚çŠÂ‹«Õ•ÁŒW”‚ğ‹‚ß‚é
 	float a = clamp(float(count) * SAMPLING_RATIO / float(trycnt), 0.0, 1.0);
 
 
 	float brightNess = 0.0f;
-	//ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã—ãŸæ·±åº¦å€¤-è¨ˆç®—ã—ãŸæ·±åº¦å€¤ã®å¹³å‡ã€‚
+	//ƒTƒ“ƒvƒŠƒ“ƒO‚µ‚½[“x’l-ŒvZ‚µ‚½[“x’l‚Ì•½‹ÏB
 	//brightNess = sumDepth;
 	brightNess = 1.0f - ao;
-	//è¨ˆç®—ã—ãŸæ·±åº¦å€¤ã€‚
+	//ŒvZ‚µ‚½[“x’lB
 	//brightNess = rpos.z;
-	//ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã—ãŸæ·±åº¦å€¤ã€‚
+	//ƒTƒ“ƒvƒŠƒ“ƒO‚µ‚½[“x’lB
 	//brightNess = realDepth;
 	return float4(a, a, a, 1.0f);
 }
 
-//SSAO(ï¿½ï¿½Zï¿½pï¿½Ì–ï¿½ï¿½xï¿½Ì‚İï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½Î‚æ‚¢)
+//SSAO(??Z?p????x????????????)
 /*float PSMain(PSInput input) : SV_Target0
 {
-	float dp = zPrepassTexture.Sample(Sampler, input.uv).x;//ï¿½ï¿½ï¿½İ‚ï¿½UVï¿½Ì[ï¿½x
+	float dp = zPrepassTexture.Sample(Sampler, input.uv).x;//?????UV??[?x
 
 	float w, h, miplevels;
 	zPrepassTexture.GetDimensions(0, w, h, miplevels);
 	float dx = 1.0f / w;
 	float dy = 1.0f / h;
 
-	//ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½ğ•œŒï¿½ï¿½ï¿½ï¿½ï¿½
+	//??????W???????
 	float4 respos = mul(invproj, float4(input.uv*float2(2, -2) + float2(-1, 1), dp, 1));
 	respos.xyz = respos.xyz / respos.w;
 	float div = 0.0f;
@@ -189,7 +189,7 @@ float4 PSMain(PSInput input) : SV_Target0
 			float4 rpos = mul(proj, mul(view,float4(respos.xyz + omega* radius, 1)));
             //float4 rpos = mul(proj, mul(view,float4(respos.xyz, 1)));
 			rpos.xyz /= rpos.w;
-            //ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã‹ã‚‰UVåº§æ¨™ã«å¤‰æ›ã™ã‚‹ã€‚
+            //ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚©‚çUVÀ•W‚É•ÏŠ·‚·‚éB
             float2 rposUV = rpos.xy;
             rposUV *= float2(0.5f,-0.5f);
             rposUV += 0.5f;

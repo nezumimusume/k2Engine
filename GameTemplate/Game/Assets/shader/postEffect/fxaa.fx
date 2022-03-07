@@ -1,17 +1,17 @@
 /// <summary>
-/// FXAAã€‚
+/// FXAAB
 /// </summary>
 
 
 cbuffer cb : register(b0) {
-    float4x4 mvp;       //ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã€‚
+    float4x4 mvp;       //ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
     float4 mulColor;
 };
 
-//è§£åƒåº¦ã‚’çŸ¥ã‚‹ãŸã‚ã®å®šæ•°ãƒãƒƒãƒ•ã‚¡â€•ã€‚
+//‰ğ‘œ“x‚ğ’m‚é‚½‚ß‚Ì’è”ƒoƒbƒtƒ@\B
 cbuffer CresolutionB : register(b1) {
-    float bufferW;  //æ¨ªã®è§£åƒåº¦ã€‚
-    float bufferH;  //ç¸¦ã®è§£åƒåº¦ã€‚
+    float bufferW;  //‰¡‚Ì‰ğ‘œ“xB
+    float bufferH;  //c‚Ì‰ğ‘œ“xB
 };
 
 
@@ -25,10 +25,10 @@ struct PSInput {
     float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> sceneTexture : register(t0);     //FXAAã‚’ã‹ã‘ã‚‹ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ã€‚
-sampler Sampler : register(s0);     //ã‚µãƒ³ãƒ—ãƒ©ãƒ¼ã€‚
+Texture2D<float4> sceneTexture : register(t0);     //FXAA‚ğ‚©‚¯‚éƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ÌƒVƒF[ƒ_[ƒŠƒ\[ƒXB
+sampler Sampler : register(s0);     //ƒTƒ“ƒvƒ‰[B
 
-//FXAAé–¢ä¿‚ã€‚
+//FXAAŠÖŒWB
 
 
 PSInput VSMain(VSInput In)
@@ -51,7 +51,7 @@ float4 FxaaPixelShader(
     float2 sceneTexSize
 )
 {
-	//è¿‘å‚4ãƒ†ã‚¯ã‚»ãƒ«ã‚’ãƒ•ã‚§ãƒƒãƒã€‚
+	//‹ß–T4ƒeƒNƒZƒ‹‚ğƒtƒFƒbƒ`B
 	float4 nTex = float4( 
 		pos.x + 0.5f/sceneTexSize.x, 
 		pos.y + 0.5f/sceneTexSize.y,
@@ -67,7 +67,7 @@ float4 FxaaPixelShader(
 	float lumaM = rgbyM.y;
 	
 	
-	//è¿‘å‚ãƒ†ã‚¯ã‚»ãƒ«ã®è¼åº¦ã®å·®ã‚’èª¿ã¹ã‚‹ã€‚
+	//‹ß–TƒeƒNƒZƒ‹‚Ì‹P“x‚Ì·‚ğ’²‚×‚éB
 	float lumaMaxNwSw = max(lumaNw, lumaSw);
     lumaNe += 1.0/384.0;
     float lumaMinNwSw = min(lumaNw, lumaSw);
@@ -87,12 +87,12 @@ float4 FxaaPixelShader(
     float lumaMaxSubMinM = lumaMaxM - lumaMinM;
     float dirSeMinusNw = lumaSe - lumaNw;
     if(lumaMaxSubMinM < lumaMaxScaledClamped){
-		//è¼åº¦ã®å·®ãŒã—ãã„å€¤ä»¥ä¸‹ã ã£ãŸã®ã§ã€ã“ã®ãƒ”ã‚¯ã‚»ãƒ«ã¯ã‚¢ãƒ³ãƒã‚’ã‹ã‘ãªã„ã€‚
+		//‹P“x‚Ì·‚ª‚µ‚«‚¢’lˆÈ‰º‚¾‚Á‚½‚Ì‚ÅA‚±‚ÌƒsƒNƒZƒ‹‚ÍƒAƒ“ƒ`‚ğ‚©‚¯‚È‚¢B
 		 return rgbyM;
 	}
     
 /*--------------------------------------------------------------------------*/
-	//è¼åº¦ã®å·®ã‚’åˆ©ç”¨ã—ã¦ã€ã‚®ã‚¶ã‚®ã‚¶ãŒç™ºç”Ÿã—ã¦ã„ã‚‹å¯èƒ½æ€§ã®é«˜ã„ãƒ†ã‚¯ã‚»ãƒ«ã‚’ãƒ•ã‚§ãƒƒãƒã™ã‚‹ã€‚
+	//‹P“x‚Ì·‚ğ—˜—p‚µ‚ÄAƒMƒUƒMƒU‚ª”­¶‚µ‚Ä‚¢‚é‰Â”\«‚Ì‚‚¢ƒeƒNƒZƒ‹‚ğƒtƒFƒbƒ`‚·‚éB
     float2 dir;
     dir.x = dirSwMinusNe + dirSeMinusNw;
     dir.y = dirSwMinusNe - dirSeMinusNw;
@@ -110,14 +110,14 @@ float4 FxaaPixelShader(
     float4 rgbyP2 = sceneTexture.Sample(Sampler, pos.xy + dir2 * fxaaConsoleRcpFrameOpt2.zw);
     
 /*--------------------------------------------------------------------------*/
-	//ãƒ–ãƒ¬ãƒ³ãƒ‰ãƒ–ãƒ¬ãƒ³ãƒ‰ã€‚
+	//ƒuƒŒƒ“ƒhƒuƒŒƒ“ƒhB
     float4 rgbyA = rgbyN1 + rgbyP1;
     float4 rgbyB = ((rgbyN2 + rgbyP2) * 0.25) + (rgbyA * 0.25);
 /*--------------------------------------------------------------------------*/
     int twoTap = (rgbyB.y < lumaMin) || (rgbyB.y > lumaMax);
     
     if(twoTap){
-		//ã¾ã è¼åº¦ã®å·®ãŒå¤§ãã„ã®ã§ã€å†åº¦ãƒ–ãƒ¬ãƒ³ãƒ‰ã€‚
+		//‚Ü‚¾‹P“x‚Ì·‚ª‘å‚«‚¢‚Ì‚ÅAÄ“xƒuƒŒƒ“ƒhB
 		rgbyB.xyz = rgbyA.xyz * 0.5;
 	}
  
@@ -144,7 +144,7 @@ float4 PSMain( PSInput In ) : SV_Target0
         0.0833f,								// FxaaFloat fxaaConsoleEdgeThresholdMin,
         texSize
 	);
-    // ã‚¬ãƒ³ãƒè£œæ­£ã€‚
+    // ƒKƒ“ƒ}•â³B
     color.xyz =  pow(max( color.xyz, 0.0001f ), 1.0f/2.2f);
     return color;
 }

@@ -4,44 +4,44 @@
 
 
 ///////////////////////////////////////
-// æ§‹é€ ä½“ã€‚
+// \‘¢‘ÌB
 ///////////////////////////////////////
 
 
-// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸ã®å…¥åŠ›
+// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ö‚Ì“ü—Í
 struct SPSIn
 {
-    float4 pos : SV_POSITION;       //åº§æ¨™ã€‚
-    float3 depth : TEXCOORD0;       //æ·±åº¦å€¤ã€‚xã«ã¯ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ç©ºé–“ã€yã«ã¯ã‚«ãƒ¡ãƒ©ç©ºé–“ã§ã®æ­£è¦åŒ–ã•ã‚ŒãŸZå€¤ã€zã«ã¯ã‚«ãƒ¡ãƒ©ç©ºé–“ã§ã®Zå€¤
+    float4 pos : SV_POSITION;       //À•WB
+    float3 depth : TEXCOORD0;       //[“x’lBx‚É‚ÍƒvƒƒWƒFƒNƒVƒ‡ƒ“‹óŠÔAy‚É‚ÍƒJƒƒ‰‹óŠÔ‚Å‚Ì³‹K‰»‚³‚ê‚½Z’lAz‚É‚ÍƒJƒƒ‰‹óŠÔ‚Å‚ÌZ’l
 };
 
 
 ///////////////////////////////////////
-// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®å…±é€šå‡¦ç†ã‚’ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ã€‚
+// ’¸“_ƒVƒF[ƒ_[‚Ì‹¤’Êˆ—‚ðƒCƒ“ƒNƒ‹[ƒh‚·‚éB
 ///////////////////////////////////////
 #include "../ModelVSCommon.h"
 
 
 ///////////////////////////////////////
-// é–¢æ•°
+// ŠÖ”
 ///////////////////////////////////////
 
-// ãƒ¢ãƒ‡ãƒ«ç”¨ã®é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆ
+// ƒ‚ƒfƒ‹—p‚Ì’¸“_ƒVƒF[ƒ_[‚ÌƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg
 SPSIn VSMainCore(SVSIn vsIn, float4x4 mWorldLocal, uniform bool isUsePreComputedVertexBuffer)
 {
     SPSIn psIn;
-    // é ‚ç‚¹åº§æ¨™ã‚’ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã«å¤‰æ›ã™ã‚‹ã€‚
+    // ’¸“_À•W‚ðƒ[ƒ‹ƒhÀ•WŒn‚É•ÏŠ·‚·‚éB
     psIn.pos = CalcVertexPositionInWorldSpace(vsIn.pos, mWorldLocal, isUsePreComputedVertexBuffer);
-    psIn.pos = mul(mView, psIn.pos);        // ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã«å¤‰æ›
+    psIn.pos = mul(mView, psIn.pos);        // ƒ[ƒ‹ƒhÀ•WŒn‚©‚çƒJƒƒ‰À•WŒn‚É•ÏŠ·
     psIn.depth.z = psIn.pos.z;
-    psIn.pos = mul(mProj, psIn.pos);        // ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã‹ã‚‰ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã«å¤‰æ›
+    psIn.pos = mul(mProj, psIn.pos);        // ƒJƒƒ‰À•WŒn‚©‚çƒXƒNƒŠ[ƒ“À•WŒn‚É•ÏŠ·
     psIn.depth.x = psIn.pos.z / psIn.pos.w;
     psIn.depth.y = saturate( psIn.pos.w / 1000.0f );
     
     return psIn;
 }
 
-// ãƒ¢ãƒ‡ãƒ«ç”¨ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆ
+// ƒ‚ƒfƒ‹—p‚ÌƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚ÌƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
     return float4( psIn.pos.z, psIn.depth.y, psIn.depth.z, 1.0f );

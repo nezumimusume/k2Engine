@@ -1,28 +1,28 @@
 /*!
- * @brief ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’è¨ˆç®—ã™ã‚‹å‡¦ç†ã€‚
+ * @brief ƒAƒjƒ[ƒVƒ‡ƒ“Ï‚İ’¸“_ƒoƒbƒtƒ@‚ğŒvZ‚·‚éˆ—B
  */
 
 
 struct SVertex{
-    float3 pos;			//åº§æ¨™ã€‚
-    float3 normal;		//æ³•ç·šã€‚
-    float3 tangent;		//æ¥ãƒ™ã‚¯ãƒˆãƒ«ã€‚
-    float3 binormal;	//å¾“ãƒ™ã‚¯ãƒˆãƒ«ã€‚
-    float2 uv;			//UVåº§æ¨™ã€‚
-    int4 indices;		//ã‚¹ã‚­ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€‚
-    float4 skinWeights;	//ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆã€‚
+    float3 pos;			//À•WB
+    float3 normal;		//–@üB
+    float3 tangent;		//ÚƒxƒNƒgƒ‹B
+    float3 binormal;	//]ƒxƒNƒgƒ‹B
+    float2 uv;			//UVÀ•WB
+    int4 indices;		//ƒXƒLƒ“ƒCƒ“ƒfƒbƒNƒXB
+    float4 skinWeights;	//ƒXƒLƒ“ƒEƒFƒCƒgB
 };
 
 cbuffer cbParam : register(b0)
 {
-    float4x4 worldMatrix;   // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã€‚
-    int numVertex ;         // é ‚ç‚¹æ•°ã€‚    
-    int numInstance;        // ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®æœ€å¤§æ•°ã€‚
+    float4x4 worldMatrix;   // ƒ[ƒ‹ƒhs—ñB
+    int numVertex ;         // ’¸“_”B    
+    int numInstance;        // ƒCƒ“ƒXƒ^ƒ“ƒX‚ÌÅ‘å”B
 }
 
 StructuredBuffer<SVertex> g_iputVertexBuffer : register(t0);
-StructuredBuffer<float4x4> g_boneMatrix         : register(t1);	    // ãƒœãƒ¼ãƒ³è¡Œåˆ—ã€‚
-StructuredBuffer<float4x4> g_worldMatrixArray   : register(t2);     // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®é…åˆ—ã€‚ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚·ãƒ³ã‚°ãƒ‡ã‚£ã‚¹ãƒ‘ãƒƒãƒã®éš›ã«ä½¿ã‚ã‚Œã‚‹ã€‚
+StructuredBuffer<float4x4> g_boneMatrix         : register(t1);	    // ƒ{[ƒ“s—ñB
+StructuredBuffer<float4x4> g_worldMatrixArray   : register(t2);     // ƒ[ƒ‹ƒhs—ñ‚Ì”z—ñBƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒOƒfƒBƒXƒpƒbƒ`‚ÌÛ‚Ég‚í‚ê‚éB
 RWStructuredBuffer<SVertex> g_outputVertexBuffer : register(u0);
 
 #define NUM_THREAD_X        256
@@ -44,7 +44,7 @@ void CSMain(
         SVertex inVertex = g_iputVertexBuffer[vertexNo];
         float4x4 worldMatrixLocal = 0;	
         if( inVertex.skinWeights[0] > 0.0f){
-            // ã‚¹ã‚­ãƒ³ã‚ã‚Šã€‚            
+            // ƒXƒLƒ“‚ ‚èB            
             float w = 0.0f;
             [unroll]
             for (int i = 0; i < 3; i++)
@@ -55,7 +55,7 @@ void CSMain(
 
             worldMatrixLocal += g_boneMatrix[inVertex.indices[3]] * (1.0f - w);
         }else{
-            // ã‚¹ã‚­ãƒ³ãªã—ã€‚
+            // ƒXƒLƒ“‚È‚µB
             if( numInstance == 1){
                 worldMatrixLocal = worldMatrix;
             }else{

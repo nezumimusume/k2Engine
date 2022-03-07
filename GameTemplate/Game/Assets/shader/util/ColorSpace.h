@@ -1,15 +1,15 @@
 /*!
- *@brief    è‰²ç©ºé–“é–¢ä¿‚ã®ãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ã€‚
+ *@brief    F‹óŠÔŠÖŒW‚Ìƒwƒbƒ_[ƒtƒ@ƒCƒ‹B
  */
 
 #ifndef _COLOR_SPACE_H_
 #define _COLOR_SPACE_H_
 ////////////////////////////////////////////////////////
-// RGB->HSV, HSV->RGBã¸ã®è‰²ç©ºé–“å¤‰æ›é–¢é€£ã®é–¢æ•°é›†ã€‚
+// RGB->HSV, HSV->RGB‚Ö‚ÌF‹óŠÔ•ÏŠ·ŠÖ˜A‚ÌŠÖ”WB
 ////////////////////////////////////////////////////////
 
 /*!
- * @brief RGBç³»ã‹ã‚‰HSVç³»ã«å¤‰æ›ã™ã‚‹ã€‚
+ * @brief RGBŒn‚©‚çHSVŒn‚É•ÏŠ·‚·‚éB
  */
 float3 Rgb2Hsv(float3 c)
 {
@@ -22,14 +22,14 @@ float3 Rgb2Hsv(float3 c)
     return float3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 }
 /*!
- * @brief RGBç³»ã‹ã‚‰HSVã®V(è¼åº¦)ã‚’æ±‚ã‚ã‚‹ã€‚
+ * @brief RGBŒn‚©‚çHSV‚ÌV(‹P“x)‚ğ‹‚ß‚éB
  */
 float Rgb2V( float3 rgb)
 {
     return max(rgb.r, max(rgb.g, rgb.b));
 }
 /*!
- * @brief HSVç³»ã‹ã‚‰RGBç³»ã«å¤‰æ›ã™ã‚‹ã€‚
+ * @brief HSVŒn‚©‚çRGBŒn‚É•ÏŠ·‚·‚éB
  */
 float3 Hsv2Rgb(float3 c)
 {
