@@ -79,7 +79,12 @@ namespace nsK2EngineLow {
 			WaitForSingleObject(m_fenceEvent, INFINITE);
 		}
 	}
-	bool GraphicsEngine::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeight)
+	bool GraphicsEngine::Init(
+		HWND hwnd, 
+		UINT frameBufferWidth, 
+		UINT frameBufferHeight,
+		const raytracing::InitData& raytracingInitData
+	)
 	{
 		//
 		g_graphicsEngine = this;
@@ -171,7 +176,7 @@ namespace nsK2EngineLow {
 		//フォント描画エンジンを初期化。
 		m_fontEngine.Init();
 		//レイトレエンジンを初期化。
-		m_raytracingEngine.Init();
+		m_raytracingEngine.Init(raytracingInitData);
 		return true;
 	}
 

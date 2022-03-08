@@ -44,6 +44,7 @@ Texture2D<float4> g_refractionMap : register(t5);                   // ‹üÜƒ}ƒbƒ
 StructuredBuffer<SVertex> g_vertexBuffers : register(t6);           // ’¸“_ƒoƒbƒtƒ@[B
 StructuredBuffer<int> g_indexBuffers : register(t7);                // ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@[B
 TextureCube<float4> g_skyCubeMap : register(t8);                    // ƒXƒJƒCƒLƒ…[ƒuƒ}ƒbƒvB
+StructuredBuffer<DirectionalLight> g_light : register(t9);          // ƒ‰ƒCƒgB
 
 RWTexture2D<float4> gOutput : register(u0);
 
@@ -54,8 +55,19 @@ struct RayPayload
     float3 color;               // ƒJƒ‰[
     int hit;
     int depth;
+    float3 cameraPos;
 };
+// ƒŒƒC‚ªÕ“Ë‚µ‚½“_‚Ìƒ[ƒ‹ƒhÀ•W‚ğŒvZ‚·‚éB
+float3 GetHitPosInWorld()
+{
+    float hitT = RayTCurrent();
+    float3 rayDirW = WorldRayDirection();
+    float3 rayOriginW = WorldRayOrigin();
+    float3 posW = rayOriginW + hitT * rayDirW;
 
+    return posW;
+
+}
 // UVÀ•W‚ğæ“¾
 float2 GetUV(BuiltInTriangleIntersectionAttributes attribs)
 {
@@ -203,6 +215,7 @@ void rayGen()
 
     RayPayload payload;
     payload.depth = 0;
+    payload.cameraPos = g_camera.pos;
 
     //TraceRay
     TraceRay(g_raytracingWorld, 0 /*rayFlags*/, 0xFF, 0 /* ray index*/, 0, 0, ray, payload);
@@ -228,19 +241,32 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
 
     // ƒqƒbƒg‚µ‚½ƒvƒŠƒ~ƒeƒBƒu‚Ì–@ü‚ğæ“¾
     float3 normal = GetNormal(attribs, uv);
-    
+    // ƒJƒ‰[
+    float3 color = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
+    float4 metallicSmooth = g_specularMap.SampleLevel(s, uv, 0.0f);
     // ŒõŒ¹‚É‚Ş‚©‚Á‚ÄƒŒƒC‚ğ”ò‚Î‚·
     TraceLightRay(payload, normal);
-    float lig = 0.0f;
-    if(payload.hit == 0)
+    // 
+    DirectionalLight light = g_light[0];
+    float3 lig = 0.0f;
+    //if(payload.hit == 0)
     {
-        float3 ligDir =  normalize(float3(0.5, 0.5, 0.2));
-        float t = max(0.0f, dot(ligDir, normal));
-        lig = t;
+        float3 worldPos = GetHitPosInWorld();
+        float3 toEye = normalize( payload.cameraPos - worldPos);
+        lig = CalcLighting(
+            light.direction,
+            light.color,
+            normal,
+            toEye,
+            float4(color, 1.0f),
+            metallicSmooth.r,
+            metallicSmooth.a,
+            color
+        );
     }
 
     //ŠÂ‹«Œõ
-    lig += 0.5f;
+    lig += 0.5f * color;
     RayPayload refPayload;
     refPayload.depth = payload.depth;
     refPayload.color = 0;
@@ -248,16 +274,14 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     // ”½ËƒŒƒC
     TraceReflectionRay(refPayload, normal);
 
-    // ‚±‚ÌƒvƒŠƒ~ƒeƒBƒu‚Ì”½Ë—¦‚ğæ“¾
-    float reflectRate = g_specularMap.SampleLevel(s, uv, 0.0f).a;
-    float3 color = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
     color *= lig;
     if( payload.depth == 1){
         payload.color = refPayload.color;
     }else{
-        payload.color = lerp(color, refPayload.color, reflectRate);
+        payload.color = lerp(color, refPayload.color,  metallicSmooth.a);
     }
     
+    payload.color = float3(uv, 0.0f);
     payload.depth--;
 }
 

@@ -31,7 +31,7 @@ namespace nsK2EngineLow {
 			pDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &bufDesc, initState, nullptr, IID_PPV_ARGS(&pBuffer));
 			return pBuffer;
 		}
-		void Engine::Init()
+		void Engine::Init(const InitData& initData)
 		{
 			auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 
@@ -59,6 +59,15 @@ namespace nsK2EngineLow {
 			// レイトレエンジン側でダブルバッファにしているので、内部ではダブルバッファにしない。
 			m_rayGenerationCB[0].Init(sizeof(Camera), &cam, false);
 			m_rayGenerationCB[1].Init(sizeof(Camera), &cam, false);
+
+			for (int bufferNo = 0; bufferNo < 2; bufferNo++) {
+				m_expandSRV[bufferNo] = std::make_unique< ExpanadSRV>();
+				m_expandSRV[bufferNo]->Init(
+					initData.m_expandShaderResource,
+					initData.m_expandShaderResourceSize
+				);
+			}
+			
 		}
 		void Engine::CommitRegistGeometry(RenderContext& rc)
 		{
@@ -70,7 +79,14 @@ namespace nsK2EngineLow {
 			
 			for (int i = 0; i < 2; i++) {
 				// 各種リソースをディスクリプタヒープに登録する。
-				m_descriptorHeaps[i].Init(i, m_world, m_outputResource, m_rayGenerationCB[i], m_skycubeBox);
+				m_descriptorHeaps[i].Init(
+					i, 
+					m_world, 
+					m_outputResource, 
+					m_rayGenerationCB[i], 
+					m_skycubeBox,
+					m_expandSRV[i]->m_structuredBuffer
+				);
 				// PSOを作成。
 				m_pipelineStateObject[i].Init(m_descriptorHeaps[i]);
 				// シェーダーテーブルを作成。
@@ -93,7 +109,7 @@ namespace nsK2EngineLow {
 			// レイトレワールドを構築する。
 			m_world.Build(rc);
 
-			//カリカリ
+			// カメラを更新。
 			Camera cam;
 			cam.pos = g_camera3D->GetPosition();
 			cam.mViewProjInv = g_camera3D->GetViewProjectionMatrixInv();
@@ -101,6 +117,9 @@ namespace nsK2EngineLow {
 			cam.fNear = g_camera3D->GetNear();
 			cam.fFar = g_camera3D->GetFar();
 			m_rayGenerationCB[backBufferNo].CopyToVRAM(cam);
+
+			// 拡張ストラクチャードバッファを更新。
+			m_expandSRV[backBufferNo]->m_structuredBuffer.Update(m_expandSRV[backBufferNo]->m_srcData);
 
 			D3D12_RESOURCE_BARRIER barrier = {};
 			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

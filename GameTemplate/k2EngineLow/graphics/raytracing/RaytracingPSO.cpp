@@ -295,8 +295,8 @@ namespace nsK2EngineLow {
 			struct RayPayload
 			{
 				Vector4 color;
-				Vector4 reflectionColor;
 				Vector4 hit_depth;
+				Vector4 cameraPos;
 			};
 			shaderConfig.Init(sizeof(float) * 2, sizeof(RayPayload));
 			subobjects[index] = shaderConfig.subobject; // 

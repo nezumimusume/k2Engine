@@ -3,6 +3,11 @@
 
 namespace nsK2Engine {
 
+    RenderingEngine::RenderingEngine()
+    {
+        // シーンライト
+        g_sceneLight = &m_sceneLight;
+    }
     RenderingEngine::~RenderingEngine()
     {
         g_sceneLight = nullptr;
@@ -33,8 +38,7 @@ namespace nsK2Engine {
             m_gBuffer[enGBufferNormal],
             m_gBuffer[enGBufferMetaricShadowSmooth],
             m_gBuffer[enGBufferAlbedoDepth]);
-        // シーンライト
-        g_sceneLight = &m_sceneLight;
+        
     }
     void RenderingEngine::InitDefferedLighting_Sprite()
     {

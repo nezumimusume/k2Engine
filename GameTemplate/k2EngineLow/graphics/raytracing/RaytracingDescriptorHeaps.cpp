@@ -9,13 +9,14 @@ namespace nsK2EngineLow {
 			World& world,
 			GPUBuffer& outputBuffer,
 			ConstantBuffer& rayGeneCB,
-			Texture& skycubeBox
+			Texture& skycubeBox,
+			StructuredBuffer& expandSRV
 		)
 		{
 
 			//レイトレの出力先をディスクリプタヒープに登録する。
 			m_srvUavCbvHeap.Init(
-				world.GetNumInstance() * (int)ESRV_OneEntry::eNum,
+				world.GetNumInstance() * (int)ESRV_OneEntry::eNum ,
 				1,
 				1,
 				1
@@ -70,6 +71,11 @@ namespace nsK2EngineLow {
 				m_srvUavCbvHeap.RegistShaderResource(
 					regNo + (int)ESRV_OneEntry::eSkyCubeBox,
 					skycubeBox
+				);
+				// 拡張SRV
+				m_srvUavCbvHeap.RegistShaderResource(
+					regNo + (int)ESRV_OneEntry::eExpandShaderResrouce,
+					expandSRV
 				);
 				
 				regNo += (int)ESRV_OneEntry::eNum;

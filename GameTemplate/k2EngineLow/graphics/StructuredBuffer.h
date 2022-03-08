@@ -17,7 +17,8 @@ namespace nsK2EngineLow {
 		/// <param name="sizeOfElement">エレメントのサイズ。</param>
 		/// <param name="numElement">エレメントの数。</param>
 		/// <param name="initData">初期データ。</param>
-		void Init(int sizeOfElement, int numElement, void* initData);
+		/// <param name="isDoubleBuffer">内部でダブルバッファ化する？。</param>
+		void Init(int sizeOfElement, int numElement, void* initData, bool isDoubleBuffer = true);
 		/// <summary>
 		/// 頂点バッファを使って構造化バッファを初期化する。
 		/// </summary>
@@ -53,13 +54,17 @@ namespace nsK2EngineLow {
 		/// 解放処理。
 		/// </summary>
 		void Release();
+		/// <summary>
+		/// バックバッファの番号を取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetBackBufferNo() const;
 	private:
 		ID3D12Resource* m_buffersOnGPU[2] = { nullptr };
 		void* m_buffersOnCPU[2] = { nullptr };		//CPU側からアクセスできるするストラクチャバッファのアドレス。
 		int m_numElement = 0;						//要素数。
 		int m_sizeOfElement = 0;					//エレメントのサイズ。
-		bool m_isInited = false;
-
-		//初期化済み？
+		bool m_isInited = false;					//初期化済み？
+		bool m_isDoubleBuffer = true;
 	};
 }

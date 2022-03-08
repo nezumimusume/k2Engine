@@ -15,7 +15,16 @@ namespace nsK2Engine {
 		g_collisionObjectManager = &m_collisionObjectManager;
 		g_renderingEngine = &m_renderingEngine;
 
-		m_k2EngineLow.Init(initData.hwnd, initData.frameBufferWidth, initData.frameBufferHeight);
+		raytracing::InitData raytracintInitData;
+		raytracintInitData.m_expandShaderResource = &g_sceneLight->GetSceneLight().directionalLight[0];
+		raytracintInitData.m_expandShaderResourceSize = sizeof(g_sceneLight->GetSceneLight().directionalLight[0]);
+		
+		m_k2EngineLow.Init(
+			initData.hwnd, 
+			initData.frameBufferWidth, 
+			initData.frameBufferHeight,
+			raytracintInitData
+		);
 		m_renderingEngine.Init(initData.isSoftShadow);
 		g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
 		g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });

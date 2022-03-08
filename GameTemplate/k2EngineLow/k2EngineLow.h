@@ -13,7 +13,9 @@ namespace nsK2EngineLow {
 	class GameTime;
 	class Texture;
 	class Font;
-
+	namespace raytracing {
+		struct InitData;
+	}
 	class K2EngineLow {
 	public:
 		/// <summary>
@@ -58,7 +60,12 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// ゲームエンジンの初期化。
 		/// </summary>
-		void Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeight);
+		void Init(
+			HWND hwnd, 
+			UINT frameBufferWidth, 
+			UINT frameBufferHeight,
+			const raytracing::InitData& raytracingInitData
+		);
 		/// <summary>
 		/// tksファイルをバンクから取得。
 		/// </summary>

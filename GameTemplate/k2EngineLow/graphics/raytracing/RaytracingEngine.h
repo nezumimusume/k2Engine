@@ -12,6 +12,28 @@ namespace nsK2EngineLow {
 	class Model;
 	namespace raytracing {
 
+		/// <summary>
+		/// 初期化情報
+		/// </summary>
+		struct InitData {
+			void*	m_expandShaderResource;		// 拡張シェーダーリソースの配列。
+			int		m_expandShaderResourceSize;	// 拡張シェーダーリソースのサイズの配列。
+		};
+		/// <summary>
+		/// 拡張シェーダーリソース
+		/// </summary>
+		struct ExpanadSRV {
+			void Init(void* srcData, int srcDataSize)
+			{
+				m_srcData = srcData;
+				m_srcDataSize = srcDataSize;
+				m_structuredBuffer.Init(srcDataSize, 1, srcData, false);
+			}
+			void* m_srcData = nullptr;				// ソースデータ。
+			int m_srcDataSize = 0;					// ソースデータのサイズ。
+			StructuredBuffer m_structuredBuffer;	// ストラクチャードバッファ。
+		};
+		using ExpanadSRVPtr = std::unique_ptr< ExpanadSRV>;
 
 		class Engine : public Noncopyable
 		{
@@ -20,7 +42,8 @@ namespace nsK2EngineLow {
 			/// <summary>
 			/// 初期化。
 			/// </summary>
-			void Init();
+			/// <param name="initData">初期化データ</param>
+			void Init(const InitData& initData);
 			/// <summary>
 			/// レイトレーシングをディスパッチ。
 			/// </summary>
@@ -88,20 +111,16 @@ namespace nsK2EngineLow {
 				float fNear;			// 近平面。
 				float pad[2];			// パディング。
 			};
-			/// <summary>
-			/// 定数バッファ。b0に割り当てられる。
-			/// </summary>
-			struct CB_0 {
-			};
-			ConstantBuffer m_rayGenerationCB[2];		// レイジェネレーションの定数バッファ。
-			World m_world;								// レイトレワールド。
-			PSO m_pipelineStateObject[2];				// パイプラインステートオブジェクト
-			ShaderTable m_shaderTable[2];				// シェーダーテーブル。
-			DescriptorHeaps m_descriptorHeaps[2];		// レイトレで使用するディスクリプタヒープの管理者。
-			GPUBuffer m_outputResource;					// レイトレースの結果の出力先。
-			Texture m_outputTexture;					// レイトレースの結果の出力先(テクスチャ)
-			Texture m_skycubeBox;						// スカイキューブボックス。
-			bool m_isDirty = false;						// ダーティフラグ。
+			ExpanadSRVPtr m_expandSRV[2];						// 拡張シェーダーリソースビュー。
+			ConstantBuffer m_rayGenerationCB[2];				// レイジェネレーションの定数バッファ。
+			World m_world;										// レイトレワールド。
+			PSO m_pipelineStateObject[2];						// パイプラインステートオブジェクト
+			ShaderTable m_shaderTable[2];						// シェーダーテーブル。
+			DescriptorHeaps m_descriptorHeaps[2];				// レイトレで使用するディスクリプタヒープの管理者。
+			GPUBuffer m_outputResource;							// レイトレースの結果の出力先。
+			Texture m_outputTexture;							// レイトレースの結果の出力先(テクスチャ)
+			Texture m_skycubeBox;								// スカイキューブボックス。
+			bool m_isDirty = false;								// ダーティフラグ。
 		};
 	}//namespace raytracing
 }//namespace nsK2EngineLow 

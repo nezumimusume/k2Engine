@@ -115,18 +115,19 @@ namespace nsK2EngineLow {
 		/// この列挙子が各インスタンスに割り当てられているシェーダーリソースを表しています。
 		/// </remarks>
 		enum class ESRV_OneEntry {
-			eStartRayGenerationSRV,				//レイジェネレーションシェーダーで利用するSRVの開始番号。
-			eTLAS = eStartRayGenerationSRV,		//TLAS
-			eEndRayGenerationSRV,					//レイジェネレーションで使用されるSRVの数。
-			eAlbedoMap = eEndRayGenerationSRV,	//アルベドマップ。
-			eNormalMap,							//法線マップ。
-			eSpecularMap,						//スペキュラマップ。
-			eReflectionMap,						//リフレクションマップ。
-			eRefractionMap,						//屈折マップ。
-			eVertexBuffer,						//頂点バッファ。
-			eIndexBuffer,						//インデックスバッファ。
+			eStartRayGenerationSRV,				// レイジェネレーションシェーダーで利用するSRVの開始番号。
+			eTLAS = eStartRayGenerationSRV,		// TLAS
+			eEndRayGenerationSRV,				// レイジェネレーションで使用されるSRVの数。
+			eAlbedoMap = eEndRayGenerationSRV,	// アルベドマップ。
+			eNormalMap,							// 法線マップ。
+			eSpecularMap,						// スペキュラマップ。
+			eReflectionMap,						// リフレクションマップ。
+			eRefractionMap,						// 屈折マップ。
+			eVertexBuffer,						// 頂点バッファ。
+			eIndexBuffer,						// インデックスバッファ。
 			eSkyCubeBox,						// スカイキューブボックス
-			eNum,			//SRVの数。
+			eExpandShaderResrouce,				// 拡張シェーダーリソース。
+			eNum,								// SRVの数。
 			eNumRayGenerationSRV = eEndRayGenerationSRV - eStartRayGenerationSRV,	//レイジェネレーションシェーダーで使用するSRVの数。
 		};
 		/// <summary>
