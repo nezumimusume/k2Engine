@@ -94,7 +94,7 @@ float3 GetNormal(BuiltInTriangleIntersectionAttributes attribs, float2 uv)
     float3 barycentrics = float3(1.0 - attribs.barycentrics.x - attribs.barycentrics.y, attribs.barycentrics.x, attribs.barycentrics.y);
 
     // プリミティブIDを取得
-    uint primID = PrimitiveIndex();
+    uint primID = 1;// PrimitiveIndex();
 
     // プリミティブIDから頂点番号を取得する
     uint v0_id = g_indexBuffers[primID * 3];
@@ -124,7 +124,7 @@ float3 GetNormal(BuiltInTriangleIntersectionAttributes attribs, float2 uv)
 
     float3 newNormal = tangent * binSpaceNormal.x + binormal * binSpaceNormal.y + normal * binSpaceNormal.z ;
 
-    return newNormal;
+    return normal0;
 }
 
 // 光源に向けてレイを飛ばす
@@ -281,7 +281,7 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
         payload.color = lerp(color, refPayload.color,  metallicSmooth.a);
     }
     
-    payload.color = float3(uv, 0.0f);
+    payload.color = normal;
     payload.depth--;
 }
 
