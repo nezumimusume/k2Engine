@@ -39,7 +39,7 @@ namespace nsK2EngineLow {
 			D3D12_RESOURCE_DESC resDesc = {};
 			resDesc.DepthOrArraySize = 1;
 			resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-			resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // The backbuffer is actually DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, but sRGB formats can't be used with UAVs. We will convert to sRGB ourselves in the shader
+			resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; 
 			resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 			resDesc.Height = g_graphicsEngine->GetFrameBufferHeight();
 			resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;

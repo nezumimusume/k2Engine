@@ -57,11 +57,13 @@ namespace nsK2EngineLow {
 					instance->m_material = mesh.m_materials[i];
 					if (model.IsComputedAnimationVertexBuffer()) {
 						instance->m_vertexBufferRWSB.Init(model.GetAnimatedVertexBuffer(meshNo), false);
+						instance->m_indexBufferRWSB.Init(model.GetAnimatedIndexBuffer(meshNo, i), false);
 					}
 					else {
 						instance->m_vertexBufferRWSB.Init(mesh.m_vertexBuffer, false);
+						instance->m_indexBufferRWSB.Init(*mesh.m_indexBufferArray[i], false);
 					}
-					instance->m_indexBufferRWSB.Init(*mesh.m_indexBufferArray[i], false);
+					
 					if (model.IsComputedAnimationVertexBuffer()	) {
 						// アニメーション済み頂点バッファを利用する場合は、すでにワールド空間に変換済み。
 						instance->geometoryDesc.Triangles.Transform3x4 = 0;

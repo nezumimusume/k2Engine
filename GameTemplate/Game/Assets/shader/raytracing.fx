@@ -94,7 +94,7 @@ float3 GetNormal(BuiltInTriangleIntersectionAttributes attribs, float2 uv)
     float3 barycentrics = float3(1.0 - attribs.barycentrics.x - attribs.barycentrics.y, attribs.barycentrics.x, attribs.barycentrics.y);
 
     // プリミティブIDを取得
-    uint primID = 1;// PrimitiveIndex();
+    uint primID = PrimitiveIndex();
 
     // プリミティブIDから頂点番号を取得する
     uint v0_id = g_indexBuffers[primID * 3];
@@ -124,7 +124,7 @@ float3 GetNormal(BuiltInTriangleIntersectionAttributes attribs, float2 uv)
 
     float3 newNormal = tangent * binSpaceNormal.x + binormal * binSpaceNormal.y + normal * binSpaceNormal.z ;
 
-    return normal0;
+    return newNormal;
 }
 
 // 光源に向けてレイを飛ばす
@@ -158,35 +158,32 @@ void TraceLightRay(inout RayPayload raypayload, float3 normal)
 // 反射レイを飛ばす
 void TraceReflectionRay(inout RayPayload raypayload, float3 normal)
 {
-    if(raypayload.depth < 3)
-    {
-        float hitT = RayTCurrent();
-        float3 rayDirW = WorldRayDirection();
-        float3 rayOriginW = WorldRayOrigin();
+    float hitT = RayTCurrent();
+    float3 rayDirW = WorldRayDirection();
+    float3 rayOriginW = WorldRayOrigin();
 
-        // 反射ベクトルを求める
-        float3 refDir = reflect(rayDirW, normal);
+    // 反射ベクトルを求める
+    float3 refDir = reflect(rayDirW, normal);
 
-        // Find the world-space hit position
-        float3 posW = rayOriginW + hitT * rayDirW;
+    // Find the world-space hit position
+    float3 posW = rayOriginW + hitT * rayDirW;
 
-        RayDesc ray;
-        ray.Origin = posW;
-        ray.Direction = refDir;
-        ray.TMin = 0.01f;
-        ray.TMax = 1000000;
+    RayDesc ray;
+    ray.Origin = posW;
+    ray.Direction = refDir;
+    ray.TMin = 0.01f;
+    ray.TMax = 1000000;
 
-        TraceRay(
-            g_raytracingWorld,
-            0,
-            0xFF,
-            0,
-            0,
-            0,
-            ray,
-            raypayload
-        );
-    }
+    TraceRay(
+        g_raytracingWorld,
+        0,
+        0xFF,
+        0,
+        0,
+        0,
+        ray,
+        raypayload
+    );
 }
 
 [shader("raygeneration")]
@@ -214,7 +211,7 @@ void rayGen()
     ray.TMax = 1000000;
 
     RayPayload payload;
-    payload.depth = 0;
+    payload.depth = 3;
     payload.cameraPos = g_camera.pos;
 
     //TraceRay
@@ -229,60 +226,64 @@ void rayGen()
 void miss(inout RayPayload payload)
 {
     float3 rayDirW = WorldRayDirection();
-    payload.color = g_skyCubeMap.SampleLevel(s, rayDirW, 0.0f);
+    payload.color = g_skyCubeMap.SampleLevel(s, rayDirW, 0.0f) * 0.1f;
 }
 
 [shader("closesthit")]
 void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attribs)
 {
-    payload.depth++;
+    if(payload.depth == 0){
+        // これ以上は調べない。
+        miss(payload);
+        return ;
+    }
+    payload.depth--;
     // ヒットしたプリミティブのUV座標を取得
     float2 uv = GetUV(attribs);
 
     // ヒットしたプリミティブの法線を取得
     float3 normal = GetNormal(attribs, uv);
-    // カラー
-    float3 color = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
+    // アルベドカラー
+    float3 albedoColor = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
     float4 metallicSmooth = g_specularMap.SampleLevel(s, uv, 0.0f);
     // 光源にむかってレイを飛ばす
     TraceLightRay(payload, normal);
+
+    // ワールド座標を計算。
+    float3 worldPos = GetHitPosInWorld();
+    // カメラに向かうベクトルを計算。
+    float3 toEye = normalize( payload.cameraPos - worldPos);
+
     // 
     DirectionalLight light = g_light[0];
     float3 lig = 0.0f;
-    //if(payload.hit == 0)
+    if(payload.hit == 0)
     {
-        float3 worldPos = GetHitPosInWorld();
-        float3 toEye = normalize( payload.cameraPos - worldPos);
         lig = CalcLighting(
             light.direction,
             light.color,
             normal,
             toEye,
-            float4(color, 1.0f),
+            float4(albedoColor, 1.0f),
             metallicSmooth.r,
             metallicSmooth.a,
-            color
+            albedoColor
         );
     }
+    
+    payload.color = lig;
 
-    //環境光
-    lig += 0.5f * color;
     RayPayload refPayload;
     refPayload.depth = payload.depth;
     refPayload.color = 0;
 
+    
     // 反射レイ
     TraceReflectionRay(refPayload, normal);
-
-    color *= lig;
-    if( payload.depth == 1){
-        payload.color = refPayload.color;
-    }else{
-        payload.color = lerp(color, refPayload.color,  metallicSmooth.a);
-    }
+    // 反射してきた光を足し算する。
+    payload.color += refPayload.color * albedoColor;
     
-    payload.color = normal;
-    payload.depth--;
+
 }
 
 [shader("closesthit")]
