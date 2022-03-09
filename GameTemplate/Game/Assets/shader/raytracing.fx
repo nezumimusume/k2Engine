@@ -226,7 +226,7 @@ void rayGen()
 void miss(inout RayPayload payload)
 {
     float3 rayDirW = WorldRayDirection();
-    payload.color = g_skyCubeMap.SampleLevel(s, rayDirW, 0.0f) * 0.1f;
+    payload.color = g_skyCubeMap.SampleLevel(s, rayDirW, 0.0f);
 }
 
 [shader("closesthit")]
@@ -245,6 +245,7 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     float3 normal = GetNormal(attribs, uv);
     // アルベドカラー
     float3 albedoColor = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
+    
     float4 metallicSmooth = g_specularMap.SampleLevel(s, uv, 0.0f);
     // 光源にむかってレイを飛ばす
     TraceLightRay(payload, normal);
@@ -271,7 +272,8 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
         );
     }
     
-    payload.color = lig;
+    // 環境光
+    payload.color = lig + 0.5f * albedoColor;
 
     RayPayload refPayload;
     refPayload.depth = payload.depth;
@@ -281,7 +283,7 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     // 反射レイ
     TraceReflectionRay(refPayload, normal);
     // 反射してきた光を足し算する。
-    payload.color += refPayload.color * albedoColor;
+    payload.color = lerp( payload.color, refPayload.color * albedoColor, metallicSmooth.a );
     
 
 }

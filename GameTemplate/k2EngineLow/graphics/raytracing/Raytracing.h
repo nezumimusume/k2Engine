@@ -48,7 +48,7 @@ namespace nsK2EngineLow {
 			0
 		};
 
-		const int MAX_TRACE_RECURSION_DEPTH = 4;	//レイトレースの再帰呼び出しの最大数。
+		const int MAX_TRACE_RECURSION_DEPTH = 5;	//レイトレースの再帰呼び出しの最大数。
 														//これがTraceRayを再帰的に呼び出せる最大数です。
 														//
 			//ローカルルートシグネチャ

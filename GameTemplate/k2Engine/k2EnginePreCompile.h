@@ -2,7 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 
-#define COPY_RAYTRACING_FRAMEBUFFER		// 有効でレイトレの結果をフレームバッファに書き出す。
+// #define COPY_RAYTRACING_FRAMEBUFFER		// 有効でレイトレの結果をフレームバッファに書き出す。
 
 #include "k2EngineLowPreCompile.h"
 using namespace nsK2EngineLow;
