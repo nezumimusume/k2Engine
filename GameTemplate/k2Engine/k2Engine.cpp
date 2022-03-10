@@ -16,8 +16,8 @@ namespace nsK2Engine {
 		g_renderingEngine = &m_renderingEngine;
 
 		raytracing::InitData raytracintInitData;
-		raytracintInitData.m_expandShaderResource = &g_sceneLight->GetSceneLight().directionalLight[0];
-		raytracintInitData.m_expandShaderResourceSize = sizeof(g_sceneLight->GetSceneLight().directionalLight[0]);
+		raytracintInitData.m_expandShaderResource = &m_renderingEngine.GetRaytracingLightData();
+		raytracintInitData.m_expandShaderResourceSize = sizeof(m_renderingEngine.GetRaytracingLightData());
 		
 		m_k2EngineLow.Init(
 			initData.hwnd, 

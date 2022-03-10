@@ -1,9 +1,19 @@
 
 ////////////////////////////////////////////////
-// PBRƒ‰ƒCƒeƒBƒ“ƒO‚ğƒCƒ“ƒNƒ‹[ƒhB
+// PBRƒ‰ƒCƒeƒBƒ“ƒO
 ////////////////////////////////////////////////
-
 #include "PBRLighting.h"
+
+///////////////////////////////////////
+// IBL
+///////////////////////////////////////
+#include "IBL.h"
+
+///////////////////////////////////////
+// ƒTƒ“ƒvƒ‰
+///////////////////////////////////////
+#include "Sampler.h"
+
 static const int MAX_RAY_DEPTH = 2;
 
 // ’¸“_\‘¢
@@ -31,6 +41,12 @@ struct Camera
     float pad[2];           // ƒpƒfƒBƒ“ƒO
 };
 
+// ƒŒƒCƒgƒŒ—p‚Ìƒ‰ƒCƒgî•ñ
+struct RaytracingLight{
+    DirectionalLight directionalLight;  // ƒfƒBƒŒƒNƒVƒ‡ƒiƒ‹ƒ‰ƒCƒgB
+    float iblIntencity;                 // IBL‹­“xB
+};
+
 cbuffer rayGenCB :register(b0)
 {
     Camera g_camera;    // ƒJƒƒ‰B
@@ -45,11 +61,10 @@ Texture2D<float4> g_refractionMap : register(t5);                   // ‹üÜƒ}ƒbƒ
 StructuredBuffer<SVertex> g_vertexBuffers : register(t6);           // ’¸“_ƒoƒbƒtƒ@[B
 StructuredBuffer<int> g_indexBuffers : register(t7);                // ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@[B
 TextureCube<float4> g_skyCubeMap : register(t8);                    // ƒXƒJƒCƒLƒ…[ƒuƒ}ƒbƒvB
-StructuredBuffer<DirectionalLight> g_light : register(t9);          // ƒ‰ƒCƒgB
+StructuredBuffer<RaytracingLight> g_light : register(t9);          // ƒ‰ƒCƒgB
 
 RWTexture2D<float4> gOutput : register(u0);
 
-SamplerState  s : register(s0);
 
 struct RayPayload
 {
@@ -122,7 +137,7 @@ float3 GetNormal(BuiltInTriangleIntersectionAttributes attribs, float2 uv)
     float3 binormal = barycentrics.x * binormal0 + barycentrics.y * binormal1 + barycentrics.z * binormal2;
     
 
-    float3 binSpaceNormal = g_normalMap.SampleLevel (s, uv, 0.0f).xyz;    
+    float3 binSpaceNormal = g_normalMap.SampleLevel (Sampler, uv, 0.0f).xyz;    
     binSpaceNormal = (binSpaceNormal * 2.0f) - 1.0f;
 
     float3 newNormal = tangent * binSpaceNormal.x + binormal * binSpaceNormal.y + normal * binSpaceNormal.z ;
@@ -142,7 +157,7 @@ void TraceLightRay(inout RayPayload raypayload, float3 normal)
 
     RayDesc ray;
     ray.Origin = posW;
-    ray.Direction = g_light[0].direction * -1.0f;
+    ray.Direction = g_light[0].directionalLight.direction * -1.0f;
     ray.TMin = 0.01f;
     ray.TMax = 100;
 
@@ -229,8 +244,12 @@ void rayGen()
 void miss(inout RayPayload payload)
 {
     float3 rayDirW = WorldRayDirection();
-    int level = lerp(0, 12, 1 - payload.smooth);
-    payload.color = g_skyCubeMap.SampleLevel(s, rayDirW, level) * 0.1f;
+    payload.color = SampleIBLColorFromSkyCube( 
+        g_skyCubeMap,
+        rayDirW,
+        payload.smooth,
+        g_light[0].iblIntencity
+    );
 }
 
 [shader("closesthit")]
@@ -248,9 +267,9 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     // ƒqƒbƒg‚µ‚½ƒvƒŠƒ~ƒeƒBƒu‚Ì–@ü‚ğæ“¾
     float3 normal = GetNormal(attribs, uv);
     // ƒAƒ‹ƒxƒhƒJƒ‰[
-    float3 albedoColor = gAlbedoTexture.SampleLevel(s, uv, 0.0f).rgb;
+    float3 albedoColor = gAlbedoTexture.SampleLevel(Sampler, uv, 0.0f).rgb;
     
-    float4 metallicSmooth = g_specularMap.SampleLevel(s, uv, 0.0f);
+    float4 metallicSmooth = g_specularMap.SampleLevel(Sampler, uv, 0.0f);
     // ŒõŒ¹‚É‚Ş‚©‚Á‚ÄƒŒƒC‚ğ”ò‚Î‚·
     TraceLightRay(payload, normal);
 
@@ -260,7 +279,7 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     float3 toEye = normalize( payload.cameraPos - worldPos);
 
     // 
-    DirectionalLight light = g_light[0];
+    DirectionalLight light = g_light[0].directionalLight;
     float3 lig = 0.0f;
     if(payload.hit == 0)
     {

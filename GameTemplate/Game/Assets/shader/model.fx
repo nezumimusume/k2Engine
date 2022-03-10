@@ -44,6 +44,10 @@ struct SPSIn
 ///////////////////////////////////////
 #include "Shadowing.h"
 
+///////////////////////////////////////
+// IBL
+///////////////////////////////////////
+#include "IBL.h"
 
 ////////////////////////////////////////////////
 // 関数定義。
@@ -131,9 +135,13 @@ float4 PSMainCore( SPSIn In, uniform int isSoftShadow )
 	
 	 if (light.isIBL == 1) {
         // 視線からの反射ベクトルを求める。
-        float3 v = reflect(toEye * -1.0f, normal);
-        int level = lerp(0, 12, 1 - smooth);
-        lig += albedoColor * g_skyCubeMap.SampleLevel(Sampler, v, level) * light.iblLuminance;
+        lig += albedoColor * SampleIBLColorFromSkyCube(
+            g_skyCubeMap,
+            toEye,
+            normal,
+            smooth,
+            light.iblIntencity
+        );
     }
     else {
         // 環境光による底上げ

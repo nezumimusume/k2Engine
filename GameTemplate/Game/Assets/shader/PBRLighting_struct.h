@@ -53,7 +53,7 @@ struct LightCB{
     float3 ambientLight;    // 環境光
     int numSpotLight;       // スポットライトの数。
     float4x4 mlvp[NUM_DIRECTIONAL_LIGHT][NUM_SHADOW_MAP];
-    float iblLuminance;     // IBLの明るさ。
+    float iblIntencity;     // IBLの強度。
     int isIBL;              // IBLを行う。
     int isEnableRaytracing; // レイトレが有効。
 };

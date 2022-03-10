@@ -37,7 +37,13 @@ namespace nsK2Engine {
             int m_isIBL;                // IBLを行う。
             int m_isEnableRaytracing;   // レイトレが行われている。
         };
-
+        /// <summary>
+        /// レイトレ用のライトデータ。
+        /// </summary>
+        struct RaytracingLightData {
+            DirectionalLight m_directionalLight;  // ディレクショナルライト。
+            float m_iblIntencity;                 // IBL強度。
+        };
         //メインレンダリングターゲットのスナップショット
         enum class EnMainRTSnapshot
         {
@@ -431,13 +437,21 @@ namespace nsK2Engine {
         {
             m_isEnableRaytracing = false;
         }
+        /// <summary>
+        /// レイトレ用のライトデータを取得。
+        /// </summary>
+        /// <returns></returns>
+        RaytracingLightData& GetRaytracingLightData()
+        {
+            return m_raytracingLightData;
+        }
     private:
         /// <summary>
         /// イメージベースドライティング(IBL)のためのデータを初期化する。
         /// </summary>
         /// <param name="iblTexFilePath">IBLテクスチャのファイルパス。</param>
-        /// <param name="luminance">IBLテクスチャの明るさ。</param>
-        void InitIBLData(const wchar_t* iblTexFilePath, float luminance);
+        /// <param name="intencity">IBLの強度。</param>
+        void InitIBLData(const wchar_t* iblTexFilePath, float intencity);
         /// <summary>
         /// G-Bufferを初期化
         /// </summary>
@@ -541,8 +555,9 @@ namespace nsK2Engine {
         /// </summary>
         struct SIBLData {
             Texture m_texture;          // IBLテクスチャ
-            float m_luminance = 1.0f;   // 明るさ。
+            float m_intencity = 1.0f;   // 強度。
         };
+        
         /// <summary>
         /// GIテクスチャを作るためのブラー処理。
         /// </summary>
@@ -553,6 +568,7 @@ namespace nsK2Engine {
             eGITextureBlur_128x128,     // 128×128
             eGITextureBlur_Num,     
         };
+        RaytracingLightData m_raytracingLightData;                      // レイトレ用のライトデータ。
         LightCulling m_lightCulling;                                    // ライトカリング。 
         ShadowMapRender m_shadowMapRenders[MAX_DIRECTIONAL_LIGHT];      // シャドウマップへの描画処理
         VolumeLightRender m_volumeLightRender;                          // ボリュームライトレンダラー。

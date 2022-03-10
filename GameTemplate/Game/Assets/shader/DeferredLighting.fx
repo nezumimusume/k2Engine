@@ -50,8 +50,15 @@ struct PSInput
 #include "Shadowing.h"
 
 ///////////////////////////////////////
+// IBL
+///////////////////////////////////////
+#include "IBL.h"
+
+///////////////////////////////////////
 // 関数
 ///////////////////////////////////////
+
+
 
 //頂点シェーダー。
 PSInput VSMain(VSInput In)
@@ -88,12 +95,7 @@ float4 SampleReflectionColor( float2 uv, float level )
 
     return lerp( col_0, col_1, frac(level));
 }
-float4 SampleIBLColor(float3 toEye, float3 normal, float smooth)
-{
-    float3 v = reflect(toEye * -1.0f, normal);
-    int level = lerp(0, 12, 1 - smooth);
-    return g_skyCubeMap.SampleLevel(Sampler, v, level) * light.iblLuminance;
-}
+
 /*!
  * @brief	UV座標と深度値からワールド座標を計算する。
  *@param[in]	uv				uv座標
@@ -371,11 +373,23 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
             lig += albedoColor * SampleReflectionColor(In.uv, level);
         }else if (light.isIBL == 1) {
             // IBLがあるなら。
-            lig += albedoColor * SampleIBLColor(toEye, normal, smooth );
+            lig += albedoColor * SampleIBLColorFromSkyCube(
+                g_skyCubeMap, 
+                toEye, 
+                normal, 
+                smooth,
+                light.iblIntencity
+            );
         }
     }else if (light.isIBL == 1) {
         // 視線からの反射ベクトルを求める。
-        lig += albedoColor * SampleIBLColor(toEye, normal, smooth );
+        lig += albedoColor * SampleIBLColorFromSkyCube(
+            g_skyCubeMap, 
+            toEye, 
+            normal, 
+            smooth,
+            light.iblIntencity 
+        );
     }
     else {
         // 環境光による底上げ

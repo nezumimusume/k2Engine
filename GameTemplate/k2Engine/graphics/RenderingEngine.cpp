@@ -87,7 +87,7 @@ namespace nsK2Engine {
         if (m_iblData.m_texture.IsValid()) {
             spriteInitData.m_textures[texNo++] = &m_iblData.m_texture;
             m_deferredLightingCB.m_isIBL = 1;
-            m_deferredLightingCB.m_iblLuminance = m_iblData.m_luminance;
+            m_deferredLightingCB.m_iblLuminance = m_iblData.m_intencity;
         }
 
         spriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -215,10 +215,10 @@ namespace nsK2Engine {
         m_copyMainRtToFrameBufferSprite.Init(spriteInitData);
 
     }
-    void RenderingEngine::InitIBLData(const wchar_t* iblTexFilePath, float luminance)
+    void RenderingEngine::InitIBLData(const wchar_t* iblTexFilePath, float intencity)
     {
         m_iblData.m_texture.InitFromDDSFile(iblTexFilePath);
-        m_iblData.m_luminance = luminance;
+        m_iblData.m_intencity = intencity;
         g_graphicsEngine->SetRaytracingSkyCubeBox(m_iblData.m_texture);
     }
     void RenderingEngine::InitDeferredLighting()
@@ -324,6 +324,9 @@ namespace nsK2Engine {
         m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
         m_deferredLightingCB.m_isEnableRaytracing = m_isEnableRaytracing ? 1 : 0;
 
+        // レイトレ用のライトデータをコピー。
+        m_raytracingLightData.m_directionalLight = m_sceneLight.GetSceneLight().directionalLight[0];
+        m_raytracingLightData.m_iblIntencity = m_iblData.m_intencity;
         // アニメーション済み頂点の計算。
         ComputeAnimatedVertex(rc);
 

@@ -2,4 +2,9 @@
 // サンプラ
 /////////////////////////////////////////////////////
 
+#ifndef _SAMPLER_H_
+#define _SAMPLER_H_
+
 sampler Sampler : register( s0 );   // s0レジスタに関連付けされているサンプラステート
+
+#endif // _SAMPLER_H_
