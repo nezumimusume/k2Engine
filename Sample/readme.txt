@@ -43,7 +43,7 @@
 　　GameCamera.cpp,hにサンプルが記述されている。
 
 ・Sample_09
-　　TPSカメラのサンプル
+　　TPSカメラのサンプル(NG)
 　　GameCamera.cpp,hにサンプルが記述されている。
 
 ・Sample_10
@@ -62,7 +62,7 @@
 　　サウンドを再生するサンプル。
 　　Game.cppにサンプルが記述されている。
 
-・Sample_14
+・Sample_14(NG)
 　　レベルデザインのサンプル。
 　　レベルデザインのやり方は下記URLの動画を参考。
 　　https://www.youtube.com/watch?v=DdugMxWZZq4
@@ -85,7 +85,7 @@
 ・Sample_21
 　　Level2Dの使い方。
 
-・Sample_22
+・Sample_22(NG)
 　　インスタンシング描画のサンプル。
 　　　→インスタンシング描画とは？
 　　　　→一度のドローコールで、同じモデルを大量に高速にするための技術。
@@ -95,7 +95,7 @@
 　　　　→fpsが出力されるようになっている。
 　　　　　見比べてみて欲しい。
 
-・Sample_23
+・Sample_23(NG)
 　　IBL(ImageBasedLighting)のサンプル
 　　　→IBLとは？
 　　　　→画像を使用してライティングを行う。

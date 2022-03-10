@@ -43,7 +43,6 @@ Game::~Game()
 
 bool Game::Start()
 {
-	
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
 	g_camera3D->SetFar(40000.0f);
 
