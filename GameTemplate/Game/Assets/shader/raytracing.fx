@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////
 
 #include "PBRLighting.h"
+static const int MAX_RAY_DEPTH = 2;
 
 // 頂点構造
 // フォーマットはTkmFile.hのSVertexと同じになっている必要がある
@@ -53,9 +54,11 @@ SamplerState  s : register(s0);
 struct RayPayload
 {
     float3 color;               // カラー
-    int hit;
-    int depth;
-    float3 cameraPos;
+    int hit;                    // 衝突したかどうかのフラグ。
+    int depth;                  // 深度。
+    float smooth;               // 衝突面の滑らかさ。
+    float3 cameraPos;           // カメラ座標。
+
 };
 // レイが衝突した点のワールド座標を計算する。
 float3 GetHitPosInWorld()
@@ -139,7 +142,7 @@ void TraceLightRay(inout RayPayload raypayload, float3 normal)
 
     RayDesc ray;
     ray.Origin = posW;
-    ray.Direction = normalize(float3(0.5, 0.5, 0.2));
+    ray.Direction = g_light[0].direction * -1.0f;
     ray.TMin = 0.01f;
     ray.TMax = 100;
 
@@ -211,7 +214,7 @@ void rayGen()
     ray.TMax = 1000000;
 
     RayPayload payload;
-    payload.depth = 3;
+    payload.depth = 0;
     payload.cameraPos = g_camera.pos;
 
     //TraceRay
@@ -226,18 +229,19 @@ void rayGen()
 void miss(inout RayPayload payload)
 {
     float3 rayDirW = WorldRayDirection();
-    payload.color = g_skyCubeMap.SampleLevel(s, rayDirW, 0.0f);
+    int level = lerp(0, 12, 1 - payload.smooth);
+    payload.color = g_skyCubeMap.SampleLevel(s, rayDirW, level) * 0.1f;
 }
 
 [shader("closesthit")]
 void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attribs)
 {
-    if(payload.depth == 0){
+    payload.depth++;
+    if(payload.depth > MAX_RAY_DEPTH){
         // これ以上は調べない。
         miss(payload);
         return ;
     }
-    payload.depth--;
     // ヒットしたプリミティブのUV座標を取得
     float2 uv = GetUV(attribs);
 
@@ -273,17 +277,21 @@ void chs(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     }
     
     // 環境光
-    payload.color = lig + 0.5f * albedoColor;
-
     RayPayload refPayload;
     refPayload.depth = payload.depth;
     refPayload.color = 0;
-
+    refPayload.smooth = metallicSmooth.a;
     
     // 反射レイ
     TraceReflectionRay(refPayload, normal);
-    // 反射してきた光を足し算する。
-    payload.color = lerp( payload.color, refPayload.color * albedoColor, metallicSmooth.a );
+    if( payload.depth == 1){
+        // これは一次反射なので、映り込み画像をそのまま使う。
+        payload.color = refPayload.color;
+    }else{
+        // 反射してきた光を足し算する。
+        payload.color = lig + refPayload.color * albedoColor ;
+    }
+    
     
 
 }

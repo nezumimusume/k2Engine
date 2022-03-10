@@ -368,7 +368,7 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
         float reflectionRate = 1.0f - ( ( smooth - 0.5f ) * 2.0f );
         float level = lerp(0.0f, (float)(NUM_REFLECTION_TEXTURE - 1 ), pow( reflectionRate, 3.0f ));
         if( level < NUM_REFLECTION_TEXTURE-1){
-            lig += albedoColor * SampleReflectionColor(In.uv, level) * light.iblLuminance ;
+            lig += albedoColor * SampleReflectionColor(In.uv, level);
         }else if (light.isIBL == 1) {
             // IBL‚ª‚ ‚é‚È‚çB
             lig += albedoColor * SampleIBLColor(toEye, normal, smooth );

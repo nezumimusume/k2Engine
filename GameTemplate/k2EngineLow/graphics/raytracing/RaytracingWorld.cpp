@@ -132,7 +132,7 @@ namespace nsK2EngineLow {
 		int World::GetNumInstance() const
 		{
 			int bufferNo = g_graphicsEngine->GetBackBufferIndex();
-			return m_instances[bufferNo].size();
+			return static_cast<int>(m_instances[bufferNo].size());
 		}
 
 	
