@@ -103,8 +103,8 @@ namespace nsK2EngineLow {
 		}
 		// DXRのサポートを調べる。
 		if (IsSupportDXR(m_d3dDevice)) {
-			// DXRがサポートされている。
-			m_isPossibleRaytracing = true;
+			// DXRがサポートされていて、かつRTXシリーズならレイトレ可能にする。
+			m_isPossibleRaytracing = m_isPossibleRaytracing && true;
 		}
 		//コマンドキューの作成。
 		if (!CreateCommandQueue()) {
@@ -225,6 +225,16 @@ namespace nsK2EngineLow {
 			}
 			if (wcsstr(desc.Description, L"NVIDIA") != nullptr) {
 				//NVIDIA製
+#ifdef ENABLE_DXR_ON_RTX_ONLY
+				std::wstring adapterName =desc.Description;
+				if (adapterName.find(L"RTX") != std::string::npos) {
+					// RTXシリーズのGPU。
+					m_isPossibleRaytracing = true;
+
+				}
+#else // #ifdef ENABLE_DXR_ON_RTX_ONLY
+				m_isPossibleRaytracing = true;
+#endif // #ifdef ENABLE_DXR_ON_RTX_ONLY
 				if (adapterVender[GPU_VenderNvidia]) {
 					adapterVender[GPU_VenderNvidia]->Release();
 				}

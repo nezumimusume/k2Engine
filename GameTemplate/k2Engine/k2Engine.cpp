@@ -18,7 +18,11 @@ namespace nsK2Engine {
 		raytracing::InitData raytracintInitData;
 		raytracintInitData.m_expandShaderResource = &m_renderingEngine.GetRaytracingLightData();
 		raytracintInitData.m_expandShaderResourceSize = sizeof(m_renderingEngine.GetRaytracingLightData());
-		
+#ifdef COPY_RAYTRACING_FRAMEBUFFER
+		// フレームバッファにコピーする場合は、レイトレの出力先のカラーバッファのフォーマットを
+		// フレームバッファと同じにする。
+		raytracintInitData.m_outputColorBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+#endif // #ifdef COPY_RAYTRACING_FRAMEBUFFER
 		m_k2EngineLow.Init(
 			initData.hwnd, 
 			initData.frameBufferWidth, 

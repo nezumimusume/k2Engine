@@ -47,6 +47,7 @@ bool Game::Start()
 			sphere->m_position = objData.position;
 			sphere->m_scale = objData.scale;
 			sphere->m_rotation = objData.rotation;
+			sphere->m_instanceNo = m_maxSphere;
 			//‹…‚Ì”‚ğ”‚¦‚éB
 			m_maxSphere++;
 			m_spheres.push_back(sphere);
@@ -60,6 +61,7 @@ bool Game::Start()
 			muscle->m_position = objData.position;
 			muscle->m_scale = objData.scale;
 			muscle->m_rotation = objData.rotation;
+			muscle->m_instanceNo = m_maxMuscle;
 			//‹…‚Ì”‚ğ”‚¦‚éB
 			m_maxMuscle++;
 			m_muscles.push_back(muscle);

@@ -380,6 +380,9 @@ float4 PSMainCore(PSInput In, uniform int isSoftShadow)
                 smooth,
                 light.iblIntencity
             );
+        }else{
+            // 環境光による底上げ
+            lig += light.ambientLight * albedoColor;    
         }
     }else if (light.isIBL == 1) {
         // 視線からの反射ベクトルを求める。

@@ -39,7 +39,7 @@ namespace nsK2EngineLow {
 			D3D12_RESOURCE_DESC resDesc = {};
 			resDesc.DepthOrArraySize = 1;
 			resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-			resDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+			resDesc.Format = initData.m_outputColorBufferFormat;
 			resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 			resDesc.Height = g_graphicsEngine->GetFrameBufferHeight();
 			resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;

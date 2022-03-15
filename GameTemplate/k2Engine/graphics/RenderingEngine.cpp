@@ -322,11 +322,14 @@ namespace nsK2Engine {
     {
         // シーンライトのデータをコピー。
         m_deferredLightingCB.m_light = m_sceneLight.GetSceneLight();
-        m_deferredLightingCB.m_isEnableRaytracing = m_isEnableRaytracing ? 1 : 0;
+        m_deferredLightingCB.m_isEnableRaytracing = IsEnableRaytracing() ? 1 : 0;
 
         // レイトレ用のライトデータをコピー。
         m_raytracingLightData.m_directionalLight = m_sceneLight.GetSceneLight().directionalLight[0];
         m_raytracingLightData.m_iblIntencity = m_iblData.m_intencity;
+        m_raytracingLightData.m_ambientLight = m_sceneLight.GetSceneLight().ambinetLight;
+        m_raytracingLightData.m_enableIBLTexture = m_iblData.m_texture.IsValid() ? 1 : 0;
+
         // アニメーション済み頂点の計算。
         ComputeAnimatedVertex(rc);
 

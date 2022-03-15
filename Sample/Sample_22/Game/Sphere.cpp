@@ -10,7 +10,7 @@ Sphere::Sphere()
 
 Sphere::~Sphere()
 {
-
+	m_sphereRender->RemoveInstance(m_instanceNo);
 }
 
 bool Sphere::Start()
@@ -29,6 +29,7 @@ void Sphere::Update()
 	if (m_game->m_isDrawInstancing == true)
 	{
 		m_sphereRender->UpdateInstancingData(
+			m_instanceNo,
 			m_position,
 			m_rotation,
 			m_scale

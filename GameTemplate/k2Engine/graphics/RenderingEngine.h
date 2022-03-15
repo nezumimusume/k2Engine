@@ -42,7 +42,10 @@ namespace nsK2Engine {
         /// </summary>
         struct RaytracingLightData {
             DirectionalLight m_directionalLight;  // ディレクショナルライト。
+            Vector3 m_ambientLight;               // 環境光。IBLテクスチャが指定されていない場合に利用される。
             float m_iblIntencity;                 // IBL強度。
+            int m_enableIBLTexture;               // IBLテクスチャが指定されている。
+
         };
         //メインレンダリングターゲットのスナップショット
         enum class EnMainRTSnapshot
@@ -427,7 +430,7 @@ namespace nsK2Engine {
         /// </summary>
         void EnableRaytracing()
         {
-            m_isEnableRaytracing = true;
+            m_isEnableRaytracing = true && IsEnableRaytracing();
         }
         /// <summary>
         /// レイトレーシングを無効にします。
@@ -435,7 +438,7 @@ namespace nsK2Engine {
         /// </summary>
         void DisableRaytracing()
         {
-            m_isEnableRaytracing = false;
+            m_isEnableRaytracing = false && IsEnableRaytracing();
         }
         /// <summary>
         /// レイトレ用のライトデータを取得。

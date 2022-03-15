@@ -33,9 +33,9 @@ void Game::InitSky()
 	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
 
 	// 環境光の計算のためのIBLテクスチャをセットする。
-	g_sceneLight->SetIBLTextureForAmbient(m_skyCube->GetTextureFilePath(), 1.0f);
+	g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 1.0f);
 	// 環境日光の影響が分かりやすいように、ディレクションライトはオフに。
-	g_sceneLight->SetDirectionLight(0, g_vec3Zero, g_vec3Zero);
+	g_renderingEngine->SetDirectionLight(0, g_vec3Zero, g_vec3Zero);
 }
 bool Game::Start()
 {

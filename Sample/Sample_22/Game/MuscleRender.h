@@ -23,10 +23,19 @@ public:
 	/// <param name="rot"></param>
 	/// <param name="scale"></param>
 	void UpdateInstancingData(
+		int instanceNo,
 		const Vector3& pos,
 		const Quaternion& rot, const Vector3& scale
 	) {
-		m_modelRender.UpdateInstancingData(pos, rot, scale);
+		m_modelRender.UpdateInstancingData(instanceNo, pos, rot, scale);
+	}
+	/// <summary>
+	/// インスタンスを破棄。
+	/// </summary>
+	/// <param name="instanceNo">インスタンス番号</param>
+	void RemoveInstance(int instanceNo)
+	{
+		m_modelRender.RemoveInstance(instanceNo);
 	}
 private:
 	ModelRender		m_modelRender;	// モデルレンダラー。

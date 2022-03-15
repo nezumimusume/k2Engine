@@ -10,7 +10,7 @@ Muscle::Muscle()
 
 Muscle::~Muscle()
 {
-
+	m_muscleRender->RemoveInstance(m_instanceNo);
 }
 
 bool Muscle::Start()
@@ -37,6 +37,7 @@ void Muscle::Update()
 	if (m_game->m_isDrawInstancing == true)
 	{
 		m_muscleRender->UpdateInstancingData(
+			m_instanceNo,
 			m_position,
 			m_rotation,
 			m_scale

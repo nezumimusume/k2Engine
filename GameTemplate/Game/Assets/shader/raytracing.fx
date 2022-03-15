@@ -44,7 +44,9 @@ struct Camera
 // レイトレ用のライト情報
 struct RaytracingLight{
     DirectionalLight directionalLight;  // ディレクショナルライト。
+    float3 ambientLight;                // 環境光。IBLテクスチャが指定されていない場合に利用される。
     float iblIntencity;                 // IBL強度。
+    int enableIBLTexture;               // IBLテクスチャが指定されている？  
 };
 
 cbuffer rayGenCB :register(b0)
@@ -243,13 +245,19 @@ void rayGen()
 [shader("miss")]
 void miss(inout RayPayload payload)
 {
-    float3 rayDirW = WorldRayDirection();
-    payload.color = SampleIBLColorFromSkyCube( 
-        g_skyCubeMap,
-        rayDirW,
-        payload.smooth,
-        g_light[0].iblIntencity
-    );
+    if( g_light[0].enableIBLTexture == 1){
+        // IBLテクスチャが指定されている。
+        float3 rayDirW = WorldRayDirection();
+        payload.color = SampleIBLColorFromSkyCube( 
+            g_skyCubeMap,
+            rayDirW,
+            payload.smooth,
+            g_light[0].iblIntencity
+        );
+    }else{
+        // 環境光を使う。
+        payload.color = g_light[0].ambientLight;
+    }
 }
 
 [shader("closesthit")]

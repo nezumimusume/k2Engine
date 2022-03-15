@@ -523,7 +523,7 @@ namespace nsK2Engine {
         /// </param>
         /// <param name="luminance">
         /// IBLテクスチャの明るさ。
-        /// <param>
+        /// </param>
         void SetAmbientByIBLTexture(const wchar_t* textureFilePath, float luminance);
         /// <summary>
         /// IBL環境光を無効にする。

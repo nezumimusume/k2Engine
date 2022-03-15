@@ -2,6 +2,8 @@
 #include "SphereRender.h"
 #include "Game.h"
 
+
+
 bool SphereRender::Start()
 {
 	m_modelRender.Init(

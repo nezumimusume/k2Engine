@@ -16,8 +16,9 @@ namespace nsK2EngineLow {
 		/// 初期化情報
 		/// </summary>
 		struct InitData {
-			void*	m_expandShaderResource;		// 拡張シェーダーリソースの配列。
-			int		m_expandShaderResourceSize;	// 拡張シェーダーリソースのサイズの配列。
+			void*	m_expandShaderResource;			// 拡張シェーダーリソースの配列。
+			int		m_expandShaderResourceSize;		// 拡張シェーダーリソースのサイズの配列。
+			DXGI_FORMAT m_outputColorBufferFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;	// レイトレの結果を出力するカラーバッファのフォーマット。
 		};
 		/// <summary>
 		/// 拡張シェーダーリソース
