@@ -55,7 +55,7 @@ void CSMain(
             }
 
             skinMatrix += g_boneMatrix[inVertex.indices[3]] * (1.0f - w);
-            if( numInstance == 0){
+            if( numInstance == 1){
                 // 一体の描画の場合はCPP側でスキン行列がワールド空間に変換されているので、
                 // そのまま使う。
                 worldMatrixLocal = skinMatrix;
