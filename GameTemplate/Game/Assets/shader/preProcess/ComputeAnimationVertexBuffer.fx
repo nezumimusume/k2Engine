@@ -4,13 +4,13 @@
 
 
 struct SVertex{
-    float3 pos;			//座標。
-    float3 normal;		//法線。
-    float3 tangent;		//接ベクトル。
-    float3 binormal;	//従ベクトル。
-    float2 uv;			//UV座標。
-    int4 indices;		//スキンインデックス。
-    float4 skinWeights;	//スキンウェイト。
+    float3 pos;			// 座標。
+    float3 normal;		// 法線。
+    float3 tangent;		// 接ベクトル。
+    float3 binormal;	// 従ベクトル。
+    float2 uv;			// UV座標。
+    int4 indices;		// スキンインデックス。
+    float4 skinWeights;	// スキンウェイト。
 };
 
 cbuffer cbParam : register(b0)
@@ -45,15 +45,25 @@ void CSMain(
         float4x4 worldMatrixLocal = 0;	
         if( inVertex.skinWeights[0] > 0.0f){
             // スキンあり。            
+            float4x4 skinMatrix = 0;
             float w = 0.0f;
             [unroll]
             for (int i = 0; i < 3; i++)
             {
-                worldMatrixLocal += g_boneMatrix[inVertex.indices[i]] * inVertex.skinWeights[i];
+                skinMatrix += g_boneMatrix[inVertex.indices[i]] * inVertex.skinWeights[i];
                 w += inVertex.skinWeights[i];
             }
 
-            worldMatrixLocal += g_boneMatrix[inVertex.indices[3]] * (1.0f - w);
+            skinMatrix += g_boneMatrix[inVertex.indices[3]] * (1.0f - w);
+            if( numInstance == 0){
+                // 一体の描画の場合はCPP側でスキン行列がワールド空間に変換されているので、
+                // そのまま使う。
+                worldMatrixLocal = skinMatrix;
+            }else{
+                // 複数のオブジェクトを描画する場合は通常の描画でスキン行列はモデル空間のままなので、
+                // ここでワールド空間に変換する。
+                worldMatrixLocal = mul( g_worldMatrixArray[instanceNo], skinMatrix);
+            }
         }else{
             // スキンなし。
             if( numInstance == 1){

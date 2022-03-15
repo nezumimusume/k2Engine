@@ -4,14 +4,14 @@
 
 bool MuscleRender::Start()
 {
-	m_animationClip.Load("Assets/animData/sample2/muscle.tka");
+	m_animationClip.Load("Assets/animData/run.tka");
 	m_animationClip.SetLoopFlag(true);
 
 	m_modelRender.Init(
-		"Assets/modelData/sample2.tkm",
+		"Assets/modelData/unityChan.tkm",
 		&m_animationClip,
 		1,
-		enModelUpAxisZ,
+		enModelUpAxisY,
 		true,
 		m_maxMuscle
 	);

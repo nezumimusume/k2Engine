@@ -65,13 +65,14 @@ bool Game::Start()
 			//球の数を数える。
 			m_maxMuscle++;
 			m_muscles.push_back(muscle);
+			
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
 		else if (objData.EqualObjectName(L"sample3") == true) {
 			//falseにすると、レベルの方でモデルが読み込まれて配置される。
 			//レベルのモデルもインスタンシング描画に対応。
-			return false;
+			return true;
 		}
 		else if (objData.EqualObjectName(L"player") == true) {
 			//Unityちゃん。
