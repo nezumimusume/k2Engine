@@ -316,19 +316,22 @@ private
 		cloneMeshObj = copy c_node 
 		cloneMeshObj = convertToMesh cloneMeshObj
 		numFace = getNumFaces cloneMeshObj
-		
-		--マテリアル情報から構築する。
-		BuildMeshParts_Material c_node cloneMeshObj numFace
+		numTVert = getNumTVerts cloneMeshObj
 
-		--頂点バッファを構築する。
-		BuildMeshPatrs_VertexBuffer c_node cloneMeshObj numFace
+		if numTVert > 0 then (
+			--テクスチャ頂点があれば出力する。
+			--マテリアル情報から構築する。
+			BuildMeshParts_Material c_node cloneMeshObj numFace
 
-		--インデックスバッファを構築する。
-		BuildMeshParts_IndexBuffer c_node cloneMeshObj numFace
+			--頂点バッファを構築する。
+			BuildMeshPatrs_VertexBuffer c_node cloneMeshObj numFace
 
-		--メッシュパーツを追加。
-		append md.meshParts ms
+			--インデックスバッファを構築する。
+			BuildMeshParts_IndexBuffer c_node cloneMeshObj numFace
 
+			--メッシュパーツを追加。
+			append md.meshParts ms
+		)
 		delete cloneMeshObj
 		cloneMeshObj=undefined
 	),
