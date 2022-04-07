@@ -38,9 +38,7 @@ void Game::InitSky()
 	g_renderingEngine->SetDirectionLight(0, g_vec3Zero, g_vec3Zero);
 }
 bool Game::Start()
-{
-	
-	
+{	
 	InitSky();
 	
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");

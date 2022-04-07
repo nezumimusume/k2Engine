@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GameCamera.h"
 
-#include "Player.h"
+#include "Dancer.h"
 
 GameCamera::GameCamera()
 {
@@ -15,14 +15,14 @@ GameCamera::~GameCamera()
 
 bool GameCamera::Start()
 {
-	g_camera3D->SetPosition(200.0f, 200.0f, 0.0f);
+	g_camera3D->SetPosition(1000.0f, 500.0f, 0.0f);
 	g_camera3D->SetTarget(0, 250.f, 0.0f);
 
 	//注視点から視点までのベクトルを設定。
 	m_toCameraPos = g_camera3D->GetPosition() - g_camera3D->GetTarget();
 	
-	//プレイヤーのインスタンスを探す。
-	m_player = FindGO<Player>("player");
+	//ダンサーのインスタンスを探す。
+	m_dancer = FindGO<Dancer>("Dancer");
 
 	//ばねカメラの初期化。
 	m_springCamera.Init(
@@ -38,7 +38,7 @@ void GameCamera::Update()
 {
 	//カメラを更新。
 	//注視点を計算する。
-	Vector3 target = m_player->GetPosition();
+	Vector3 target = m_dancer->GetPosition();
 	//プレイヤの足元からちょっと上を注視点とする。
 	target.y += 80.0f;
 	target += g_camera3D->GetForward() * 20.0f;
@@ -63,7 +63,7 @@ void GameCamera::Update()
 	//大きさが１になるということは、ベクトルから強さがなくなり、方向のみの情報となるということ。
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
-	if (toPosDir.y < -0.5f) {
+	if (toPosDir.y < -0.2f) {
 		//カメラが上向きすぎ。
 		m_toCameraPos = toCameraPosOld;
 	}

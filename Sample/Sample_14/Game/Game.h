@@ -6,7 +6,8 @@
 //クラス宣言。
 class Player;
 class GameCamera;
-class Box;
+class BoxMove;
+class BoxRotation;
 
 class Game : public IGameObject
 {
@@ -25,6 +26,8 @@ public:
 	Player* m_player = nullptr;				//プレイヤー。
 	GameCamera* m_gameCamera = nullptr;		//ゲームカメラ。
 	LevelRender m_levelRender;				//レベルレンダー。
-	std::vector<Box*> m_boxs;				//ボックス。
+
+	std::vector<BoxMove*> m_boxmoves;				//moveボックス。
+	std::vector<BoxRotation*> m_boxrots;			//rotationボックス。
 };
 

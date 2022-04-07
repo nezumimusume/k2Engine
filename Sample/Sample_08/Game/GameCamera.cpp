@@ -27,10 +27,10 @@ void GameCamera::Update()
 	//注視点を計算する。
 	Vector3 target = m_player->m_position;
 	//プレイヤの足元からちょっと上を注視点とする。
-	target.y += 50.0f;
+	target.y += 100.0f;
 	//視点を計算する。
 	//キャラクタを斜め上から見ているような視点にする。
-	Vector3 toPos = { 0.0f, 50.0f, -150.0f };
+	Vector3 toPos = { 0.0f, 50.0f, -300.0f };
 	Vector3 pos = target + toPos;	
 	//メインカメラに注視点と視点を設定する。
 	g_camera3D->SetTarget(target);

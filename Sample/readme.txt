@@ -43,7 +43,7 @@
 　　GameCamera.cpp,hにサンプルが記述されている。
 
 ・Sample_09
-　　TPSカメラのサンプル(NG)
+　　TPSカメラのサンプル
 　　GameCamera.cpp,hにサンプルが記述されている。
 
 ・Sample_10
@@ -62,7 +62,7 @@
 　　サウンドを再生するサンプル。
 　　Game.cppにサンプルが記述されている。
 
-・Sample_14(NG)
+・Sample_14
 　　レベルデザインのサンプル。
 　　レベルデザインのやり方は下記URLの動画を参考。
 　　https://www.youtube.com/watch?v=DdugMxWZZq4
@@ -95,7 +95,7 @@
 　　　　→fpsが出力されるようになっている。
 　　　　　見比べてみて欲しい。
 
-・Sample_23(NG)
+・Sample_23
 　　IBL(ImageBasedLighting)のサンプル
 　　　→IBLとは？
 　　　　→画像を使用してライティングを行う。

@@ -99,16 +99,6 @@ void Player::Turn()
 
 void Player::ManageState()
 {
-	//地面に付いていなかったら。
-	if (m_charaCon.IsOnGround() == false)
-	{
-		//ステートを1(ジャンプ中)にする。
-		m_playerState = 1;
-		//ここでManageStateの処理を終わらせる。
-		return;
-	}
-
-	//地面に付いていたら。
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{

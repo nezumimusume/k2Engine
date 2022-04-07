@@ -13,6 +13,8 @@ Player::~Player()
 
 bool Player::Start()
 {
+	m_position = { 0.0f,0.0f,-200.0f };
+
 	//キャラクターコントローラーを初期化。
 	m_charaCon.Init(
 		20.0f,			//半径。
@@ -61,7 +63,13 @@ void Player::Move()
 		&& m_charaCon.IsOnGround()  //かつ、地面に居たら
 		) {
 		//ジャンプする。
-		m_moveSpeed.y = 400.0f;	//上方向に速度を設定して、
+		m_moveSpeed.y = 200.0f;	//上方向に速度を設定して、
+	}
+	//地面に付いていなかったら。
+	else if(!m_charaCon.IsOnGround())
+	{
+		//重力を発生させる。
+		m_moveSpeed.y -= 2.5f;
 	}
 	//m_moveSpeed.y -= 980.0f * g_gameTime->GetFrameDeltaTime();
 	//キャラクターコントローラーを使用して、座標を更新。

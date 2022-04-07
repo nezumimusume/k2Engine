@@ -29,6 +29,8 @@ void Game::Update()
 	m_fontRender.SetPosition(Vector3(200.0f, 200.0f, 0.0f));
 	//フォントの大きさを設定。
 	m_fontRender.SetScale(2.0f);
+	//フォントの色を設定。
+	m_fontRender.SetColor({ 1.0f,0.0f,0.0f,1.0f });
 
 	m_timer += g_gameTime->GetFrameDeltaTime();
 }

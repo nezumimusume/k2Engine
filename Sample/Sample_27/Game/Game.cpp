@@ -40,7 +40,7 @@ bool Game::Start()
 		}
 		else if (objData.EqualObjectName(L"maria") == true) 
 		{
-			m_dancer = NewGO<Dancer>(0);
+			m_dancer = NewGO<Dancer>(0, "Dancer");
 			m_dancer->SetPosition(objData.position);
 			m_dancer->SetScale(objData.scale);
 			m_dancer->SetRotation(objData.rotation);

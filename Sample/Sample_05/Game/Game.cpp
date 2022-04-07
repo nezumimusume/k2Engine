@@ -28,7 +28,7 @@ Game::~Game()
 
 bool Game::Start()
 {
-	g_camera3D->SetPosition({ 0.0f, 100.0f, -600.0f });
+	g_camera3D->SetPosition({ 0.0f, 100.0f, 800.0f });
 
 
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");

@@ -18,7 +18,7 @@ namespace nsK2Engine {
 		enSkyCubeType_NightToon, // 夜間(トゥーン調)
 		enSkyCubeType_NightToon_2, // 夜間(トゥーン調)２
 		enSkyCubeType_SunriseToon,	// 明け方(トゥーン調)
-		enSkyCubeType_SpaceToon,	// 大気圏(トゥーン調)
+		//enSkyCubeType_SpaceToon,	// 大気圏(トゥーン調) 正常にでないのでコメントアウト。
 		enSkyCubeType_SpaceToon_2,	// 大気圏(トゥーン調)２
 		enSkyCubeType_Num,
 	};
