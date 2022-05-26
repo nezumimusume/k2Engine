@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "HID/GamePadVibration.h"
+
 namespace nsK2EngineLow {	
 	/// <summary>
 	/// 仮想ボタン定義
@@ -165,6 +167,17 @@ namespace nsK2EngineLow {
 		{
 			return m_state.state;
 		}
+		/// <summary>
+		/// バイブレーションを設定。
+		/// </summary>
+		/// <param name="padNo">パッド番号</param>
+		/// <param name="durationSec">バイブレーションの継続時間(0.0～1.0)</param>
+		/// <param name="normalizedPower">正規化されたパワー(0.0～1.0)</param>
+		void SetVibration( float durationSec, float normalizedPower )
+		{
+			auto vibration = NewGO< GamePadVibration>(0);
+			vibration->Init(m_padNo, durationSec, normalizedPower);
+		}
 	private:
 		void UpdateCore(XINPUT_STATE xInputState);
 	public:
@@ -191,7 +204,7 @@ namespace nsK2EngineLow {
 		float m_rStickX = 0.0f;		// 右スティックのX軸の入力量。
 		float m_rStickY = 0.0f;		// 右スティックのY軸の入力量。
 
-		static EnXInputPadState m_padStates[MAX_PAD];
+		static EnXInputPadState m_padStates[MAX_PAD];	// パッドの状態。
 	};
 
 	extern std::array<GamePad*, GamePad::CONNECT_PAD_MAX> g_pad;

@@ -228,6 +228,9 @@
     <ClCompile Include="graphics\ComputeAnimationVertexBuffer.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="HID\GamePadVIbration.cpp">
+      <Filter>HID</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -507,6 +510,9 @@
     </ClInclude>
     <ClInclude Include="graphics\raytracing\RaytracingWorld_Inline.h">
       <Filter>graphics\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="HID\GamePadVibration.h">
+      <Filter>HID</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

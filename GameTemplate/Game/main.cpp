@@ -43,6 +43,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+		if (g_pad[0]->IsTrigger(enButtonA) ){
+			g_pad[0]->SetVibration(/*durationSec=*/0.5f, /*normalizedPower=*/1.0f);
+		}
 		K2Engine::GetInstance()->Execute();
 	}
 
