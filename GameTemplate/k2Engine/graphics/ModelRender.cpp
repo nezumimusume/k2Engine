@@ -77,10 +77,12 @@ namespace nsK2Engine {
 		InitModelOnShadowMap(*g_renderingEngine, filePath, enModelUpAxis, isFrontCullingOnDrawShadowMap);
 		// 幾何学データを初期化。
 		InitGeometryDatas(maxInstance);
-		// レイトレワールドに追加。
-		g_renderingEngine->AddModelToRaytracingWorld(m_translucentModel);
+		if (m_isRaytracingWorld) {
+			// レイトレワールドに追加。
+			g_renderingEngine->AddModelToRaytracingWorld(m_translucentModel);
+			m_addRaytracingWorldModel = &m_translucentModel;
+		}
 		
-		m_addRaytracingWorldModel = &m_translucentModel;
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
 
@@ -138,10 +140,11 @@ namespace nsK2Engine {
 		// 各種ワールド行列を更新する。
 		UpdateWorldMatrixInModes();
 		
-		// レイトレワールドに追加。
-		g_renderingEngine->AddModelToRaytracingWorld(m_renderToGBufferModel);
-		
-		m_addRaytracingWorldModel = &m_renderToGBufferModel;
+		if (m_isRaytracingWorld) {
+			// レイトレワールドに追加。
+			g_renderingEngine->AddModelToRaytracingWorld(m_renderToGBufferModel);
+			m_addRaytracingWorldModel = &m_renderToGBufferModel;
+		}
 	}
 
 	void ModelRender::InitGeometryDatas(int maxInstance)
@@ -336,7 +339,7 @@ namespace nsK2Engine {
 			modelInitData.m_expandShaderResoruceView[0] = &m_worldMatrixArraySB;
 		}
 
-		for (int ligNo = 0; ligNo < MAX_DIRECTIONAL_LIGHT; ligNo++)
+		for (int ligNo = 0; ligNo < /*MAX_DIRECTIONAL_LIGHT*/NUM_SHADOW_LIGHT; ligNo++)
 		{
 			ConstantBuffer* cameraParamCBArray = m_drawShadowMapCameraParamCB[ligNo];
 			Model* shadowModelArray = m_shadowModels[ligNo];
@@ -422,7 +425,9 @@ namespace nsK2Engine {
 		}
 		for (auto& models : m_shadowModels) {
 			for (auto& model : models) {
-				model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+				if (model.IsInited()) {
+					model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+				}
 			}
 		}
 	}
@@ -482,7 +487,9 @@ namespace nsK2Engine {
 		const Matrix& lvpMatrix)
 	{
 
-		if (m_isShadowCaster) {
+		if (m_isShadowCaster
+			&& m_shadowModels[ligNo][shadowMapNo].IsInited()
+		) {
 			Vector4 cameraParam;
 			cameraParam.x = g_camera3D->GetNear();
 			cameraParam.y = g_camera3D->GetFar();

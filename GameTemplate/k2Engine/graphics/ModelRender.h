@@ -281,6 +281,13 @@ namespace nsK2Engine {
 		/// </remark>
 		/// <param name="instanceNo">インスタンス番号</param>
 		void RemoveInstance(int instanceNo);
+		/// <summary>
+		/// レイトレワールドに登録するかのフラグを設定する
+		/// 頻繁に生成するモデル（弾など）をInitする前に引数falseで実行してください。
+		/// </summary>
+		void SetRaytracingWorld(bool flag) {
+			m_isRaytracingWorld = flag;
+		}
 	private:
 		/// <summary>
 		/// スケルトンの初期化。
@@ -416,6 +423,8 @@ namespace nsK2Engine {
 		/// </summary>
 		/// <param name="maxInstance">インスタンス数</param>
 		void InitGeometryDatas(int maxInstance);
+	public:
+		static const int NUM_SHADOW_LIGHT = 1;
 	private:
 		AnimationClip* m_animationClips = nullptr;			// アニメーションクリップ。
 		int							m_numAnimationClips = 0;			// アニメーションクリップの数。
@@ -439,6 +448,7 @@ namespace nsK2Engine {
 		int							m_numInstance = 0;					// インスタンスの数。
 		int							m_maxInstance = 1;					// 最大インスタンス数。
 		bool						m_isEnableInstancingDraw = false;	// インスタンシング描画が有効？
+		bool						m_isRaytracingWorld = true;			//レイトレワールドに登録する？
 		std::unique_ptr<Matrix[]>	m_worldMatrixArray;					// ワールド行列の配列。
 		StructuredBuffer			m_worldMatrixArraySB;				// ワールド行列の配列のストラクチャードバッファ。
 		std::vector< GemometryData > m_geometryDatas;					// ジオメトリ情報。
