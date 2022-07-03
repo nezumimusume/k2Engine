@@ -102,7 +102,14 @@ namespace nsK2EngineLow {
 		});
 
 		// シェーダーをロード。
-		m_shader.LoadCS("Assets/shader/preProcess/ComputeAnimationVertexBuffer.fx", "CSMain");
+		const char* fxFilePath = "Assets/shader/preProcess/ComputeAnimationVertexBuffer.fx";
+		const char* entryPoint = "CSMain";
+		m_shader = g_engine->GetShaderFromBank(fxFilePath, entryPoint);
+		if (m_shader == nullptr) {
+			m_shader = new Shader;
+			m_shader->LoadCS(fxFilePath, entryPoint);
+			g_engine->RegistShaderToBank(fxFilePath, entryPoint, m_shader);
+		}
 		
 		// ボーン行列を送るためのストラクチャードバッファを作成。
 		m_boneMatrixArray = boneMatrixArray;
@@ -129,7 +136,7 @@ namespace nsK2EngineLow {
 			// パイプラインステートを初期化。
 			D3D12_COMPUTE_PIPELINE_STATE_DESC  psoDesc = { 0 };
 			psoDesc.pRootSignature = mesh.m_rootSignature.Get();
-			psoDesc.CS = CD3DX12_SHADER_BYTECODE(m_shader.GetCompiledBlob());
+			psoDesc.CS = CD3DX12_SHADER_BYTECODE(m_shader->GetCompiledBlob());
 			psoDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 			psoDesc.NodeMask = 0;
 			mesh.m_pipelineState.Init(psoDesc);
