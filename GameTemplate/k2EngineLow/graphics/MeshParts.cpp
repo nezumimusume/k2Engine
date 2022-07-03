@@ -6,6 +6,11 @@
 #include "ComputeAnimationVertexBuffer.h"
 
 namespace nsK2EngineLow {
+	static TResourceBank<Material>& GetMaterialBank()
+	{
+		static TResourceBank<Material> materialBank;
+		return materialBank;
+	}
 	MeshParts::~MeshParts()
 	{
 		for (auto& mesh : m_meshs) {
@@ -197,25 +202,56 @@ namespace nsK2EngineLow {
 			}
 		}
 		//3. マテリアルを作成。
+		auto& materialBank = GetMaterialBank();
 		mesh->m_materials.reserve(tkmMesh.materials.size());
 		for (auto& tkmMat : tkmMesh.materials) {
-			auto mat = new Material;
-			mat->InitFromTkmMaterila(
-				tkmMat,
+			char materiayKey[MAX_PATH];
+			sprintf_s(
+				materiayKey,
+				MAX_PATH,
+				"%s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s",
 				fxFilePath,
 				vsEntryPointFunc,
 				vsSkinEntryPointFunc,
 				psEntryPointFunc,
-				colorBufferFormat,
-				NUM_SRV_ONE_MATERIAL,
-				NUM_CBV_ONE_MATERIAL,
-				NUM_CBV_ONE_MATERIAL * materialNum,
-				NUM_SRV_ONE_MATERIAL * materialNum,
+				(int)colorBufferFormat[0],
+				(int)colorBufferFormat[1],
+				(int)colorBufferFormat[2],
+				(int)colorBufferFormat[3],
+				(int)colorBufferFormat[4],
+				(int)colorBufferFormat[5],
+				(int)colorBufferFormat[6],
+				(int)colorBufferFormat[7],
 				alphaBlendMode,
 				isDepthWrite,
 				isDepthTest,
-				cullMode
+				cullMode,
+				tkmMat.albedoMapFileName.empty() ? "none" : tkmMat.albedoMapFileName.c_str(),
+				tkmMat.normalMapFileName.empty() ? "none" : tkmMat.normalMapFileName.c_str(),
+				tkmMat.specularMapFileName.empty() ? "none" : tkmMat.specularMapFileName.c_str()
 			);
+			auto mat = materialBank.Get(materiayKey);
+			if (mat == nullptr) {
+				mat = new Material();
+
+				mat->InitFromTkmMaterila(
+					tkmMat,
+					fxFilePath,
+					vsEntryPointFunc,
+					vsSkinEntryPointFunc,
+					psEntryPointFunc,
+					colorBufferFormat,
+					NUM_SRV_ONE_MATERIAL,
+					NUM_CBV_ONE_MATERIAL,
+					NUM_CBV_ONE_MATERIAL * materialNum,
+					NUM_SRV_ONE_MATERIAL * materialNum,
+					alphaBlendMode,
+					isDepthWrite,
+					isDepthTest,
+					cullMode
+				);
+				materialBank.Regist(materiayKey, mat);
+			}
 			//作成したマテリアル数をカウントする。
 			materialNum++;
 			mesh->m_materials.push_back(mat);
