@@ -18,10 +18,6 @@ namespace nsK2EngineLow {
 			for (auto& ib : mesh->m_indexBufferArray) {
 				delete ib;
 			}
-			//マテリアルを削除。
-			for (auto& mat : mesh->m_materials) {
-				delete mat;
-			}
 			//メッシュを削除。
 			delete mesh;
 		}
