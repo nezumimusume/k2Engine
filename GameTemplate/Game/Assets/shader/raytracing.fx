@@ -231,9 +231,12 @@ void rayGen()
     ray.TMax = 1000000;
 
     RayPayload payload;
+    payload.color = float3(0.0f, 0.0f, 0.0f);
     payload.depth = 0;
     payload.cameraPos = g_camera.pos;
-
+    payload.smooth = 0.0f;
+    payload.hit = 0;
+    
     //TraceRay
     TraceRay(g_raytracingWorld, 0 /*rayFlags*/, 0xFF, 0 /* ray index*/, 0, 0, ray, payload);
 
