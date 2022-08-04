@@ -94,7 +94,12 @@ Texture2D<float4> g_metallicAndSmoothMap : MetallicSmoothMap <
 bool g_useNormalMap
 <
     string UIName = "Use Normal Map";
-> = false;
+> = true;
+
+bool g_useMetallicSmoothMap
+<
+    string UIName = "Use MetallicSmooth Map";
+> = true;
 
 float3 g_ambient  = { 0.5, 0.5, 0.5 };
 /////////////////////////////////////////////

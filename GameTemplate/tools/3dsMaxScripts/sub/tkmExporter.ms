@@ -201,8 +201,10 @@ private
 					albedoFileName = diffMap.fileName
 				)
 				normalMapFileName = "" 
-				if normalMap != undefined then(
-					normalMapFileName = normalMap.fileName
+				if c_node.material.g_useNormalMap == true then(
+					if normalMap != undefined then(
+						normalMapFileName = normalMap.fileName
+					)
 				)
 				specMapFileName = "" 
 				if specMap != undefined then(
