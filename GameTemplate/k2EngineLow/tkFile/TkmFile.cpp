@@ -270,7 +270,7 @@ namespace nsK2EngineLow {
 					}
 					else {
 						char errorMessage[256];
-						sprintf(errorMessage, "テクスチャのロードに失敗しました。%s\n", texFilePath);
+						sprintf(errorMessage, "テクスチャのロードに失敗しました。%s\n", texFilePath.c_str());
 						if (isOutputErrorCodeTTY == false) {
 							MessageBoxA(nullptr, errorMessage, "エラー", MB_OK);
 						}
