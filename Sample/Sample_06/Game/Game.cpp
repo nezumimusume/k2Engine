@@ -13,8 +13,8 @@ Game::~Game()
 
 bool Game::Start()
 {
-	m_spriteRender.Init("Assets/sprite/suzuka.dds", 970, 380);
-	m_spriteRender.SetScale(Vector3(0.9474f, 0.7432f, 0.0f));
+	m_spriteRender.Init("Assets/sprite/windowsSprite.dds", 1280, 720);
+	m_spriteRender.SetScale(Vector3(1.0f, 1.0f, 0.0f));
 	return true;
 }
 

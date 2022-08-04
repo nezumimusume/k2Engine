@@ -25,6 +25,9 @@ bool Background::Start()
 	//大きさ、回転の変更を反映させるために、モデルを更新。
 	m_modelRender.Update();
 
+	//ラインが多くてゴーストが見えにくいので削除。
+	//m_phyStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetWorldMatrix(0));
+
 	return true;
 }
 

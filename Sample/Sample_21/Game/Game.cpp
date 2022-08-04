@@ -18,7 +18,7 @@ bool Game::Start()
 
 	//レベルを構築する。
 	m_level2DRender.Init("Assets/level2D/sample.casl", [&](Level2DObjectData& objData) {
-		//名前画一致していたら。
+		//名前が一致していたら。
 		if (objData.EqualObjectName("k2SLEditor_red") == true) {
 
 

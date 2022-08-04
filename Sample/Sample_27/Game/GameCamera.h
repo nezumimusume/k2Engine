@@ -4,7 +4,7 @@
 #include "camera/SpringCamera.h"
 
 //クラス宣言。
-class Player;
+class Dancer;
 
 class GameCamera : public IGameObject
 {
@@ -17,7 +17,7 @@ public:
 	/////////////////////////////////////
 	//メンバ変数
 	/////////////////////////////////////
-	Player* m_player = nullptr;		//プレイヤー。
+	Dancer* m_dancer = nullptr;		//プレイヤー。
 	Vector3 m_toCameraPos = Vector3::One;
 	SpringCamera m_springCamera;	//ばねカメラ。
 };
