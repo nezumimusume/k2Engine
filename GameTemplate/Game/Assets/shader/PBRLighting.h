@@ -63,11 +63,13 @@ float SpcFresnel(float f0, float u)
 /// <param name="smooth">滑らかさ</param>
 float CookTorranceSpecular(float3 L, float3 V, float3 N, float smooth)
 {
-    float microfacet = 1.0f - smooth;
+    // マイクロファセットが小さくなりすぎると、鏡面反射が強くなりすぎることがあるので、
+    // 下限を0.5にした。
+    float microfacet = min( 0.5f, 1.0f - smooth );
 
     // 金属度を垂直入射の時のフレネル反射率として扱う
     // 金属度が高いほどフレネル反射は大きくなる
-    float f0 = smooth;
+    float f0 = 0.5;
 
     // ライトに向かうベクトルと視線に向かうベクトルのハーフベクトルを求める
     float3 H = normalize(L + V);
