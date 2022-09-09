@@ -56,6 +56,7 @@ namespace nsK2Engine {
 		{
 			return m_cb1.midddleGray;
 		}
+		
 	private:
 		static const int MAX_SAMPLES = 16;
 		struct SCB_1 {

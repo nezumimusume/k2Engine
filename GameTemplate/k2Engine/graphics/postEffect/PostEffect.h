@@ -85,6 +85,22 @@ namespace nsK2Engine {
             return m_tonemap.GetMiddlegray();
         }
         /// <summary>
+        /// ブルームが発生する閾値を設定。
+        /// </summary>
+        /// <param name="value"></param>
+        void SetBloomThreshold(float value)
+        {
+            m_bloom.SetThreshold(value);
+        }
+        /// <summary>
+        /// ブルームが発生する閾値を取得。
+        /// </summary>
+        /// <returns></returns>
+        float GetBloomThreshold() const
+        {
+            return m_bloom.GetThreshold();
+        }
+        /// <summary>
         /// シーンの平均輝度が記憶されているテクスチャを取得。
         /// </summary>
         /// <returns></returns>

@@ -317,7 +317,6 @@ namespace nsK2Engine {
         /// </summary>
         void RemoveEventListener(void* pListenerObj)
         {
-
             auto it = std::find_if(
                 m_eventListeners.begin(),
                 m_eventListeners.end(),
@@ -400,13 +399,28 @@ namespace nsK2Engine {
             return m_postEffect.GetTonemapMiddlegray();
         }
         /// <summary>
+        /// ブルームが発生する閾値を設定。
+        /// </summary>
+        /// <param name="value"></param>
+        void SetBloomThreshold(float value)
+        {
+            m_postEffect.SetBloomThreshold(value);
+        }
+        /// <summary>
+        /// ブルームが発生する閾値を取得。
+        /// </summary>
+        /// <returns></returns>
+        float GetBloomThreshold() const
+        {
+            return m_postEffect.GetBloomThreshold();
+        }
+        /// <summary>
         /// ボリュームスポットライトをシーンに追加
         /// </summary>
         /// <param name="lig">ライト</param>
         void AddVolumeSpotLight(VolumeLightBase& lig)
         {
             m_volumeLightRender.AddVolumeSpotLight(lig);
-
         }
         /// <summary>
         /// ボリュームスポットライトをシーンから削除

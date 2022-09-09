@@ -44,6 +44,7 @@ cbuffer SamplingLuminanceCb : register(b1)
 {
     int isEnableTonemap;
     float middleGray;
+    float threshold;
 };
 
 /*!
@@ -65,8 +66,8 @@ float4 PSSamplingLuminance(PSInput In) : SV_Target0
     // clip()関数は引数の値がマイナスになると、以降の処理をスキップする
     // なので、マイナスになるとピクセルカラーは出力されない
     
-    clip(hsv.z - 1.0f );
-    hsv.z -= 1.0f;
+    clip(hsv.z - threshold );
+    hsv.z -= threshold;
     
     if(isEnableTonemap){
         // カラーを元のカラーに戻す。

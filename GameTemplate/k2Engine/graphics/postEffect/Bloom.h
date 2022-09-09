@@ -24,8 +24,6 @@ namespace nsK2Engine {
         /// </summary>
         /// <param name="rc">レンダ―コンテキスト。</param>
         /// <param name="mainRenderTarget">メインレンダ―ターゲット。</param>
-        
-        
         void OnRender(RenderContext& rc, RenderTarget& mainRenderTarget) override;
         /// <summary>
         /// ポストエフェクトを実行した結果となるテクスチャを取得。
@@ -35,6 +33,22 @@ namespace nsK2Engine {
         {
             return m_luminanceRenderTarget.GetRenderTargetTexture();
         }
+        /// <summary>
+        /// ブルームが発生する閾値を設定。
+        /// </summary>
+        /// <param name="value"></param>
+        void SetThreshold(float value)
+        {
+            m_samplingLuminanceCB1.threshold = value;
+        }
+        /// <summary>
+        /// ブルームが発生する閾値を取得。
+        /// </summary>
+        /// <returns></returns>
+        float GetThreshold() const
+        {
+            return m_samplingLuminanceCB1.threshold;
+        }
     private:
         /// <summary>
         /// 輝度抽出パスの定数バッファ１に送る内容。
@@ -42,6 +56,7 @@ namespace nsK2Engine {
         struct SSamplingLuminanceCB1 {
             int isTonemap;      // トーンマップが有効？
             float middlegray;   // ミドルグレー。
+            float threshold = 1.0f;
         };
         RenderTarget m_luminanceRenderTarget;	//輝度抽出用のレンダリングターゲット
         Sprite m_luminanceSprite;				//輝度抽出用のスプライト
